@@ -8,7 +8,8 @@ import {
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 
 // A shallow, camera-constrained diorama. Hidden façades are intentionally plain.
-export const VIEW_ANGLE = Math.PI / 5;
+// The original passage runs from the near lower-left approach to the far upper-right.
+export const VIEW_ANGLE = THREE.MathUtils.degToRad(-50);
 export const TILT_LIMIT = 12;
 export const ELEVATION = Math.PI / 3.1;
 const ink = createDryInk();
@@ -69,15 +70,29 @@ function beam(
   );
   return obj;
 }
-function building(parent: THREE.Object3D, x: number, z: number, scale = 1) {
+function building(
+  parent: THREE.Object3D,
+  x: number,
+  z: number,
+  scale = 1,
+  turn = 0,
+) {
   const g = new THREE.Group();
   parent.add(g);
   g.position.set(x, 0.14, z);
   g.scale.setScalar(scale);
+  g.rotation.y = turn;
   box(g, 2, 1.15, 1.6, 0, 0.575, 0, plaster);
   [-0.85, 0, 0.85].forEach((a) => box(g, 0.065, 1.4, 0.065, a, 0.7, 1.02));
   box(g, 2, 0.09, 0.09, 0, 1.32, 1.02);
   box(g, 1.8, 0.4, 0.38, 0, 0.3, 0.94);
+  // Timber framing and open shop bays, visible at the reference-facing angle.
+  for (const a of [-0.94, -0.32, 0.32, 0.94])
+    box(g, 0.045, 1.1, 0.035, a, 0.57, 0.82, dark);
+  for (const y of [0.18, 0.45, 0.98])
+    box(g, 1.88, 0.025, 0.035, 0, y, 0.84, wood);
+  for (let i = 0; i < 8; i++)
+    box(g, 0.025, 0.55, 0.02, -0.87 + i * 0.095, 0.57, 0.85, dark);
   // Paired pitched roof planes and raised eaves, with repeated ink tile seams.
   for (const side of [-1, 1]) {
     const geom = new THREE.BufferGeometry();
@@ -108,6 +123,16 @@ function building(parent: THREE.Object3D, x: number, z: number, scale = 1) {
       const a = -1.24 + (i * 2.48) / 22;
       beam(g, [a, 1.98, 0], [a, 1.29, side * 1.17], 0.008, dark);
     }
+    for (let row = 1; row < 7; row++) {
+      const t = row / 7;
+      beam(
+        g,
+        [-1.23, 1.98 - 0.69 * t, side * 1.17 * t],
+        [1.23, 1.98 - 0.69 * t, side * 1.17 * t],
+        0.007,
+        dark,
+      );
+    }
     beam(g, [-1.28, 1.32, side * 1.18], [1.28, 1.32, side * 1.18], 0.035);
   }
   beam(g, [-1.3, 2, 0], [1.3, 2, 0], 0.045, dark);
@@ -130,6 +155,14 @@ function tree(parent: THREE.Object3D, x: number, z: number, leafy: boolean) {
       end = [Math.cos(a) * (0.55 + i * 0.035), y + 0.55, Math.sin(a) * 0.53];
     beam(g, [0.06, y, 0], end, 0.04);
     beam(g, end, [end[0] * 1.4, end[1] + 0.32, end[2] * 1.3], 0.018);
+    for (let twig = 0; twig < 3; twig++) {
+      const tip = [
+        end[0] * (1.3 + twig * 0.12),
+        end[1] + 0.27 + twig * 0.14,
+        end[2] * (1.25 + twig * 0.15),
+      ];
+      beam(g, end, tip, 0.008, dark);
+    }
     if (leafy) {
       const cloud = new THREE.Shape();
       const radius = 0.44 + (i % 3) * 0.1;
@@ -294,6 +327,49 @@ function batchStatic(group: THREE.Group) {
       );
   });
 }
+function person(parent: THREE.Object3D, variant: number) {
+  const g = new THREE.Group();
+  parent.add(g);
+  const robe = [dark, linen, green][variant % 3];
+  mesh(g, new THREE.CylinderGeometry(0.065, 0.115, 0.33, 6), robe, 0, 0.245, 0);
+  mesh(g, new THREE.SphereGeometry(0.064, 7, 5), wood, 0, 0.46, 0);
+  if (variant % 3 === 0)
+    mesh(g, new THREE.ConeGeometry(0.15, 0.065, 10), linen, 0, 0.53, 0);
+  else box(g, 0.13, 0.05, 0.12, 0, 0.515, 0, dark);
+  beam(g, [-0.045, 0.12, 0], [-0.055, 0.02, 0.025], 0.02, dark);
+  beam(g, [0.045, 0.12, 0], [0.06, 0.02, -0.025], 0.02, dark);
+  beam(g, [-0.06, 0.36, 0], [-0.12, 0.24, 0.04], 0.029, robe);
+  beam(g, [0.06, 0.36, 0], [0.12, 0.24, 0.04], 0.029, robe);
+  if (variant % 4 === 0) {
+    beam(g, [-0.3, 0.39, 0], [0.3, 0.39, 0], 0.014, dark);
+    for (const side of [-1, 1]) {
+      beam(g, [side * 0.27, 0.39, 0], [side * 0.27, 0.14, 0], 0.009, dark);
+      mesh(
+        g,
+        new THREE.CylinderGeometry(0.08, 0.055, 0.12, 8),
+        linen,
+        side * 0.27,
+        0.13,
+        0,
+      );
+    }
+  }
+  return g;
+}
+function parasol(parent: THREE.Object3D, x: number, z: number) {
+  beam(parent, [x, 0.08, z], [x, 1.15, z], 0.024, dark);
+  mesh(parent, new THREE.ConeGeometry(0.62, 0.19, 16), linen, x, 1.18, z);
+  for (let j = 0; j < 12; j++) {
+    const a = (j * Math.PI) / 6;
+    beam(
+      parent,
+      [x, 1.28, z],
+      [x + Math.cos(a) * 0.61, 1.09, z + Math.sin(a) * 0.61],
+      0.007,
+      dark,
+    );
+  }
+}
 export function createBridgeStudy() {
   const group = new THREE.Group();
   const river = mesh(
@@ -384,34 +460,73 @@ export function createBridgeStudy() {
         beam(group, [a, height(a) - 0.4, z], [b, height(b) - 0.08, z], 0.055);
     }
   }
-  building(group, -5.7, -2.7, 1.25);
-  building(group, 5.4, -3.2, 1.0);
-  tree(group, -7.2, 1.3, false);
-  tree(group, 6.7, 0.8, true);
-  tree(group, -4.1, -4.4, true);
-  stall(group, -4.6, 1.9, true);
-  stall(group, 4.5, 2.1, false);
+  // Far-bank shops and near-bank roof masses frame the bridge without covering it.
+  building(group, -6.8, -3.7, 1.05);
+  building(group, -4.4, -3.7, 0.82);
+  building(group, 4.6, -3.8, 0.9);
+  building(group, 6.8, -3.5, 1.05);
+  building(group, -6.8, 3.6, 0.85);
+  building(group, 6.5, 3.6, 1.12);
+  building(group, 4.3, 4.3, 0.72);
+  for (const [x, z, leafy] of [
+    [-7.8, -1.3, 0],
+    [-7.5, 4.7, 0],
+    [-3.6, -5, 0],
+    [7.7, 1, 0],
+    [7.5, 4.8, 1],
+    [4.1, -5, 0],
+    [-4.2, 4.1, 1],
+  ])
+    tree(group, x, z, !!leafy);
+  for (const [x, z, covered] of [
+    [-4.4, 1.45, 1],
+    [-5.8, 0.85, 0],
+    [-3.65, 3.1, 0],
+    [4.15, 1.6, 1],
+    [5.65, 0.55, 0],
+    [3.6, -1.9, 0],
+  ])
+    stall(group, x, z, !!covered);
+  parasol(group, -4.15, 2.65);
+  parasol(group, 4.6, 0.35);
+  parasol(group, -5.9, -1.6);
   boat(group, -0.9, 3.5, true);
   boat(group, 1.25, -3.4, false);
-  batchStatic(group);
-  const people: THREE.Group[] = [];
+  const crowdPositions = [
+    [-4.0, 0.8],
+    [-4.8, 0.7],
+    [-5.4, 1.5],
+    [-6.2, 1.6],
+    [-3.8, 2.3],
+    [-3.45, 3.6],
+    [-4.8, -2.25],
+    [-6.5, -2.2],
+    [-5.7, -1.35],
+    [-6.7, 2.6],
+    [3.8, 0.85],
+    [4.7, 0.9],
+    [5.3, 1.5],
+    [6.2, 1.25],
+    [3.55, -1.3],
+    [4.25, -2.35],
+    [5.3, -2.0],
+    [6.8, -2.1],
+    [5.1, 2.65],
+    [3.4, 2.8],
+  ];
+  crowdPositions.forEach(([x, z], i) => {
+    const p = person(group, i);
+    p.position.set(x, 0.12, z);
+    p.rotation.y = i * 1.7;
+  });
   for (let i = 0; i < 6; i++) {
-    const g = new THREE.Group();
-    group.add(g);
-    people.push(g);
-    mesh(
-      g,
-      new THREE.ConeGeometry(0.085, 0.31, 6),
-      [dark, linen, green][i % 3],
-      0,
-      0.22,
-      0,
-    );
-    mesh(g, new THREE.SphereGeometry(0.06, 6, 5), wood, 0, 0.44, 0);
-    box(g, 0.13, 0.035, 0.12, 0, 0.49, 0, dark);
-    beam(g, [-0.032, 0.1, 0], [-0.032, 0, 0.015], 0.013, dark);
-    beam(g, [0.032, 0.1, 0], [0.032, 0, -0.015], 0.013, dark);
+    const x = -2.7 + i * 1.05;
+    const p = person(group, i + 1);
+    p.position.set(x, height(x) + 0.09, i % 2 ? 0.45 : -0.45);
+    p.rotation.y = i % 2 ? 0 : Math.PI;
   }
+  batchStatic(group);
+  const people = Array.from({ length: 8 }, (_, i) => person(group, i));
   return {
     group,
     setPainting(enabled: boolean) {
@@ -419,8 +534,19 @@ export function createBridgeStudy() {
     },
     update(time: number) {
       people.forEach((p, i) => {
-        const x = ((time * 0.12 + i * 1.35) % 7.1) - 3.55;
-        p.position.set(x, height(x) + 0.08, i % 2 ? 0.27 : -0.27);
+        // Ping-pong routes avoid teleporting at either bridge approach.
+        const phase = (time * 0.018 + i * 0.173) % 2;
+        const travel = phase < 1 ? phase : 2 - phase;
+        if (i < 4) {
+          const x = -3.55 + travel * 7.1;
+          p.position.set(x, height(x) + 0.09, i % 2 ? 0.19 : -0.19);
+          p.rotation.y = phase < 1 ? Math.PI / 2 : -Math.PI / 2;
+        } else {
+          const side = i % 2 ? 1 : -1;
+          const z = -1.8 + travel * 3.6;
+          p.position.set(side * (i < 6 ? 3.13 : 6.8), 0.12, z);
+          p.rotation.y = phase < 1 ? 0 : Math.PI;
+        }
       });
     },
   };

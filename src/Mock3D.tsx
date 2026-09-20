@@ -65,14 +65,29 @@ export default function Mock3D() {
     study.setPainting(true);
     const camera = new THREE.OrthographicCamera(-12, 12, 9, -9, 0.1, 100);
     const controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableRotate = false;
-    controls.enableDamping = true;
+    controls.enableRotate = true;
+    controls.minAzimuthAngle =
+      VIEW_ANGLE - THREE.MathUtils.degToRad(TILT_LIMIT);
+    controls.maxAzimuthAngle =
+      VIEW_ANGLE + THREE.MathUtils.degToRad(TILT_LIMIT);
+    controls.minPolarAngle = ELEVATION;
+    controls.maxPolarAngle = ELEVATION;
+    controls.rotateSpeed = 0.45;
+    controls.addEventListener("change", () =>
+      setAngle(
+        Math.round(
+          THREE.MathUtils.radToDeg(controls.getAzimuthalAngle() - VIEW_ANGLE),
+        ),
+      ),
+    );
+    controls.enableDamping = false;
     controls.dampingFactor = 0.12;
     controls.screenSpacePanning = true;
     controls.minZoom = 0.65;
     controls.maxZoom = 2.5;
-    controls.mouseButtons.LEFT = THREE.MOUSE.PAN;
-    controls.touches.ONE = THREE.TOUCH.PAN;
+    controls.mouseButtons.LEFT = THREE.MOUSE.ROTATE;
+    controls.mouseButtons.RIGHT = THREE.MOUSE.PAN;
+    controls.touches.ONE = THREE.TOUCH.ROTATE;
     controls.touches.TWO = THREE.TOUCH.DOLLY_PAN;
     controls.target.set(0, 0.5, 0);
     const position = (degrees: number) => {
@@ -249,8 +264,8 @@ export default function Mock3D() {
           <div className="study-gesture">
             <Move size={13} />
             {t(
-              "Drag to pan · Pinch or scroll to zoom",
-              "拖动平移 · 双指或滚轮缩放",
+              "Drag to turn · Right-drag to pan · Pinch / wheel to zoom",
+              "拖动旋转 · 右键平移 · 双指或滚轮缩放",
             )}
           </div>
         </div>
@@ -291,33 +306,6 @@ export default function Mock3D() {
           className="painting-controls"
           aria-label={t("Painting controls", "绘画设置")}
         >
-          <label className="angle-control">
-            <span>
-              {t("Turn the painting", "转动画卷")}{" "}
-              <output>
-                {angle > 0 ? "+" : ""}
-                {angle}°
-              </output>
-            </span>
-            <input
-              type="range"
-              min={-TILT_LIMIT}
-              max={TILT_LIMIT}
-              step="1"
-              value={angle}
-              disabled={!ready}
-              aria-label={t("Rotation angle", "旋转角度")}
-              onChange={(e) => {
-                const value = Number(e.target.value);
-                setAngle(value);
-                api.current?.view(value);
-              }}
-            />
-            <span className="angle-extents">
-              <span>−12°</span>
-              <span>+12°</span>
-            </span>
-          </label>
           <label className="angle-control softness-control">
             <span>
               {t("Ink softness", "墨色晕染")} <output>{softness}%</output>

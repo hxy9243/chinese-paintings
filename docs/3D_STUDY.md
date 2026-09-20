@@ -40,3 +40,11 @@ Compared directly against the repository's original Rainbow Bridge crop: shift r
 An optional single offscreen finish pass spreads a small amount of nearby ink and adds fine silk fibers. Its resolution is capped at 1.5 times CSS pixels to limit phone cost. The bilingual **Ink softness** slider controls this pass (0–100%, default 70%); Plain model bypasses it, and 0% renders the painted geometry directly. The pass and its render target are disposed on unmount. Camera limits, editing saves, and the fixed composition are unchanged. Physical-device performance remains unverified.
 
 These effects bring the material closer to aged ink on silk. They do not replace the fine, reference-specific architectural drawing needed for a faithful recreation.
+
+## Reference composition and direct rotation
+
+The authored center camera now looks from azimuth −50 degrees at the existing fixed elevation. This puts the near bridge approach toward the lower left and the far approach toward the upper right, following the direction in `public/reference/rainbow-bridge.jpg`. The original uses locally varying painted perspectives, so this is a compositional approximation, not an exact single-camera reconstruction.
+
+The scene contains seven shops/houses with additional timber framing and tile rows, seven trees with finer bare twigs, six stalls, three ribbed parasols, two boats, 26 posed people, and eight moving people. Static crowds are batched with the scenery. Four pedestrians cross the bridge and four walk the bank lanes; their routes reverse instead of teleporting at the ends.
+
+Left-drag / one-finger drag rotates within ±12 degrees of the authored view. Elevation is fixed. Right-drag pans, wheel zooms, and two fingers pan/zoom. The rotation range slider was removed; the three view buttons remain for keyboard use. Ink softness remains adjustable.

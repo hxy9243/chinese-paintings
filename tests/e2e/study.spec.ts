@@ -43,13 +43,13 @@ test("limited 3D views work without touching the saved painting", async ({
       bounds.x + bounds.width / 2,
       bounds.y + bounds.height / 2,
     );
-    await page.mouse.down();
+    await page.mouse.down({ button: "right" });
     await page.mouse.move(
       bounds.x + bounds.width / 2 + 45,
       bounds.y + bounds.height / 2 + 25,
       { steps: 5 },
     );
-    await page.mouse.up();
+    await page.mouse.up({ button: "right" });
   }
   await expect(page.locator(".study-stage")).toHaveAttribute("data-angle", "0");
   await page
@@ -88,19 +88,24 @@ test("painting render supports bounded rotation and a plain-model comparison", a
   await expect(
     page.getByRole("button", { name: "Ink & wash", exact: true }),
   ).toHaveAttribute("aria-pressed", "true");
-  const slider = page.getByRole("slider", { name: "Rotation angle" });
-  await slider.focus();
-  await slider.press("End");
+  await expect(
+    page.getByRole("slider", { name: "Rotation angle" }),
+  ).toHaveCount(0);
+  const canvas = page.locator(".study-canvas");
+  const box = await canvas.boundingBox();
+  if (!box) throw new Error("Missing canvas");
+  const y = box.y + box.height / 2;
+  await page.mouse.move(box.x + box.width * 0.8, y);
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width * 0.2, y + 35, { steps: 12 });
+  await page.mouse.up();
   await expect(page.locator(".study-stage")).toHaveAttribute(
     "data-angle",
     "12",
   );
-  await slider.press("ArrowRight");
-  await expect(page.locator(".study-stage")).toHaveAttribute(
-    "data-angle",
-    "12",
-  );
-  await slider.press("Home");
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width * 0.8, y, { steps: 12 });
+  await page.mouse.up();
   await expect(page.locator(".study-stage")).toHaveAttribute(
     "data-angle",
     "-12",
@@ -121,7 +126,7 @@ test("painting render supports bounded rotation and a plain-model comparison", a
   );
   await page.getByRole("button", { name: "Ink & wash", exact: true }).click();
   await page.getByRole("button", { name: "Reset view", exact: true }).click();
-  await expect(slider).toHaveValue("0");
+  await expect(page.locator(".study-stage")).toHaveAttribute("data-angle", "0");
   await page.screenshot({
     path: `test-results/painting-${test.info().project.name}.png`,
     fullPage: true,
