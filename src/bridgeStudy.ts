@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { paintMaterial, paintingAmount } from "./paintMaterial";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 
 // A shallow, camera-constrained diorama. Hidden façades are intentionally plain.
@@ -8,10 +9,9 @@ export const ELEVATION = Math.PI / 3.1;
 const ink = new THREE.LineBasicMaterial({
   color: 0x655d46,
   transparent: true,
-  opacity: 0.65,
+  opacity: 0.42,
 });
-const mat = (color: number) =>
-  new THREE.MeshLambertMaterial({ color, flatShading: true });
+const mat = paintMaterial;
 const wood = mat(0xa18a61),
   dark = mat(0x635e4d),
   plaster = mat(0xded2af),
@@ -130,13 +130,47 @@ function tree(parent: THREE.Object3D, x: number, z: number, leafy: boolean) {
       end = [Math.cos(a) * (0.55 + i * 0.035), y + 0.55, Math.sin(a) * 0.53];
     beam(g, [0.06, y, 0], end, 0.04);
     beam(g, end, [end[0] * 1.4, end[1] + 0.32, end[2] * 1.3], 0.018);
-    if (leafy)
-      mesh(
+    if (leafy) {
+      const cloud = new THREE.Shape();
+      const radius = 0.44 + (i % 3) * 0.1;
+      for (let j = 0; j <= 64; j++) {
+        const angle = (j / 64) * Math.PI * 2;
+        const r =
+          radius * (1 + 0.13 * Math.sin(j * 1.8) + 0.07 * Math.sin(j * 3.1));
+        const px = Math.cos(angle) * r,
+          py = Math.sin(angle) * r * 0.8;
+        if (j === 0) cloud.moveTo(px, py);
+        else cloud.lineTo(px, py);
+      }
+      const canopy = mesh(
         g,
-        new THREE.IcosahedronGeometry(0.43 + (i % 3) * 0.09, 1),
+        new THREE.ShapeGeometry(cloud),
         i % 2 ? green : pale,
         ...(end as [number, number, number]),
+        false,
       );
+      canopy.rotation.y = VIEW_ANGLE;
+      // Individually drawn leaf dabs break the geometric silhouette.
+      for (let j = 0; j < 28; j++) {
+        const a = j * 2.399,
+          r = Math.sqrt(j / 28) * radius;
+        const leaf = new THREE.Shape();
+        leaf.moveTo(-0.035, 0);
+        leaf.quadraticCurveTo(0, 0.065, 0.045, 0);
+        leaf.quadraticCurveTo(0, -0.035, -0.035, 0);
+        const dab = mesh(
+          g,
+          new THREE.ShapeGeometry(leaf),
+          j % 3 ? green : dark,
+          end[0] + Math.cos(a) * r,
+          end[1] + Math.sin(a) * r * 0.75,
+          end[2] + 0.035 + j * 0.001,
+          false,
+        );
+        dab.rotation.y = VIEW_ANGLE;
+        dab.rotation.z = a;
+      }
+    }
   }
 }
 function boat(parent: THREE.Object3D, x: number, z: number, cargo: boolean) {
@@ -235,9 +269,14 @@ function batchStatic(group: THREE.Group) {
     batch.geometries.push(geometry);
     batches.set(material, batch);
   });
-  const retained = group.children.filter(
-    (obj) => obj instanceof THREE.Line && !(obj instanceof THREE.LineSegments),
-  );
+  const retained: THREE.Line[] = [];
+  group.traverse((obj) => {
+    if (obj instanceof THREE.Line && !(obj instanceof THREE.LineSegments)) {
+      const geometry = obj.geometry.clone().applyMatrix4(obj.matrixWorld);
+      retained.push(new THREE.Line(geometry, obj.material));
+      obj.geometry.dispose();
+    }
+  });
   group.traverse((obj) => {
     if (obj instanceof THREE.Mesh || obj instanceof THREE.LineSegments)
       obj.geometry.dispose();
@@ -257,10 +296,54 @@ function batchStatic(group: THREE.Group) {
 }
 export function createBridgeStudy() {
   const group = new THREE.Group();
-  box(group, 17, 0.16, 11.5, 0, -0.16, 0, mat(0xc8c2a9));
-  box(group, 5.5, 0.035, 11.46, 0, -0.055, 0, mat(0xaab9ac));
-  for (const side of [-1, 1])
-    box(group, 5.74, 0.15, 11.5, side * 5.62, -0.005, 0, mat(0xd8cfb3));
+  const river = mesh(
+    group,
+    new THREE.PlaneGeometry(17, 11.5),
+    mat(0xbdc3af, true),
+    0,
+    -0.03,
+    0,
+    false,
+  );
+  river.rotation.x = -Math.PI / 2;
+  for (const side of [-1, 1]) {
+    const bank = new THREE.Shape();
+    bank.moveTo(side * 8.5, -5.7);
+    bank.lineTo(side * 2.75, -5.7);
+    for (let j = 0; j <= 30; j++) {
+      const z = -5.7 + (j * 11.4) / 30;
+      bank.lineTo(
+        side * (2.75 + 0.22 * Math.sin(z * 1.3) + 0.08 * Math.cos(z * 3)),
+        z,
+      );
+    }
+    bank.lineTo(side * 8.5, 5.7);
+    bank.closePath();
+    const land = mesh(
+      group,
+      new THREE.ShapeGeometry(bank),
+      mat(0xd6c6a1, true),
+      0,
+      0.06,
+      0,
+      false,
+    );
+    land.rotation.x = -Math.PI / 2;
+    const pts = [];
+    for (let j = 0; j <= 60; j++) {
+      const z = -5.4 + (j * 10.8) / 60;
+      pts.push(
+        new THREE.Vector3(
+          side * (2.75 + 0.22 * Math.sin(-z * 1.3) + 0.08 * Math.cos(z * 3)),
+          0.065,
+          z,
+        ),
+      );
+    }
+    group.add(
+      new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), ink),
+    );
+  }
   // River strokes are deliberate ink marks rather than a glossy water shader.
   for (let i = 0; i < 65; i++) {
     const x = Math.sin(i * 7.9) * 2.3,
@@ -331,6 +414,10 @@ export function createBridgeStudy() {
   }
   return {
     group,
+    setPainting(enabled: boolean) {
+      paintingAmount.value = enabled ? 1 : 0;
+      ink.opacity = enabled ? 0.42 : 0.65;
+    },
     update(time: number) {
       people.forEach((p, i) => {
         const x = ((time * 0.12 + i * 1.35) % 7.1) - 3.55;

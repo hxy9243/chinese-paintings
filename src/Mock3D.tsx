@@ -21,12 +21,14 @@ type StudyApi = {
   view: (angle: number) => void;
   zoom: (factor: number) => void;
   reset: () => void;
+  painting: (enabled: boolean) => void;
 };
 export default function Mock3D() {
   const host = useRef<HTMLDivElement>(null),
     api = useRef<StudyApi | null>(null);
   const [lang, setLang] = useState<"en" | "zh">("en"),
     [angle, setAngle] = useState(0),
+    [painted, setPainted] = useState(true),
     [ready, setReady] = useState(false),
     [error, setError] = useState(false);
   const t = (en: string, zh: string) => (lang === "en" ? en : zh);
@@ -54,6 +56,7 @@ export default function Mock3D() {
     scene.add(sunlight);
     const study = createBridgeStudy();
     scene.add(study.group);
+    study.setPainting(true);
     const camera = new THREE.OrthographicCamera(-12, 12, 9, -9, 0.1, 100);
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableRotate = false;
@@ -100,6 +103,7 @@ export default function Mock3D() {
     resize();
     api.current = {
       view: position,
+      painting: study.setPainting,
       zoom(factor) {
         camera.zoom = THREE.MathUtils.clamp(camera.zoom * factor, 0.65, 2.5);
         camera.updateProjectionMatrix();
@@ -116,7 +120,7 @@ export default function Mock3D() {
       last = 0;
     const animate = (now: number) => {
       frame = requestAnimationFrame(animate);
-      if (now - last < 32) return;
+      if (document.hidden || now - last < 32) return;
       last = now;
       controls.update();
       study.update(clock.getElapsedTime());
@@ -143,14 +147,14 @@ export default function Mock3D() {
     };
   }, []);
   return (
-    <div className="study-shell">
+    <div className="study-shell" data-painting={painted}>
       <header className="study-header">
         <a href={import.meta.env.BASE_URL} className="study-back">
           <ArrowLeft size={17} />
           <span>{t("Back to the painting", "返回画卷")}</span>
         </a>
         <div className="study-wordmark">
-          清明小景 <span> / {t("SPATIAL STUDY", "空间小样")}</span>
+          清明小景 <span> / {t("LIVING INK", "立体水墨")}</span>
         </div>
         <button
           onClick={() => setLang(lang === "en" ? "zh" : "en")}
@@ -162,20 +166,19 @@ export default function Mock3D() {
       <main className="study-main">
         <div className="study-title">
           <div className="eyebrow">
-            {t("RAINBOW BRIDGE · A STUDY IN DEPTH", "虹桥 · 立体试作")}
+            {t("RAINBOW BRIDGE · INK IN MOTION", "虹桥 · 墨韵流转")}
           </div>
-          <h1>
-            {t("A little depth. A living scroll.", "一卷烟火，咫尺立体。")}
-          </h1>
+          <h1>{t("A painting, gently turning.", "轻转画卷，墨色生息。")}</h1>
           <p>
             {t(
-              "Painted forms, held within a carefully chosen view.",
-              "以有限视角，留住画卷的意境。",
+              "Soft washes, fine ink, and a little room to turn.",
+              "淡彩细墨之间，轻轻转动一方小景。",
             )}
           </p>
         </div>
         <div className="study-stage" data-ready={ready} data-angle={angle}>
           <div ref={host} className="study-canvas" />
+          {painted && <div className="study-paper" aria-hidden="true" />}
           <div className="study-stamp">
             虹<br />桥<span>小景</span>
           </div>
@@ -240,7 +243,10 @@ export default function Mock3D() {
           <div>
             <span className="study-label">{t("THE CAMERA", "观看角度")}</span>
             <p>
-              {t("Three views. One composition.", "三个视角，同一幅小景。")}
+              {t(
+                "Turn gently. Stay within the scroll.",
+                "轻转视角，不离画意。",
+              )}
             </p>
           </div>
           <div className="study-views">
@@ -263,6 +269,59 @@ export default function Mock3D() {
             ))}
           </div>
         </section>
+        <section
+          className="painting-controls"
+          aria-label={t("Painting controls", "绘画设置")}
+        >
+          <label className="angle-control">
+            <span>
+              {t("Turn the painting", "转动画卷")}{" "}
+              <output>
+                {angle > 0 ? "+" : ""}
+                {angle}°
+              </output>
+            </span>
+            <input
+              type="range"
+              min={-TILT_LIMIT}
+              max={TILT_LIMIT}
+              step="1"
+              value={angle}
+              disabled={!ready}
+              aria-label={t("Rotation angle", "旋转角度")}
+              onChange={(e) => {
+                const value = Number(e.target.value);
+                setAngle(value);
+                api.current?.view(value);
+              }}
+            />
+            <span className="angle-extents">
+              <span>−12°</span>
+              <span>+12°</span>
+            </span>
+          </label>
+          <div
+            className="paint-switch"
+            role="group"
+            aria-label={t("Rendering style", "渲染风格")}
+          >
+            {[true, false].map((value) => (
+              <button
+                key={String(value)}
+                disabled={!ready}
+                aria-pressed={painted === value}
+                onClick={() => {
+                  setPainted(value);
+                  api.current?.painting(value);
+                }}
+              >
+                {value
+                  ? t("Ink & wash", "水墨淡彩")
+                  : t("Plain model", "素模对比")}
+              </button>
+            ))}
+          </div>
+        </section>
         <footer className="study-notes">
           <p>
             <strong>
@@ -275,8 +334,8 @@ export default function Mock3D() {
           </p>
           <p>
             {t(
-              "Concept mock · simplified geometry and ink colors. Final painting textures and historical detail are still to be developed.",
-              "概念小样 · 简化模型与水墨配色。最终绘画纹理与历史细节仍待制作。",
+              "Painting MVP · procedural pigment and layered foliage. Inspired by the scroll; detailed historical artwork is still to come.",
+              "绘画小样 · 程序化墨色与层叠树叶。取意原作，历史细节仍待精绘。",
             )}
           </p>
         </footer>

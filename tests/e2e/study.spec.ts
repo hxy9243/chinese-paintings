@@ -66,3 +66,26 @@ test("limited 3D views work without touching the saved painting", async ({
     fullPage: true,
   });
 });
+
+test('painting render supports bounded rotation and a plain-model comparison', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror',e=>errors.push(e.message));
+  page.on('console',msg=>{if(msg.type()==='error')errors.push(msg.text());});
+  await page.goto('/?view=3d');
+  await expect(page.locator('.study-stage')).toHaveAttribute('data-ready','true',{timeout:30000});
+  await expect(page.getByRole('button',{name:'Ink & wash',exact:true})).toHaveAttribute('aria-pressed','true');
+  const slider=page.getByRole('slider',{name:'Rotation angle'});
+  await slider.focus();await slider.press('End');
+  await expect(page.locator('.study-stage')).toHaveAttribute('data-angle','12');
+  await slider.press('ArrowRight');
+  await expect(page.locator('.study-stage')).toHaveAttribute('data-angle','12');
+  await slider.press('Home');
+  await expect(page.locator('.study-stage')).toHaveAttribute('data-angle','-12');
+  await page.getByRole('button',{name:'Plain model',exact:true}).click();
+  await expect(page.locator('.study-shell')).toHaveAttribute('data-painting','false');
+  await page.getByRole('button',{name:'Ink & wash',exact:true}).click();
+  await page.getByRole('button',{name:'Reset view',exact:true}).click();
+  await expect(slider).toHaveValue('0');
+  await page.screenshot({path:`test-results/painting-${test.info().project.name}.png`,fullPage:true});
+  expect(errors).toEqual([]);
+});

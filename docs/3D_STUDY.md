@@ -24,3 +24,11 @@ This is a modeling and camera proof, not finished painting art or an historicall
 ## Checks
 
 Production TypeScript/build and model tests. Browser tests cover entry from editor, all camera presets, zoom/reset, pan without angle change, Chinese controls, phone-width overflow, and unchanged local save storage. Desktop and mobile Chromium profiles are used; these are not physical iOS/Android tests.
+
+## Painting renderer MVP
+
+The default rendering now uses world-space procedural pigment: broad wash variation, fine grain, restrained shading, and muted sepia/green colors. Because variation is attached to world coordinates, it does not slide across surfaces when the camera turns. A paper-grain overlay is decorative and does not intercept touch input.
+
+The board base has been replaced by softly fading ground planes and irregular riverbanks. Foliage uses layered scalloped shapes and individual leaf marks rather than faceted spheres. Curved boat-canopy ink strokes now survive static geometry batching.
+
+A continuous accessible slider turns the camera within the same ±12-degree envelope; presets and reset remain available. “Ink & wash” / “Plain model” compares the pigment treatment on the same geometry. Hidden tabs stop rendering frames. This is procedural painting treatment, not a hand-painted texture set or a claim of fidelity to the original scroll. Physical-device performance and historical detail review remain pending.
