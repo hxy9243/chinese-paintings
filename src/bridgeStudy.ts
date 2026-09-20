@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { REFERENCE_AZIMUTH, scrollPoint } from "./scrollLayout";
 import {
   paintMaterial,
   paintingAmount,
@@ -9,10 +10,15 @@ import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 
 // A shallow, camera-constrained diorama. Hidden façades are intentionally plain.
 // The original passage runs from the near lower-left approach to the far upper-right.
-export const VIEW_ANGLE = THREE.MathUtils.degToRad(-50);
+export const VIEW_ANGLE = REFERENCE_AZIMUTH;
 export const TILT_LIMIT = 12;
 export const ELEVATION = Math.PI / 3.1;
 const ink = createDryInk();
+const riverInk = new THREE.LineBasicMaterial({
+  color: 0x798e80,
+  transparent: true,
+  opacity: 0.3,
+});
 const mat = paintMaterial;
 const wood = mat(0xa18a61),
   dark = mat(0x514a3b),
@@ -284,10 +290,25 @@ function batchStatic(group: THREE.Group) {
     { geometries: THREE.BufferGeometry[]; lines: boolean }
   >();
   group.traverse((obj) => {
-    if (!(obj instanceof THREE.Mesh || obj instanceof THREE.LineSegments))
-      return;
+    if (!(obj instanceof THREE.Mesh || obj instanceof THREE.Line)) return;
     const material = obj.material as THREE.Material;
     let geometry = obj.geometry.clone();
+    if (obj instanceof THREE.Line && !(obj instanceof THREE.LineSegments)) {
+      const source = geometry.getAttribute("position"),
+        positions: number[] = [];
+      for (let i = 0; i < source.count - 1; i++)
+        for (const index of [i, i + 1])
+          positions.push(
+            source.getX(index),
+            source.getY(index),
+            source.getZ(index),
+          );
+      geometry.dispose();
+      geometry = new THREE.BufferGeometry().setAttribute(
+        "position",
+        new THREE.Float32BufferAttribute(positions, 3),
+      );
+    }
     if (geometry.index) {
       const flat = geometry.toNonIndexed();
       geometry.dispose();
@@ -297,25 +318,16 @@ function batchStatic(group: THREE.Group) {
     geometry.deleteAttribute("uv");
     const batch = batches.get(material) ?? {
       geometries: [],
-      lines: obj instanceof THREE.LineSegments,
+      lines: obj instanceof THREE.Line,
     };
     batch.geometries.push(geometry);
     batches.set(material, batch);
   });
-  const retained: THREE.Line[] = [];
   group.traverse((obj) => {
-    if (obj instanceof THREE.Line && !(obj instanceof THREE.LineSegments)) {
-      const geometry = obj.geometry.clone().applyMatrix4(obj.matrixWorld);
-      retained.push(new THREE.Line(geometry, obj.material));
-      obj.geometry.dispose();
-    }
-  });
-  group.traverse((obj) => {
-    if (obj instanceof THREE.Mesh || obj instanceof THREE.LineSegments)
+    if (obj instanceof THREE.Mesh || obj instanceof THREE.Line)
       obj.geometry.dispose();
   });
   group.clear();
-  retained.forEach((obj) => group.add(obj));
   batches.forEach(({ geometries, lines }, material) => {
     const merged = mergeGeometries(geometries);
     geometries.forEach((g) => g.dispose());
@@ -368,6 +380,135 @@ function parasol(parent: THREE.Object3D, x: number, z: number) {
       0.007,
       dark,
     );
+  }
+}
+function ribbon(
+  parent: THREE.Group,
+  from: number,
+  to: number,
+  width: number,
+  depth: (s: number) => number,
+  material: THREE.Material,
+  y: number,
+) {
+  const vertices: number[] = [],
+    indices: number[] = [];
+  const count = Math.ceil((to - from) * 3);
+  for (let i = 0; i <= count; i++)
+    for (const side of [-1, 1]) {
+      const s = from + ((to - from) * i) / count;
+      const p = scrollPoint(s, depth(s) + (side * width) / 2);
+      vertices.push(p.x, y, p.z);
+    }
+  for (let i = 0; i < count; i++) {
+    const a = i * 2;
+    indices.push(a, a + 1, a + 2, a + 1, a + 3, a + 2);
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute("position", new THREE.Float32BufferAttribute(vertices, 3));
+  geo.setIndex(indices);
+  geo.computeVertexNormals();
+  mesh(parent, geo, material, 0, 0, 0, false);
+}
+function expandedScroll(parent: THREE.Group) {
+  const terrain = new THREE.Group();
+  ribbon(terrain, -62, 62, 16, () => 0, mat(0xd6c6a1, true), -0.08);
+  ribbon(
+    terrain,
+    7,
+    62,
+    3.5,
+    (s) => -1.1 + Math.sin(s * 0.09) * 1.4,
+    mat(0xc4bea7, true),
+    -0.045,
+  );
+  ribbon(
+    terrain,
+    -62,
+    -8,
+    2.1,
+    (s) => 0.7 + Math.sin(s * 0.17) * 0.65,
+    mat(0xe1d3b2, true),
+    -0.025,
+  );
+  ribbon(
+    terrain,
+    8,
+    62,
+    1.45,
+    (s) => 3.2 + Math.sin(s * 0.09),
+    mat(0xe1d3b2, true),
+    -0.025,
+  );
+  batchStatic(terrain);
+  parent.add(terrain);
+  // Separate material batches by district so offscreen neighborhoods can be culled.
+  for (const center of [-52, -37, -22, 19, 34, 49]) {
+    const district = new THREE.Group();
+    const urban = center < 0;
+    const count = urban ? 10 : center < 40 ? 5 : 3;
+    for (let i = 0; i < count; i++) {
+      const s =
+        center -
+        6 +
+        (i / Math.max(count - 1, 1)) * 12 +
+        Math.sin(i * 2.7 + center) * 0.4;
+      const depth =
+        (urban ? (i % 2 ? -2.5 : 4.25) : i % 2 ? 5.55 : -5.2) +
+        Math.sin(i * 1.9 + center) * 0.6;
+      const p = scrollPoint(s, depth);
+      building(
+        district,
+        p.x,
+        p.z,
+        0.65 + (i % 4) * 0.14,
+        (i % 4 === 0 ? Math.PI / 2 : 0) + Math.sin(i + center) * 0.1,
+      );
+      if (i % 2 === 0) {
+        const q = scrollPoint(s, urban ? 2.4 : 3.8);
+        stall(district, q.x, q.z, i % 3 === 0);
+      }
+    }
+    for (let i = 0; i < (urban ? 3 : 6); i++) {
+      const p = scrollPoint(center - 6 + i * 2.2, i % 2 ? 6.5 : -6.2);
+      tree(district, p.x, p.z, !urban && i % 4 === 0);
+    }
+    for (let i = 0; i < (urban ? 18 : 10); i++) {
+      const s = center - 6 + ((i * 0.79) % 12);
+      const d = urban
+        ? 0.7 + Math.sin(s * 0.17) * 0.65 + ((i % 3) - 1) * 0.5
+        : 3.2 + Math.sin(s * 0.09) + ((i % 3) - 1) * 0.3;
+      const p = scrollPoint(s, d);
+      const figure = person(district, i);
+      figure.position.set(p.x, 0.08, p.z);
+      figure.rotation.y =
+        REFERENCE_AZIMUTH + (i % 2 ? Math.PI / 2 : -Math.PI / 2);
+    }
+    if (urban) {
+      const p = scrollPoint(center, 2.6);
+      parasol(district, p.x, p.z);
+    } else {
+      for (let i = 0; i < 2; i++) {
+        const s = center - 3 + i * 5;
+        const p = scrollPoint(s, -1.1 + Math.sin(s * 0.09) * 1.4);
+        boat(district, p.x, p.z, i === 0);
+      }
+    }
+    if (center === -22) {
+      const gate = new THREE.Group();
+      const p = scrollPoint(-27, 0.7);
+      gate.position.copy(p);
+      gate.rotation.y = REFERENCE_AZIMUTH;
+      // Gate opening remains clear through the main street.
+      for (const side of [-1, 1])
+        box(gate, 1.25, 2.1, 2.3, 0, 1.05, side * 2.2, plaster);
+      box(gate, 1.25, 0.65, 6.7, 0, 2.42, 0, plaster);
+      building(gate, 0, 0, 1.1, Math.PI / 2);
+      gate.children[gate.children.length - 1].position.y = 2.75;
+      district.add(gate);
+    }
+    batchStatic(district);
+    parent.add(district);
   }
 }
 export function createBridgeStudy() {
@@ -432,11 +573,7 @@ export function createBridgeStudy() {
     group.add(
       new THREE.Line(
         new THREE.BufferGeometry().setFromPoints(points),
-        new THREE.LineBasicMaterial({
-          color: 0x798e80,
-          transparent: true,
-          opacity: 0.3,
-        }),
+        riverInk,
       ),
     );
   }
@@ -526,7 +663,12 @@ export function createBridgeStudy() {
     p.rotation.y = i % 2 ? 0 : Math.PI;
   }
   batchStatic(group);
-  const people = Array.from({ length: 8 }, (_, i) => person(group, i));
+  expandedScroll(group);
+  const people = Array.from({ length: 8 }, (_, i) => {
+    const p = person(group, i);
+    batchStatic(p);
+    return p;
+  });
   return {
     group,
     setPainting(enabled: boolean) {

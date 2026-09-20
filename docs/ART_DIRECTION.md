@@ -44,3 +44,12 @@ Most requests for transparent sprites returned an opaque checkerboard. A second 
 A masked copy of the fixed painting supplies the bridge’s foreground railing. The bridge route follows the visible deck; people are rendered between background and railing. The static landscape remains unmodified by the player.
 
 The three small character appearances are drawn with PixiJS graphics, matching the subdued ink palette; they are not generated walk-cycle sprite sheets.
+
+## Full-scroll comparison source
+
+The expanded scene includes a separately labeled 2D reproduction for direct comparison:
+https://commons.wikimedia.org/wiki/File:Alongtheriver_QingMing.jpg
+
+This record identifies Zhang Zeduan's Northern Song original in the Palace Museum and a public-domain faithful reproduction. Downloaded from `https://upload.wikimedia.org/wikipedia/commons/8/86/Alongtheriver_QingMing.jpg` (38,414 × 1,800). The bundled `public/reference/original-scroll.webp` preserves the full image and proportions, reduced to 16,000 px wide and WebP quality 85 for browser delivery. It loads only when the comparison dialog opens. No painted content was invented or retouched in this reproduction.
+
+The 3D districts are interpretive, modular scenery guided by the broad progression from country roads and river transport to the bridge, gate, and city streets. They are not measured placements or traced models of the full original. The 2D reproduction retains the painting's local perspective choices; the 3D interpretation cannot claim exact likeness.

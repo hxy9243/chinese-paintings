@@ -366,3 +366,80 @@
     width: 100%;
   }
 }
+.scroll-districts {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 22px 0 0;
+}
+.scroll-districts button {
+  font-size: 11px;
+  min-height: 38px;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 0 12px;
+}
+.scroll-districts button:last-child {
+  color: var(--red);
+}
+.original-scroll-dialog {
+  width: min(1200px, 95vw);
+  max-width: 95vw;
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  padding: 22px;
+}
+.original-scroll-dialog::backdrop {
+  background: #282b24aa;
+}
+.original-scroll-dialog header,
+.original-scroll-dialog footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.original-scroll-dialog h2 {
+  font: 20px var(--serif);
+}
+.original-scroll-dialog p {
+  font-size: 12px;
+  margin: 12px 0;
+}
+.original-strip {
+  overflow-x: auto;
+  max-width: 100%;
+  background: #d3bb88;
+  overscroll-behavior: contain;
+}
+.original-strip img {
+  display: block;
+  height: 350px;
+  width: auto;
+  max-width: none;
+}
+.original-scroll-dialog footer {
+  margin-top: 12px;
+  font-size: 11px;
+}
+@media (max-width: 700px) {
+  .scroll-districts {
+    gap: 4px;
+    margin-top: 16px;
+  }
+  .scroll-districts button {
+    padding: 0 8px;
+    font-size: 10px;
+  }
+  .original-scroll-dialog {
+    padding: 12px;
+  }
+  .original-scroll-dialog h2 {
+    font-size: 16px;
+  }
+  .original-strip img {
+    height: 270px;
+  }
+}

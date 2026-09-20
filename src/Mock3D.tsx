@@ -17,9 +17,11 @@ import {
 } from "./bridgeStudy";
 import "./mock3d.css";
 import { createInkFinish } from "./inkFinish";
+import { SCROLL_STOPS, scrollPoint } from "./scrollLayout";
 
 type StudyApi = {
   view: (angle: number) => void;
+  travel: (s: number, overview?: boolean) => void;
   zoom: (factor: number) => void;
   reset: () => void;
   painting: (enabled: boolean) => void;
@@ -28,6 +30,9 @@ type StudyApi = {
 export default function Mock3D() {
   const host = useRef<HTMLDivElement>(null),
     api = useRef<StudyApi | null>(null);
+  const originalDialog = useRef<HTMLDialogElement>(null),
+    originalStrip = useRef<HTMLDivElement>(null);
+  const [originalOpen, setOriginalOpen] = useState(false);
   const [lang, setLang] = useState<"en" | "zh">("en"),
     [angle, setAngle] = useState(0),
     [painted, setPainted] = useState(true),
@@ -63,7 +68,7 @@ export default function Mock3D() {
     const study = createBridgeStudy();
     scene.add(study.group);
     study.setPainting(true);
-    const camera = new THREE.OrthographicCamera(-12, 12, 9, -9, 0.1, 100);
+    const camera = new THREE.OrthographicCamera(-12, 12, 9, -9, 0.1, 250);
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableRotate = true;
     controls.minAzimuthAngle =
@@ -83,7 +88,7 @@ export default function Mock3D() {
     controls.enableDamping = false;
     controls.dampingFactor = 0.12;
     controls.screenSpacePanning = true;
-    controls.minZoom = 0.65;
+    controls.minZoom = 0.12;
     controls.maxZoom = 2.5;
     controls.mouseButtons.LEFT = THREE.MOUSE.ROTATE;
     controls.mouseButtons.RIGHT = THREE.MOUSE.PAN;
@@ -97,7 +102,7 @@ export default function Mock3D() {
           Math.max(-TILT_LIMIT, Math.min(TILT_LIMIT, degrees)),
         );
       const offset = new THREE.Vector3().setFromSphericalCoords(
-        25,
+        110,
         ELEVATION,
         azimuth,
       );
@@ -125,6 +130,15 @@ export default function Mock3D() {
     resize();
     api.current = {
       view: position,
+      travel(s, overview = false) {
+        controls.target.copy(scrollPoint(s));
+        controls.target.y = 0.5;
+        camera.zoom = overview
+          ? Math.min(1, (camera.right - camera.left) / 136)
+          : 1;
+        camera.updateProjectionMatrix();
+        position(0);
+      },
       painting(enabled) {
         paintingEnabled = enabled;
         study.setPainting(enabled);
@@ -133,7 +147,7 @@ export default function Mock3D() {
         inkSoftness = Math.max(0, Math.min(1, amount));
       },
       zoom(factor) {
-        camera.zoom = THREE.MathUtils.clamp(camera.zoom * factor, 0.65, 2.5);
+        camera.zoom = THREE.MathUtils.clamp(camera.zoom * factor, 0.12, 2.5);
         camera.updateProjectionMatrix();
       },
       reset() {
@@ -204,11 +218,39 @@ export default function Mock3D() {
           <h1>{t("A painting, gently turning.", "轻转画卷，墨色生息。")}</h1>
           <p>
             {t(
-              "Weathered silk, broken ink, and a gently turning scene.",
-              "旧绢淡彩，枯笔微晕，轻转一方烟火。",
+              "Explore a sixfold-longer riverside and city passage.",
+              "沿汴河入街市，展开六倍长卷。",
             )}
           </p>
         </div>
+        <nav
+          className="scroll-districts"
+          aria-label={t("Explore the long scroll", "游览长卷")}
+        >
+          {SCROLL_STOPS.map((stop) => (
+            <button
+              key={stop.id}
+              disabled={!ready}
+              onClick={() => api.current?.travel(stop.s)}
+            >
+              {lang === "en" ? stop.en : stop.zh}
+            </button>
+          ))}
+          <button
+            disabled={!ready}
+            onClick={() => api.current?.travel(0, true)}
+          >
+            {t("Whole scene", "全景")}
+          </button>
+          <button
+            onClick={() => {
+              setOriginalOpen(true);
+              originalDialog.current?.showModal();
+            }}
+          >
+            {t("Original scroll", "对照原作")}
+          </button>
+        </nav>
         <div className="study-stage" data-ready={ready} data-angle={angle}>
           <div ref={host} className="study-canvas" />
           {painted && <div className="study-paper" aria-hidden="true" />}
@@ -363,11 +405,79 @@ export default function Mock3D() {
           </p>
           <p>
             {t(
-              "Painting MVP · procedural pigment and layered foliage. Inspired by the scroll; detailed historical artwork is still to come.",
-              "绘画小样 · 程序化墨色与层叠树叶。取意原作，历史细节仍待精绘。",
+              "Expanded 3D interpretation, not an exact reconstruction. Compare with the original scroll to see its painted perspectives.",
+              "拓展立体小景，并非原作的精确复原。可对照原卷，查看各处绘画视角。",
             )}
           </p>
         </footer>
+        <dialog
+          ref={originalDialog}
+          className="original-scroll-dialog"
+          onClose={() => setOriginalOpen(false)}
+        >
+          <header>
+            <h2>
+              {t(
+                "The original handscroll · 2D reference",
+                "原作长卷 · 二维对照",
+              )}
+            </h2>
+            <button autoFocus onClick={() => originalDialog.current?.close()}>
+              {t("Close", "关闭")}
+            </button>
+          </header>
+          <p>
+            {t(
+              "This reproduction preserves the painting’s own perspective. Swipe horizontally or use the arrows to explore.",
+              "此复制图保留原作自身的绘画视角。横向滑动或使用箭头游览。",
+            )}
+          </p>
+          <div ref={originalStrip} className="original-strip">
+            {originalOpen && (
+              <img
+                src={`${import.meta.env.BASE_URL}reference/original-scroll.webp`}
+                alt={t(
+                  "Zhang Zeduan’s original Qingming handscroll",
+                  "张择端清明上河图原卷",
+                )}
+              />
+            )}
+          </div>
+          <footer>
+            <button
+              aria-label={t("Original left", "原作向左")}
+              onClick={() =>
+                originalStrip.current?.scrollBy({
+                  left: -600,
+                  behavior: "smooth",
+                })
+              }
+            >
+              ←
+            </button>
+            <a
+              href="https://commons.wikimedia.org/wiki/File:Alongtheriver_QingMing.jpg"
+              target="_blank"
+              rel="noreferrer"
+            >
+              {t(
+                "Zhang Zeduan · Palace Museum · public-domain reproduction",
+                "张择端 · 故宫博物院藏 · 公版复制图",
+              )}
+            </a>
+            <button
+              aria-label={t("Original right", "原作向右")}
+              onClick={() =>
+                originalStrip.current?.scrollBy({
+                  left: 600,
+                  behavior: "smooth",
+                })
+              }
+            >
+              →
+            </button>
+          </footer>
+        </dialog>
       </main>
     </div>
   );

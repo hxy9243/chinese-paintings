@@ -133,3 +133,66 @@ test("painting render supports bounded rotation and a plain-model comparison", a
   });
   expect(errors).toEqual([]);
 });
+
+test("long scroll districts, overview, and original reproduction are reachable", async ({
+  page,
+}) => {
+  const errors: string[] = [];
+  page.on("pageerror", (e) => errors.push(e.message));
+  page.on("console", (m) => {
+    if (m.type() === "error") errors.push(m.text());
+  });
+  await page.goto("/?view=3d");
+  await expect(page.locator(".study-stage")).toHaveAttribute(
+    "data-ready",
+    "true",
+    { timeout: 45000 },
+  );
+  for (const name of [
+    "City streets",
+    "City gate",
+    "River wharves",
+    "Country road",
+    "Whole scene",
+  ]) {
+    await page.getByRole("button", { name, exact: true }).click();
+    await expect(
+      page.getByRole("img", { name: "Rainbow Bridge constrained 3D study" }),
+    ).toBeVisible();
+  }
+  await page.screenshot({
+    path: `test-results/long-scroll-${test.info().project.name}.png`,
+    fullPage: true,
+  });
+  await page
+    .getByRole("button", { name: "Original scroll", exact: true })
+    .click();
+  const dialog = page.getByRole("dialog");
+  await expect(dialog).toBeVisible();
+  const img = dialog.getByRole("img");
+  await expect(img).toBeVisible();
+  await expect
+    .poll(() =>
+      img.evaluate(
+        (image: HTMLImageElement) => image.complete && image.naturalWidth > 0,
+      ),
+    )
+    .toBe(true);
+  await page
+    .getByRole("button", { name: "Original right", exact: true })
+    .click();
+  await expect
+    .poll(() => page.locator(".original-strip").evaluate((el) => el.scrollLeft))
+    .toBeGreaterThan(0);
+  await page.getByRole("button", { name: "Close", exact: true }).click();
+  await expect(dialog).not.toBeVisible();
+  await page
+    .getByRole("button", { name: "Rainbow Bridge", exact: true })
+    .click();
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  expect(errors).toEqual([]);
+});

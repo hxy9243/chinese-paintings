@@ -48,3 +48,11 @@ The authored center camera now looks from azimuth −50 degrees at the existing 
 The scene contains seven shops/houses with additional timber framing and tile rows, seven trees with finer bare twigs, six stalls, three ribbed parasols, two boats, 26 posed people, and eight moving people. Static crowds are batched with the scenery. Four pedestrians cross the bridge and four walk the bank lanes; their routes reverse instead of teleporting at the ends.
 
 Left-drag / one-finger drag rotates within ±12 degrees of the authored view. Elevation is fixed. Right-drag pans, wheel zooms, and two fingers pan/zoom. The rotation range slider was removed; the three view buttons remain for keyboard use. Ink softness remains adjustable.
+
+## Expanded handscroll
+
+The scene now spans 124 world units along the authored camera's horizontal axis (the previous bridge patch projected to about 20 units): approximately six times the prior visible length. `scrollLayout.ts` defines this basis and five destination points. The bridge remains at the center; six added districts extend city streets and a gate to the left, wharves and countryside to the right. This establishes a larger exploration MVP, not a historically exact reconstruction.
+
+District geometry is batched separately to permit offscreen culling. Ground fade bounds now cover the long composition. A longer camera distance and far plane prevent the ends clipping while turning. Zoom limits accommodate a whole-scene overview. Destination buttons restore an authored close view without shrinking all details to phone size. Mouse rotation and ±12 degree limits remain; no rotation range slider is reintroduced.
+
+“Original scroll” opens a native modal with a faithful 2D reproduction, horizontal browsing, attribution, keyboard-close support, and touch scrolling. It is explicitly labeled as 2D and is not represented as a 3D render. Exact reproduction remains a future asset/layout task requiring source-specific modeling and camera projection work.

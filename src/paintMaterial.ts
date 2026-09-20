@@ -31,7 +31,9 @@ export function paintMaterial(color: number, ground = false) {
         painted*=.86+wash*.23-pool*.12;
         painted*=mix(.96,1.02,max(0.,facing.y));
         vec3 result=mix(pigment*shade,painted,painting);
-        float edge=min((8.6-abs(point.x))/1.5,(5.8-abs(point.z))/1.3);
+        float scroll=point.x*.64278761+point.z*.76604444;
+        float depth=-point.x*.76604444+point.z*.64278761;
+        float edge=min((62.-abs(scroll))/2.5,(8.-abs(depth))/1.3);
         float alpha=ground>.5 ? smoothstep(0.,1.,edge+(wash-.5)*.3) : 1.;
         gl_FragColor=vec4(result,alpha);
         #include <tonemapping_fragment>
