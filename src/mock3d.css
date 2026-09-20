@@ -358,3 +358,11 @@
     font-size: 24px;
   }
 }
+.softness-control {
+  width: min(250px, 28%);
+}
+@media (max-width: 700px) {
+  .softness-control {
+    width: 100%;
+  }
+}

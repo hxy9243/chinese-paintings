@@ -16,12 +16,14 @@ import {
   VIEW_ANGLE,
 } from "./bridgeStudy";
 import "./mock3d.css";
+import { createInkFinish } from "./inkFinish";
 
 type StudyApi = {
   view: (angle: number) => void;
   zoom: (factor: number) => void;
   reset: () => void;
   painting: (enabled: boolean) => void;
+  softness: (amount: number) => void;
 };
 export default function Mock3D() {
   const host = useRef<HTMLDivElement>(null),
@@ -29,6 +31,7 @@ export default function Mock3D() {
   const [lang, setLang] = useState<"en" | "zh">("en"),
     [angle, setAngle] = useState(0),
     [painted, setPainted] = useState(true),
+    [softness, setSoftness] = useState(70),
     [ready, setReady] = useState(false),
     [error, setError] = useState(false);
   const t = (en: string, zh: string) => (lang === "en" ? en : zh);
@@ -42,7 +45,10 @@ export default function Mock3D() {
       return;
     }
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setClearColor(0xf0eadb, 0);
+    renderer.setClearColor(0x000000, 0);
+    const finish = createInkFinish(renderer);
+    let paintingEnabled = true,
+      inkSoftness = 0.7;
     renderer.domElement.setAttribute(
       "aria-label",
       "Rainbow Bridge constrained 3D study",
@@ -90,6 +96,7 @@ export default function Mock3D() {
         h = el.clientHeight;
       if (!w || !h) return;
       renderer.setSize(w, h);
+      finish.resize(w, h);
       const aspect = w / h;
       const span = Math.max(8.8, 11.4 / aspect);
       camera.left = -span * aspect;
@@ -103,7 +110,13 @@ export default function Mock3D() {
     resize();
     api.current = {
       view: position,
-      painting: study.setPainting,
+      painting(enabled) {
+        paintingEnabled = enabled;
+        study.setPainting(enabled);
+      },
+      softness(amount) {
+        inkSoftness = Math.max(0, Math.min(1, amount));
+      },
       zoom(factor) {
         camera.zoom = THREE.MathUtils.clamp(camera.zoom * factor, 0.65, 2.5);
         camera.updateProjectionMatrix();
@@ -124,7 +137,7 @@ export default function Mock3D() {
       last = now;
       controls.update();
       study.update(clock.getElapsedTime());
-      renderer.render(scene, camera);
+      finish.render(scene, camera, paintingEnabled ? inkSoftness : 0);
     };
     frame = requestAnimationFrame(animate);
     setReady(true);
@@ -141,13 +154,18 @@ export default function Mock3D() {
           materials.forEach((m) => m.dispose());
         }
       });
+      finish.dispose();
       renderer.dispose();
       renderer.domElement.remove();
       api.current = null;
     };
   }, []);
   return (
-    <div className="study-shell" data-painting={painted}>
+    <div
+      className="study-shell"
+      data-painting={painted}
+      data-softness={softness}
+    >
       <header className="study-header">
         <a href={import.meta.env.BASE_URL} className="study-back">
           <ArrowLeft size={17} />
@@ -171,8 +189,8 @@ export default function Mock3D() {
           <h1>{t("A painting, gently turning.", "轻转画卷，墨色生息。")}</h1>
           <p>
             {t(
-              "Soft washes, fine ink, and a little room to turn.",
-              "淡彩细墨之间，轻轻转动一方小景。",
+              "Weathered silk, broken ink, and a gently turning scene.",
+              "旧绢淡彩，枯笔微晕，轻转一方烟火。",
             )}
           </p>
         </div>
@@ -298,6 +316,29 @@ export default function Mock3D() {
             <span className="angle-extents">
               <span>−12°</span>
               <span>+12°</span>
+            </span>
+          </label>
+          <label className="angle-control softness-control">
+            <span>
+              {t("Ink softness", "墨色晕染")} <output>{softness}%</output>
+            </span>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              step="5"
+              value={softness}
+              disabled={!ready || !painted}
+              aria-label={t("Ink softness", "墨色晕染")}
+              onChange={(e) => {
+                const value = Number(e.target.value);
+                setSoftness(value);
+                api.current?.softness(value / 100);
+              }}
+            />
+            <span className="angle-extents">
+              <span>{t("Crisp", "清晰")}</span>
+              <span>{t("Diffuse", "晕开")}</span>
             </span>
           </label>
           <div

@@ -1,24 +1,25 @@
 import * as THREE from "three";
-import { paintMaterial, paintingAmount } from "./paintMaterial";
+import {
+  paintMaterial,
+  paintingAmount,
+  createDryInk,
+  brushEdges,
+} from "./paintMaterial";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 
 // A shallow, camera-constrained diorama. Hidden façades are intentionally plain.
 export const VIEW_ANGLE = Math.PI / 5;
 export const TILT_LIMIT = 12;
 export const ELEVATION = Math.PI / 3.1;
-const ink = new THREE.LineBasicMaterial({
-  color: 0x655d46,
-  transparent: true,
-  opacity: 0.42,
-});
+const ink = createDryInk();
 const mat = paintMaterial;
 const wood = mat(0xa18a61),
-  dark = mat(0x635e4d),
+  dark = mat(0x514a3b),
   plaster = mat(0xded2af),
-  roof = mat(0x8e917e);
+  roof = mat(0x827965);
 const linen = mat(0xc7b991),
-  green = mat(0x8c9771),
-  pale = mat(0xa8ad89);
+  green = mat(0x858167),
+  pale = mat(0xa49e7e);
 function mesh(
   parent: THREE.Object3D,
   geo: THREE.BufferGeometry,
@@ -31,8 +32,7 @@ function mesh(
   const m = new THREE.Mesh(geo, material);
   m.position.set(x, y, z);
   parent.add(m);
-  if (outline)
-    m.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo, 22), ink));
+  if (outline) m.add(new THREE.LineSegments(brushEdges(geo), ink));
   return m;
 }
 function box(
@@ -299,7 +299,7 @@ export function createBridgeStudy() {
   const river = mesh(
     group,
     new THREE.PlaneGeometry(17, 11.5),
-    mat(0xbdc3af, true),
+    mat(0xc4bea7, true),
     0,
     -0.03,
     0,
@@ -416,7 +416,6 @@ export function createBridgeStudy() {
     group,
     setPainting(enabled: boolean) {
       paintingAmount.value = enabled ? 1 : 0;
-      ink.opacity = enabled ? 0.42 : 0.65;
     },
     update(time: number) {
       people.forEach((p, i) => {

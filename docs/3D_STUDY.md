@@ -32,3 +32,11 @@ The default rendering now uses world-space procedural pigment: broad wash variat
 The board base has been replaced by softly fading ground planes and irregular riverbanks. Foliage uses layered scalloped shapes and individual leaf marks rather than faceted spheres. Curved boat-canopy ink strokes now survive static geometry batching.
 
 A continuous accessible slider turns the camera within the same ±12-degree envelope; presets and reset remain available. “Ink & wash” / “Plain model” compares the pigment treatment on the same geometry. Hidden tabs stop rendering frames. This is procedural painting treatment, not a hand-painted texture set or a claim of fidelity to the original scroll. Physical-device performance and historical detail review remain pending.
+
+## Weathered ink refinement
+
+Compared directly against the repository's original Rainbow Bridge crop: shift roof/foliage/river colors toward restrained warm browns, deepen the linework, break pen strokes with deterministic pigment gaps, subdivide outlines into slightly wavering segments, and add dry-brush gaps and pigment pooling to surface washes.
+
+An optional single offscreen finish pass spreads a small amount of nearby ink and adds fine silk fibers. Its resolution is capped at 1.5 times CSS pixels to limit phone cost. The bilingual **Ink softness** slider controls this pass (0–100%, default 70%); Plain model bypasses it, and 0% renders the painted geometry directly. The pass and its render target are disposed on unmount. Camera limits, editing saves, and the fixed composition are unchanged. Physical-device performance remains unverified.
+
+These effects bring the material closer to aged ink on silk. They do not replace the fine, reference-specific architectural drawing needed for a faithful recreation.
