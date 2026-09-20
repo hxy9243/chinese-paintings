@@ -9,7 +9,7 @@ export function createInkFinish(renderer: THREE.WebGLRenderer) {
     uniforms: {
       source: { value: target.texture },
       texel: { value: new THREE.Vector2(1, 1) },
-      paper: { value: new THREE.Color(0xf2eee3) },
+      paper: { value: new THREE.Color(0xeee5cb) },
       strength: { value: 0.65 },
     },
     vertexShader: `varying vec2 uvPoint;void main(){uvPoint=uv;gl_Position=vec4(position.xy,0.,1.);}`,

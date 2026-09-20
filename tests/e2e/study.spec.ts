@@ -134,7 +134,7 @@ test("painting render supports bounded rotation and a plain-model comparison", a
   expect(errors).toEqual([]);
 });
 
-test("long scroll districts, overview, and original reproduction are reachable", async ({
+test("selected passage focuses, overview, and supplied reference are reachable", async ({
   page,
 }) => {
   const errors: string[] = [];
@@ -149,11 +149,10 @@ test("long scroll districts, overview, and original reproduction are reachable",
     { timeout: 45000 },
   );
   for (const name of [
-    "City streets",
-    "City gate",
-    "River wharves",
-    "Country road",
-    "Whole scene",
+    "Bridge approach",
+    "Far-bank shops",
+    "River bend",
+    "Whole passage",
   ]) {
     await page.getByRole("button", { name, exact: true }).click();
     await expect(
@@ -161,11 +160,11 @@ test("long scroll districts, overview, and original reproduction are reachable",
     ).toBeVisible();
   }
   await page.screenshot({
-    path: `test-results/long-scroll-${test.info().project.name}.png`,
+    path: `test-results/passage-${test.info().project.name}.png`,
     fullPage: true,
   });
   await page
-    .getByRole("button", { name: "Original scroll", exact: true })
+    .getByRole("button", { name: "Reference crop", exact: true })
     .click();
   const dialog = page.getByRole("dialog");
   await expect(dialog).toBeVisible();
@@ -187,7 +186,7 @@ test("long scroll districts, overview, and original reproduction are reachable",
   await page.getByRole("button", { name: "Close", exact: true }).click();
   await expect(dialog).not.toBeVisible();
   await page
-    .getByRole("button", { name: "Rainbow Bridge", exact: true })
+    .getByRole("button", { name: "Bridge approach", exact: true })
     .click();
   expect(
     await page.evaluate(

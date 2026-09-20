@@ -53,3 +53,7 @@ https://commons.wikimedia.org/wiki/File:Alongtheriver_QingMing.jpg
 This record identifies Zhang Zeduan's Northern Song original in the Palace Museum and a public-domain faithful reproduction. Downloaded from `https://upload.wikimedia.org/wikipedia/commons/8/86/Alongtheriver_QingMing.jpg` (38,414 × 1,800). The bundled `public/reference/original-scroll.webp` preserves the full image and proportions, reduced to 16,000 px wide and WebP quality 85 for browser delivery. It loads only when the comparison dialog opens. No painted content was invented or retouched in this reproduction.
 
 The 3D districts are interpretive, modular scenery guided by the broad progression from country roads and river transport to the bridge, gate, and city streets. They are not measured placements or traced models of the full original. The 2D reproduction retains the painting's local perspective choices; the 3D interpretation cannot claim exact likeness.
+
+## Selected passage reference, September 20
+
+`public/reference/selected-passage.webp` is a WebP packaging copy (quality 92, unchanged dimensions/composition) of the user-provided `/home/kevin/Pictures/Screenshots/Screenshot from 2026-09-20 00-49-26.png`. This selected crop supersedes the full-scroll expansion as the active scene brief. Original work attribution remains Zhang Zeduan, Palace Museum; the supplied screenshot's yellow-brown rendering is the current palette guide. The original full-scroll reference remains archived but is no longer the comparison dialog's image.

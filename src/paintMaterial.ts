@@ -24,7 +24,7 @@ export function paintMaterial(color: number, ground = false) {
       void main(){
         float wash=noise(point*2.8)*.65+noise(point*10.)*.25+noise(point*90.)*.1;
         float shade=.75+.25*max(0.,dot(normalize(facing),normalize(vec3(-.6,1.,.8))));
-        vec3 paper=vec3(.84,.78,.64);
+        vec3 paper=vec3(.78,.68,.46);
         float pool=smoothstep(.43,.75,noise(point*15.));
         float dry=smoothstep(.62,.85,noise(point*vec3(90.,35.,65.)));
         vec3 painted=mix(pigment,paper,.03+wash*.12+dry*.12);
@@ -33,7 +33,7 @@ export function paintMaterial(color: number, ground = false) {
         vec3 result=mix(pigment*shade,painted,painting);
         float scroll=point.x*.64278761+point.z*.76604444;
         float depth=-point.x*.76604444+point.z*.64278761;
-        float edge=min((62.-abs(scroll))/2.5,(8.-abs(depth))/1.3);
+        float edge=min((22.-abs(scroll))/2.,(14.-abs(depth))/1.3);
         float alpha=ground>.5 ? smoothstep(0.,1.,edge+(wash-.5)*.3) : 1.;
         gl_FragColor=vec4(result,alpha);
         #include <tonemapping_fragment>
@@ -42,18 +42,18 @@ export function paintMaterial(color: number, ground = false) {
   });
 }
 
-export function createDryInk() {
+export function createDryInk(fade = 1) {
   return new THREE.ShaderMaterial({
     transparent: true,
     depthWrite: false,
-    uniforms: { painting: paintingAmount },
+    uniforms: { painting: paintingAmount, fade: { value: fade } },
     vertexShader: `varying vec3 point;void main(){vec4 world=modelMatrix*vec4(position,1.);point=world.xyz;gl_Position=projectionMatrix*viewMatrix*world;}`,
-    fragmentShader: `uniform float painting;varying vec3 point;
+    fragmentShader: `uniform float painting;uniform float fade;varying vec3 point;
       void main(){float grain=fract(sin(dot(floor(point*95.),vec3(127.1,311.7,74.7)))*43758.5453);
         float flow=.5+.5*sin(point.x*41.+point.y*29.+point.z*37.);
         float opacity=mix(.65,.28+flow*.40+grain*.18,painting);
         if(painting>.5 && grain>.92)opacity*=.22;
-        gl_FragColor=vec4(vec3(.095,.077,.05),opacity);
+        gl_FragColor=vec4(vec3(.095,.077,.05),opacity*fade);
         #include <tonemapping_fragment>
         #include <colorspace_fragment>
       }`,

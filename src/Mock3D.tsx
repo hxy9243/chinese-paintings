@@ -21,7 +21,7 @@ import { SCROLL_STOPS, scrollPoint } from "./scrollLayout";
 
 type StudyApi = {
   view: (angle: number) => void;
-  travel: (s: number, overview?: boolean) => void;
+  travel: (s: number, overview?: boolean, depth?: number) => void;
   zoom: (factor: number) => void;
   reset: () => void;
   painting: (enabled: boolean) => void;
@@ -88,13 +88,14 @@ export default function Mock3D() {
     controls.enableDamping = false;
     controls.dampingFactor = 0.12;
     controls.screenSpacePanning = true;
-    controls.minZoom = 0.12;
+    controls.minZoom = 0.5;
     controls.maxZoom = 2.5;
     controls.mouseButtons.LEFT = THREE.MOUSE.ROTATE;
     controls.mouseButtons.RIGHT = THREE.MOUSE.PAN;
     controls.touches.ONE = THREE.TOUCH.ROTATE;
     controls.touches.TWO = THREE.TOUCH.DOLLY_PAN;
-    controls.target.set(0, 0.5, 0);
+    controls.target.copy(scrollPoint(0, 0));
+    controls.target.y = 0.5;
     const position = (degrees: number) => {
       const azimuth =
         VIEW_ANGLE +
@@ -118,7 +119,7 @@ export default function Mock3D() {
       renderer.setSize(w, h);
       finish.resize(w, h);
       const aspect = w / h;
-      const span = Math.max(8.8, 11.4 / aspect);
+      const span = Math.max(8.8, 23 / aspect);
       camera.left = -span * aspect;
       camera.right = span * aspect;
       camera.top = span;
@@ -130,12 +131,10 @@ export default function Mock3D() {
     resize();
     api.current = {
       view: position,
-      travel(s, overview = false) {
-        controls.target.copy(scrollPoint(s));
+      travel(s, overview = false, depth = 0) {
+        controls.target.copy(scrollPoint(s, depth));
         controls.target.y = 0.5;
-        camera.zoom = overview
-          ? Math.min(1, (camera.right - camera.left) / 136)
-          : 1;
+        camera.zoom = overview ? 1 : 1.8;
         camera.updateProjectionMatrix();
         position(0);
       },
@@ -147,11 +146,12 @@ export default function Mock3D() {
         inkSoftness = Math.max(0, Math.min(1, amount));
       },
       zoom(factor) {
-        camera.zoom = THREE.MathUtils.clamp(camera.zoom * factor, 0.12, 2.5);
+        camera.zoom = THREE.MathUtils.clamp(camera.zoom * factor, 0.5, 2.5);
         camera.updateProjectionMatrix();
       },
       reset() {
-        controls.target.set(0, 0.5, 0);
+        controls.target.copy(scrollPoint(0, 0));
+        controls.target.y = 0.5;
         camera.zoom = 1;
         camera.updateProjectionMatrix();
         position(0);
@@ -218,8 +218,8 @@ export default function Mock3D() {
           <h1>{t("A painting, gently turning.", "轻转画卷，墨色生息。")}</h1>
           <p>
             {t(
-              "Explore a sixfold-longer riverside and city passage.",
-              "沿汴河入街市，展开六倍长卷。",
+              "Rainbow Bridge and the riverbanks, studied from your selected passage.",
+              "以所选画段为本，细看虹桥两岸。",
             )}
           </p>
         </div>
@@ -231,7 +231,7 @@ export default function Mock3D() {
             <button
               key={stop.id}
               disabled={!ready}
-              onClick={() => api.current?.travel(stop.s)}
+              onClick={() => api.current?.travel(stop.s, false, stop.depth)}
             >
               {lang === "en" ? stop.en : stop.zh}
             </button>
@@ -240,7 +240,7 @@ export default function Mock3D() {
             disabled={!ready}
             onClick={() => api.current?.travel(0, true)}
           >
-            {t("Whole scene", "全景")}
+            {t("Whole passage", "全景")}
           </button>
           <button
             onClick={() => {
@@ -248,7 +248,7 @@ export default function Mock3D() {
               originalDialog.current?.showModal();
             }}
           >
-            {t("Original scroll", "对照原作")}
+            {t("Reference crop", "对照原作")}
           </button>
         </nav>
         <div className="study-stage" data-ready={ready} data-angle={angle}>
@@ -405,8 +405,8 @@ export default function Mock3D() {
           </p>
           <p>
             {t(
-              "Expanded 3D interpretation, not an exact reconstruction. Compare with the original scroll to see its painted perspectives.",
-              "拓展立体小景，并非原作的精确复原。可对照原卷，查看各处绘画视角。",
+              "A modeled study of the selected passage: broad roofs, working boats, and small figures in yellowed-silk ink. Interpretive, not a traced replica.",
+              "选段立体习作：宽阔屋顶、行舟与小人物，施以旧绢墨色。取意原作，并非逐笔复刻。",
             )}
           </p>
         </footer>
@@ -417,10 +417,7 @@ export default function Mock3D() {
         >
           <header>
             <h2>
-              {t(
-                "The original handscroll · 2D reference",
-                "原作长卷 · 二维对照",
-              )}
+              {t("Your selected passage · 2D reference", "所选画段 · 二维对照")}
             </h2>
             <button autoFocus onClick={() => originalDialog.current?.close()}>
               {t("Close", "关闭")}
@@ -435,10 +432,10 @@ export default function Mock3D() {
           <div ref={originalStrip} className="original-strip">
             {originalOpen && (
               <img
-                src={`${import.meta.env.BASE_URL}reference/original-scroll.webp`}
+                src={`${import.meta.env.BASE_URL}reference/selected-passage.webp`}
                 alt={t(
-                  "Zhang Zeduan’s original Qingming handscroll",
-                  "张择端清明上河图原卷",
+                  "Selected Rainbow Bridge and riverbank passage",
+                  "所选虹桥与河岸画段",
                 )}
               />
             )}

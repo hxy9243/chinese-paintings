@@ -1,13 +1,11 @@
 import * as THREE from "three";
-export const SCROLL_HALF_LENGTH = 62;
-export const SCROLL_HALF_DEPTH = 8;
+export const SCROLL_HALF_LENGTH = 22;
+export const SCROLL_HALF_DEPTH = 14;
 export const REFERENCE_AZIMUTH = THREE.MathUtils.degToRad(-50);
 export const SCROLL_STOPS = [
-  { id: "city", s: -49, en: "City streets", zh: "城内街巷" },
-  { id: "gate", s: -27, en: "City gate", zh: "城门市集" },
-  { id: "bridge", s: 0, en: "Rainbow Bridge", zh: "虹桥" },
-  { id: "wharves", s: 24, en: "River wharves", zh: "汴河码头" },
-  { id: "country", s: 49, en: "Country road", zh: "郊野行旅" },
+  { id: "bridge", s: -6, depth: -3, en: "Bridge approach", zh: "虹桥市集" },
+  { id: "bank", s: 0, depth: -7, en: "Far-bank shops", zh: "对岸屋舍" },
+  { id: "bend", s: 12, depth: 1, en: "River bend", zh: "河湾舟楫" },
 ] as const;
 export function scrollPoint(s: number, depth = 0) {
   return new THREE.Vector3(

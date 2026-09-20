@@ -443,3 +443,7 @@
     height: 270px;
   }
 }
+.study-stage {
+  background: #eee5cb;
+  border-radius: 2px;
+}
