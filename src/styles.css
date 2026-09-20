@@ -784,7 +784,7 @@ dialog a {
     font-size: 6px;
     letter-spacing: 1.6px;
   }
-  .topbar nav > button:first-child span,
+  .topbar nav > button:first-of-type span,
   .share-top span,
   .nav-divider {
     display: none;
@@ -1044,4 +1044,13 @@ dialog a {
     top: 8px;
     bottom: auto;
   }
+}
+
+.study-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 8px;
+  text-decoration: none;
+  font-size: 11px;
 }

@@ -465,6 +465,9 @@ export default function App() {
           </div>
         </a>
         <nav>
+          <a className="study-link" href="?view=3d">
+            {t("3D study", "立体小样")}
+          </a>
           <button
             aria-label={t("The original", "原作")}
             onClick={() => setModal("reference")}

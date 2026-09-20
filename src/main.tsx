@@ -1,9 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App";
+const App = React.lazy(() =>
+  new URLSearchParams(window.location.search).get("view") === "3d"
+    ? import("./Mock3D")
+    : import("./App"),
+);
 import "./styles.css";
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <App />
+    <React.Suspense fallback={<div style={{ padding: 40 }}>清明小景…</div>}>
+      <App />
+    </React.Suspense>
   </React.StrictMode>,
 );
