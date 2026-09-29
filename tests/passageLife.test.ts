@@ -73,7 +73,7 @@ describe("life in the reference passage", () => {
     for (let i = 0; i < BOATS.length; i++) {
       let entered = false;
       let previous = boatPose(i, 0);
-      for (let time = 1; time <= 450; time++) {
+      for (let time = 1; time <= 1400; time++) {
         const pose = boatPose(i, time);
         if (Math.abs(pose.s - previous.s) > 1) {
           expect(Math.abs(pose.s)).toBeGreaterThan(22 + BOATS[i].length / 2);
@@ -181,6 +181,6 @@ describe("life in the reference passage", () => {
         n.geometry.dispose();
       }
     });
-    expect(draws).toBeLessThan(450);
+    expect(draws).toBeLessThan(650);
   });
 });

@@ -1,4 +1,13 @@
 import {
+  BANK_LOOPS,
+  bankCenter,
+  CART_ROUTES,
+  reserve,
+  roofClear,
+  type CartRoute,
+  PERSON_RADIUS,
+} from "./passageSpace";
+import {
   BOATS,
   BRIDGE,
   GROUND_Y,
@@ -6,7 +15,6 @@ import {
   bridgeHeight,
   bridgePoint,
   shoreDepth,
-  type BankSide,
   type PassagePoint,
 } from "./passageLayout";
 
@@ -52,52 +60,139 @@ export function insideRoof(p: PassagePoint, margin = 0) {
     );
   });
 }
-export function walkPose(index: number, time: number) {
-  const crossing = index < BRIDGE_WALKERS;
-  const phase =
-    (time * (crossing ? 0.014 : 0.006) + ((index * 0.61803398875) % 2)) % 2;
-  const forward = phase < 1,
-    leg = forward ? phase : 2 - phase;
-  const travel = Math.max(0, Math.min(1, (leg - 0.025) / 0.95));
-  const moving = leg > 0.025 && leg < 0.975;
-  if (crossing) {
-    const x = -BRIDGE.length / 2 + travel * BRIDGE.length;
+// Closed passing lanes: everyone keeps their spacing and turns on clear end caps.
+function laneLoop(phase: number, start: number, end: number, radius: number) {
+  const straight = end - start,
+    perimeter = 2 * straight + 2 * Math.PI * radius;
+  let q = ((phase % perimeter) + perimeter) % perimeter;
+  if (q < straight) return { s: start + q, lateral: -radius, angle: 0 };
+  q -= straight;
+  if (q < Math.PI * radius) {
+    const a = -Math.PI / 2 + q / radius;
     return {
-      ...bridgePoint(x, index % 2 ? 0.32 : -0.32),
-      y: bridgeHeight(x),
-      angle: BRIDGE.angle + (forward ? 0 : Math.PI),
-      moving,
+      s: end + radius * Math.cos(a),
+      lateral: radius * Math.sin(a),
+      angle: a + Math.PI / 2,
     };
   }
-  const side: BankSide = index % 2 ? "far" : "near";
-  const s = -20 + travel * 40;
-  const d = shoreDepth(side, s) + (side === "far" ? -0.13 : 0.28);
-  const slope =
-    (shoreDepth(side, s + 0.03) - shoreDepth(side, s - 0.03)) / 0.06;
+  q -= Math.PI * radius;
+  if (q < straight) return { s: end - q, lateral: radius, angle: Math.PI };
+  q -= straight;
+  const a = Math.PI / 2 + q / radius;
   return {
-    s,
-    d,
+    s: start + radius * Math.cos(a),
+    lateral: radius * Math.sin(a),
+    angle: a + Math.PI / 2,
+  };
+}
+export function walkPose(index: number, time: number) {
+  if (index < BRIDGE_WALKERS) {
+    const start = -BRIDGE.length / 2 + 0.8,
+      end = BRIDGE.length / 2 - 0.8;
+    const perimeter = 2 * (end - start) + 2 * Math.PI * 0.3;
+    const p = laneLoop(
+      time * 0.13 + (index / BRIDGE_WALKERS) * perimeter,
+      start,
+      end,
+      0.3,
+    );
+    return {
+      ...bridgePoint(p.s, p.lateral),
+      y: bridgeHeight(p.s),
+      angle: BRIDGE.angle + p.angle,
+      moving: true,
+    };
+  }
+  const k = index - BRIDGE_WALKERS;
+  // Alternate near/far banks while distributing six walkers over each half-bank loop.
+  const loop = BANK_LOOPS[(k % 2) * 2 + (Math.floor(k / 2) % 2)];
+  const perimeter = 2 * (loop.end - loop.start) + 2 * Math.PI * 0.2;
+  const p = laneLoop(
+    time * 0.12 + (Math.floor(k / 4) / 6) * perimeter,
+    loop.start,
+    loop.end,
+    0.2,
+  );
+  const slope =
+    (shoreDepth(loop.side, p.s + 0.01) - shoreDepth(loop.side, p.s - 0.01)) /
+    0.02;
+  return {
+    s: p.s,
+    d: bankCenter(loop.side, p.s) + p.lateral,
     y: GROUND_Y,
-    angle: Math.atan(slope) + (forward ? 0 : Math.PI),
+    angle: Math.atan2(
+      Math.sin(p.angle) + slope * Math.cos(p.angle),
+      Math.cos(p.angle),
+    ),
+    moving: true,
+  };
+}
+export const CARTS = CART_ROUTES;
+export function cartPose(index: number, time: number) {
+  const route: CartRoute = CART_ROUTES[index],
+    speed = 0.16,
+    travel = route.length / speed,
+    turn = 3.5;
+  const period = 2 * (travel + turn),
+    clock = time + index * 3.1;
+  const q = ((clock % period) + period) % period;
+  let along = 0,
+    angle = route.angle,
+    moving = false,
+    turning = false;
+  let traveled = Math.floor(clock / period) * 2 * route.length;
+  if (q < travel) {
+    along = q * speed;
+    traveled += along;
+    moving = true;
+  } else if (q < travel + turn) {
+    along = route.length;
+    traveled += route.length;
+    angle += (Math.PI * (q - travel)) / turn;
+    turning = true;
+  } else if (q < 2 * travel + turn) {
+    along = route.length - (q - travel - turn) * speed;
+    traveled += 2 * route.length - along;
+    angle += Math.PI;
+    moving = true;
+  } else {
+    traveled += 2 * route.length;
+    angle += Math.PI + (Math.PI * (q - 2 * travel - turn)) / turn;
+    turning = true;
+  }
+  return {
+    s: route.a.s + Math.cos(route.angle) * along,
+    d: route.a.d + Math.sin(route.angle) * along,
+    y: GROUND_Y,
+    angle,
     moving,
+    turning,
+    traveled,
   };
 }
 // Recycle beyond the frame, where the complete hull is invisible. The route
 // samples the entire hull length so even the largest boats clear bank bends.
 export function boatPose(index: number, time: number) {
   const b = BOATS[index];
-  const direction = index % 2 ? -1 : 1;
-  const speed = 0.16 + (index % 3) * 0.018;
-  const s = ((((b.s + 30 + direction * time * speed) % 60) + 60) % 60) - 30;
+  // A spaced convoy uses the narrow channel in one direction at a time.
+  // Direction changes only when every complete vessel is beyond the frame.
+  const speed = 0.18,
+    spacing = 10,
+    legDuration = (60 + (BOATS.length - 1) * spacing) / speed;
+  const clock = time + 300,
+    leg = Math.floor(clock / legDuration),
+    routePhase = clock % legDuration;
+  const direction = leg % 2 ? -1 : 1;
+  const s = direction * (-30 - index * spacing + speed * routePhase);
   let lower = -Infinity,
     upper = Infinity;
   for (let j = 0; j <= 32; j++) {
-    const x = s + (j / 32 - 0.5) * b.length;
+    const x = s + (j / 32 - 0.5) * b.length * 1.24;
     lower = Math.max(lower, shoreDepth("far", x));
     upper = Math.min(upper, shoreDepth("near", x));
   }
-  const margin = b.width * 0.66 + 0.15;
-  const fraction = index % 2 ? 0.32 : 0.68;
+  const margin = b.width * 0.7 + 0.1;
+  const fraction = 0.5;
   const d = lower + margin + (upper - lower - 2 * margin) * fraction;
   const phase = time * 0.34 + index * 1.71;
   return {
@@ -120,6 +215,57 @@ export function riverRipple(index: number, time: number) {
     length: (0.25 + (index % 5) * 0.13) * Math.sin(Math.PI * phase) ** 2,
   };
 }
+export const MARKET: (PassagePoint & { parasol: boolean })[] = [];
+for (let i = 0; i < 8; i++) {
+  const candidates: PassagePoint[] = [];
+  for (let s = -20; s <= 20; s += 0.55)
+    for (const side of ["near", "far"] as const)
+      for (let offset = 1.8; offset < 6.5; offset += 0.6)
+        candidates.push({
+          s,
+          d: shoreDepth(side, s) + (side === "near" ? 1 : -1) * offset,
+        });
+  const target = { s: i < 5 ? -11 + i : 3 + (i - 5) * 5, d: i < 5 ? 4.7 : -8 };
+  candidates.sort(
+    (a, b) =>
+      Math.hypot(a.s - target.s, a.d - target.d) -
+      Math.hypot(b.s - target.s, b.d - target.d),
+  );
+  const parasol = i % 3 === 0;
+  for (const p of candidates)
+    if (reserve(p, parasol ? 0.97 : 0.58, "market")) {
+      MARKET.push({ ...p, parasol });
+      break;
+    }
+}
+export const FEATURE_TREES: (PassagePoint & {
+  size: number;
+  form: "spreading" | "pollard" | "sapling";
+})[] = [];
+for (const [s, d] of [
+  [-19, 3],
+  [-14.1, 5],
+  [-5.8, -10],
+  [6.8, -11.5],
+  [8, 2.1],
+  [10.2, 4],
+  [6, 3.2],
+  [3.5, 4.8],
+  [12, 5.7],
+  [20.7, -8.5],
+]) {
+  const size =
+    s === 8 ? 1.18 : s === -19 ? 0.94 : 0.78 + Math.abs(Math.sin(s)) * 0.22;
+  const form =
+    s === 8 || s === -19
+      ? "spreading"
+      : s === 6 || s === 12
+        ? "pollard"
+        : "sapling";
+  const radius = (form === "spreading" ? 2.0 : 0.5) * size;
+  if (roofClear({ s, d }, size * 1.3) && reserve({ s, d }, radius, "tree"))
+    FEATURE_TREES.push({ s, d, size, form });
+}
 export type NatureKind = "bare" | "spring" | "willow" | "reed" | "rock";
 export const NATURE: (PassagePoint & { kind: NatureKind; size: number })[] = [];
 for (const side of ["near", "far"] as const)
@@ -138,29 +284,31 @@ for (const side of ["near", "far"] as const)
               : "reed";
     const d =
       shoreDepth(side, s) +
-      sign * (kind === "reed" || kind === "rock" ? 0.1 : 1.05);
+      sign * (kind === "reed" ? 0.18 : kind === "rock" ? 1.7 : 2.1);
     const p = {
       s,
       d,
       kind,
       size:
         kind === "reed" || kind === "rock"
-          ? 0.65 + (i % 4) * 0.12
+          ? 0.5 + (i % 4) * 0.08
           : 1.1 + (i % 4) * 0.18,
     };
-    // Keep the bridge approaches and all roofs clear.
-    const u =
-      (s - BRIDGE.center.s) * Math.cos(BRIDGE.angle) +
-      (d - BRIDGE.center.d) * Math.sin(BRIDGE.angle);
-    const v =
-      -(s - BRIDGE.center.s) * Math.sin(BRIDGE.angle) +
-      (d - BRIDGE.center.d) * Math.cos(BRIDGE.angle);
+    const radius =
+      kind === "reed"
+        ? 0.12
+        : kind === "rock"
+          ? 0.2
+          : kind === "willow"
+            ? p.size * 0.95
+            : 0.45 * p.size;
     if (
-      Math.abs(u) < BRIDGE.length / 2 + 1.4 &&
-      Math.abs(v) < BRIDGE.width / 2 + 0.65
+      roofClear(
+        p,
+        kind === "bare" || kind === "spring" ? p.size * 1.05 : radius,
+      ) &&
+      reserve(p, radius, kind)
     )
-      continue;
-    if (!insideRoof(p, kind === "reed" || kind === "rock" ? 0.12 : 0.8))
       NATURE.push(p);
   }
 
@@ -170,7 +318,10 @@ for (const side of ["near", "far"] as const)
     const s = -17 + i * 2;
     const d = (side === "far" ? -1 : 1) * (10.7 + (i % 3) * 0.8);
     const p = { s, d };
-    if (!insideRoof(p, 0.8))
+    if (
+      roofClear(p, 1.35 + (i % 3) * 0.2) &&
+      reserve(p, 0.45 * (1.35 + (i % 3) * 0.2), "tree")
+    )
       NATURE.push({
         ...p,
         kind: i % 4 === 0 ? "spring" : "bare",
@@ -178,11 +329,30 @@ for (const side of ["near", "far"] as const)
       });
   }
 
-export const CARTS = [
-  { s: -18, d: 1.0, angle: 0.24 },
-  { s: -14, d: 2.4, angle: 0.18 },
-  { s: -9.5, d: 4.4, angle: -0.45 },
-  { s: -4.5, d: -7.7, angle: 0.12 },
-  { s: -20, d: -7.2, angle: 0.11 },
-  { s: 12.3, d: 5.1, angle: 0.36 },
-];
+// Fill available grove sites before placing the stationary crowd. Crowns can
+// extend above the footpaths; conservative trunk/root discs keep traffic clear.
+for (
+  let i = 0;
+  i < 600 &&
+  NATURE.filter(
+    (n) => n.kind === "bare" || n.kind === "spring" || n.kind === "willow",
+  ).length < 30;
+  i++
+) {
+  const s = -20 + ((i * 1.73) % 40),
+    d = -12.6 + ((i * 2.37) % 25.2),
+    size = 1.15 + (i % 3) * 0.15;
+  const kind: NatureKind =
+    i % 7 === 0 ? "willow" : i % 3 === 0 ? "spring" : "bare";
+  const radius = (kind === "willow" ? 0.95 : 0.45) * size;
+  if (roofClear({ s, d }, size * 1.05) && reserve({ s, d }, radius, kind))
+    NATURE.push({ s, d, size, kind });
+}
+export const STATIC_PEOPLE: PassagePoint[] = [];
+for (let i = 0; i < 400 && STATIC_PEOPLE.length < 50; i++) {
+  const s = -20 + ((i * 0.731) % 40),
+    side = i % 3 ? "near" : "far";
+  const d =
+    shoreDepth(side, s) + (side === "near" ? 1 : -1) * (1.65 + (i % 7) * 0.6);
+  if (reserve({ s, d }, PERSON_RADIUS, "person")) STATIC_PEOPLE.push({ s, d });
+}

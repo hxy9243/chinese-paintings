@@ -108,3 +108,14 @@ Seven boat groups travel slowly in both directions. Two begin beyond the side ed
 Three labeled rotation sliders expose ±30° turning, tilting, and rolling. The default elevation is 35° so the full tilt range stays above ground. The interpretation remains a modeled study of the supplied passage.
 
 Validation: production build and 25 geometry/model/animation tests pass. Six desktop/mobile Chromium checks cover presets, all three axes, pan/zoom/reset, rendering styles, language, reference access, saved-painting preservation, and page overflow. The final framing gives tall crowns more space; a focused desktop rendering check verifies that adjustment. Physical-device performance remains unmeasured.
+
+
+## Moving horses and shared clearance — 2026-09-29
+
+Six horse carts now move along reserved routes, turn in clear spaces, and continue back along their routes. Horse legs, heads, and spoked wheels remain articulated after the rest of each cart is batched. Wheel rotation follows travel distance. All motion uses the existing scene clock, so Pause life, reduced-motion startup, and hidden-tab pausing also cover the carts.
+
+`passageSpace.ts` defines shared clearance around roof envelopes, bridge approaches, footpaths, trees, stalls, and posed figures. Route selection reserves the full swept cart footprint, including room to turn. Placement checks use trunk/root footprints for tall trees whose branches are above traffic, and full hanging-crown footprints for low willows. The resulting layout keeps eight market stalls and thirty grove trees, with displaced props repositioned into clear areas.
+
+Pedestrians follow spaced loops with separate passing lanes. Bank loops stop short of the bridge approaches; bridge walkers have their own two lanes, clear of the stationary observers. Some front-row buildings move inland to create usable footpaths. Boats share a spaced convoy at a common speed and alternate direction only after all vessels leave the frame. This prevents overtaking and opposing traffic in the narrow channel. Oars stay within the vessel clearance envelope and cabin masts are lowered to clear the timber arch.
+
+This is collision-free authored traffic for the fixed scene, using conservative footprints and reserved routes rather than a general rigid-body physics simulation. Tests sample twenty minutes of land traffic and more than twenty-three minutes of river traffic; check static spacing, bank and arch clearance, articulated cart bounds, pause behavior, and geometry reuse. The production build and all thirty unit tests pass. Desktop and mobile Chromium checks cover the rendered scene and its controls.

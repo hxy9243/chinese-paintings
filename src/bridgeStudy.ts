@@ -21,10 +21,13 @@ import {
   BUILDING_KINDS,
   NATURE,
   CARTS,
+  cartPose,
+  FEATURE_TREES,
+  MARKET,
+  STATIC_PEOPLE,
   WALKER_COUNT,
   RIPPLE_COUNT,
   boatPose,
-  insideRoof,
   walkPose,
   riverRipple,
   type BuildingKind,
@@ -378,7 +381,7 @@ function boat(parent: THREE.Object3D, x: number, z: number, cargo: boolean) {
       g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), ink));
     }
   }
-  beam(g, [0.3, 0.32, -0.7], [1.05, 0.1, -1.8], 0.022, dark);
+  beam(g, [0.3, 0.32, -0.7], [0.68, 0.1, -1.55], 0.022, dark);
 }
 function stall(
   parent: THREE.Object3D,
@@ -424,17 +427,31 @@ function horseCart(parent: THREE.Group, index: number) {
   // Horse faces local +x: rounded barrel, sloping neck, muzzle and alert ears.
   const body = mesh(g, new THREE.SphereGeometry(1, 10, 7), coat, 0.65, 0.65, 0);
   body.scale.set(0.48, 0.22, 0.2);
-  beam(g, [0.9, 0.68, 0], [1.12, 1.03, 0], 0.13, coat);
-  const head = mesh(g, new THREE.SphereGeometry(1, 8, 6), coat, 1.22, 1.02, 0);
+  const headGroup = new THREE.Group();
+  g.add(headGroup);
+  beam(headGroup, [0.9, 0.68, 0], [1.12, 1.03, 0], 0.13, coat);
+  const head = mesh(
+    headGroup,
+    new THREE.SphereGeometry(1, 8, 6),
+    coat,
+    1.22,
+    1.02,
+    0,
+  );
   head.scale.set(0.24, 0.12, 0.105);
   for (const z of [-0.075, 0.075])
-    beam(g, [1.12, 1.1, z], [1.1, 1.26, z], 0.025, coat);
+    beam(headGroup, [1.12, 1.1, z], [1.1, 1.26, z], 0.025, coat);
+  const legs: THREE.Group[] = [];
   for (const x of [0.35, 0.94])
     for (const z of [-0.14, 0.14]) {
-      const reach = z < 0 ? 0.09 : -0.09;
-      beam(g, [x, 0.59, z], [x + reach, 0.3, z], 0.04, coat);
-      beam(g, [x + reach, 0.3, z], [x - reach, 0.035, z], 0.029, coat);
-      box(g, 0.105, 0.06, 0.075, x - reach + 0.025, 0.03, z, dark);
+      const leg = new THREE.Group();
+      leg.position.set(x, 0.59, z);
+      leg.name = "horse-leg";
+      g.add(leg);
+      beam(leg, [0, 0, 0], [0.02, -0.29, 0], 0.04, coat);
+      beam(leg, [0.02, -0.29, 0], [0, -0.555, 0], 0.029, coat);
+      box(leg, 0.105, 0.06, 0.075, 0.025, -0.56, 0, coat);
+      legs.push(leg);
     }
   beam(g, [0.22, 0.72, 0], [0.04, 0.35, 0.03], 0.055, dark);
   beam(g, [0.94, 0.88, 0], [1.05, 1.12, 0], 0.045, dark);
@@ -445,26 +462,24 @@ function horseCart(parent: THREE.Group, index: number) {
     beam(g, [-0.58, 0.86, z / 2], [1.3, 1.02, z / 3], 0.008, dark);
   }
   box(g, 1.05, 0.1, 0.64, -0.85, 0.43, 0);
+  const wheels: THREE.Group[] = [];
   for (const z of [-0.31, 0.31]) {
     box(g, 1.08, 0.23, 0.04, -0.85, 0.58, z);
-    const wheel = mesh(
-      g,
-      new THREE.TorusGeometry(0.29, 0.025, 5, 16),
-      dark,
-      -0.94,
-      0.3,
-      z * 1.28,
-    );
+    const wheel = new THREE.Group();
+    wheel.position.set(-0.94, 0.3, z * 1.28);
+    wheel.name = "cart-wheel";
+    g.add(wheel);
+    mesh(wheel, new THREE.TorusGeometry(0.29, 0.025, 5, 16), dark);
     for (let j = 0; j < 10; j++) {
       const a = (j / 10) * Math.PI * 2;
       beam(
-        g,
-        [-0.94, 0.3, z * 1.28],
-        [-0.94 + Math.cos(a) * 0.28, 0.3 + Math.sin(a) * 0.28, z * 1.28],
+        wheel,
+        [0, 0, 0],
+        [Math.cos(a) * 0.28, Math.sin(a) * 0.28, 0],
         0.012,
       );
     }
-    wheel.name = "cart-wheel";
+    wheels.push(wheel);
   }
   if (index % 2) {
     const canopy = mesh(
@@ -492,7 +507,15 @@ function horseCart(parent: THREE.Group, index: number) {
   driver.scale.setScalar(0.65);
   driver.position.set(-0.42, 0.48, 0);
   driver.rotation.y = Math.PI / 2;
-  return g;
+  const animated = [...legs, ...wheels, headGroup];
+  animated.forEach((part) => g.remove(part));
+  batchStatic(g);
+  animated.forEach((part) => {
+    batchStatic(part);
+    g.add(part);
+  });
+  g.name = "horse-cart";
+  return { group: g, legs, wheels, head: headGroup };
 }
 // Batch the static model: details should not require hundreds of draw calls.
 function batchStatic(group: THREE.Group) {
@@ -567,7 +590,7 @@ function person(parent: THREE.Object3D, variant: number, walking = false) {
   }
   beam(g, [-0.06, 0.36, 0], [-0.12, 0.24, 0.04], 0.029, robe);
   beam(g, [0.06, 0.36, 0], [0.12, 0.24, 0.04], 0.029, robe);
-  if (variant % 4 === 0) {
+  if (!walking && variant % 4 === 0) {
     beam(g, [-0.3, 0.39, 0], [0.3, 0.39, 0], 0.014, dark);
     for (const side of [-1, 1]) {
       beam(g, [side * 0.27, 0.39, 0], [side * 0.27, 0.14, 0], 0.009, dark);
@@ -1021,7 +1044,7 @@ function workingBoat(
     for (let z = -length * 0.22; z < length * 0.23; z += 0.32)
       for (const side of [-1, 1])
         box(g, 0.02, 0.24, 0.18, side * width * 0.405, 0.53, z, dark);
-    beam(g, [0, 0.34, -length * 0.31], [0, 1.85, -length * 0.31], 0.025, dark);
+    beam(g, [0, 0.34, -length * 0.31], [0, 1.1, -length * 0.31], 0.025, dark);
     beam(
       g,
       [-width * 0.45, 0.85, -length * 0.31],
@@ -1184,80 +1207,33 @@ export function createBridgeStudy() {
       BUILDING_KINDS[index],
     );
   }
-  for (const [s, d] of [
-    [-19, 3],
-    [-14.1, 5],
-    [-5.8, -10],
-    [6.8, -11.5],
-    [8, 2.1],
-    [10.2, 4],
-    [6, 3.2],
-    [3.5, 4.8],
-    [12, 5.7],
-    [20.7, -8.5],
-  ]) {
-    const side = d < -5 ? "far" : "near";
-    const safeDepth =
-      side === "far"
-        ? Math.min(d, shoreDepth(side, s) - 0.25)
-        : Math.max(d, shoreDepth(side, s) + 0.3);
-    if (insideRoof({ s, d: safeDepth }, 0.3)) continue;
-    const p = scrollPoint(s, safeDepth);
-    const form: TreeForm =
-      s === 8 || s === -19
-        ? "spreading"
-        : s === 6 || s === 12
-          ? "pollard"
-          : "sapling";
-    const t = characterTree(group, p.x, p.z, form, s);
-    const size =
-      s === 8 ? 1.18 : s === -19 ? 0.94 : 0.78 + Math.abs(Math.sin(s)) * 0.22;
+  for (const { s, d, size, form } of FEATURE_TREES) {
+    const p = scrollPoint(s, d),
+      t = characterTree(group, p.x, p.z, form, s);
     t.scale.set(size * 1.15, size * 1.5, size * 1.15);
     t.rotation.y = s * 0.31;
   }
   riversideNature(group);
-  const market = [
-    [-10, 0.9],
-    [-11.9, 2.1],
-    [-9, 3.1],
-    [-8.3, 4.5],
-    [-6.5, 5.5],
-    [-12.8, 4.2],
-    [-6.3, -7.1],
-    [-5.9, -6.2],
-  ];
-  market.forEach(([s, d], i) => {
-    const side = d < -5 ? "far" : "near";
-    const safeDepth =
-      side === "far"
-        ? Math.min(d, shoreDepth(side, s) - 0.7)
-        : Math.max(d, shoreDepth(side, s) + 0.85);
-    const p = scrollPoint(s, safeDepth);
+  MARKET.forEach(({ s, d, parasol: covered }, i) => {
+    const p = scrollPoint(s, d);
     stall(group, p.x, p.z, i % 3 === 0);
-    if (i % 2 === 0) parasol(group, p.x + 0.4, p.z + 0.3);
+    if (covered) parasol(group, p.x + 0.4, p.z + 0.3);
   });
-  for (let i = 0; i < 50; i++) {
-    const onApproach = i < 34;
-    const s = onApproach
-      ? -12 + (i % 5) * 0.72 + Math.floor(i / 5) * 0.33
-      : -19 + (i - 34) * 2.4;
-    const d = onApproach
-      ? Math.max(1 + Math.floor(i / 5) * 0.78, shoreDepth("near", s) + 0.3)
-      : shoreDepth("far", s) - 0.15;
+  STATIC_PEOPLE.forEach(({ s, d }, i) => {
     const p = person(group, i);
     p.scale.setScalar(PERSON_SCALE);
     p.position.copy(scrollPoint(s, d));
     p.position.y = GROUND_Y;
     p.rotation.y = i * 1.7;
-  }
+  });
   for (let i = 0; i < 12; i++) {
     const x = -half + 0.4 + (i * (BRIDGE.length - 0.8)) / 11,
       p = person(bridge, i);
     p.scale.setScalar(PERSON_SCALE);
-    p.position.set(x, height(x), i % 2 ? 0.7 : -0.7);
+    p.position.set(x, height(x), i % 2 ? 0.9 : -0.9);
   }
-  CARTS.forEach((_, i) => horseCart(group, i));
   batchStatic(group);
+  const carts = CARTS.map((_, i) => horseCart(group, i));
   const boats = BOATS.map((b) => {
     const vessel = workingBoat(
       group,
@@ -1299,6 +1275,24 @@ export function createBridgeStudy() {
       paintingAmount.value = enabled ? 1 : 0;
     },
     update(time: number) {
+      carts.forEach((cart, i) => {
+        const pose = cartPose(i, time),
+          stride = pose.moving ? pose.traveled * 15 : time * 2.4;
+        cart.group.position.copy(scrollPoint(pose.s, pose.d));
+        cart.group.position.y = pose.y;
+        cart.group.rotation.y = REFERENCE_AZIMUTH - pose.angle;
+        cart.legs.forEach((leg, j) => {
+          leg.rotation.z =
+            Math.sin(stride + (j === 0 || j === 3 ? 0 : Math.PI)) *
+            (pose.moving ? 0.23 : pose.turning ? 0.12 : 0);
+        });
+        cart.wheels.forEach((wheel, j) => {
+          wheel.rotation.z =
+            -pose.traveled / (0.7 * 0.29) +
+            (pose.turning ? (pose.angle - CARTS[i].angle) * (j ? 1 : -1) : 0);
+        });
+        cart.head.position.y = Math.sin(stride) * 0.012;
+      });
       people.forEach((p, i) => {
         const pose = walkPose(i, time),
           stride = pose.moving ? Math.sin(time * (5 + (i % 3) * 0.3) + i) : 0;
@@ -1310,7 +1304,7 @@ export function createBridgeStudy() {
       });
       boats.forEach((vessel, i) => {
         const pose = boatPose(i, time);
-        vessel.visible = Math.abs(pose.s) < 22 + BOATS[i].length / 2 + 0.2;
+        vessel.visible = Math.abs(pose.s) < 22 + BOATS[i].length * 0.62 + 0.2;
         vessel.position.copy(scrollPoint(pose.s, pose.d));
         vessel.position.y = pose.y;
         vessel.rotation.set(

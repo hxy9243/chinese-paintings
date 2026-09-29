@@ -124,20 +124,20 @@ function waterfrontHall(
 // Low waterfront shops, rear warehouses, broad foreground roofs; heights are
 // relative to the same person scale rather than arbitrary per-object scaling.
 export const HALLS: HallLayout[] = [
-  waterfrontHall("far", -18, 4.4, 2.1, 0.85, 2.55),
-  waterfrontHall("far", -13.25, 3.8, 2.6, 1.05, 2.55),
+  waterfrontHall("far", -18, 4.4, 2.1, 0.85, 3.7),
+  waterfrontHall("far", -13.25, 3.8, 2.6, 1.05, 3.7),
   waterfrontHall("far", -9.2, 3, 2.2, 0.95, 1.6),
-  waterfrontHall("far", -0.7, 3.8, 2.7, 1.1, 2.55),
-  waterfrontHall("far", 3.45, 3.3, 2.3, 1, 2.55),
-  waterfrontHall("far", 9.7, 5.4, 3.1, 1.2, 0.65),
-  waterfrontHall("far", 15.5, 5.1, 2.9, 1, 0.65),
+  waterfrontHall("far", -0.7, 3.8, 2.7, 1.1, 3.7),
+  waterfrontHall("far", 3.45, 3.3, 2.3, 1, 3.7),
+  waterfrontHall("far", 9.7, 5.4, 3.1, 1.2, 1.4),
+  waterfrontHall("far", 15.5, 5.1, 2.9, 1, 1.4),
   waterfrontHall("near", -16.5, 4.8, 3.8, 1.15, 2.5),
   waterfrontHall("near", -10.4, 5.4, 3.8, 1.35, 3.9),
   waterfrontHall("near", -4.4, 5.2, 3.6, 1.2, 2.5),
   waterfrontHall("near", 1.05, 4.1, 3.5, 1.15, 3.5),
-  waterfrontHall("near", -1, 3.1, 2.1, 0.8, 0.8),
+  waterfrontHall("near", 2.6, 3.1, 2.1, 0.8, 1.35),
   ...[-17, -13, -0.9, 3.2].map((s) =>
-    waterfrontHall("far", s, 2.7, 1.3, 0.6, 0.25),
+    waterfrontHall("far", s, 2.7, 1.3, 0.6, 1.35),
   ),
 ];
 // Compact foreground street: matching roof axes and narrow gaps between eaves.
