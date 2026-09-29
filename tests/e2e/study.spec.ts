@@ -24,6 +24,10 @@ test("the home page opens the 3D study and preserves existing local data", async
   await expect(
     page.getByRole("img", { name: "Rainbow Bridge constrained 3D study" }),
   ).toBeVisible();
+  await expect(page.locator(".study-stage")).toHaveAttribute(
+    "data-angle",
+    "30",
+  );
   await page.getByRole("button", { name: "Left −30°", exact: true }).click();
   await expect(page.locator(".study-stage")).toHaveAttribute(
     "data-angle",
@@ -51,7 +55,7 @@ test("the home page opens the 3D study and preserves existing local data", async
   await page.getByRole("button", { name: "Zoom in", exact: true }).click();
   await page.getByRole("button", { name: "Reset view", exact: true }).click();
   await expect(
-    page.getByRole("button", { name: "Scroll view", exact: true }),
+    page.getByRole("button", { name: "Right +30°", exact: true }),
   ).toHaveAttribute("aria-pressed", "true");
   await expect(page.locator(".study-stage")).toHaveAttribute("data-pitch", "0");
   await expect(page.locator(".study-stage")).toHaveAttribute("data-roll", "0");
@@ -69,7 +73,10 @@ test("the home page opens the 3D study and preserves existing local data", async
     );
     await page.mouse.up({ button: "right" });
   }
-  await expect(page.locator(".study-stage")).toHaveAttribute("data-angle", "0");
+  await expect(page.locator(".study-stage")).toHaveAttribute(
+    "data-angle",
+    "30",
+  );
   await page
     .getByRole("button", { name: "Switch language / 切换语言" })
     .click();
@@ -144,7 +151,10 @@ test("painting render supports bounded rotation and a plain-model comparison", a
   );
   await page.getByRole("button", { name: "Ink & wash", exact: true }).click();
   await page.getByRole("button", { name: "Reset view", exact: true }).click();
-  await expect(page.locator(".study-stage")).toHaveAttribute("data-angle", "0");
+  await expect(page.locator(".study-stage")).toHaveAttribute(
+    "data-angle",
+    "30",
+  );
   await page.screenshot({
     path: `test-results/painting-${test.info().project.name}.png`,
     fullPage: true,
@@ -166,6 +176,13 @@ test("selected passage focuses, overview, and supplied reference are reachable",
     "true",
     { timeout: 45000 },
   );
+  const explorer = page.getByRole("button", {
+    name: "Explore the scroll",
+    exact: true,
+  });
+  await expect(explorer).toHaveAttribute("aria-expanded", "false");
+  await explorer.click();
+  await expect(explorer).toHaveAttribute("aria-expanded", "true");
   for (const name of [
     "Bridge approach",
     "Far-bank shops",

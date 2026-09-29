@@ -9,6 +9,7 @@ import {
   Rotate3D,
   Pause,
   Play,
+  ChevronDown,
 } from "lucide-react";
 import {
   createBridgeStudy,
@@ -41,11 +42,12 @@ export default function Mock3D() {
   pausedRef.current = paused;
   const [originalOpen, setOriginalOpen] = useState(false);
   const [lang, setLang] = useState<"en" | "zh">("en"),
-    [angle, setAngle] = useState(0),
+    [angle, setAngle] = useState(TILT_LIMIT),
     [pitch, setPitch] = useState(0),
     [roll, setRoll] = useState(0),
     [painted, setPainted] = useState(true),
     [softness, setSoftness] = useState(70),
+    [scrollControlsOpen, setScrollControlsOpen] = useState(false),
     [ready, setReady] = useState(false),
     [error, setError] = useState(false);
   const t = (en: string, zh: string) => (lang === "en" ? en : zh);
@@ -138,7 +140,11 @@ export default function Mock3D() {
       camera.lookAt(controls.target);
       controls.update();
     };
-    position(0, 0);
+    const defaultAngle = TILT_LIMIT;
+    const defaultZoom = 1.25;
+    camera.zoom = defaultZoom;
+    camera.updateProjectionMatrix();
+    position(defaultAngle, 0);
     const resize = () => {
       const w = el.clientWidth,
         h = el.clientHeight;
@@ -186,11 +192,11 @@ export default function Mock3D() {
       reset() {
         controls.target.copy(scrollPoint(0, 0));
         controls.target.y = 1.1;
-        camera.zoom = 1;
+        camera.zoom = defaultZoom;
         camera.updateProjectionMatrix();
         rollAngle = 0;
         setRoll(0);
-        position(0, 0);
+        position(defaultAngle, 0);
       },
     };
     let animationTime = 0;
@@ -251,56 +257,57 @@ export default function Mock3D() {
         </button>
       </header>
       <main className="study-main">
-        <div className="study-title">
-          <div className="eyebrow">
-            {t("RAINBOW BRIDGE · INK IN MOTION", "虹桥 · 墨韵流转")}
-          </div>
-          <h1>{t("A painting, gently turning.", "轻转画卷，墨色生息。")}</h1>
-          <p>
-            {t(
-              "Rainbow Bridge and the riverbanks, studied from your selected passage.",
-              "以所选画段为本，细看虹桥两岸。",
-            )}
-          </p>
-        </div>
-        <nav
-          className="scroll-districts"
-          aria-label={t("Explore the long scroll", "游览长卷")}
-        >
-          {SCROLL_STOPS.map((stop) => (
+        <section className="scroll-explorer">
+          <button
+            className="scroll-explorer-toggle"
+            aria-expanded={scrollControlsOpen}
+            aria-controls="scroll-district-controls"
+            onClick={() => setScrollControlsOpen((open) => !open)}
+          >
+            <span>{t("Explore the scroll", "游览长卷")}</span>
+            <ChevronDown size={15} aria-hidden="true" />
+          </button>
+          <nav
+            id="scroll-district-controls"
+            className="scroll-districts"
+            aria-label={t("Explore the long scroll", "游览长卷")}
+            hidden={!scrollControlsOpen}
+          >
+            {SCROLL_STOPS.map((stop) => (
+              <button
+                key={stop.id}
+                disabled={!ready}
+                onClick={() => api.current?.travel(stop.s, false, stop.depth)}
+              >
+                {lang === "en" ? stop.en : stop.zh}
+              </button>
+            ))}
             <button
-              key={stop.id}
               disabled={!ready}
-              onClick={() => api.current?.travel(stop.s, false, stop.depth)}
+              onClick={() => api.current?.travel(0, true)}
             >
-              {lang === "en" ? stop.en : stop.zh}
+              {t("Whole passage", "全景")}
             </button>
-          ))}
-          <button
-            disabled={!ready}
-            onClick={() => api.current?.travel(0, true)}
-          >
-            {t("Whole passage", "全景")}
-          </button>
-          <button
-            disabled={!ready}
-            aria-pressed={paused}
-            onClick={() => setPaused((value) => !value)}
-          >
-            {paused ? <Play size={14} /> : <Pause size={14} />}
-            {paused
-              ? t("Resume life", "继续生息")
-              : t("Pause life", "暂停生息")}
-          </button>
-          <button
-            onClick={() => {
-              setOriginalOpen(true);
-              originalDialog.current?.showModal();
-            }}
-          >
-            {t("Reference crop", "对照原作")}
-          </button>
-        </nav>
+            <button
+              disabled={!ready}
+              aria-pressed={paused}
+              onClick={() => setPaused((value) => !value)}
+            >
+              {paused ? <Play size={14} /> : <Pause size={14} />}
+              {paused
+                ? t("Resume life", "继续生息")
+                : t("Pause life", "暂停生息")}
+            </button>
+            <button
+              onClick={() => {
+                setOriginalOpen(true);
+                originalDialog.current?.showModal();
+              }}
+            >
+              {t("Reference crop", "对照原作")}
+            </button>
+          </nav>
+        </section>
         <div
           className="study-stage"
           data-ready={ready}
@@ -351,7 +358,7 @@ export default function Mock3D() {
               disabled={!ready}
               onClick={() => {
                 api.current?.reset();
-                setAngle(0);
+                setAngle(TILT_LIMIT);
               }}
             >
               <RotateCcw size={16} />
