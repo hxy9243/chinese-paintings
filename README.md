@@ -1,6 +1,8 @@
-# 清明小景 · The Living Handscroll
+# 清明小景 · Living Ink
 
-A small, bilingual 2.5D scene-building toy inspired by the Rainbow Bridge passage in Zhang Zeduan’s **Along the River During the Qingming Festival**.
+An interactive 3D ink study of the Rainbow Bridge passage in Zhang Zeduan’s **Along the River During the Qingming Festival**.
+
+The home page opens the 3D scene directly. Older `?view=3d` links still work. The former 2D painting editor has been removed; existing browser save data is not changed.
 
 ## Run
 
@@ -9,48 +11,30 @@ Node.js 22.12+ (Node 24 recommended).
 ```sh
 npm ci
 npm run dev
-```
-
-Open the local address printed by Vite. To try it on a phone on the same network, use the network address. Production sharing requires HTTPS; image download remains available when native sharing is unsupported.
-
-```sh
 npm test
 npx playwright install chromium
 npm run test:e2e
 npm run build
-npm run preview
 ```
 
-Deploy the generated `dist/` directory on a static HTTPS host. Vite uses relative asset URLs so deployment beneath a subdirectory is supported. No backend, credentials, or accounts are needed. The private Sites hosting project is recorded in `.openai/hosting.json`. Public access remains disabled.
+Open the local address printed by Vite. The private Sites project is recorded in `.openai/hosting.json`; public access remains disabled.
 
-## Play
+## Explore
 
-New games begin with five editable houses and shops on the two riverbanks. Existing saved compositions, including empty ones, are preserved. Choose one of eight objects, tap a valid spot, and confirm. Tap an existing object to move it, switch its variation, or remove it. Buildings and stands attract a small population that follows the banks and crosses the bridge. Use the three-part guide or choose Free play.
-
-- Drag the background to pan; pinch or scroll to zoom.
-- Undo/redo also support Ctrl/Cmd+Z and Shift+Ctrl/Cmd+Z.
-- Pause freezes inhabitants; reduced-motion preference starts paused.
-- Reference composition temporarily displays a separate authored arrangement.
-- The original opens the sourced painting detail for comparison.
-- The 3D study includes varied courtyard/shop/warehouse architecture, shoreline planting, 36 walkers, drifting boats, and animated river ripples. Pause life freezes the motion; reduced-motion preference starts paused.
-- Share exports a 1080 × 1920 keepsake, with optional closer framing.
-- Local saves stay on this browser/device; a play link does **not** transfer the scene.
-- Invalid existing saves are retained until the user chooses to back them up and save the new composition.
+- Drag to turn and tilt; use the three sliders for ±30° rotation on each axis.
+- Right-drag to pan; pinch or scroll to zoom. Reset restores the authored view.
+- Focus on the bridge, far-bank shops, river bend, or whole passage.
+- Pause life freezes walkers, boats, and river ripples. Reduced-motion preference starts paused.
+- Compare the ink treatment with the plain model, and adjust ink softness.
+- Open the reference crop to compare with the original painting.
 
 ## Structure
 
-- `src/passageLayout.ts`: shared shorelines, bank-aligned building footprints, bridge landings, and relative scale for the 3D study.
-- `src/model.ts`: asset catalog, scene geometry, footprints, placement rules, validated versioned saves.
-- `src/Scene.tsx`: PixiJS world, depth, bridge occlusion, inhabitants, camera and pointer gestures.
-- `src/App.tsx`: bilingual editor, guide, history, persistence, dialogs and export.
-- `public/art/`: optimized production artwork. `art-sources/`: generated source artwork.
-- `docs/ART_DIRECTION.md`: provenance, production decisions and limitations.
-- `docs/IMAGE_PROMPTS.md`: built-in image-generation prompt set.
+- `src/Mock3D.tsx`: bilingual interface, camera, and animation clock.
+- `src/bridgeStudy.ts`: modeled bridge, buildings, trees, horse carts, figures, and boats.
+- `src/passageLayout.ts`: bank outlines, building footprints, bridge landings, and boat sizes.
+- `src/passageLife.ts`: walking routes, river traffic, ripples, and planting.
+- `src/paintMaterial.ts` and `src/inkFinish.ts`: pigment and ink rendering.
+- `docs/3D_STUDY.md`: implementation notes and historical changes.
 
-Artwork packaging is reproducible with `node scripts/package-art.mjs`. It resizes/encodes source files for delivery; it does not generate new artwork.
-
-## Scope and validation limits
-
-This is a simplified artistic interpretation, not an exact reconstruction. Terrain, bridge and paths are fixed. The inhabitants use small code-drawn ink figures in three clothing colors, with walking/idle motion. There is no live 3D, modular construction, economy, cloud save or multiplayer.
-
-Automated Chromium tests cover desktop and phone-sized touch contexts. Physical iOS Safari/Android Chrome performance, operating-system share sheets, and a five-person usability trial require real devices and participants. The 30 fps target must not be treated as physically verified merely because automated tests pass.
+This is an artistic interpretation of the supplied passage. Automated checks cover geometry, animation, and desktop/mobile Chromium interactions. Physical iOS/Android performance remains unmeasured.

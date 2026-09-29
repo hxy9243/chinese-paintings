@@ -11,13 +11,6 @@
   border-bottom: 1px solid var(--line);
   gap: 16px;
 }
-.study-back {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  text-decoration: none;
-  font-size: 12px;
-}
 .study-wordmark {
   font-family: var(--serif);
   letter-spacing: 3px;
@@ -208,9 +201,6 @@
   .study-header {
     height: 66px;
     gap: 4px;
-  }
-  .study-back {
-    font-size: 10px;
   }
   .study-wordmark {
     font-size: 16px;

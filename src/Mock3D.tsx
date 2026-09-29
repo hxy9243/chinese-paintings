@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import {
-  ArrowLeft,
   Minus,
   Plus,
   RotateCcw,
@@ -241,10 +240,6 @@ export default function Mock3D() {
       data-softness={softness}
     >
       <header className="study-header">
-        <a href={import.meta.env.BASE_URL} className="study-back">
-          <ArrowLeft size={17} />
-          <span>{t("Back to the painting", "返回画卷")}</span>
-        </a>
         <div className="study-wordmark">
           清明小景 <span> / {t("LIVING INK", "立体水墨")}</span>
         </div>
@@ -333,9 +328,7 @@ export default function Mock3D() {
                 "This browser could not open the 3D view.",
                 "此浏览器暂时无法显示立体小景。",
               )}{" "}
-              <a href={import.meta.env.BASE_URL}>
-                {t("Return to the painting", "返回画卷")}
-              </a>
+              <a href={import.meta.env.BASE_URL}>{t("Try again", "重试")}</a>
             </div>
           )}
           <div className="study-zoom">

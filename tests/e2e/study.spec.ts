@@ -1,19 +1,21 @@
 import { test, expect } from "@playwright/test";
 
-test("limited 3D views work without touching the saved painting", async ({
+test("the home page opens the 3D study and preserves existing local data", async ({
   page,
 }) => {
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto("/");
   const saved = await page.evaluate(() => JSON.stringify(localStorage));
-  await expect(page.getByRole("link", { name: "3D study" })).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Back to the painting" }),
+  ).toHaveCount(0);
+  await expect(page.locator(".scene-canvas")).toHaveCount(0);
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,
     ),
   ).toBe(true);
-  await page.getByRole("link", { name: "3D study" }).click();
   await expect(page.locator(".study-stage")).toHaveAttribute(
     "data-ready",
     "true",
@@ -95,7 +97,7 @@ test("painting render supports bounded rotation and a plain-model comparison", a
   page.on("console", (msg) => {
     if (msg.type() === "error") errors.push(msg.text());
   });
-  await page.goto("/?view=3d");
+  await page.goto("/");
   await expect(page.locator(".study-stage")).toHaveAttribute(
     "data-ready",
     "true",

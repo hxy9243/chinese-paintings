@@ -1,6 +1,6 @@
 # Limited-angle spatial study
 
-Open `?view=3d` from the editor's **3D study** link. This is a separate, read-only composition, not a conversion of a player's saved painting.
+The home page opens this 3D study directly. Older `?view=3d` links still work. The 2D painting editor has been removed; existing browser save data is left untouched. The original painting crop remains available for reference.
 
 ## Camera contract
 
