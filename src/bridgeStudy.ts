@@ -14,7 +14,6 @@ import {
   BOATS,
   BRIDGE,
   bridgeHeight,
-  bridgePoint,
   GROUND_Y,
   PERSON_SCALE,
 } from "./passageLayout";
@@ -38,11 +37,7 @@ import {
   type BuildingKind,
 } from "./passageLife";
 import { MOORED_BOATS, mooredBoatPose, mooringAnchor } from "./moorings";
-import {
-  STREET_HALF_WIDTH,
-  MAIN_STREET,
-  segmentDistance,
-} from "./passageSpace";
+import { MAIN_STREET, segmentDistance } from "./passageSpace";
 import { createCrowd } from "./crowd";
 import { idleMotion } from "./peopleMotion";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
@@ -402,12 +397,13 @@ function stall(
   z: number,
   covered: boolean,
   turn = REFERENCE_AZIMUTH,
+  size = 1,
 ) {
   const g = new THREE.Group();
   parent.add(g);
   g.position.set(x, GROUND_Y, z);
   g.rotation.y = turn;
-  g.scale.setScalar(0.55);
+  g.scale.setScalar(0.55 * size);
   box(g, 1.3, 0.1, 0.7, 0, 0.62, 0);
   for (const a of [-0.53, 0.53])
     for (const b of [-0.24, 0.24]) box(g, 0.05, 0.63, 0.05, a, 0.3, b);
@@ -1107,44 +1103,6 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
   river.rotation.x = -Math.PI / 2;
   bank(group, bankOutline("far"));
   bank(group, bankOutline("near"));
-  // A pale, continuous street leads into each bridge landing.
-  for (const [start, end] of [
-    [-18, -BRIDGE.length / 2],
-    [BRIDGE.length / 2, 18],
-  ]) {
-    const shape = new THREE.Shape();
-    [
-      [start, -STREET_HALF_WIDTH],
-      [end, -STREET_HALF_WIDTH],
-      [end, STREET_HALF_WIDTH],
-      [start, STREET_HALF_WIDTH],
-    ].forEach(([x, lateral], i) => {
-      const p = bridgePoint(x, lateral),
-        v = scrollPoint(p.s, p.d);
-      if (i === 0) shape.moveTo(v.x, -v.z);
-      else shape.lineTo(v.x, -v.z);
-    });
-    shape.closePath();
-    const material = mat(0xc4ad7e, true);
-    material.fragmentShader = material.fragmentShader.replace(
-      "void main(){",
-      `void main(){
-      float roadS=point.x*.64278761+point.z*.76604444;
-      float roadD=-point.x*.76604444+point.z*.64278761;
-      if(length(vec2(max(0.,abs(roadS)-16.),max(0.,abs(roadD)-8.)))>6.)discard;
-    `,
-    );
-    const street = mesh(
-      group,
-      new THREE.ShapeGeometry(shape),
-      material,
-      0,
-      GROUND_Y + 0.004,
-      0,
-      false,
-    );
-    street.rotation.x = -Math.PI / 2;
-  }
   const bridge = new THREE.Group();
   bridge.position.copy(scrollPoint(BRIDGE.center.s, BRIDGE.center.d));
   bridge.rotation.y = REFERENCE_AZIMUTH - BRIDGE.angle;
@@ -1278,7 +1236,7 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
     t.rotation.y = s * 0.31;
   }
   riversideNature(group);
-  MARKET.forEach(({ s, d, parasol: covered }, i) => {
+  MARKET.forEach(({ s, d, parasol: covered, size }, i) => {
     const p = scrollPoint(s, d);
     const lateral =
       -(s - BRIDGE.center.s) * Math.sin(BRIDGE.angle) +
@@ -1287,7 +1245,7 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
       segmentDistance({ s, d }, MAIN_STREET) < 5.5
         ? REFERENCE_AZIMUTH - BRIDGE.angle + (lateral > 0 ? Math.PI : 0)
         : REFERENCE_AZIMUTH + (d > 0 ? Math.PI : 0);
-    stall(group, p.x, p.z, i % 3 === 0, turn);
+    stall(group, p.x, p.z, i % 3 === 0, turn, size);
     if (covered) parasol(group, p.x + 0.4, p.z + 0.3);
   });
   batchStatic(group);

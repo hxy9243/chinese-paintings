@@ -122,11 +122,15 @@ export const CART_ROUTES: CartRoute[] = Array.from({ length: 6 }, (_, i) => ({
   length: 44,
   ...MAIN_STREET,
 }));
-export function trafficClear(p: PassagePoint, radius: number) {
+export function trafficClear(
+  p: PassagePoint,
+  radius: number,
+  streetClearance = STREET_HALF_WIDTH,
+) {
   return (
     walkingClear(p, radius) &&
     bridgeClear(p, radius) &&
-    segmentDistance(p, MAIN_STREET) > radius + STREET_HALF_WIDTH + 0.08
+    segmentDistance(p, MAIN_STREET) > radius + streetClearance + 0.08
   );
 }
 export const STATIC_OBSTACLES: Disc[] = [];
@@ -134,7 +138,7 @@ export function reserve(p: PassagePoint, radius: number, kind: string) {
   if (
     !dryDisc(p, radius) ||
     !roofClear(p, radius) ||
-    !trafficClear(p, radius) ||
+    !trafficClear(p, radius, kind === "shopper" ? 1.1 : STREET_HALF_WIDTH) ||
     STATIC_OBSTACLES.some(
       (other) => distance(p, other) < radius + other.radius + 0.08,
     )

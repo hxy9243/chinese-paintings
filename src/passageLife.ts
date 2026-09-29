@@ -191,7 +191,17 @@ export function riverRipple(index: number, time: number) {
 const willowGrove = reserve({ s: 19, d: -11 }, 1.1, "willow")
   ? [{ s: 19, d: -11, kind: "willow" as const, size: 1.15 }]
   : [];
-export const MARKET: (PassagePoint & { parasol: boolean })[] = [];
+export const MARKET: (PassagePoint & { parasol: boolean; size: number })[] = [];
+// Small roadside counters fill the street edges before the broader market.
+for (const lateral of [-2.55, 2.55, -3.75, 3.75, -4.85, 4.85]) {
+  for (let x = -15.7; x <= 11.7 && MARKET.length < 16; x += 1.2) {
+    if (Math.abs(x) < BRIDGE.length / 2 + 0.8) continue;
+    const p = bridgePoint(x, lateral);
+    if (reserve(p, 0.5, "market"))
+      MARKET.push({ ...p, parasol: false, size: 0.75 });
+  }
+}
+
 for (let i = 0; i < 28; i++) {
   const candidates: PassagePoint[] = [];
   for (let s = -20; s <= 20; s += 0.55)
@@ -213,22 +223,25 @@ for (let i = 0; i < 28; i++) {
   const parasol = i % 3 === 0;
   for (const p of candidates)
     if (reserve(p, parasol ? 0.97 : 0.7, "market")) {
-      MARKET.push({ ...p, parasol });
+      MARKET.push({ ...p, parasol, size: 1 });
       break;
     }
 }
 // Browsing spaces are reserved together with stalls, before planting the groves.
+export const SHOPPER_SPACE = 0.36;
+export const SHOPPER_WANDER = 0.18;
 export const SHOP_VISITORS: (PassagePoint & { shop: number })[] = [];
 MARKET.forEach((shop, index) => {
   let placed = 0;
-  for (let j = 0; j < 36 && placed < 4; j++) {
-    const angle = (j * Math.PI) / 18,
-      offset = (shop.parasol ? 0.97 : 0.7) + 0.44 + 0.12;
+  for (let j = 0; j < 48 && placed < 5; j++) {
+    const angle = (j * Math.PI) / 24,
+      offset =
+        (shop.size < 1 ? 0.5 : shop.parasol ? 0.97 : 0.7) + SHOPPER_SPACE + 0.1;
     const p = {
       s: shop.s + Math.cos(angle) * offset,
       d: shop.d + Math.sin(angle) * offset,
     };
-    if (reserve(p, 0.44, "shopper")) {
+    if (reserve(p, SHOPPER_SPACE, "shopper")) {
       SHOP_VISITORS.push({ ...p, shop: index });
       placed++;
     }
@@ -237,7 +250,7 @@ MARKET.forEach((shop, index) => {
 export function shopperPose(index: number, time: number, seed = 0) {
   const home = SHOP_VISITORS[index],
     shop = MARKET[home.shop],
-    p = wander(index + 300, time, 0.26, seed);
+    p = wander(index + 300, time, SHOPPER_WANDER, seed);
   const s = home.s + p.s,
     d = home.d + p.d;
   return {

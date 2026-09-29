@@ -28,7 +28,7 @@ describe("bridge market street", () => {
         );
     for (const p of STATIC_OBSTACLES)
       expect(segmentDistance(p, MAIN_STREET) - p.radius).toBeGreaterThan(
-        STREET_HALF_WIDTH + 0.07,
+        (p.kind === "shopper" ? 1.1 : STREET_HALF_WIDTH) + 0.07,
       );
     for (const p of [BRIDGE.near, BRIDGE.far])
       expect(segmentDistance(p, MAIN_STREET)).toBeLessThan(0.001);
@@ -54,16 +54,19 @@ describe("bridge market street", () => {
     }
   });
   it("adds market clusters beside the street with shoppers who both linger and move", () => {
-    expect(MARKET.length).toBeGreaterThanOrEqual(26);
-    expect(SHOP_VISITORS.length).toBeGreaterThanOrEqual(50);
+    expect(MARKET.length).toBeGreaterThanOrEqual(40);
+    expect(SHOP_VISITORS.length).toBeGreaterThanOrEqual(85);
     expect(
       MARKET.filter((p) => segmentDistance(p, MAIN_STREET) < 5.5).length,
-    ).toBeGreaterThanOrEqual(8);
+    ).toBeGreaterThanOrEqual(18);
     expect(
       MARKET.filter(
         (_, shop) => SHOP_VISITORS.filter((p) => p.shop === shop).length >= 3,
       ).length,
     ).toBeGreaterThanOrEqual(10);
+    expect(
+      SHOP_VISITORS.filter((p) => segmentDistance(p, MAIN_STREET) < 5.5).length,
+    ).toBeGreaterThanOrEqual(30);
     SHOP_VISITORS.forEach((_, i) => {
       let stopped = false,
         moving = false;

@@ -140,3 +140,8 @@ Four smaller vessels now remain beside the far-bank buildings in two clusters, f
 The bridge now leads into a continuous 3.7-unit main street on both banks, with houses moved or narrowed to face the route instead of blocking it. A pale earth surface makes both approaches visible. The bridge deck widens to 3.2 units, leaving room for a central cart lane, side pedestrian lanes, and spectators by the rails. Six one-way carts now follow the street over the arch; their elevation and pitch follow the deck, and recycling remains outside the rounded scene.
 
 Twenty-eight stalls replace eighteen, with 56 local shoppers arranged into browsing clusters. Street-side stalls face the approach. Smaller reserved browsing spaces permit denser groups while retaining random pauses, gentle idle motion, and separation from traffic. Thirty tall trees and the four far-bank moorings remain. Geometry tests verify a clear corridor through both landings, all roof and prop clearances, cart crossings, foot/body clearance, pedestrian lanes, and populated stall clusters.
+
+
+## Unified ground and denser roadsides — 2026-09-29
+
+Removed the separate road surface, so the street uses exactly the surrounding bank's ground material. Sixteen smaller roadside counters raise the total to 44 stalls, including 19 close to the main street. One hundred shoppers now occupy reserved browsing spaces, with 34 close to the street. Shoppers can stand along the street's outer edges while the central cart route and walking lanes stay clear. Smaller local wandering radii allow denser groups without overlapping figures or counters. All forty movement, layout, and clearance tests pass.

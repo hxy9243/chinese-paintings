@@ -6,6 +6,7 @@ import {
   WALKER_COUNT,
   STATIC_PEOPLE,
   SHOP_VISITORS,
+  SHOPPER_SPACE,
   MARKET,
   RESIDENT_SPACE,
   residentPose,
@@ -75,7 +76,7 @@ describe("independent activity and browsing", () => {
           (o) => o.s === home.s && o.d === home.d,
         )!;
         expect(own.radius).toBe(
-          homes === SHOP_VISITORS ? 0.44 : RESIDENT_SPACE,
+          homes === SHOP_VISITORS ? SHOPPER_SPACE : RESIDENT_SPACE,
         );
       });
     }
