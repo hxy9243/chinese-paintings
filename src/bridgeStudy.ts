@@ -32,7 +32,8 @@ import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 // The original passage runs from the near lower-left approach to the far upper-right.
 export const VIEW_ANGLE = REFERENCE_AZIMUTH;
 export const TILT_LIMIT = 12;
-export const ELEVATION = Math.PI / 3.1;
+// Polar angle: 28 degrees above ground, four degrees lower than before.
+export const ELEVATION = THREE.MathUtils.degToRad(62);
 const ink = createDryInk();
 const riverInk = createDryInk(0.38);
 const mat = paintMaterial;
@@ -512,42 +513,102 @@ function hall(
     return g;
   }
   box(g, w, h, depth, 0, h / 2, 0, kind === "warehouse" ? wood : plaster);
-  // Hipped tile roof: short ridge, broad roof planes, triangular hip ends.
+  // Low shop/warehouse gables contrast with broad hipped dwelling roofs.
+  // Restrained concave eaves follow the crop rather than pagoda silhouettes.
+  const gabled = kind === "warehouse" || kind === "shop";
   const e = w / 2 + 0.2,
-    f = depth / 2 + 0.23,
-    r = w * (kind === "warehouse" ? 0.48 : 0.29),
-    y = h + 0.1,
-    top = h + Math.min(0.55, depth * 0.21);
-  const geo = new THREE.BufferGeometry();
-  geo.setAttribute(
-    "position",
-    new THREE.Float32BufferAttribute(
-      [-e, y, -f, e, y, -f, e, y, f, -e, y, f, -r, top, 0, r, top, 0],
-      3,
-    ),
-  );
-  geo.setIndex([0, 4, 5, 0, 5, 1, 3, 2, 5, 3, 5, 4, 0, 3, 4, 1, 5, 2]);
-  geo.computeVertexNormals();
-  mesh(g, geo, roof);
-  for (let i = 0; i <= Math.ceil(w * 12); i++) {
-    const x = -e + (2 * e * i) / Math.ceil(w * 12),
-      rx = THREE.MathUtils.clamp(x, -r, r);
-    for (const side of [-1, 1])
-      beam(g, [rx, top + 0.008, 0], [x, y + 0.01, side * f], 0.006, dark);
-  }
-  for (let row = 1; row < 8; row++) {
-    const t = row / 8,
-      half = r + (e - r) * t;
-    for (const side of [-1, 1])
+    f = depth / 2 + 0.23;
+  const r = gabled ? e : w * 0.29;
+  const y = h + 0.1,
+    top = h + Math.min(0.64, depth * (gabled ? 0.28 : 0.23));
+  const roofY = (t: number) =>
+    top + (y - top) * t - Math.sin(t * Math.PI) * 0.065;
+  const positions: number[] = [];
+  const triangle = (a: number[], b: number[], c: number[]) =>
+    positions.push(...a, ...b, ...c);
+  for (const side of [-1, 1]) {
+    for (let row = 0; row < 10; row++) {
+      const t = row / 10,
+        u = (row + 1) / 10;
+      const a = r + (e - r) * t,
+        b = r + (e - r) * u;
+      const A = [-a, roofY(t), side * f * t],
+        B = [a, roofY(t), side * f * t];
+      const C = [b, roofY(u), side * f * u],
+        D = [-b, roofY(u), side * f * u];
+      triangle(A, B, C);
+      triangle(A, C, D);
+      if (!gabled) {
+        const P = [side * a, roofY(t), -f * t],
+          Q = [side * a, roofY(t), f * t];
+        const R = [side * b, roofY(u), f * u],
+          S = [side * b, roofY(u), -f * u];
+        triangle(P, Q, R);
+        triangle(P, R, S);
+      }
       beam(
         g,
-        [-half, top - (top - y) * t + 0.01, side * f * t],
-        [half, top - (top - y) * t + 0.01, side * f * t],
+        [-b, roofY(u) + 0.012, side * f * u],
+        [b, roofY(u) + 0.012, side * f * u],
         0.005,
         dark,
       );
+    }
+    for (let i = 0; i <= Math.ceil(w * 10); i++) {
+      const x = -e + (2 * e * i) / Math.ceil(w * 10),
+        rx = THREE.MathUtils.clamp(x, -r, r);
+      const points = Array.from({ length: 11 }, (_, j) => {
+        const t = j / 10;
+        return new THREE.Vector3(
+          rx + (x - rx) * t,
+          roofY(t) + 0.008,
+          side * f * t,
+        );
+      });
+      g.add(
+        new THREE.Line(new THREE.BufferGeometry().setFromPoints(points), ink),
+      );
+    }
+    beam(g, [-e, y - 0.025, side * f], [e, y - 0.025, side * f], 0.027, wood);
+    for (let x = -w / 2; x <= w / 2; x += 0.22)
+      beam(
+        g,
+        [x, y - 0.055, side * (f - 0.2)],
+        [x, y - 0.025, side * f],
+        0.017,
+        wood,
+      );
+    if (gabled) {
+      const end = new THREE.BufferGeometry().setAttribute(
+        "position",
+        new THREE.Float32BufferAttribute(
+          [
+            (side * w) / 2,
+            h,
+            -depth / 2,
+            (side * w) / 2,
+            top - 0.04,
+            0,
+            (side * w) / 2,
+            h,
+            depth / 2,
+          ],
+          3,
+        ),
+      );
+      end.computeVertexNormals();
+      mesh(g, end, kind === "warehouse" ? wood : plaster);
+      beam(g, [side * e, y, -f], [side * e, top, 0], 0.024, dark);
+      beam(g, [side * e, top, 0], [side * e, y, f], 0.024, dark);
+    }
   }
-  beam(g, [-r - 0.06, top + 0.025, 0], [r + 0.06, top + 0.025, 0], 0.027, dark);
+  const geo = new THREE.BufferGeometry().setAttribute(
+    "position",
+    new THREE.Float32BufferAttribute(positions, 3),
+  );
+  geo.computeVertexNormals();
+  mesh(g, geo, roof);
+  beam(g, [-r, top + 0.025, 0], [r, top + 0.025, 0], 0.028, dark);
   for (let i = 0; i <= Math.ceil(w / 0.6); i++) {
     const x = -w / 2 + (i * w) / Math.ceil(w / 0.6);
     box(g, 0.037, h, 0.035, x, h / 2, depth / 2 + 0.018, dark);
@@ -568,6 +629,26 @@ function hall(
       box(g, 0.035, h, 0.032, (side * w) / 2, h / 2, z, dark);
   box(g, w, 0.032, 0.035, 0, h * 0.28, depth / 2 + 0.04, dark);
   if (kind === "shop") {
+    // Hanging shop board and small wares remain within the roof overhang.
+    beam(
+      g,
+      [-w * 0.36, h * 0.9, depth / 2],
+      [-w * 0.36, h * 0.9, depth / 2 + 0.2],
+      0.016,
+      dark,
+    );
+    box(g, 0.18, h * 0.38, 0.025, -w * 0.36, h * 0.68, depth / 2 + 0.19, linen);
+    for (let i = 0; i < 5; i++) {
+      const x = -w * 0.34 + i * w * 0.17;
+      mesh(
+        g,
+        new THREE.CylinderGeometry(0.055, 0.045, 0.09, 8),
+        i % 2 ? linen : wood,
+        x,
+        h * 0.27,
+        depth / 2 + 0.14,
+      );
+    }
     // Deep dark shop bays, counter, and a restrained cloth valance under the eaves.
     for (const x of [-w * 0.3, 0, w * 0.3]) {
       box(g, w * 0.25, h * 0.7, 0.025, x, h * 0.42, depth / 2 + 0.05, dark);
@@ -578,6 +659,11 @@ function hall(
     box(g, w * 0.94, 0.09, 0.025, 0, h * 0.75, depth / 2 + 0.18, linen);
     box(g, 0.14, h * 0.57, 0.035, -w * 0.41, h * 0.65, depth / 2 + 0.09, linen);
   } else if (kind === "gallery") {
+    // Balcony corner posts and hanging lanterns distinguish larger tea halls.
+    for (const x of [-w * 0.44, w * 0.44]) {
+      beam(g, [x, 0, depth / 2 + 0.12], [x, h, depth / 2 + 0.12], 0.032);
+      box(g, 0.14, 0.19, 0.12, x, h * 0.76, depth / 2 + 0.13, linen);
+    }
     // Recessed upper gallery and a second shallow eave distinguish larger halls.
     box(g, w * 0.88, h * 0.3, 0.025, 0, h * 0.68, depth / 2 + 0.05, dark);
     box(g, w + 0.25, 0.055, depth + 0.28, 0, h * 0.48, 0, roof);
@@ -716,14 +802,54 @@ export function createBridgeStudy() {
     );
     plank.rotation.z = Math.atan2(height(x + dx / 2) - height(x - dx / 2), dx);
   }
+  // Staggered overlapping timber courses give the open arch its deep structure.
   for (const z of [-0.88, -0.44, 0, 0.44, 0.88]) {
-    for (let i = 0; i < 12; i++) {
-      const a = -half + (i * BRIDGE.length) / 12,
-        b = a + BRIDGE.length / 12;
-      beam(bridge, [a, height(a) - 0.2, z], [b, height(b) - 0.2, z], 0.07);
-      if (i < 11)
-        beam(bridge, [a, height(a) - 0.33, z], [b, height(b) - 0.13, z], 0.045);
+    for (let layer = 0; layer < 3; layer++) {
+      const count = 10,
+        step = BRIDGE.length / count;
+      for (let i = 0; i < count; i++) {
+        const a = -half + i * step,
+          b = Math.min(half, a + step * 1.24);
+        const inset = 0.14 + layer * 0.105;
+        beam(
+          bridge,
+          [a, height(a) - inset, z],
+          [b, height(b) - inset, z],
+          0.064,
+          layer === 1 ? dark : wood,
+        );
+      }
     }
+  }
+  // Paired outer arch bands and transverse tie logs; no piers in the channel.
+  for (let i = 0; i < 24; i++) {
+    const a = -half + (i * BRIDGE.length) / 24,
+      b = a + BRIDGE.length / 24;
+    for (const side of [-1, 1]) {
+      const z = side * (BRIDGE.width / 2 + 0.035);
+      for (const inset of [0.12, 0.38])
+        beam(
+          bridge,
+          [a, height(a) - inset, z],
+          [b, height(b) - inset, z],
+          0.052,
+        );
+      if (i % 2 === 0)
+        beam(
+          bridge,
+          [a, height(a) - 0.38, z],
+          [b, height(b) - 0.12, z],
+          0.038,
+          dark,
+        );
+    }
+    if (i % 2 === 0)
+      beam(
+        bridge,
+        [a, height(a) - 0.25, -BRIDGE.width / 2 - 0.12],
+        [a, height(a) - 0.25, BRIDGE.width / 2 + 0.12],
+        0.065,
+      );
   }
   for (let i = 0; i <= 16; i++) {
     const x = -half + (i * BRIDGE.length) / 16;

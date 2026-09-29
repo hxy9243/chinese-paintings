@@ -134,7 +134,7 @@ export const BRIDGE = {
   near,
   far,
   width: 2.05,
-  rise: 1.55,
+  rise: 2.05,
   length: Math.hypot(far.s - near.s, far.d - near.d),
   angle: Math.atan2(far.d - near.d, far.s - near.s),
   center: { s: (near.s + far.s) / 2, d: (near.d + far.d) / 2 },

@@ -84,3 +84,11 @@ Sparse spring trees, drooping willows, additional bare trees, low reeds, and irr
 Thirty-six moving figures replace the previous eight: twelve cross the bridge and twenty-four follow both banks. Articulated legs, small body movement, varied stride phases, and brief endpoint pauses complement the existing posed crowd. Five separately batched boat groups drift, bob, and rock on bounded routes. A single reusable line buffer animates 120 short ink ripples across the channel. Boat motion is intentionally small so the composition and navigable clearances remain stable.
 
 **Pause life / Resume life** freezes all scene motion together. Reduced-motion preference starts paused; hidden tabs do not advance animation time. Tests sample full walking and boat-motion cycles, check planting and ripple clearance, and exercise the actual scene's moving geometry, local boat transforms, stable buffers, pause behavior, and draw-object budget. Browser and physical-device performance have not been measured for this update.
+
+## Reference refinement — 2026-09-28
+
+Compared against the supplied bridge crop again: the deck's former 1.55-unit rise and thin understructure understated the rainbow silhouette. The rise is now 2.05 units, with three overlapping timber courses, paired outer arch bands, diagonal connections, and projecting transverse ties. The same bridgeHeight function drives decking and pedestrians; bank anchors and pier-free navigation remain unchanged. This is a visual approximation, not a structural reconstruction of the historical woven-timber joints.
+
+Shop and warehouse roofs now have full-length ridges and closed gable ends. Dwellings retain shorter hipped ridges; courtyard wings and balconied halls remain distinct. All roof planes use shallow concavity, with tile courses following that profile, eave fascias and exposed rafters. Shops gain hanging boards and counter wares; galleries gain corner posts and lanterns. New façade details remain inside the existing roof envelopes.
+
+The fixed camera is lowered from about 31.9° to 28° above the ground. Azimuth, ±12° rotation limits, warm ink materials, shoreline layout, and the source comparison remain unchanged. Production build and all 22 geometry/model/animation tests pass; no browser or physical-device QA was performed for this revision.
