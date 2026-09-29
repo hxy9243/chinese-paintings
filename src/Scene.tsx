@@ -445,7 +445,10 @@ export default forwardRef<SceneHandle, Props>(function Scene(props, ref) {
                 { x: 610, y: 765 },
                 { x: 155, y: 110 },
               ];
-          for (const spot of spots)
+          for (const spot of spots.filter(
+            (spot) =>
+              !validatePlacement(assetId, spot, p.objects, movingObject?.id),
+          ))
             hints
               .ellipse(spot.x, spot.y, 38, 15)
               .stroke({ color: 0x7b7b58, alpha: 0.5, width: 1.3 });

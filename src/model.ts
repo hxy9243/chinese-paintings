@@ -73,8 +73,8 @@ export const ASSETS: AssetDefinition[] = [
     "trees",
     "Old river tree",
     "疏枝古木",
-    135,
-    123,
+    150,
+    137,
     25,
     18,
     "Fine, sparse branches along the riverbanks.",
@@ -85,8 +85,8 @@ export const ASSETS: AssetDefinition[] = [
     "trees",
     "Spring branches",
     "新绿疏林",
-    140,
-    120,
+    155,
+    133,
     28,
     20,
     "A lightly leafed variation of the bank-side tree form.",
@@ -97,8 +97,8 @@ export const ASSETS: AssetDefinition[] = [
     "boats",
     "River skiff",
     "小舟",
-    145,
-    73,
+    172,
+    87,
     111,
     27,
     "Low open hulls alongside larger river vessels.",
@@ -109,8 +109,8 @@ export const ASSETS: AssetDefinition[] = [
     "boats",
     "Covered boat",
     "篷船",
-    188,
-    91,
+    226,
+    109,
     151,
     38,
     "Arched woven covers on working boats near the bridge.",
@@ -121,8 +121,8 @@ export const ASSETS: AssetDefinition[] = [
     "stands",
     "Market table",
     "货摊",
-    89,
-    59,
+    66,
+    44,
     58,
     24,
     "Goods and baskets displayed along the bridge approach.",
@@ -133,8 +133,8 @@ export const ASSETS: AssetDefinition[] = [
     "stands",
     "Cloth canopy",
     "布棚",
-    122,
-    81,
+    92,
+    61,
     78,
     32,
     "Simple cloth awnings and roadside vendor shelters.",
@@ -226,6 +226,21 @@ export const EMPTY: SceneDocument = {
   objects: [],
   tutorialSkipped: false,
 };
+// A new game begins with an editable riverfront, while an explicitly saved
+// empty composition remains empty. Create fresh objects for every load.
+export function createStartingDocument(): SceneDocument {
+  return {
+    version: 1,
+    tutorialSkipped: false,
+    objects: [
+      { id: "start-house-west", assetId: "house", x: 350, y: 110 },
+      { id: "start-shop-far", assetId: "shop", x: 560, y: 125 },
+      { id: "start-house-far", assetId: "house", x: 790, y: 140 },
+      { id: "start-shop-near", assetId: "shop", x: 260, y: 610 },
+      { id: "start-house-near", assetId: "house", x: 650, y: 756 },
+    ],
+  };
+}
 export const STORAGE_KEY = "qingming-scene-v1";
 export function pointSegmentDistance(p: Point, a: Point, b: Point): number {
   const dx = b.x - a.x,
@@ -349,7 +364,10 @@ export function loadDocument(storage: Pick<Storage, "getItem">): {
 } {
   try {
     const raw = storage.getItem(STORAGE_KEY);
-    return { doc: raw ? parseDocument(raw) : EMPTY, error: false };
+    return {
+      doc: raw ? parseDocument(raw) : createStartingDocument(),
+      error: false,
+    };
   } catch {
     return { doc: EMPTY, error: true };
   }

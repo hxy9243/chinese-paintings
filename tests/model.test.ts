@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import {
   EMPTY,
+  createStartingDocument,
   SCENE,
   ASSETS,
   parseDocument,
@@ -50,6 +51,27 @@ describe("placement protects the painting", () => {
   });
 });
 describe("durable scenes", () => {
+  it("starts with editable houses on both banks and round trips them", () => {
+    const doc = loadDocument({ getItem: () => null }).doc;
+    expect(
+      doc.objects.filter((o) => o.assetId === "house").length,
+    ).toBeGreaterThanOrEqual(3);
+    expect(parseDocument(JSON.stringify(doc))).toEqual(doc);
+    const next = createStartingDocument();
+    doc.objects.pop();
+    expect(next.objects).toHaveLength(5);
+  });
+  it("preserves saved empty scenes and existing player compositions", () => {
+    for (const doc of [
+      EMPTY,
+      { ...EMPTY, objects: SCENE.referenceArrangement },
+    ]) {
+      expect(loadDocument({ getItem: () => JSON.stringify(doc) })).toEqual({
+        doc,
+        error: false,
+      });
+    }
+  });
   it("round trips the authored composition", () => {
     const d = { ...EMPTY, objects: SCENE.referenceArrangement };
     expect(parseDocument(JSON.stringify(d))).toEqual(d);

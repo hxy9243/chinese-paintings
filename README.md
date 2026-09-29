@@ -25,7 +25,7 @@ Deploy the generated `dist/` directory on a static HTTPS host. Vite uses relativ
 
 ## Play
 
-Choose one of eight objects, tap a valid spot, and confirm. Tap an existing object to move it, switch its variation, or remove it. Buildings and stands attract a small population that follows the banks and crosses the bridge. Use the three-part guide or choose Free play.
+New games begin with five editable houses and shops on the two riverbanks. Existing saved compositions, including empty ones, are preserved. Choose one of eight objects, tap a valid spot, and confirm. Tap an existing object to move it, switch its variation, or remove it. Buildings and stands attract a small population that follows the banks and crosses the bridge. Use the three-part guide or choose Free play.
 
 - Drag the background to pan; pinch or scroll to zoom.
 - Undo/redo also support Ctrl/Cmd+Z and Shift+Ctrl/Cmd+Z.
@@ -38,6 +38,7 @@ Choose one of eight objects, tap a valid spot, and confirm. Tap an existing obje
 
 ## Structure
 
+- `src/passageLayout.ts`: shared shorelines, bank-aligned building footprints, bridge landings, and relative scale for the 3D study.
 - `src/model.ts`: asset catalog, scene geometry, footprints, placement rules, validated versioned saves.
 - `src/Scene.tsx`: PixiJS world, depth, bridge occlusion, inhabitants, camera and pointer gestures.
 - `src/App.tsx`: bilingual editor, guide, history, persistence, dialogs and export.

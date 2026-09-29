@@ -6,6 +6,18 @@ import {
   createDryInk,
   brushEdges,
 } from "./paintMaterial";
+import {
+  bankOutline,
+  shoreDepth,
+  onBank,
+  HALLS,
+  BOATS,
+  BRIDGE,
+  bridgeHeight,
+  bridgePoint,
+  GROUND_Y,
+  PERSON_SCALE,
+} from "./passageLayout";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 
 // A shallow, camera-constrained diorama. Hidden façades are intentionally plain.
@@ -75,7 +87,7 @@ function beam(
 function tree(parent: THREE.Object3D, x: number, z: number, leafy: boolean) {
   const g = new THREE.Group();
   parent.add(g);
-  g.position.set(x, 0.14, z);
+  g.position.set(x, GROUND_Y, z);
   beam(g, [0, 0, 0], [0.12, 1.3, 0], 0.1);
   beam(g, [0.12, 1.3, 0], [-0.18, 2.4, 0.03], 0.057);
   for (let i = 0; i < 7; i++) {
@@ -139,7 +151,7 @@ function boat(parent: THREE.Object3D, x: number, z: number, cargo: boolean) {
   const g = new THREE.Group();
   parent.add(g);
   g.position.set(x, 0.09, z);
-  g.rotation.y = -0.15;
+  g.rotation.y = 0;
   const shape = new THREE.Shape();
   shape.moveTo(-0.48, -1.3);
   shape.quadraticCurveTo(-0.72, 0, -0.43, 1.22);
@@ -181,10 +193,18 @@ function boat(parent: THREE.Object3D, x: number, z: number, cargo: boolean) {
   }
   beam(g, [0.3, 0.32, -0.7], [1.05, 0.1, -1.8], 0.022, dark);
 }
-function stall(parent: THREE.Object3D, x: number, z: number, covered: boolean) {
+function stall(
+  parent: THREE.Object3D,
+  x: number,
+  z: number,
+  covered: boolean,
+  turn = REFERENCE_AZIMUTH,
+) {
   const g = new THREE.Group();
   parent.add(g);
-  g.position.set(x, 0.14, z);
+  g.position.set(x, GROUND_Y, z);
+  g.rotation.y = turn;
+  g.scale.setScalar(0.55);
   box(g, 1.3, 0.1, 0.7, 0, 0.62, 0);
   for (const a of [-0.53, 0.53])
     for (const b of [-0.24, 0.24]) box(g, 0.05, 0.63, 0.05, a, 0.3, b);
@@ -292,6 +312,12 @@ function person(parent: THREE.Object3D, variant: number) {
   return g;
 }
 function parasol(parent: THREE.Object3D, x: number, z: number) {
+  const g = new THREE.Group();
+  parent.add(g);
+  g.position.set(x, GROUND_Y, z);
+  g.scale.setScalar(0.7);
+  parent = g;
+  x = z = 0;
   beam(parent, [x, 0.08, z], [x, 1.15, z], 0.024, dark);
   mesh(parent, new THREE.ConeGeometry(0.62, 0.19, 16), linen, x, 1.18, z);
   for (let j = 0; j < 12; j++) {
@@ -319,7 +345,7 @@ function bank(parent: THREE.Group, outline: number[][]) {
     new THREE.ShapeGeometry(shape),
     mat(0xb09a6d, true),
     0,
-    0.015,
+    GROUND_Y,
     0,
     false,
   );
@@ -360,7 +386,7 @@ function hall(
   const g = new THREE.Group();
   parent.add(g);
   g.position.copy(scrollPoint(s, d));
-  g.position.y = 0.06;
+  g.position.y = GROUND_Y;
   g.rotation.y = turn;
   box(g, w, h, depth, 0, h / 2, 0, plaster);
   // Hipped tile roof: short ridge, broad roof planes, triangular hip ends.
@@ -368,7 +394,7 @@ function hall(
     f = depth / 2 + 0.23,
     r = w * 0.29,
     y = h + 0.1,
-    top = h + 0.72;
+    top = h + Math.min(0.55, depth * 0.21);
   const geo = new THREE.BufferGeometry();
   geo.setAttribute(
     "position",
@@ -453,7 +479,7 @@ function workingBoat(
   }
   for (const side of [-1, 1]) {
     const crew = person(g, side + 2);
-    crew.scale.setScalar(0.65);
+    crew.scale.setScalar(PERSON_SCALE);
     crew.position.set(0, 0.34, side * length * 0.34);
   }
   return g;
@@ -473,37 +499,14 @@ export function createBridgeStudy() {
     false,
   );
   river.rotation.x = -Math.PI / 2;
-  bank(group, [
-    [-22, -13],
-    [22, -13],
-    [22, -3.4],
-    [17, -4.2],
-    [11, -5],
-    [5, -5.5],
-    [-3.6, -5.8],
-    [-7, -6.8],
-    [-13, -6.8],
-    [-22, -5.8],
-  ]);
-  bank(group, [
-    [-22, -1.5],
-    [-16, 0.1],
-    [-11, 1.8],
-    [-8.4, -0.2],
-    [-6.5, 2.5],
-    [-3, 4],
-    [0, 4],
-    [4, 1.5],
-    [7, 0.7],
-    [10, 3],
-    [16, 5.4],
-    [22, 6],
-    [22, 14],
-    [-22, 14],
-  ]);
+  bank(group, bankOutline("far"));
+  bank(group, bankOutline("near"));
   // Quiet water strokes follow the broad bend rather than a straight channel.
   for (let i = 0; i < 180; i++) {
-    const p = scrollPoint(-21 + ((i * 0.731) % 42), -3.9 + ((i * 0.417) % 7));
+    const s = -21 + ((i * 0.731) % 42),
+      d = -3.9 + ((i * 0.417) % 7);
+    if (onBank("far", { s, d }) || onBank("near", { s, d })) continue;
+    const p = scrollPoint(s, d);
     const q = p.clone().add(scrollPoint(0.25 + (i % 3) * 0.14, 0.03));
     p.y = q.y = -0.02;
     group.add(
@@ -514,64 +517,108 @@ export function createBridgeStudy() {
     );
   }
   const bridge = new THREE.Group();
-  bridge.position.copy(scrollPoint(-6, -3));
+  bridge.position.copy(scrollPoint(BRIDGE.center.s, BRIDGE.center.d));
+  bridge.rotation.y = REFERENCE_AZIMUTH - BRIDGE.angle;
   group.add(bridge);
-  const height = (x: number) =>
-    0.15 + 1.65 * Math.cos(((x / 3.65) * Math.PI) / 2);
-  for (let i = 0; i < 40; i++) {
-    const x = -3.65 + ((i + 0.5) * 7.3) / 40,
-      dx = 7.3 / 40;
-    const plank = box(bridge, dx + 0.008, 0.1, 1.35, x, height(x), 0);
+  const height = bridgeHeight,
+    half = BRIDGE.length / 2;
+  // Broad transverse decking seated on five longitudinal timber ribs.
+  for (let i = 0; i < 56; i++) {
+    const dx = BRIDGE.length / 56,
+      x = -half + (i + 0.5) * dx;
+    const plank = box(
+      bridge,
+      dx + 0.008,
+      0.09,
+      BRIDGE.width,
+      x,
+      height(x) - 0.045,
+      0,
+    );
     plank.rotation.z = Math.atan2(height(x + dx / 2) - height(x - dx / 2), dx);
   }
-  for (const z of [-0.62, 0.62]) {
-    for (let i = 0; i < 14; i++) {
-      const a = -3.65 + (i * 7.3) / 14,
-        b = -3.65 + ((i + 1) * 7.3) / 14;
-      beam(bridge, [a, height(a) - 0.2, z], [b, height(b) - 0.2, z], 0.075);
-      beam(bridge, [a, height(a), z], [a, height(a) + 0.5, z], 0.035);
-      beam(bridge, [a, height(a) + 0.5, z], [b, height(b) + 0.5, z], 0.035);
-      beam(bridge, [a, height(a) + 0.26, z], [b, height(b) + 0.26, z], 0.025);
-      if (i < 13)
-        beam(bridge, [a, height(a) - 0.4, z], [b, height(b) - 0.08, z], 0.055);
+  for (const z of [-0.88, -0.44, 0, 0.44, 0.88]) {
+    for (let i = 0; i < 12; i++) {
+      const a = -half + (i * BRIDGE.length) / 12,
+        b = a + BRIDGE.length / 12;
+      beam(bridge, [a, height(a) - 0.2, z], [b, height(b) - 0.2, z], 0.07);
+      if (i < 11)
+        beam(bridge, [a, height(a) - 0.33, z], [b, height(b) - 0.13, z], 0.045);
     }
   }
-  // Far-bank warehouses, low riverfront shop rows, and the larger eastern compound.
-  hall(group, -18, -8.8, 4.4, 2.1, 0.85, 0.12);
-  hall(group, -13.3, -8.9, 3.8, 2.6, 1.05, -0.15);
-  hall(group, -8.7, -9.5, 3, 2.2, 0.95, 0.04);
-  hall(group, -1.5, -9, 4.5, 2.7, 1.2, -0.05);
-  hall(group, 4, -8.5, 3.3, 2.3, 1.0, 0.1);
-  hall(group, 10.3, -8.1, 5.4, 3.1, 1.25, 0.06);
-  hall(group, 16.9, -7, 5.1, 2.9, 1.0, -0.13);
-  // The broad foreground roof masses are deliberately much larger than a person.
-  hall(group, -17.5, 7.2, 4.8, 3.8, 1.15, 0.22);
-  hall(group, -9.6, 10.5, 5.9, 4.2, 1.45, -0.16);
-  hall(group, -3.3, 10.3, 5.4, 3.6, 1.25, 0.08);
-  hall(group, 2.6, 10, 4.1, 3.8, 1.2, -0.12);
-  hall(group, -1, 6.8, 3.1, 2.1, 0.8, 0.1);
-  const shoreShops = [
-    [-17, -5.9],
-    [-13, -5.8],
-    [-0.9, -6.1],
-    [3.2, -5.6],
-  ];
-  shoreShops.forEach(([s, d], i) =>
-    hall(group, s, d, 2.7, 1.3, 0.6, (i % 2 ? 1 : -1) * 0.08),
-  );
+  for (let i = 0; i <= 16; i++) {
+    const x = -half + (i * BRIDGE.length) / 16;
+    beam(
+      bridge,
+      [x, height(x) - 0.13, -BRIDGE.width / 2],
+      [x, height(x) - 0.13, BRIDGE.width / 2],
+      0.045,
+    );
+    for (const z of [-BRIDGE.width / 2, BRIDGE.width / 2]) {
+      beam(bridge, [x, height(x), z], [x, height(x) + 0.27, z], 0.021);
+      if (i < 16) {
+        const next = x + BRIDGE.length / 16;
+        for (const rail of [0.14, 0.27])
+          beam(
+            bridge,
+            [x, height(x) + rail, z],
+            [next, height(next) + rail, z],
+            0.018,
+          );
+      }
+    }
+  }
+  // Timber bearing sills on dry land at both ends; no piers in the navigable span.
+  for (const side of [-1, 1]) {
+    box(
+      bridge,
+      0.6,
+      0.22,
+      BRIDGE.width + 0.18,
+      side * half,
+      GROUND_Y - 0.12,
+      0,
+      dark,
+    );
+    box(
+      bridge,
+      0.9,
+      0.06,
+      BRIDGE.width,
+      side * (half + 0.38),
+      GROUND_Y - 0.03,
+      0,
+    );
+  }
+  for (const h of HALLS) {
+    hall(
+      group,
+      h.s,
+      h.d,
+      h.width,
+      h.depth,
+      h.height,
+      REFERENCE_AZIMUTH - h.angle + (h.side === "near" ? Math.PI : 0),
+    );
+  }
   for (const [s, d] of [
     [-19, 3],
-    [-16, 5],
-    [-2, -10],
-    [6, -9],
+    [-14.1, 5],
+    [-5.8, -10],
+    [6.8, -11.5],
     [8, 2.1],
     [10.2, 4],
     [6, 3.2],
     [3.5, 4.8],
     [12, 5.7],
-    [18, -9],
+    [20.7, -8.5],
   ]) {
-    const p = scrollPoint(s, d);
+    const side = d < -5 ? "far" : "near";
+    const safeDepth =
+      side === "far"
+        ? Math.min(d, shoreDepth(side, s) - 0.25)
+        : Math.max(d, shoreDepth(side, s) + 0.3);
+    const p = scrollPoint(s, safeDepth);
     tree(group, p.x, p.z, false);
   }
   const market = [
@@ -581,83 +628,55 @@ export function createBridgeStudy() {
     [-8.3, 4.5],
     [-6.5, 5.5],
     [-12.8, 4.2],
-    [-5, -5.9],
-    [-3.8, -6.5],
+    [-6.3, -7.1],
+    [-5.9, -6.2],
   ];
   market.forEach(([s, d], i) => {
-    const p = scrollPoint(s, d);
+    const side = d < -5 ? "far" : "near";
+    const safeDepth =
+      side === "far"
+        ? Math.min(d, shoreDepth(side, s) - 0.7)
+        : Math.max(d, shoreDepth(side, s) + 0.85);
+    const p = scrollPoint(s, safeDepth);
     stall(group, p.x, p.z, i % 3 === 0);
     if (i % 2 === 0) parasol(group, p.x + 0.4, p.z + 0.3);
   });
-  workingBoat(
-    group,
-    16,
-    -0.3,
-    7.2,
-    1.6,
-    true,
-    REFERENCE_AZIMUTH + Math.PI / 2 + 0.2,
-  );
-  workingBoat(
-    group,
-    -6.8,
-    -3.1,
-    5.4,
-    1.1,
-    false,
-    REFERENCE_AZIMUTH + Math.PI / 2,
-  );
-  workingBoat(
-    group,
-    -16,
-    -3.8,
-    5.1,
-    1.0,
-    true,
-    REFERENCE_AZIMUTH + Math.PI / 2 - 0.1,
-  );
-  workingBoat(
-    group,
-    9.8,
-    5.4,
-    4.9,
-    1.0,
-    false,
-    REFERENCE_AZIMUTH + Math.PI / 2 + 0.2,
-  );
-  workingBoat(
-    group,
-    1,
-    1.6,
-    3.5,
-    0.75,
-    false,
-    REFERENCE_AZIMUTH + Math.PI / 2 - 0.25,
-  );
+  for (const b of BOATS) {
+    workingBoat(
+      group,
+      b.s,
+      b.d,
+      b.length,
+      b.width,
+      b.cabin,
+      REFERENCE_AZIMUTH + Math.PI / 2 - b.angle,
+    );
+  }
   for (let i = 0; i < 50; i++) {
     const onApproach = i < 34;
     const s = onApproach
       ? -12 + (i % 5) * 0.72 + Math.floor(i / 5) * 0.33
       : -19 + (i - 34) * 2.4;
-    const d = onApproach ? 1 + Math.floor(i / 5) * 0.78 : -6.8;
+    const d = onApproach
+      ? Math.max(1 + Math.floor(i / 5) * 0.78, shoreDepth("near", s) + 0.3)
+      : shoreDepth("far", s) - 0.15;
     const p = person(group, i);
-    p.scale.setScalar(0.65);
+    p.scale.setScalar(PERSON_SCALE);
     p.position.copy(scrollPoint(s, d));
-    p.position.y = 0.055;
+    p.position.y = GROUND_Y;
     p.rotation.y = i * 1.7;
   }
   for (let i = 0; i < 12; i++) {
-    const x = -3.3 + i * 0.59,
+    const x = -half + 0.4 + (i * (BRIDGE.length - 0.8)) / 11,
       p = person(bridge, i);
-    p.scale.setScalar(0.65);
-    p.position.set(x, height(x) + 0.08, i % 2 ? 0.42 : -0.42);
+    p.scale.setScalar(PERSON_SCALE);
+    p.position.set(x, height(x), i % 2 ? 0.7 : -0.7);
   }
   batchStatic(group);
-  const bridgeOrigin = scrollPoint(-6, -3);
   const people = Array.from({ length: 8 }, (_, i) => {
     const p = person(group, i);
     batchStatic(p);
-    p.scale.setScalar(0.65);
+    p.scale.setScalar(PERSON_SCALE);
     return p;
   });
   return {
@@ -670,16 +689,18 @@ export function createBridgeStudy() {
         const phase = (time * 0.018 + i * 0.173) % 2,
           travel = phase < 1 ? phase : 2 - phase;
         if (i < 4) {
-          const x = -3.5 + travel * 7;
-          p.position
-            .copy(bridgeOrigin)
-            .add(new THREE.Vector3(x, height(x) + 0.085, i % 2 ? 0.18 : -0.18));
-          p.rotation.y = phase < 1 ? Math.PI / 2 : -Math.PI / 2;
+          const x = -half + travel * BRIDGE.length;
+          const point = bridgePoint(x, i % 2 ? 0.3 : -0.3);
+          p.position.copy(scrollPoint(point.s, point.d));
+          p.position.y = height(x);
+          p.rotation.y =
+            bridge.rotation.y + (phase < 1 ? Math.PI / 2 : -Math.PI / 2);
         } else {
+          const s = -10.2 + travel * 2.4;
           p.position.copy(
-            scrollPoint(-10.2 + travel * 2.4, 1.2 + (i - 4) * 0.65),
+            scrollPoint(s, shoreDepth("near", s) + 0.45 + (i - 4) * 0.3),
           );
-          p.position.y = 0.06;
+          p.position.y = GROUND_Y;
           p.rotation.y =
             REFERENCE_AZIMUTH + (phase < 1 ? Math.PI / 2 : -Math.PI / 2);
         }

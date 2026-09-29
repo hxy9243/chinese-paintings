@@ -34,7 +34,7 @@ test("guided composition, edit, history, persistence, reference and export", asy
   await expect(
     page.getByRole("button", { name: "Riverside shop", exact: true }),
   ).toBeEnabled();
-  await place(page, "Buildings", "Riverside shop", 260, 610);
+  await expect(page.locator("footer")).toContainText("5 / 40");
   await expect(
     page.getByRole("heading", { name: "Make room for a market" }),
   ).toBeVisible();
@@ -44,7 +44,7 @@ test("guided composition, edit, history, persistence, reference and export", asy
   await expect(
     page.getByRole("heading", { name: "A little world, made by you" }),
   ).toBeVisible();
-  await expect(page.locator("footer")).toContainText("4 / 40");
+  await expect(page.locator("footer")).toContainText("8 / 40");
   await point(page, 260, 575);
   await page.getByRole("button", { name: "Variation", exact: true }).click();
   await expect(page.locator(".selection-toolbar")).toContainText(
@@ -59,11 +59,11 @@ test("guided composition, edit, history, persistence, reference and export", asy
   await expect(
     page.getByRole("button", { name: "Riverside shop", exact: true }),
   ).toBeEnabled();
-  await expect(page.locator("footer")).toContainText("4 / 40");
+  await expect(page.locator("footer")).toContainText("8 / 40");
   await page.getByRole("button", { name: "Peek at a composition" }).click();
   await expect(page.locator(".reference-badge")).toBeVisible();
   await page.getByRole("button", { name: "Return to my scene" }).click();
-  await expect(page.locator("footer")).toContainText("4 / 40");
+  await expect(page.locator("footer")).toContainText("8 / 40");
   await page
     .getByRole("button", { name: "Share your scene", exact: true })
     .click();
