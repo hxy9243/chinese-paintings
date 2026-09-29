@@ -36,6 +36,7 @@ import {
   riverRipple,
   type BuildingKind,
 } from "./passageLife";
+import { MOORED_BOATS, mooredBoatPose, mooringAnchor } from "./moorings";
 import { createCrowd } from "./crowd";
 import { idleMotion } from "./peopleMotion";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
@@ -1254,6 +1255,48 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
     batchStatic(vessel);
     return vessel;
   });
+  const moored = MOORED_BOATS.map((b) => {
+    const vessel = workingBoat(
+      group,
+      b.s,
+      b.d,
+      b.length,
+      b.width,
+      b.cabin,
+      REFERENCE_AZIMUTH + Math.PI / 2 - b.angle,
+    );
+    vessel.name = "moored-boat";
+    batchStatic(vessel);
+    return vessel;
+  });
+  const mooringPosts = new THREE.Group();
+  group.add(mooringPosts);
+  const ties = moored.flatMap((vessel, index) =>
+    [-1, 1].map((side) => {
+      const anchor = mooringAnchor(index, side),
+        point = scrollPoint(anchor.s, anchor.d);
+      beam(
+        mooringPosts,
+        [point.x, -0.1, point.z],
+        [point.x, 0.24, point.z],
+        0.028,
+        dark,
+      );
+      const geometry = new THREE.BufferGeometry().setAttribute(
+        "position",
+        new THREE.Float32BufferAttribute(new Float32Array(9 * 3), 3).setUsage(
+          THREE.DynamicDrawUsage,
+        ),
+      );
+      const rope = new THREE.Line(geometry, ink);
+      rope.name = "mooring-line";
+      rope.frustumCulled = false;
+      group.add(rope);
+      return { vessel, index, side, point, rope };
+    }),
+  );
+  batchStatic(mooringPosts);
+  const boatLayouts = [...BOATS, ...MOORED_BOATS];
   const rippleGeometry = new THREE.BufferGeometry();
   const ripplePositions = new THREE.Float32BufferAttribute(
     new Float32Array(RIPPLE_COUNT * 8 * 3),
@@ -1288,7 +1331,7 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
     addPerson(group, i, "shop-visitor"),
   );
   const drivers = carts.map((c, i) => addPerson(c.group, i, "cart-driver"));
-  const crew = boats.flatMap((b, i) =>
+  const crew = [...boats, ...moored].flatMap((b, i) =>
     [-1, 1].map((side) => ({
       rig: addPerson(b, i + (side + 1) / 2, "boat-crew"),
       side,
@@ -1365,7 +1408,7 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
         p.group.position.set(
           Math.sin(time * 0.33 + i) * 0.025,
           0.34 + idle.breath,
-          side * BOATS[boat].length * 0.36,
+          side * boatLayouts[boat].length * 0.36,
         );
         p.group.rotation.set(
           idle.lean,
@@ -1383,6 +1426,33 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
           REFERENCE_AZIMUTH + Math.PI / 2 - pose.angle,
           pose.roll,
         );
+      });
+      moored.forEach((vessel, i) => {
+        const pose = mooredBoatPose(i, time);
+        vessel.position.copy(scrollPoint(pose.s, pose.d));
+        vessel.position.y = pose.y;
+        vessel.rotation.set(
+          pose.pitch,
+          REFERENCE_AZIMUTH + Math.PI / 2 - pose.angle,
+          pose.roll,
+        );
+      });
+      // Lines follow the gently bobbing boats while their shore posts stay fixed.
+      ties.forEach(({ vessel, index, side, point, rope }) => {
+        const b = MOORED_BOATS[index];
+        vessel.updateWorldMatrix(true, false);
+        const start = vessel.localToWorld(
+          new THREE.Vector3(b.width * 0.5, 0.3, side * b.length * 0.31),
+        );
+        const end = new THREE.Vector3(point.x, 0.2, point.z),
+          positions = rope.geometry.getAttribute("position");
+        for (let i = 0; i <= 8; i++) {
+          const t = i / 8,
+            p = start.clone().lerp(end, t);
+          p.y -= Math.sin(t * Math.PI) * 0.06;
+          positions.setXYZ(i, p.x, p.y, p.z);
+        }
+        positions.needsUpdate = true;
       });
       crowd.update();
       for (let i = 0; i < RIPPLE_COUNT; i++) {

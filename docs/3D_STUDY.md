@@ -128,3 +128,8 @@ Every figure now belongs to an animated role: walkers, residents, bridge observe
 Six horse carts travel continuously in one direction along a reserved road behind the near-bank roof row. They clip at the rounded ground boundary and recycle only fully offstage, with no U-turns. Seven boats use simultaneous opposing lanes with separation based on their complete hull and oar envelopes. The left river entrance is slightly wider, and the largest cabin vessel is narrower, to make passing possible without clipping banks or the arch.
 
 Articulated people share instanced mesh and ink geometry, so the larger animated crowd does not add a separate set of draw calls per person. Deterministic tests check multiple activity schedules, motion of all six roles, complete pause behavior, offstage recycling, and land/river separation over extended simulated time. The scene remains authored traffic for this fixed landscape rather than a general physics simulation.
+
+
+## Far-bank moored boats — 2026-09-29
+
+Four smaller vessels now remain beside the far-bank buildings in two clusters, following the supplied crop. Their berths follow the shore tangent and reserve the full hull/oar footprint. Mooring posts stay fixed, lines follow gentle bobbing, and two softly animated crew members occupy each boat. They share Pause life and reduced-motion behavior with the rest of the scene. The seven passing boats retain their opposing routes. Tests verify shore, bridge, berth, and passing-traffic clearance over twenty simulated minutes, plus rendered bobbing and pause behavior.

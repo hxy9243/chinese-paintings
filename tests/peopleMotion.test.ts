@@ -16,6 +16,7 @@ import {
   boatPose,
 } from "../src/passageLife";
 import { WALKER_RADIUS, STATIC_OBSTACLES, distance } from "../src/passageSpace";
+import { MOORED_BOATS } from "../src/moorings";
 import { BOATS } from "../src/passageLayout";
 
 describe("independent activity and browsing", () => {
@@ -139,7 +140,7 @@ describe("independent activity and browsing", () => {
         STATIC_PEOPLE.length +
         12 +
         SHOP_VISITORS.length +
-        BOATS.length * 2 +
+        (BOATS.length + MOORED_BOATS.length) * 2 +
         6,
     );
     const snapshots = () =>
