@@ -445,5 +445,26 @@
 }
 .study-stage {
   background: #eee5cb;
-  border-radius: 2px;
+  border-radius: 42px;
+}
+
+.rotation-controls {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--line);
+}
+.rotation-controls .angle-control {
+  width: 100%;
+  font-size: 14px;
+}
+@media (max-width: 700px) {
+  .rotation-controls {
+    gap: 14px;
+    grid-template-columns: 1fr;
+  }
+  .study-stage {
+    border-radius: 28px;
+  }
 }

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   BRIDGE,
+  passageOutline,
   BOATS,
   HALLS,
   GROUND_Y,
@@ -13,6 +14,20 @@ import {
 } from "../src/passageLayout";
 
 describe("reference passage geometry", () => {
+  it("rounds the outer corners and turns the bridge across the bank", () => {
+    const outline = passageOutline();
+    expect(outline.length).toBeGreaterThan(60);
+    expect(
+      outline.some(([s, d]) => Math.abs(s) === 22 && Math.abs(d) === 14),
+    ).toBe(false);
+    const tangent = Math.atan(
+      (shoreDepth("far", BRIDGE.far.s + 1) -
+        shoreDepth("far", BRIDGE.far.s - 1)) /
+        2,
+    );
+    const crossAngle = (Math.abs(BRIDGE.angle - tangent) * 180) / Math.PI;
+    expect(Math.abs(crossAngle - 90)).toBeLessThan(10);
+  });
   it("keeps every roof overhang on its own riverbank", () => {
     for (const h of HALLS)
       for (const p of roofFootprint(h)) {

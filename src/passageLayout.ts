@@ -19,8 +19,8 @@ export const SHORELINES: Record<BankSide, PassagePoint[]> = {
     [-22, -1.5],
     [-16, 0.1],
     [-11, 1.8],
-    [-8.4, -0.2],
-    [-6.5, 2.5],
+    [-8.4, 2.05],
+    [-6.5, 2.25],
     [-3, 4],
     [0, 4],
     [4, 1.5],
@@ -32,6 +32,7 @@ export const SHORELINES: Record<BankSide, PassagePoint[]> = {
 };
 export function shoreDepth(side: BankSide, s: number): number {
   const shore = SHORELINES[side];
+  s = Math.max(-22, Math.min(22, s));
   for (let i = 1; i < shore.length; i++) {
     const a = shore[i - 1],
       b = shore[i];
@@ -39,10 +40,22 @@ export function shoreDepth(side: BankSide, s: number): number {
   }
   return shore.at(-1)!.d;
 }
+// Shared rounded perimeter: straight river entrances, generous curved corners.
 export function bankOutline(side: BankSide): number[][] {
   const edge = SHORELINES[side].map(({ s, d }) => [s, d]);
-  const back = side === "far" ? -14 : 14;
-  return [...edge, [22, back], [-22, back]];
+  const sign = side === "far" ? -1 : 1;
+  const arc = (cx: number, start: number) =>
+    Array.from({ length: 17 }, (_, i) => {
+      const angle = start + ((i / 16) * Math.PI) / 2;
+      return [cx + 6 * Math.cos(angle), sign * (8 + 6 * Math.sin(angle))];
+    });
+  return [...edge, ...arc(16, 0), ...arc(-16, Math.PI / 2)];
+}
+export function passageOutline(): number[][] {
+  return [
+    ...bankOutline("near").slice(SHORELINES.near.length),
+    ...bankOutline("far").slice(SHORELINES.far.length).reverse(),
+  ];
 }
 export function onBank(side: BankSide, p: PassagePoint, margin = 0): boolean {
   return side === "far"
@@ -112,28 +125,35 @@ function waterfrontHall(
 // relative to the same person scale rather than arbitrary per-object scaling.
 export const HALLS: HallLayout[] = [
   waterfrontHall("far", -18, 4.4, 2.1, 0.85, 2.55),
-  waterfrontHall("far", -13.3, 3.8, 2.6, 1.05, 2.55),
-  waterfrontHall("far", -8.7, 3, 2.2, 0.95, 1.6),
+  waterfrontHall("far", -13.25, 3.8, 2.6, 1.05, 2.55),
+  waterfrontHall("far", -9.2, 3, 2.2, 0.95, 1.6),
   waterfrontHall("far", -0.7, 3.8, 2.7, 1.1, 2.55),
-  waterfrontHall("far", 4, 3.3, 2.3, 1, 2.55),
-  waterfrontHall("far", 10.3, 5.4, 3.1, 1.2, 0.65),
-  waterfrontHall("far", 16.9, 5.1, 2.9, 1, 0.65),
-  waterfrontHall("near", -17.5, 4.8, 3.8, 1.15, 2.5),
-  waterfrontHall("near", -9.6, 5.4, 3.8, 1.35, 5.3),
-  waterfrontHall("near", -3.3, 5.2, 3.6, 1.2, 3.8),
-  waterfrontHall("near", 3.4, 4.1, 3.5, 1.15, 4.8),
+  waterfrontHall("far", 3.45, 3.3, 2.3, 1, 2.55),
+  waterfrontHall("far", 9.7, 5.4, 3.1, 1.2, 0.65),
+  waterfrontHall("far", 15.5, 5.1, 2.9, 1, 0.65),
+  waterfrontHall("near", -16.5, 4.8, 3.8, 1.15, 2.5),
+  waterfrontHall("near", -10.4, 5.4, 3.8, 1.35, 3.9),
+  waterfrontHall("near", -4.4, 5.2, 3.6, 1.2, 2.5),
+  waterfrontHall("near", 1.05, 4.1, 3.5, 1.15, 3.5),
   waterfrontHall("near", -1, 3.1, 2.1, 0.8, 0.8),
   ...[-17, -13, -0.9, 3.2].map((s) =>
     waterfrontHall("far", s, 2.7, 1.3, 0.6, 0.25),
   ),
 ];
+// Compact foreground street: matching roof axes and narrow gaps between eaves.
+[
+  { s: -16.7, d: 5.4 },
+  { s: -11, d: 8.2 },
+  { s: -5, d: 9.8 },
+  { s: 0.4, d: 10 },
+].forEach((p, i) => Object.assign(HALLS[7 + i], p, { angle: 0.08 }));
 // Both full-width landings sit inland. Local x runs from near bank to far bank.
-const near = { s: -8.4, d: 1.45 },
-  far = { s: -3.8, d: -6.95 };
+const near = { s: -7.4, d: 3.35 },
+  far = { s: -5.9, d: -7.35 };
 export const BRIDGE = {
   near,
   far,
-  width: 2.05,
+  width: 2.3,
   rise: 2.05,
   length: Math.hypot(far.s - near.s, far.d - near.d),
   angle: Math.atan2(far.d - near.d, far.s - near.s),
@@ -162,4 +182,6 @@ export const BOATS = [
   { s: -16, d: -3.8, length: 5.1, width: 1, cabin: true, angle: -0.1 },
   { s: 10, d: 0.4, length: 4.9, width: 1, cabin: false, angle: 0.18 },
   { s: 1, d: 1.3, length: 3.5, width: 0.75, cabin: false, angle: -0.25 },
+  { s: 25, d: 0, length: 3.8, width: 0.8, cabin: true, angle: 0 },
+  { s: -25, d: -3.6, length: 4.2, width: 0.8, cabin: false, angle: 0 },
 ];

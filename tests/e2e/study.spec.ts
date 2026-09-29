@@ -22,21 +22,37 @@ test("limited 3D views work without touching the saved painting", async ({
   await expect(
     page.getByRole("img", { name: "Rainbow Bridge constrained 3D study" }),
   ).toBeVisible();
-  await page.getByRole("button", { name: "Left −12°", exact: true }).click();
+  await page.getByRole("button", { name: "Left −30°", exact: true }).click();
   await expect(page.locator(".study-stage")).toHaveAttribute(
     "data-angle",
-    "-12",
+    "-30",
   );
-  await page.getByRole("button", { name: "Right +12°", exact: true }).click();
+  await page.getByRole("button", { name: "Right +30°", exact: true }).click();
   await expect(page.locator(".study-stage")).toHaveAttribute(
     "data-angle",
-    "12",
+    "30",
   );
+  for (const [name, attribute] of [
+    ["Tilt · X", "data-pitch"],
+    ["Roll · Z", "data-roll"],
+  ]) {
+    const control = page.getByRole("slider", { name, exact: true });
+    await control.focus();
+    await control.press("End");
+    await expect(page.locator(".study-stage")).toHaveAttribute(attribute, "30");
+    await control.press("Home");
+    await expect(page.locator(".study-stage")).toHaveAttribute(
+      attribute,
+      "-30",
+    );
+  }
   await page.getByRole("button", { name: "Zoom in", exact: true }).click();
   await page.getByRole("button", { name: "Reset view", exact: true }).click();
   await expect(
     page.getByRole("button", { name: "Scroll view", exact: true }),
   ).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator(".study-stage")).toHaveAttribute("data-pitch", "0");
+  await expect(page.locator(".study-stage")).toHaveAttribute("data-roll", "0");
   const bounds = await page.locator(".study-canvas").boundingBox();
   if (bounds) {
     await page.mouse.move(
@@ -101,14 +117,14 @@ test("painting render supports bounded rotation and a plain-model comparison", a
   await page.mouse.up();
   await expect(page.locator(".study-stage")).toHaveAttribute(
     "data-angle",
-    "12",
+    "30",
   );
   await page.mouse.down();
   await page.mouse.move(box.x + box.width * 0.8, y, { steps: 12 });
   await page.mouse.up();
   await expect(page.locator(".study-stage")).toHaveAttribute(
     "data-angle",
-    "-12",
+    "-30",
   );
   const softness = page.getByRole("slider", { name: "Ink softness" });
   await expect(softness).toHaveValue("70");

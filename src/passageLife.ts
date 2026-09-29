@@ -82,22 +82,36 @@ export function walkPose(index: number, time: number) {
     moving,
   };
 }
+// Recycle beyond the frame, where the complete hull is invisible. The route
+// samples the entire hull length so even the largest boats clear bank bends.
 export function boatPose(index: number, time: number) {
-  const b = BOATS[index],
-    phase = time * 0.34 + index * 1.71;
-  const drift = index === 0 ? 0.45 : index === 1 ? 0.08 : 0.13;
+  const b = BOATS[index];
+  const direction = index % 2 ? -1 : 1;
+  const speed = 0.16 + (index % 3) * 0.018;
+  const s = ((((b.s + 30 + direction * time * speed) % 60) + 60) % 60) - 30;
+  let lower = -Infinity,
+    upper = Infinity;
+  for (let j = 0; j <= 32; j++) {
+    const x = s + (j / 32 - 0.5) * b.length;
+    lower = Math.max(lower, shoreDepth("far", x));
+    upper = Math.min(upper, shoreDepth("near", x));
+  }
+  const margin = b.width * 0.66 + 0.15;
+  const fraction = index % 2 ? 0.32 : 0.68;
+  const d = lower + margin + (upper - lower - 2 * margin) * fraction;
+  const phase = time * 0.34 + index * 1.71;
   return {
-    s: b.s + Math.sin(phase * 0.45) * drift,
-    d: b.d + Math.sin(phase * 0.37) * 0.025,
-    y: Math.sin(phase) * 0.016,
-    angle: b.angle + Math.sin(phase * 0.6) * 0.006,
-    roll: Math.sin(phase + 0.8) * 0.009,
-    pitch: Math.cos(phase * 0.8) * 0.006,
+    s,
+    d,
+    y: Math.sin(phase) * 0.012,
+    angle: direction === 1 ? 0 : Math.PI,
+    roll: Math.sin(phase + 0.8) * 0.006,
+    pitch: Math.cos(phase * 0.8) * 0.004,
   };
 }
 export const RIPPLE_COUNT = 120;
 export function riverRipple(index: number, time: number) {
-  const phase = (index * 0.61803398875 + time * 0.055) % 1;
+  const phase = (index * 0.61803398875 + time * 0.025) % 1;
   const s = -20.7 + ((index * 0.731) % 41) + phase * 0.65;
   const fraction = 0.14 + ((index * 0.417) % 0.72);
   return {
@@ -109,23 +123,31 @@ export function riverRipple(index: number, time: number) {
 export type NatureKind = "bare" | "spring" | "willow" | "reed" | "rock";
 export const NATURE: (PassagePoint & { kind: NatureKind; size: number })[] = [];
 for (const side of ["near", "far"] as const)
-  for (let i = 0; i < 36; i++) {
-    const s = -20.8 + i * 1.18,
+  for (let i = 0; i < 44; i++) {
+    const s = -20.4 + i * 0.95,
       sign = side === "near" ? 1 : -1;
     const kind: NatureKind =
-      i % 9 === 0
+      i % 6 === 0
         ? "willow"
-        : i % 7 === 0
+        : i % 4 === 0
           ? "spring"
-          : i % 5 === 0
+          : i % 3 === 0
             ? "bare"
-            : i % 3 === 0
+            : i % 5 === 0
               ? "rock"
               : "reed";
     const d =
       shoreDepth(side, s) +
       sign * (kind === "reed" || kind === "rock" ? 0.1 : 1.05);
-    const p = { s, d, kind, size: 0.65 + (i % 4) * 0.12 };
+    const p = {
+      s,
+      d,
+      kind,
+      size:
+        kind === "reed" || kind === "rock"
+          ? 0.65 + (i % 4) * 0.12
+          : 1.1 + (i % 4) * 0.18,
+    };
     // Keep the bridge approaches and all roofs clear.
     const u =
       (s - BRIDGE.center.s) * Math.cos(BRIDGE.angle) +
@@ -141,3 +163,26 @@ for (const side of ["near", "far"] as const)
     if (!insideRoof(p, kind === "reed" || kind === "rock" ? 0.12 : 0.8))
       NATURE.push(p);
   }
+
+// Additional tall groves behind the roof rows; trunks stay clear of architecture.
+for (const side of ["near", "far"] as const)
+  for (let i = 0; i < 18; i++) {
+    const s = -17 + i * 2;
+    const d = (side === "far" ? -1 : 1) * (10.7 + (i % 3) * 0.8);
+    const p = { s, d };
+    if (!insideRoof(p, 0.8))
+      NATURE.push({
+        ...p,
+        kind: i % 4 === 0 ? "spring" : "bare",
+        size: 1.35 + (i % 3) * 0.2,
+      });
+  }
+
+export const CARTS = [
+  { s: -18, d: 1.0, angle: 0.24 },
+  { s: -14, d: 2.4, angle: 0.18 },
+  { s: -9.5, d: 4.4, angle: -0.45 },
+  { s: -4.5, d: -7.7, angle: 0.12 },
+  { s: -20, d: -7.2, angle: 0.11 },
+  { s: 12.3, d: 5.1, angle: 0.36 },
+];

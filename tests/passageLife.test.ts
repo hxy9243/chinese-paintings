@@ -11,6 +11,7 @@ import {
 import {
   BUILDING_KINDS,
   NATURE,
+  CARTS,
   WALKER_COUNT,
   BRIDGE_WALKERS,
   boatPose,
@@ -68,6 +69,49 @@ describe("life in the reference passage", () => {
           }
       }
   });
+  it("brings new hulls through both sides and wraps only outside the frame", () => {
+    for (let i = 0; i < BOATS.length; i++) {
+      let entered = false;
+      let previous = boatPose(i, 0);
+      for (let time = 1; time <= 450; time++) {
+        const pose = boatPose(i, time);
+        if (Math.abs(pose.s - previous.s) > 1) {
+          expect(Math.abs(pose.s)).toBeGreaterThan(22 + BOATS[i].length / 2);
+          expect(Math.abs(previous.s)).toBeGreaterThan(
+            22 + BOATS[i].length / 2,
+          );
+        }
+        if (Math.abs(previous.s) > 22 && Math.abs(pose.s) <= 22) entered = true;
+        previous = pose;
+      }
+      expect(entered).toBe(true);
+      expect(Math.abs(boatPose(i, 12).s - boatPose(i, 0).s)).toBeGreaterThan(
+        1.8,
+      );
+    }
+  });
+  it("keeps the horse-cart footprints dry and clear of roofs", () => {
+    expect(CARTS.length).toBeGreaterThanOrEqual(6);
+    for (const cart of CARTS)
+      for (let x = -1.5; x <= 1.5; x += 0.25)
+        for (const z of [-0.45, 0.45]) {
+          const p = {
+            s:
+              cart.s +
+              0.7 * (x * Math.cos(cart.angle) - z * Math.sin(cart.angle)),
+            d:
+              cart.d +
+              0.7 * (x * Math.sin(cart.angle) + z * Math.cos(cart.angle)),
+          };
+          expect(
+            onBank("near", p) || onBank("far", p),
+            `cart at ${cart.s},${cart.d}`,
+          ).toBe(true);
+          expect(insideRoof(p, 0.05), `cart at ${cart.s},${cart.d}`).toBe(
+            false,
+          );
+        }
+  });
   it("keeps ripple strokes inside the channel", () => {
     for (let t = 0; t < 30; t += 2)
       for (let i = 0; i < RIPPLE_COUNT; i++) {
@@ -91,7 +135,7 @@ describe("life in the reference passage", () => {
     const ripples = study.group.getObjectByName(
       "river-ripples",
     ) as THREE.LineSegments;
-    expect(boats).toHaveLength(5);
+    expect(boats).toHaveLength(BOATS.length);
     expect(people).toHaveLength(WALKER_COUNT);
     const geometry = ripples.geometry;
     // Boat batches must retain local coordinates; baking the world transform

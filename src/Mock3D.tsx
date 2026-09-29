@@ -7,7 +7,7 @@ import {
   Plus,
   RotateCcw,
   Move,
-  LockKeyhole,
+  Rotate3D,
   Pause,
   Play,
 } from "lucide-react";
@@ -22,7 +22,8 @@ import { createInkFinish } from "./inkFinish";
 import { SCROLL_STOPS, scrollPoint } from "./scrollLayout";
 
 type StudyApi = {
-  view: (angle: number) => void;
+  view: (angle: number, pitch?: number) => void;
+  roll: (angle: number) => void;
   travel: (s: number, overview?: boolean, depth?: number) => void;
   zoom: (factor: number) => void;
   reset: () => void;
@@ -42,6 +43,8 @@ export default function Mock3D() {
   const [originalOpen, setOriginalOpen] = useState(false);
   const [lang, setLang] = useState<"en" | "zh">("en"),
     [angle, setAngle] = useState(0),
+    [pitch, setPitch] = useState(0),
+    [roll, setRoll] = useState(0),
     [painted, setPainted] = useState(true),
     [softness, setSoftness] = useState(70),
     [ready, setReady] = useState(false),
@@ -58,6 +61,12 @@ export default function Mock3D() {
     }
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setClearColor(0x000000, 0);
+    // Hulls enter through the two side edges, with recycling beyond the frame.
+    const along = scrollPoint(1, 0).normalize();
+    renderer.clippingPlanes = [
+      new THREE.Plane(along, 22),
+      new THREE.Plane(along.clone().negate(), 22),
+    ];
     const finish = createInkFinish(renderer);
     let paintingEnabled = true,
       inkSoftness = 0.7;
@@ -82,16 +91,22 @@ export default function Mock3D() {
       VIEW_ANGLE - THREE.MathUtils.degToRad(TILT_LIMIT);
     controls.maxAzimuthAngle =
       VIEW_ANGLE + THREE.MathUtils.degToRad(TILT_LIMIT);
-    controls.minPolarAngle = ELEVATION;
-    controls.maxPolarAngle = ELEVATION;
+    controls.minPolarAngle = ELEVATION - THREE.MathUtils.degToRad(TILT_LIMIT);
+    controls.maxPolarAngle = ELEVATION + THREE.MathUtils.degToRad(TILT_LIMIT);
     controls.rotateSpeed = 0.45;
-    controls.addEventListener("change", () =>
+    controls.addEventListener("change", () => {
       setAngle(
         Math.round(
           THREE.MathUtils.radToDeg(controls.getAzimuthalAngle() - VIEW_ANGLE),
         ),
-      ),
-    );
+      );
+      setPitch(
+        Math.round(
+          THREE.MathUtils.radToDeg(ELEVATION - controls.getPolarAngle()),
+        ),
+      );
+    });
+    let rollAngle = 0;
     controls.enableDamping = false;
     controls.dampingFactor = 0.12;
     controls.screenSpacePanning = true;
@@ -102,8 +117,11 @@ export default function Mock3D() {
     controls.touches.ONE = THREE.TOUCH.ROTATE;
     controls.touches.TWO = THREE.TOUCH.DOLLY_PAN;
     controls.target.copy(scrollPoint(0, 0));
-    controls.target.y = 0.5;
-    const position = (degrees: number) => {
+    controls.target.y = 1.1;
+    const position = (
+      degrees: number,
+      pitch = THREE.MathUtils.radToDeg(ELEVATION - controls.getPolarAngle()),
+    ) => {
       const azimuth =
         VIEW_ANGLE +
         THREE.MathUtils.degToRad(
@@ -111,14 +129,17 @@ export default function Mock3D() {
         );
       const offset = new THREE.Vector3().setFromSphericalCoords(
         110,
-        ELEVATION,
+        ELEVATION -
+          THREE.MathUtils.degToRad(
+            THREE.MathUtils.clamp(pitch, -TILT_LIMIT, TILT_LIMIT),
+          ),
         azimuth,
       );
       camera.position.copy(controls.target).add(offset);
       camera.lookAt(controls.target);
       controls.update();
     };
-    position(0);
+    position(0, 0);
     const resize = () => {
       const w = el.clientWidth,
         h = el.clientHeight;
@@ -126,7 +147,7 @@ export default function Mock3D() {
       renderer.setSize(w, h);
       finish.resize(w, h);
       const aspect = w / h;
-      const span = Math.max(8.8, 23 / aspect);
+      const span = Math.max(10, 26 / aspect);
       camera.left = -span * aspect;
       camera.right = span * aspect;
       camera.top = span;
@@ -138,12 +159,19 @@ export default function Mock3D() {
     resize();
     api.current = {
       view: position,
+      roll(degrees) {
+        rollAngle = THREE.MathUtils.degToRad(
+          THREE.MathUtils.clamp(degrees, -TILT_LIMIT, TILT_LIMIT),
+        );
+      },
       travel(s, overview = false, depth = 0) {
         controls.target.copy(scrollPoint(s, depth));
-        controls.target.y = 0.5;
+        controls.target.y = 1.1;
         camera.zoom = overview ? 1 : 1.8;
         camera.updateProjectionMatrix();
-        position(0);
+        rollAngle = 0;
+        setRoll(0);
+        position(0, 0);
       },
       painting(enabled) {
         paintingEnabled = enabled;
@@ -158,10 +186,12 @@ export default function Mock3D() {
       },
       reset() {
         controls.target.copy(scrollPoint(0, 0));
-        controls.target.y = 0.5;
+        controls.target.y = 1.1;
         camera.zoom = 1;
         camera.updateProjectionMatrix();
-        position(0);
+        rollAngle = 0;
+        setRoll(0);
+        position(0, 0);
       },
     };
     let animationTime = 0;
@@ -179,6 +209,7 @@ export default function Mock3D() {
       last = now;
       if (!pausedRef.current) animationTime += delta;
       controls.update();
+      camera.rotateZ(rollAngle);
       study.update(animationTime);
       finish.render(scene, camera, paintingEnabled ? inkSoftness : 0);
     };
@@ -275,15 +306,21 @@ export default function Mock3D() {
             {t("Reference crop", "对照原作")}
           </button>
         </nav>
-        <div className="study-stage" data-ready={ready} data-angle={angle}>
+        <div
+          className="study-stage"
+          data-ready={ready}
+          data-angle={angle}
+          data-pitch={pitch}
+          data-roll={roll}
+        >
           <div ref={host} className="study-canvas" />
           {painted && <div className="study-paper" aria-hidden="true" />}
           <div className="study-stamp">
             虹<br />桥<span>小景</span>
           </div>
           <div className="study-badge">
-            <LockKeyhole size={13} />
-            {t("FIXED ELEVATION · LIMITED ANGLES", "固定俯角 · 限定视角")}
+            <Rotate3D size={13} />
+            {t("THREE AXES · ±30°", "三轴旋转 · ±30°")}
           </div>
           {!ready && !error && (
             <div className="study-loading">
@@ -330,8 +367,8 @@ export default function Mock3D() {
           <div className="study-gesture">
             <Move size={13} />
             {t(
-              "Drag to turn · Right-drag to pan · Pinch / wheel to zoom",
-              "拖动旋转 · 右键平移 · 双指或滚轮缩放",
+              "Drag to turn & tilt · Z slider to roll · Wheel to zoom",
+              "拖动旋转与俯仰 · Z 轴倾转 · 滚轮缩放",
             )}
           </div>
         </div>
@@ -362,11 +399,52 @@ export default function Mock3D() {
                 {a === 0
                   ? t("Scroll view", "画卷视角")
                   : a < 0
-                    ? t("Left −12°", "左侧 −12°")
-                    : t("Right +12°", "右侧 +12°")}
+                    ? t("Left −30°", "左侧 −30°")
+                    : t("Right +30°", "右侧 +30°")}
               </button>
             ))}
           </div>
+        </section>
+        <section
+          className="rotation-controls"
+          aria-label={t("Three-axis rotation", "三轴旋转")}
+        >
+          {[
+            { key: "yaw", label: t("Turn · Y", "转向 · Y"), value: angle },
+            { key: "pitch", label: t("Tilt · X", "俯仰 · X"), value: pitch },
+            { key: "roll", label: t("Roll · Z", "倾转 · Z"), value: roll },
+          ].map(({ key, label, value }) => (
+            <label className="angle-control" key={key}>
+              <span>
+                {label}
+                <output>
+                  {value > 0 ? "+" : ""}
+                  {value}°
+                </output>
+              </span>
+              <input
+                type="range"
+                min={-TILT_LIMIT}
+                max={TILT_LIMIT}
+                step="1"
+                value={value}
+                disabled={!ready}
+                aria-label={label}
+                onChange={(e) => {
+                  const degrees = Number(e.target.value);
+                  if (key === "roll") {
+                    setRoll(degrees);
+                    api.current?.roll(degrees);
+                  } else if (key === "pitch") api.current?.view(angle, degrees);
+                  else api.current?.view(degrees, pitch);
+                }}
+              />
+              <span className="angle-extents">
+                <span>−30°</span>
+                <span>+30°</span>
+              </span>
+            </label>
+          ))}
         </section>
         <section
           className="painting-controls"
@@ -420,11 +498,11 @@ export default function Mock3D() {
         <footer className="study-notes">
           <p>
             <strong>
-              {t("Built for a limited view.", "为有限视角而建。")}
+              {t("Explore from three angles.", "从三轴细看画卷。")}
             </strong>{" "}
             {t(
-              "Detail belongs on roofs, front façades, and visible sides. Hidden surfaces can stay simple. No full orbit is needed.",
-              "细节集中于屋顶、正面与可见侧面；隐藏部分从简，无须全角度环绕。",
+              "Turn, tilt, and roll up to 30° each way. Right-drag to pan; reset to return to the original composition.",
+              "转向、俯仰、倾转各可调至正负30°。右键拖动平移，重置可返回初始构图。",
             )}
           </p>
           <p>

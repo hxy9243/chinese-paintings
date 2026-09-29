@@ -8,6 +8,7 @@ import {
 } from "./paintMaterial";
 import {
   bankOutline,
+  passageOutline,
   shoreDepth,
   HALLS,
   BOATS,
@@ -19,9 +20,11 @@ import {
 import {
   BUILDING_KINDS,
   NATURE,
+  CARTS,
   WALKER_COUNT,
   RIPPLE_COUNT,
   boatPose,
+  insideRoof,
   walkPose,
   riverRipple,
   type BuildingKind,
@@ -31,9 +34,9 @@ import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 // A shallow, camera-constrained diorama. Hidden façades are intentionally plain.
 // The original passage runs from the near lower-left approach to the far upper-right.
 export const VIEW_ANGLE = REFERENCE_AZIMUTH;
-export const TILT_LIMIT = 12;
-// Polar angle: 28 degrees above ground, four degrees lower than before.
-export const ELEVATION = THREE.MathUtils.degToRad(62);
+export const TILT_LIMIT = 30;
+// 35 degrees above ground leaves the full ±30° pitch range above the banks.
+export const ELEVATION = THREE.MathUtils.degToRad(55);
 const ink = createDryInk();
 const riverInk = createDryInk(0.38);
 const mat = paintMaterial;
@@ -258,7 +261,7 @@ function riversideNature(parent: THREE.Group) {
               n.s < 0 ? "sapling" : "pollard",
               n.s,
             );
-      t.scale.setScalar(n.size * (n.kind === "spring" ? 0.7 : 0.8));
+      t.scale.set(n.size * 0.85, n.size * 1.1, n.size * 0.85);
       continue;
     }
     const g = new THREE.Group();
@@ -408,6 +411,88 @@ function stall(
     canopy.rotation.z = 0.05;
     box(g, 1.5, 0.18, 0.04, 0, 1.36, 0.47, linen);
   }
+}
+function horseCart(parent: THREE.Group, index: number) {
+  const layout = CARTS[index];
+  const g = new THREE.Group();
+  g.position.copy(scrollPoint(layout.s, layout.d));
+  g.position.y = GROUND_Y;
+  g.rotation.y = REFERENCE_AZIMUTH - layout.angle;
+  g.scale.setScalar(0.7);
+  parent.add(g);
+  const coat = index % 2 ? dark : wood;
+  // Horse faces local +x: rounded barrel, sloping neck, muzzle and alert ears.
+  const body = mesh(g, new THREE.SphereGeometry(1, 10, 7), coat, 0.65, 0.65, 0);
+  body.scale.set(0.48, 0.22, 0.2);
+  beam(g, [0.9, 0.68, 0], [1.12, 1.03, 0], 0.13, coat);
+  const head = mesh(g, new THREE.SphereGeometry(1, 8, 6), coat, 1.22, 1.02, 0);
+  head.scale.set(0.24, 0.12, 0.105);
+  for (const z of [-0.075, 0.075])
+    beam(g, [1.12, 1.1, z], [1.1, 1.26, z], 0.025, coat);
+  for (const x of [0.35, 0.94])
+    for (const z of [-0.14, 0.14]) {
+      const reach = z < 0 ? 0.09 : -0.09;
+      beam(g, [x, 0.59, z], [x + reach, 0.3, z], 0.04, coat);
+      beam(g, [x + reach, 0.3, z], [x - reach, 0.035, z], 0.029, coat);
+      box(g, 0.105, 0.06, 0.075, x - reach + 0.025, 0.03, z, dark);
+    }
+  beam(g, [0.22, 0.72, 0], [0.04, 0.35, 0.03], 0.055, dark);
+  beam(g, [0.94, 0.88, 0], [1.05, 1.12, 0], 0.045, dark);
+  // Two wooden shafts visibly join harness and cart.
+  for (const z of [-0.24, 0.24]) {
+    beam(g, [-1.1, 0.38, z], [0.85, 0.47, z], 0.025);
+    beam(g, [0.82, 0.48, z], [0.82, 0.84, z * 0.7], 0.018, dark);
+    beam(g, [-0.58, 0.86, z / 2], [1.3, 1.02, z / 3], 0.008, dark);
+  }
+  box(g, 1.05, 0.1, 0.64, -0.85, 0.43, 0);
+  for (const z of [-0.31, 0.31]) {
+    box(g, 1.08, 0.23, 0.04, -0.85, 0.58, z);
+    const wheel = mesh(
+      g,
+      new THREE.TorusGeometry(0.29, 0.025, 5, 16),
+      dark,
+      -0.94,
+      0.3,
+      z * 1.28,
+    );
+    for (let j = 0; j < 10; j++) {
+      const a = (j / 10) * Math.PI * 2;
+      beam(
+        g,
+        [-0.94, 0.3, z * 1.28],
+        [-0.94 + Math.cos(a) * 0.28, 0.3 + Math.sin(a) * 0.28, z * 1.28],
+        0.012,
+      );
+    }
+    wheel.name = "cart-wheel";
+  }
+  if (index % 2) {
+    const canopy = mesh(
+      g,
+      new THREE.CylinderGeometry(0.34, 0.34, 0.85, 12, 1, true, 0, Math.PI),
+      linen,
+      -0.96,
+      0.65,
+      0,
+    );
+    canopy.rotation.z = Math.PI / 2;
+  } else
+    for (let i = 0; i < 3; i++) {
+      const sack = mesh(
+        g,
+        new THREE.SphereGeometry(0.2, 7, 5),
+        linen,
+        -1.13 + i * 0.23,
+        0.65,
+        0,
+      );
+      sack.scale.set(0.8, 0.8, 1.25);
+    }
+  const driver = person(g, index);
+  driver.scale.setScalar(0.65);
+  driver.position.set(-0.42, 0.48, 0);
+  driver.rotation.y = Math.PI / 2;
+  return g;
 }
 // Batch the static model: details should not require hundreds of draw calls.
 function batchStatic(group: THREE.Group) {
@@ -954,12 +1039,16 @@ function workingBoat(
 }
 export function createBridgeStudy() {
   const group = new THREE.Group();
-  const water = new THREE.Group();
-  group.add(water);
-  water.rotation.y = REFERENCE_AZIMUTH;
+  const waterShape = new THREE.Shape();
+  passageOutline().forEach(([s, d], i) => {
+    const p = scrollPoint(s, d);
+    if (i === 0) waterShape.moveTo(p.x, -p.z);
+    else waterShape.lineTo(p.x, -p.z);
+  });
+  waterShape.closePath();
   const river = mesh(
-    water,
-    new THREE.PlaneGeometry(44, 27),
+    group,
+    new THREE.ShapeGeometry(waterShape),
     mat(0xcfbd8e, true),
     0,
     -0.04,
@@ -1112,6 +1201,7 @@ export function createBridgeStudy() {
       side === "far"
         ? Math.min(d, shoreDepth(side, s) - 0.25)
         : Math.max(d, shoreDepth(side, s) + 0.3);
+    if (insideRoof({ s, d: safeDepth }, 0.3)) continue;
     const p = scrollPoint(s, safeDepth);
     const form: TreeForm =
       s === 8 || s === -19
@@ -1122,7 +1212,7 @@ export function createBridgeStudy() {
     const t = characterTree(group, p.x, p.z, form, s);
     const size =
       s === 8 ? 1.18 : s === -19 ? 0.94 : 0.78 + Math.abs(Math.sin(s)) * 0.22;
-    t.scale.set(size, size * (s === 12 ? 1.2 : 1), size);
+    t.scale.set(size * 1.15, size * 1.5, size * 1.15);
     t.rotation.y = s * 0.31;
   }
   riversideNature(group);
@@ -1166,6 +1256,7 @@ export function createBridgeStudy() {
     p.scale.setScalar(PERSON_SCALE);
     p.position.set(x, height(x), i % 2 ? 0.7 : -0.7);
   }
+  CARTS.forEach((_, i) => horseCart(group, i));
   batchStatic(group);
   const boats = BOATS.map((b) => {
     const vessel = workingBoat(
@@ -1219,6 +1310,7 @@ export function createBridgeStudy() {
       });
       boats.forEach((vessel, i) => {
         const pose = boatPose(i, time);
+        vessel.visible = Math.abs(pose.s) < 22 + BOATS[i].length / 2 + 0.2;
         vessel.position.copy(scrollPoint(pose.s, pose.d));
         vessel.position.y = pose.y;
         vessel.rotation.set(

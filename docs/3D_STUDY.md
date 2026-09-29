@@ -4,10 +4,10 @@ Open `?view=3d` from the editor's **3D study** link. This is a separate, read-on
 
 ## Camera contract
 
-- Orthographic projection with fixed elevation (about 32 degrees above the ground).
-- Authored central view, plus two comparison presets at minus/plus 12 degrees azimuth.
-- Free orbit and vertical rotation disabled. Drag pans; wheel or two-finger pinch zooms. Reset restores the authored view.
-- Camera orientation does not change when panning or zooming. This is the production asset visibility envelope: review each asset at all three angles before polishing it.
+- Orthographic projection, initially 35 degrees above the ground.
+- Turn (Y), tilt (X), and view-axis roll (Z) each allow ±30 degrees. Left-drag turns and tilts; all three axes also have keyboard-accessible sliders.
+- Right-drag pans; wheel or two-finger pinch zooms. Reset and destination buttons restore all three axes.
+- The elevation range stays above the ground (5–65 degrees). Roll is applied after the orbit controller updates so it does not drift or change the pan target.
 
 ## Production implications
 
@@ -98,3 +98,13 @@ The fixed camera is lowered from about 31.9° to 28° above the ground. Azimuth,
 The sixteen existing footprints now contain eight building styles: dwelling, warehouse, shop, courtyard, gallery, rough-roofed shed, open trading hall, and L-shaped compound. Open halls have visible space between timber posts, benches, and rear screens. Sheds use pale fibrous roofs, irregular straw fringes and vertical plank fronts. Compounds combine unequal wings, low yard walls, recessed gates and storage jars. These are reference-informed variations rather than identifications of individual historical buildings.
 
 Ten formerly identical feature trees now use broad old crowns, knotted pollarded crowns, and narrow upright saplings with varied size, lean and orientation. The river-bend tree receives the broadest crown. Bare shoreline planting also varies between sapling and pollard forms; existing spring foliage and drooping willow forms remain. Exposed roots and broken bark lines distinguish older trunks. The bridge and camera are unchanged. Build and all 22 automated tests pass; browser and physical-device visual review was not performed for this revision.
+
+## Rounded passage and freer camera — 2026-09-29
+
+The banks and water share a rounded perimeter with six-unit corner arcs. The bridge now crosses nearly perpendicular to the far bank, and the near shoreline is smoother around its inland landing. Foreground buildings form a compact row with aligned roof axes and small clear gaps. Six horse-drawn carts include visible harnesses, shafts, spoked wheels, drivers, and alternate cloth covers or cargo. Taller existing trees and added shoreline/rear groves retain clear roof footprints.
+
+Seven boat groups travel slowly in both directions. Two begin beyond the side edges and enter shortly after the scene opens. Hull-length shoreline sampling keeps their routes inside the narrow bends; global side clipping allows partial hulls to enter the frame. Recycling happens only after the complete hull leaves view. Ripple motion, Pause life, reduced-motion startup, and hidden-tab pausing share the same scene clock.
+
+Three labeled rotation sliders expose ±30° turning, tilting, and rolling. The default elevation is 35° so the full tilt range stays above ground. The interpretation remains a modeled study of the supplied passage.
+
+Validation: production build and 25 geometry/model/animation tests pass. Six desktop/mobile Chromium checks cover presets, all three axes, pan/zoom/reset, rendering styles, language, reference access, saved-painting preservation, and page overflow. The final framing gives tall crowns more space; a focused desktop rendering check verifies that adjustment. Physical-device performance remains unmeasured.
