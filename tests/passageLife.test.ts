@@ -127,7 +127,7 @@ describe("life in the reference passage", () => {
       }
   });
   it("moves the rendered boats, walking legs and water without rebuilding geometry", () => {
-    const study = createBridgeStudy();
+    const study = createBridgeStudy(0);
     const boats = study.group.children.filter((n) => n.name === "working-boat");
     const people = study.group.children.filter(
       (n) => n.name === "walking-person",

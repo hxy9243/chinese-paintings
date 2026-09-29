@@ -16,8 +16,8 @@ export const SHORELINES: Record<BankSide, PassagePoint[]> = {
     [22, -3.4],
   ].map(([s, d]) => ({ s, d })),
   near: [
-    [-22, -1.5],
-    [-16, 0.1],
+    [-22, -0.1],
+    [-16, 0.7],
     [-11, 1.8],
     [-8.4, 2.05],
     [-6.5, 2.25],
@@ -177,7 +177,7 @@ export function bridgeHeight(x: number): number {
   );
 }
 export const BOATS = [
-  { s: 16, d: -0.3, length: 7.2, width: 1.6, cabin: true, angle: 0.12 },
+  { s: 16, d: -0.3, length: 7.2, width: 1.2, cabin: true, angle: 0.12 },
   { s: -6.8, d: -3.1, length: 5.4, width: 1.1, cabin: false, angle: 0 },
   { s: -16, d: -3.8, length: 5.1, width: 1, cabin: true, angle: -0.1 },
   { s: 10, d: 0.4, length: 4.9, width: 1, cabin: false, angle: 0.18 },

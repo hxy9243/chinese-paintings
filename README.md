@@ -24,8 +24,9 @@ Open the local address printed by Vite. The private Sites project is recorded in
 - Drag to turn and tilt; use the three sliders for ±30° rotation on each axis.
 - Right-drag to pan; pinch or scroll to zoom. Reset restores the authored view.
 - Focus on the bridge, far-bank shops, river bend, or whole passage.
-- Horse carts walk along clear routes with moving legs and wheels; people use separate passing lanes, and boats travel in spaced convoys.
-- Pause life freezes walkers, horse carts, boats, and river ripples. Reduced-motion preference starts paused.
+- Horse carts travel one way along the foreground road. Boats pass in opposite lanes and enter from both sides.
+- People walk, pause independently, and browse the market stands. Standing figures, boat crews, and drivers also have gentle idle motion.
+- Pause life freezes the whole scene. Reduced-motion preference starts paused.
 - Compare the ink treatment with the plain model, and adjust ink softness.
 - Open the reference crop to compare with the original painting.
 
@@ -35,6 +36,7 @@ Open the local address printed by Vite. The private Sites project is recorded in
 - `src/bridgeStudy.ts`: modeled bridge, buildings, trees, horse carts, figures, and boats.
 - `src/passageLayout.ts`: bank outlines, building footprints, bridge landings, and boat sizes.
 - `src/passageLife.ts`: walking routes, horse-cart motion, river traffic, ripples, and planting.
+- `src/peopleMotion.ts` and `src/crowd.ts`: individual activity schedules and shared animated figure geometry.
 - `src/passageSpace.ts`: shared placement clearances and reserved traffic routes.
 - `src/paintMaterial.ts` and `src/inkFinish.ts`: pigment and ink rendering.
 - `docs/3D_STUDY.md`: implementation notes and historical changes.

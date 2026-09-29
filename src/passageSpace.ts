@@ -98,12 +98,10 @@ export const WALK_SEGMENTS: Segment[] = BANK_LOOPS.flatMap((loop) => {
       .filter((s) => s > loop.start && s < loop.end),
     loop.end,
   ];
-  return breaks
-    .slice(1)
-    .map((s, i) => ({
-      a: { s: breaks[i], d: bankCenter(loop.side, breaks[i]) },
-      b: { s, d: bankCenter(loop.side, s) },
-    }));
+  return breaks.slice(1).map((s, i) => ({
+    a: { s: breaks[i], d: bankCenter(loop.side, breaks[i]) },
+    b: { s, d: bankCenter(loop.side, s) },
+  }));
 });
 export function walkingClear(p: PassagePoint, radius: number) {
   return WALK_SEGMENTS.every(
@@ -113,68 +111,23 @@ export function walkingClear(p: PassagePoint, radius: number) {
 }
 export type CartRoute = Segment &
   PassagePoint & { angle: number; length: number };
-const seeds = [
-  { s: -18, d: 1 },
-  { s: -14, d: 2.4 },
-  { s: -9.5, d: 4.4 },
-  { s: -4.5, d: -10 },
-  { s: 12.3, d: 8.8 },
-  { s: 18, d: 10 },
-];
-export const CART_ROUTES: CartRoute[] = [];
-for (const seed of seeds) {
-  const candidates: PassagePoint[] = [];
-  for (let s = -20; s <= 20; s += 0.7)
-    for (let d = -12.5; d <= 12.5; d += 0.7) candidates.push({ s, d });
-  candidates.sort((a, b) => distance(a, seed) - distance(b, seed));
-  let found = false;
-  for (const p of candidates) {
-    for (const angle of [0, Math.PI / 2, 0.25, -0.25]) {
-      const length = 2.2;
-      const route = {
-        ...p,
-        angle,
-        length,
-        a: {
-          s: p.s - (Math.cos(angle) * length) / 2,
-          d: p.d - (Math.sin(angle) * length) / 2,
-        },
-        b: {
-          s: p.s + (Math.cos(angle) * length) / 2,
-          d: p.d + (Math.sin(angle) * length) / 2,
-        },
-      };
-      let safe = true;
-      for (let i = 0; i <= 24 && safe; i++) {
-        const point = {
-          s: route.a.s + ((route.b.s - route.a.s) * i) / 24,
-          d: route.a.d + ((route.b.d - route.a.d) * i) / 24,
-        };
-        safe =
-          dryDisc(point, CART_RADIUS) &&
-          roofClear(point, CART_RADIUS) &&
-          bridgeClear(point, CART_RADIUS) &&
-          walkingClear(point, CART_RADIUS) &&
-          CART_ROUTES.every(
-            (other) => segmentDistance(point, other) > CART_RADIUS * 2 + 0.15,
-          );
-      }
-      if (safe) {
-        CART_ROUTES.push(route);
-        found = true;
-        break;
-      }
-    }
-    if (found) break;
-  }
-  if (!found) throw new Error("No clear horse-cart route for the passage");
-}
+// A continuous one-way road behind the near-bank roof row. Vehicles enter
+// and leave through the rounded edge; the full corridor is reserved first.
+export const CART_LANE_RADIUS = 0.46;
+export const CART_ROUTES: CartRoute[] = Array.from({ length: 6 }, (_, i) => ({
+  s: -20 + i * 7,
+  d: 12.9,
+  angle: 0,
+  length: 56,
+  a: { s: -28, d: 12.9 },
+  b: { s: 28, d: 12.9 },
+}));
 export function trafficClear(p: PassagePoint, radius: number) {
   return (
     walkingClear(p, radius) &&
     bridgeClear(p, radius) &&
     CART_ROUTES.every(
-      (route) => segmentDistance(p, route) > radius + CART_RADIUS + 0.08,
+      (route) => segmentDistance(p, route) > radius + CART_LANE_RADIUS + 0.08,
     )
   );
 }

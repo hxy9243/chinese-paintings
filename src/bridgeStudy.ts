@@ -29,9 +29,15 @@ import {
   RIPPLE_COUNT,
   boatPose,
   walkPose,
+  residentPose,
+  observerPose,
+  SHOP_VISITORS,
+  shopperPose,
   riverRipple,
   type BuildingKind,
 } from "./passageLife";
+import { createCrowd } from "./crowd";
+import { idleMotion } from "./peopleMotion";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 
 // A shallow, camera-constrained diorama. Hidden façades are intentionally plain.
@@ -503,16 +509,34 @@ function horseCart(parent: THREE.Group, index: number) {
       );
       sack.scale.set(0.8, 0.8, 1.25);
     }
-  const driver = person(g, index);
-  driver.scale.setScalar(0.65);
-  driver.position.set(-0.42, 0.48, 0);
-  driver.rotation.y = Math.PI / 2;
   const animated = [...legs, ...wheels, headGroup];
   animated.forEach((part) => g.remove(part));
   batchStatic(g);
   animated.forEach((part) => {
     batchStatic(part);
     g.add(part);
+  });
+  // Clip the traffic to the same rounded ground boundary. Each train wraps
+  // only after its entire horse, cart and driver have left that boundary.
+  const materials = new Map<THREE.Material, THREE.ShaderMaterial>();
+  g.traverse((n) => {
+    if (!(n instanceof THREE.Mesh || n instanceof THREE.Line)) return;
+    const original = n.material as THREE.ShaderMaterial;
+    let material = materials.get(original);
+    if (!material) {
+      material = original.clone();
+      material.uniforms = original.uniforms;
+      material.fragmentShader = material.fragmentShader.replace(
+        "void main(){",
+        `void main(){
+        float roadS=point.x*.64278761+point.z*.76604444;
+        float roadD=-point.x*.76604444+point.z*.64278761;
+        if(length(vec2(max(0.,abs(roadS)-16.),max(0.,abs(roadD)-8.)))>6.)discard;
+      `,
+      );
+      materials.set(original, material);
+    }
+    n.material = material;
   });
   g.name = "horse-cart";
   return { group: g, legs, wheels, head: headGroup };
@@ -1053,14 +1077,9 @@ function workingBoat(
       dark,
     );
   }
-  for (const side of [-1, 1]) {
-    const crew = person(g, side + 2);
-    crew.scale.setScalar(PERSON_SCALE);
-    crew.position.set(0, 0.34, side * length * 0.34);
-  }
   return g;
 }
-export function createBridgeStudy() {
+export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
   const group = new THREE.Group();
   const waterShape = new THREE.Shape();
   passageOutline().forEach(([s, d], i) => {
@@ -1219,19 +1238,6 @@ export function createBridgeStudy() {
     stall(group, p.x, p.z, i % 3 === 0);
     if (covered) parasol(group, p.x + 0.4, p.z + 0.3);
   });
-  STATIC_PEOPLE.forEach(({ s, d }, i) => {
-    const p = person(group, i);
-    p.scale.setScalar(PERSON_SCALE);
-    p.position.copy(scrollPoint(s, d));
-    p.position.y = GROUND_Y;
-    p.rotation.y = i * 1.7;
-  });
-  for (let i = 0; i < 12; i++) {
-    const x = -half + 0.4 + (i * (BRIDGE.length - 0.8)) / 11,
-      p = person(bridge, i);
-    p.scale.setScalar(PERSON_SCALE);
-    p.position.set(x, height(x), i % 2 ? 0.9 : -0.9);
-  }
   batchStatic(group);
   const carts = CARTS.map((_, i) => horseCart(group, i));
   const boats = BOATS.map((b) => {
@@ -1259,16 +1265,55 @@ export function createBridgeStudy() {
   ripples.name = "river-ripples";
   ripples.frustumCulled = false;
   group.add(ripples);
-  const people = Array.from({ length: WALKER_COUNT }, (_, i) => {
-    const p = person(group, i, true);
-    p.name = "walking-person";
+  const crowd = createCrowd(group, (i) => person(new THREE.Group(), i, true));
+  const addPerson = (parent: THREE.Object3D, i: number, name: string) => {
+    const p = crowd.add(parent, i, name);
     p.scale.setScalar(PERSON_SCALE);
     return {
       group: p,
       left: p.getObjectByName("left-leg")!,
       right: p.getObjectByName("right-leg")!,
     };
-  });
+  };
+  const people = Array.from({ length: WALKER_COUNT }, (_, i) =>
+    addPerson(group, i, "walking-person"),
+  );
+  const residents = STATIC_PEOPLE.map((_, i) =>
+    addPerson(group, i, "resident-person"),
+  );
+  const observers = Array.from({ length: 12 }, (_, i) =>
+    addPerson(group, i, "bridge-observer"),
+  );
+  const shoppers = SHOP_VISITORS.map((_, i) =>
+    addPerson(group, i, "shop-visitor"),
+  );
+  const drivers = carts.map((c, i) => addPerson(c.group, i, "cart-driver"));
+  const crew = boats.flatMap((b, i) =>
+    [-1, 1].map((side) => ({
+      rig: addPerson(b, i + (side + 1) / 2, "boat-crew"),
+      side,
+      boat: i,
+    })),
+  );
+  crowd.finish();
+  function animatePerson(
+    p: (typeof people)[number],
+    id: number,
+    time: number,
+    pose: ReturnType<typeof walkPose>,
+  ) {
+    const idle = idleMotion(id, time, seed),
+      stride = pose.moving ? Math.sin(pose.stride + id) : 0;
+    p.group.position.copy(scrollPoint(pose.s, pose.d));
+    p.group.position.y = pose.y + idle.breath + Math.abs(stride) * 0.003;
+    p.group.rotation.set(
+      0,
+      REFERENCE_AZIMUTH - pose.angle + Math.PI / 2 + idle.look,
+      idle.lean,
+    );
+    p.left.rotation.x = stride * 0.46;
+    p.right.rotation.x = -stride * 0.46;
+  }
   return {
     group,
     setPainting(enabled: boolean) {
@@ -1293,14 +1338,40 @@ export function createBridgeStudy() {
         });
         cart.head.position.y = Math.sin(stride) * 0.012;
       });
-      people.forEach((p, i) => {
-        const pose = walkPose(i, time),
-          stride = pose.moving ? Math.sin(time * (5 + (i % 3) * 0.3) + i) : 0;
-        p.group.position.copy(scrollPoint(pose.s, pose.d));
-        p.group.position.y = pose.y + Math.abs(stride) * 0.006;
-        p.group.rotation.y = REFERENCE_AZIMUTH - pose.angle + Math.PI / 2;
-        p.left.rotation.x = stride * 0.46;
-        p.right.rotation.x = -stride * 0.46;
+      people.forEach((p, i) =>
+        animatePerson(p, i, time, walkPose(i, time, seed)),
+      );
+      residents.forEach((p, i) =>
+        animatePerson(p, i + 100, time, residentPose(i, time, seed)),
+      );
+      observers.forEach((p, i) =>
+        animatePerson(p, i + 200, time, observerPose(i, time, seed)),
+      );
+      shoppers.forEach((p, i) =>
+        animatePerson(p, i + 300, time, shopperPose(i, time, seed)),
+      );
+      drivers.forEach((p, i) => {
+        const idle = idleMotion(i + 400, time, seed);
+        p.group.position.set(-0.42, 0.48 + idle.breath, 0);
+        p.group.visible = Math.abs(cartPose(i, time).s - 0.294) < 19.25;
+        p.group.rotation.set(
+          idle.lean,
+          Math.PI / 2 + idle.look,
+          idle.lean * 0.5,
+        );
+      });
+      crew.forEach(({ rig: p, side, boat }, i) => {
+        const idle = idleMotion(i + 500, time, seed);
+        p.group.position.set(
+          Math.sin(time * 0.33 + i) * 0.025,
+          0.34 + idle.breath,
+          side * BOATS[boat].length * 0.36,
+        );
+        p.group.rotation.set(
+          idle.lean,
+          idle.look + (side === 1 ? 0 : Math.PI),
+          idle.lean,
+        );
       });
       boats.forEach((vessel, i) => {
         const pose = boatPose(i, time);
@@ -1313,6 +1384,7 @@ export function createBridgeStudy() {
           pose.roll,
         );
       });
+      crowd.update();
       for (let i = 0; i < RIPPLE_COUNT; i++) {
         const ripple = riverRipple(i, time);
         for (let segment = 0; segment < 4; segment++)

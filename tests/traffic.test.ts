@@ -21,6 +21,7 @@ import {
 import {
   CART_RADIUS,
   PERSON_RADIUS,
+  CART_LANE_RADIUS,
   WALKER_RADIUS,
   STATIC_OBSTACLES,
 } from "../src/passageSpace";
@@ -69,7 +70,7 @@ describe("shared space and continuous traffic", () => {
       }));
       const carts = CARTS.map((_, i) => ({
         ...cartPose(i, time),
-        radius: CART_RADIUS,
+        radius: CART_LANE_RADIUS,
       }));
       for (let i = 0; i < walkers.length; i++)
         for (let j = i + 1; j < walkers.length; j++) {
@@ -105,10 +106,22 @@ describe("shared space and continuous traffic", () => {
         for (const obstacle of STATIC_OBSTACLES)
           minStatic = Math.min(
             minStatic,
-            distance(p, obstacle) - p.radius - obstacle.radius,
+            p.radius === CART_LANE_RADIUS
+              ? Math.hypot(
+                  Math.max(0, Math.abs(p.s - obstacle.s) - 1.12),
+                  Math.max(0, Math.abs(p.d - obstacle.d) - 0.32),
+                ) - obstacle.radius
+              : distance(p, obstacle) - p.radius - obstacle.radius,
           );
         for (const h of HALLS)
-          minRoof = Math.min(minRoof, hallDistance(p, h) - p.radius);
+          if (p.radius === CART_LANE_RADIUS) {
+            for (let x = -1.12; x <= 1.121; x += 0.14)
+              for (const d of [-0.32, 0.32])
+                minRoof = Math.min(
+                  minRoof,
+                  hallDistance({ s: p.s + x, d: p.d + d }, h),
+                );
+          } else minRoof = Math.min(minRoof, hallDistance(p, h) - p.radius);
       }
     }
     expect(minPeople, "walking lanes").toBeGreaterThan(0.015);
@@ -147,7 +160,12 @@ describe("shared space and continuous traffic", () => {
         for (let j = i + 1; j < BOATS.length; j++)
           boatGap = Math.min(
             boatGap,
-            Math.abs(p.s - poses[j].s) - 0.62 * (b.length + BOATS[j].length),
+            Math.max(
+              Math.abs(p.s - poses[j].s) - 0.62 * (b.length + BOATS[j].length),
+              Math.abs(p.d - poses[j].d) -
+                0.7 * (b.width + BOATS[j].width) -
+                0.08,
+            ),
           );
         for (let x = -1; x <= 1.001; x += 0.1)
           for (const side of [-1, 1]) {
@@ -170,7 +188,7 @@ describe("shared space and continuous traffic", () => {
       }
     }
     expect(bankGap).toBeGreaterThan(0.02);
-    expect(boatGap).toBeGreaterThan(0.5);
+    expect(boatGap).toBeGreaterThan(0.05);
     expect(archGap).toBeGreaterThan(0.05);
   });
   it("animates the actual horse legs and wheels, preserves their footprints, and freezes on pause", () => {

@@ -1,11 +1,10 @@
+import { activityClock, wander } from "./peopleMotion";
 import {
   BANK_LOOPS,
   bankCenter,
   CART_ROUTES,
   reserve,
   roofClear,
-  type CartRoute,
-  PERSON_RADIUS,
 } from "./passageSpace";
 import {
   BOATS,
@@ -85,13 +84,14 @@ function laneLoop(phase: number, start: number, end: number, radius: number) {
     angle: a + Math.PI / 2,
   };
 }
-export function walkPose(index: number, time: number) {
+export function walkPose(index: number, time: number, seed = 0) {
+  const activity = activityClock(index, time, seed);
   if (index < BRIDGE_WALKERS) {
     const start = -BRIDGE.length / 2 + 0.8,
       end = BRIDGE.length / 2 - 0.8;
     const perimeter = 2 * (end - start) + 2 * Math.PI * 0.3;
     const p = laneLoop(
-      time * 0.13 + (index / BRIDGE_WALKERS) * perimeter,
+      activity.progress * 0.13 + (index / BRIDGE_WALKERS) * perimeter,
       start,
       end,
       0.3,
@@ -100,7 +100,8 @@ export function walkPose(index: number, time: number) {
       ...bridgePoint(p.s, p.lateral),
       y: bridgeHeight(p.s),
       angle: BRIDGE.angle + p.angle,
-      moving: true,
+      moving: activity.moving,
+      stride: activity.progress * 5,
     };
   }
   const k = index - BRIDGE_WALKERS;
@@ -108,7 +109,7 @@ export function walkPose(index: number, time: number) {
   const loop = BANK_LOOPS[(k % 2) * 2 + (Math.floor(k / 2) % 2)];
   const perimeter = 2 * (loop.end - loop.start) + 2 * Math.PI * 0.2;
   const p = laneLoop(
-    time * 0.12 + (Math.floor(k / 4) / 6) * perimeter,
+    activity.progress * 0.12 + (Math.floor(k / 4) / 6) * perimeter,
     loop.start,
     loop.end,
     0.2,
@@ -124,76 +125,43 @@ export function walkPose(index: number, time: number) {
       Math.sin(p.angle) + slope * Math.cos(p.angle),
       Math.cos(p.angle),
     ),
-    moving: true,
+    moving: activity.moving,
+    stride: activity.progress * 5,
   };
 }
 export const CARTS = CART_ROUTES;
 export function cartPose(index: number, time: number) {
-  const route: CartRoute = CART_ROUTES[index],
-    speed = 0.16,
-    travel = route.length / speed,
-    turn = 3.5;
-  const period = 2 * (travel + turn),
-    clock = time + index * 3.1;
-  const q = ((clock % period) + period) % period;
-  let along = 0,
-    angle = route.angle,
-    moving = false,
-    turning = false;
-  let traveled = Math.floor(clock / period) * 2 * route.length;
-  if (q < travel) {
-    along = q * speed;
-    traveled += along;
-    moving = true;
-  } else if (q < travel + turn) {
-    along = route.length;
-    traveled += route.length;
-    angle += (Math.PI * (q - travel)) / turn;
-    turning = true;
-  } else if (q < 2 * travel + turn) {
-    along = route.length - (q - travel - turn) * speed;
-    traveled += 2 * route.length - along;
-    angle += Math.PI;
-    moving = true;
-  } else {
-    traveled += 2 * route.length;
-    angle += Math.PI + (Math.PI * (q - 2 * travel - turn)) / turn;
-    turning = true;
-  }
+  const speed = 0.16,
+    clock = time * speed + (index * 56) / 6 + 8;
   return {
-    s: route.a.s + Math.cos(route.angle) * along,
-    d: route.a.d + Math.sin(route.angle) * along,
+    s: -28 + (((clock % 56) + 56) % 56),
+    d: 12.9,
     y: GROUND_Y,
-    angle,
-    moving,
-    turning,
-    traveled,
+    angle: 0,
+    moving: true,
+    turning: false,
+    traveled: clock,
   };
 }
 // Recycle beyond the frame, where the complete hull is invisible. The route
 // samples the entire hull length so even the largest boats clear bank bends.
 export function boatPose(index: number, time: number) {
   const b = BOATS[index];
-  // A spaced convoy uses the narrow channel in one direction at a time.
-  // Direction changes only when every complete vessel is beyond the frame.
-  const speed = 0.18,
-    spacing = 10,
-    legDuration = (60 + (BOATS.length - 1) * spacing) / speed;
-  const clock = time + 300,
-    leg = Math.floor(clock / legDuration),
-    routePhase = clock % legDuration;
-  const direction = leg % 2 ? -1 : 1;
-  const s = direction * (-30 - index * spacing + speed * routePhase);
-  let lower = -Infinity,
-    upper = Infinity;
+  const direction = index % 2 === 0 ? 1 : -1;
+  const circuit = 72,
+    speed = 0.18;
+  const slot = Math.floor(index / 2);
+  const s = direction * (-36 + ((time * speed + slot * 18 + 12) % circuit));
+  let minCenter = Infinity,
+    maxCenter = -Infinity;
   for (let j = 0; j <= 32; j++) {
     const x = s + (j / 32 - 0.5) * b.length * 1.24;
-    lower = Math.max(lower, shoreDepth("far", x));
-    upper = Math.min(upper, shoreDepth("near", x));
+    const center = -2 + 1.3 * Math.max(0, Math.min(1, (x - 8) / 14));
+    minCenter = Math.min(minCenter, center);
+    maxCenter = Math.max(maxCenter, center);
   }
   const margin = b.width * 0.7 + 0.1;
-  const fraction = 0.5;
-  const d = lower + margin + (upper - lower - 2 * margin) * fraction;
+  const d = direction === 1 ? minCenter - margin : maxCenter + margin;
   const phase = time * 0.34 + index * 1.71;
   return {
     s,
@@ -216,7 +184,7 @@ export function riverRipple(index: number, time: number) {
   };
 }
 export const MARKET: (PassagePoint & { parasol: boolean })[] = [];
-for (let i = 0; i < 8; i++) {
+for (let i = 0; i < 18; i++) {
   const candidates: PassagePoint[] = [];
   for (let s = -20; s <= 20; s += 0.55)
     for (const side of ["near", "far"] as const)
@@ -225,7 +193,7 @@ for (let i = 0; i < 8; i++) {
           s,
           d: shoreDepth(side, s) + (side === "near" ? 1 : -1) * offset,
         });
-  const target = { s: i < 5 ? -11 + i : 3 + (i - 5) * 5, d: i < 5 ? 4.7 : -8 };
+  const target = { s: -19 + (i % 9) * 4.5, d: i < 9 ? 5 : -8 };
   candidates.sort(
     (a, b) =>
       Math.hypot(a.s - target.s, a.d - target.d) -
@@ -233,10 +201,41 @@ for (let i = 0; i < 8; i++) {
   );
   const parasol = i % 3 === 0;
   for (const p of candidates)
-    if (reserve(p, parasol ? 0.97 : 0.58, "market")) {
+    if (reserve(p, parasol ? 0.97 : 0.7, "market")) {
       MARKET.push({ ...p, parasol });
       break;
     }
+}
+// Browsing spaces are reserved together with stalls, before planting the groves.
+export const SHOP_VISITORS: (PassagePoint & { shop: number })[] = [];
+MARKET.forEach((shop, index) => {
+  let placed = 0;
+  for (let j = 0; j < 24 && placed < 2; j++) {
+    const angle = (j * Math.PI) / 12,
+      offset = (shop.parasol ? 0.97 : 0.7) + 0.6 + 0.12;
+    const p = {
+      s: shop.s + Math.cos(angle) * offset,
+      d: shop.d + Math.sin(angle) * offset,
+    };
+    if (reserve(p, 0.6, "shopper")) {
+      SHOP_VISITORS.push({ ...p, shop: index });
+      placed++;
+    }
+  }
+});
+export function shopperPose(index: number, time: number, seed = 0) {
+  const home = SHOP_VISITORS[index],
+    shop = MARKET[home.shop],
+    p = wander(index + 300, time, 0.42, seed);
+  const s = home.s + p.s,
+    d = home.d + p.d;
+  return {
+    ...p,
+    s,
+    d,
+    y: GROUND_Y,
+    angle: p.moving ? p.angle : Math.atan2(shop.d - d, shop.s - s),
+  };
 }
 export const FEATURE_TREES: (PassagePoint & {
   size: number;
@@ -348,11 +347,43 @@ for (
   if (roofClear({ s, d }, size * 1.05) && reserve({ s, d }, radius, kind))
     NATURE.push({ s, d, size, kind });
 }
+for (let i = 0; i < 100 && !NATURE.some((n) => n.kind === "rock"); i++) {
+  const s = -20 + ((i * 0.93) % 40),
+    d = shoreDepth("near", s) + 1.6;
+  if (reserve({ s, d }, 0.2, "rock"))
+    NATURE.push({ s, d, kind: "rock", size: 0.55 });
+}
+export const WANDER_RADIUS = 0.42;
+export const RESIDENT_SPACE = 0.6;
 export const STATIC_PEOPLE: PassagePoint[] = [];
-for (let i = 0; i < 400 && STATIC_PEOPLE.length < 50; i++) {
+for (let i = 0; i < 2400 && STATIC_PEOPLE.length < 50; i++) {
   const s = -20 + ((i * 0.731) % 40),
     side = i % 3 ? "near" : "far";
   const d =
     shoreDepth(side, s) + (side === "near" ? 1 : -1) * (1.65 + (i % 7) * 0.6);
-  if (reserve({ s, d }, PERSON_RADIUS, "person")) STATIC_PEOPLE.push({ s, d });
+  if (reserve({ s, d }, RESIDENT_SPACE, "person")) STATIC_PEOPLE.push({ s, d });
+}
+
+// Also use clear courtyards and inland gaps when waterfront browsing spaces fill.
+for (let i = 0; i < 8000 && STATIC_PEOPLE.length < 50; i++) {
+  const s = -20 + ((i * 0.731) % 40),
+    d = -12.5 + ((i * 1.117) % 25);
+  if (reserve({ s, d }, RESIDENT_SPACE, "person")) STATIC_PEOPLE.push({ s, d });
+}
+
+export function residentPose(index: number, time: number, seed = 0) {
+  const home = STATIC_PEOPLE[index],
+    p = wander(index + 100, time, WANDER_RADIUS, seed);
+  return { ...p, s: home.s + p.s, d: home.d + p.d, y: GROUND_Y };
+}
+export function observerPose(index: number, time: number, seed = 0) {
+  const home = -BRIDGE.length / 2 + 0.4 + (index * (BRIDGE.length - 0.8)) / 11;
+  const p = wander(index + 200, time, 0.15, seed),
+    x = home + p.s;
+  return {
+    ...p,
+    ...bridgePoint(x, index % 2 ? 0.9 : -0.9),
+    y: bridgeHeight(x),
+    angle: BRIDGE.angle + (p.angle > 0 ? 0 : Math.PI),
+  };
 }
