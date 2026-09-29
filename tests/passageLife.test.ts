@@ -24,7 +24,7 @@ import { createBridgeStudy } from "../src/bridgeStudy";
 describe("life in the reference passage", () => {
   it("varies architecture and nature while keeping planting clear of roofs", () => {
     expect(BUILDING_KINDS).toHaveLength(HALLS.length);
-    expect(new Set(BUILDING_KINDS).size).toBe(5);
+    expect(new Set(BUILDING_KINDS).size).toBe(8);
     expect(new Set(NATURE.map((n) => n.kind)).size).toBe(5);
     for (const n of NATURE) {
       expect(onBank("near", n) || onBank("far", n)).toBe(true);

@@ -93,6 +93,93 @@ function beam(
   );
   return obj;
 }
+type TreeForm = "upright" | "spreading" | "pollard" | "sapling";
+// Bare crowns in the supplied crop range from fine upright sprays to old,
+// low-forking riverbank trees. Forms are deterministic across visits.
+function characterTree(
+  parent: THREE.Object3D,
+  x: number,
+  z: number,
+  form: TreeForm,
+  seed: number,
+) {
+  const g = new THREE.Group();
+  parent.add(g);
+  g.position.set(x, GROUND_Y, z);
+  const old = form === "spreading",
+    short = form === "pollard";
+  const height = old ? 1.35 : short ? 1.65 : 2.25;
+  const thick = old ? 0.16 : short ? 0.11 : 0.045;
+  const lean = Math.sin(seed * 2.1) * 0.23;
+  const trunk = [
+    [0, 0, 0],
+    [lean * 0.6, height * 0.38, 0.07],
+    [-0.08, height * 0.72, 0.02],
+    [lean, height, 0],
+  ];
+  for (let i = 0; i < 3; i++)
+    beam(g, trunk[i], trunk[i + 1], thick * (1 - i * 0.19));
+  // Buttress roots and bark strokes keep old trunks from reading as poles.
+  if (old || short)
+    for (let j = 0; j < 5; j++) {
+      const a = j * 1.26;
+      beam(
+        g,
+        [Math.cos(a) * 0.29, 0.015, Math.sin(a) * 0.29],
+        [lean * 0.3, 0.4, 0.02],
+        0.033,
+        dark,
+      );
+      beam(
+        g,
+        [Math.cos(a) * thick, 0.15, Math.sin(a) * thick],
+        [
+          lean * 0.6 + Math.cos(a) * thick * 0.6,
+          height * 0.7,
+          0.02 + Math.sin(a) * thick * 0.6,
+        ],
+        0.006,
+        dark,
+      );
+    }
+  const branches = old ? 9 : short ? 12 : 6;
+  for (let j = 0; j < branches; j++) {
+    const a = j * 2.399 + seed,
+      originY = short ? height * 0.86 : height * (0.42 + (j % 4) * 0.13);
+    const reach = old
+      ? 1.15 + (j % 3) * 0.22
+      : short
+        ? 0.44 + (j % 3) * 0.12
+        : 0.4 + (j % 3) * 0.1;
+    const tip = [
+      lean + Math.cos(a) * reach,
+      height + (j % 4) * 0.15,
+      Math.sin(a) * reach * 0.68,
+    ];
+    const elbow = [tip[0] * 0.62, originY + 0.3, tip[2] * 0.52];
+    beam(g, [lean * 0.5, originY, 0.02], elbow, old ? 0.048 : 0.027);
+    beam(g, elbow, tip, old ? 0.031 : 0.015);
+    for (let k = 0; k < 7; k++) {
+      const spread = (k - 3) * 0.11;
+      const end = [
+        tip[0] + Math.cos(a + spread * 2) * 0.35 + spread,
+        tip[1] + 0.24 + (k % 3) * 0.14,
+        tip[2] + Math.sin(a + spread * 2) * 0.26,
+      ];
+      beam(g, tip, end, 0.007, dark);
+      beam(
+        g,
+        end,
+        [end[0] + spread * 0.7, end[1] + 0.18, end[2] + 0.08 * Math.sin(k)],
+        0.004,
+        dark,
+      );
+    }
+    if (short)
+      mesh(g, new THREE.SphereGeometry(0.085, 6, 4), wood, lean, originY, 0.02);
+  }
+  return g;
+}
 function tree(parent: THREE.Object3D, x: number, z: number, leafy: boolean) {
   const g = new THREE.Group();
   parent.add(g);
@@ -161,7 +248,16 @@ function riversideNature(parent: THREE.Group) {
   for (const n of NATURE) {
     const p = scrollPoint(n.s, n.d);
     if (n.kind === "bare" || n.kind === "spring") {
-      const t = tree(parent, p.x, p.z, n.kind === "spring");
+      const t =
+        n.kind === "spring"
+          ? tree(parent, p.x, p.z, true)
+          : characterTree(
+              parent,
+              p.x,
+              p.z,
+              n.s < 0 ? "sapling" : "pollard",
+              n.s,
+            );
       t.scale.setScalar(n.size * (n.kind === "spring" ? 0.7 : 0.8));
       continue;
     }
@@ -491,6 +587,35 @@ function hall(
   g.position.copy(scrollPoint(s, d));
   g.position.y = GROUND_Y;
   g.rotation.y = turn;
+  if (kind === "compound") {
+    const rear = hall(g, 0, 0, w * 0.9, depth * 0.35, h, 0, "dwelling");
+    rear.position.set(0, 0, -depth * 0.28);
+    const wing = hall(g, 0, 0, w * 0.27, depth * 0.5, h * 0.74, 0, "warehouse");
+    wing.position.set(-w * 0.31, 0, depth * 0.14);
+    // Low yard wall and a recessed gate rather than another enclosed hall.
+    box(
+      g,
+      w * 0.55,
+      h * 0.27,
+      0.08,
+      w * 0.17,
+      h * 0.135,
+      depth * 0.42,
+      plaster,
+    );
+    box(g, 0.38, h * 0.42, 0.06, w * 0.16, h * 0.21, depth * 0.43, dark);
+    box(g, 0.53, 0.065, 0.28, w * 0.16, h * 0.43, depth * 0.42, roof);
+    for (let i = 0; i < 3; i++)
+      mesh(
+        g,
+        new THREE.CylinderGeometry(0.11, 0.09, 0.17, 8),
+        linen,
+        w * 0.12 + i * 0.24,
+        0.085,
+        0,
+      );
+    return g;
+  }
   if (kind === "courtyard") {
     for (const side of [-1, 1]) {
       const wing = hall(g, 0, 0, w * 0.27, depth * 0.92, h * 0.86);
@@ -512,10 +637,38 @@ function hall(
     box(g, w * 0.24, 0.07, 0.34, 0, h * 0.44, depth / 2, roof);
     return g;
   }
-  box(g, w, h, depth, 0, h / 2, 0, kind === "warehouse" ? wood : plaster);
+  if (kind === "openhall") {
+    // Open-front trading shelter: daylight between posts, benches and a back screen.
+    box(g, w, h * 0.72, 0.045, 0, h * 0.36, -depth / 2, wood);
+    for (const side of [-1, 1]) {
+      box(g, 0.045, h * 0.46, depth, (side * w) / 2, h * 0.23, 0, plaster);
+      box(g, w * 0.36, 0.07, depth * 0.22, side * w * 0.25, h * 0.25, 0, wood);
+    }
+    for (let i = 0; i <= 4; i++) {
+      const x = -w / 2 + (i * w) / 4;
+      beam(g, [x, 0, depth / 2], [x, h, depth / 2], 0.032);
+      beam(
+        g,
+        [x, h * 0.72, depth / 2],
+        [x + 0.13, h * 0.94, depth / 2],
+        0.016,
+        dark,
+      );
+    }
+  } else
+    box(
+      g,
+      w,
+      h,
+      depth,
+      0,
+      h / 2,
+      0,
+      kind === "warehouse" || kind === "shed" ? wood : plaster,
+    );
   // Low shop/warehouse gables contrast with broad hipped dwelling roofs.
   // Restrained concave eaves follow the crop rather than pagoda silhouettes.
-  const gabled = kind === "warehouse" || kind === "shop";
+  const gabled = kind === "warehouse" || kind === "shop" || kind === "shed";
   const e = w / 2 + 0.2,
     f = depth / 2 + 0.23;
   const r = gabled ? e : w * 0.29;
@@ -607,8 +760,43 @@ function hall(
     new THREE.Float32BufferAttribute(positions, 3),
   );
   geo.computeVertexNormals();
-  mesh(g, geo, roof);
+  mesh(g, geo, kind === "shed" ? linen : roof);
   beam(g, [-r, top + 0.025, 0], [r, top + 0.025, 0], 0.028, dark);
+  if (kind === "openhall") {
+    beam(
+      g,
+      [-w / 2, h * 0.9, depth / 2],
+      [w / 2, h * 0.9, depth / 2],
+      0.035,
+      dark,
+    );
+    return g;
+  }
+  if (kind === "shed") {
+    // Rough vertical boards, a low door, and uneven straw at the eaves.
+    for (let x = -w / 2; x < w / 2; x += 0.13)
+      beam(g, [x, 0, depth / 2 + 0.02], [x, h, depth / 2 + 0.02], 0.009, dark);
+    box(
+      g,
+      w * 0.24,
+      h * 0.76,
+      0.028,
+      -w * 0.12,
+      h * 0.38,
+      depth / 2 + 0.04,
+      dark,
+    );
+    for (let x = -e; x < e; x += 0.055)
+      for (const side of [-1, 1])
+        beam(
+          g,
+          [x, y + 0.03, side * (f - 0.13)],
+          [x + 0.015, y - 0.055 - Math.sin(x * 61) * 0.025, side * f],
+          0.008,
+          linen,
+        );
+    return g;
+  }
   for (let i = 0; i <= Math.ceil(w / 0.6); i++) {
     const x = -w / 2 + (i * w) / Math.ceil(w / 0.6);
     box(g, 0.037, h, 0.035, x, h / 2, depth / 2 + 0.018, dark);
@@ -925,7 +1113,17 @@ export function createBridgeStudy() {
         ? Math.min(d, shoreDepth(side, s) - 0.25)
         : Math.max(d, shoreDepth(side, s) + 0.3);
     const p = scrollPoint(s, safeDepth);
-    tree(group, p.x, p.z, false);
+    const form: TreeForm =
+      s === 8 || s === -19
+        ? "spreading"
+        : s === 6 || s === 12
+          ? "pollard"
+          : "sapling";
+    const t = characterTree(group, p.x, p.z, form, s);
+    const size =
+      s === 8 ? 1.18 : s === -19 ? 0.94 : 0.78 + Math.abs(Math.sin(s)) * 0.22;
+    t.scale.set(size, size * (s === 12 ? 1.2 : 1), size);
+    t.rotation.y = s * 0.31;
   }
   riversideNature(group);
   const market = [

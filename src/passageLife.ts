@@ -11,23 +11,30 @@ import {
 } from "./passageLayout";
 
 export type BuildingKind =
-  "dwelling" | "warehouse" | "shop" | "courtyard" | "gallery";
+  | "dwelling"
+  | "warehouse"
+  | "shop"
+  | "courtyard"
+  | "gallery"
+  | "shed"
+  | "openhall"
+  | "compound";
 export const BUILDING_KINDS: BuildingKind[] = [
   "warehouse",
-  "dwelling",
-  "warehouse",
+  "compound",
+  "shed",
   "courtyard",
   "dwelling",
   "gallery",
-  "courtyard",
+  "compound",
   "courtyard",
   "gallery",
   "dwelling",
-  "courtyard",
+  "compound",
+  "openhall",
   "shop",
-  "shop",
-  "warehouse",
-  "shop",
+  "shed",
+  "openhall",
   "shop",
 ];
 export const WALKER_COUNT = 36;

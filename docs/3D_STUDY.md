@@ -92,3 +92,9 @@ Compared against the supplied bridge crop again: the deck's former 1.55-unit ris
 Shop and warehouse roofs now have full-length ridges and closed gable ends. Dwellings retain shorter hipped ridges; courtyard wings and balconied halls remain distinct. All roof planes use shallow concavity, with tile courses following that profile, eave fascias and exposed rafters. Shops gain hanging boards and counter wares; galleries gain corner posts and lanterns. New façade details remain inside the existing roof envelopes.
 
 The fixed camera is lowered from about 31.9° to 28° above the ground. Azimuth, ±12° rotation limits, warm ink materials, shoreline layout, and the source comparison remain unchanged. Production build and all 22 geometry/model/animation tests pass; no browser or physical-device QA was performed for this revision.
+
+## Architecture and tree variety — 2026-09-28
+
+The sixteen existing footprints now contain eight building styles: dwelling, warehouse, shop, courtyard, gallery, rough-roofed shed, open trading hall, and L-shaped compound. Open halls have visible space between timber posts, benches, and rear screens. Sheds use pale fibrous roofs, irregular straw fringes and vertical plank fronts. Compounds combine unequal wings, low yard walls, recessed gates and storage jars. These are reference-informed variations rather than identifications of individual historical buildings.
+
+Ten formerly identical feature trees now use broad old crowns, knotted pollarded crowns, and narrow upright saplings with varied size, lean and orientation. The river-bend tree receives the broadest crown. Bare shoreline planting also varies between sapling and pollard forms; existing spring foliage and drooping willow forms remain. Exposed roots and broken bark lines distinguish older trunks. The bridge and camera are unchanged. Build and all 22 automated tests pass; browser and physical-device visual review was not performed for this revision.
