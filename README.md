@@ -32,6 +32,7 @@ New games begin with five editable houses and shops on the two riverbanks. Exist
 - Pause freezes inhabitants; reduced-motion preference starts paused.
 - Reference composition temporarily displays a separate authored arrangement.
 - The original opens the sourced painting detail for comparison.
+- The 3D study includes varied courtyard/shop/warehouse architecture, shoreline planting, 36 walkers, drifting boats, and animated river ripples. Pause life freezes the motion; reduced-motion preference starts paused.
 - Share exports a 1080 × 1920 keepsake, with optional closer framing.
 - Local saves stay on this browser/device; a play link does **not** transfer the scene.
 - Invalid existing saves are retained until the user chooses to back them up and save the new composition.

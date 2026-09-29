@@ -74,3 +74,13 @@ The bridge runs between explicit near- and far-bank landings, with its full widt
 Scale is anchored to roughly 0.36-unit people: lower roof pitches, smaller stalls and parasols, broad foreground buildings, and 3.5–7.2-unit boats. All five hulls remain within the river; tree roots, market stalls, and bank pedestrians follow the shoreline. In the editable 2D game, trees and boats have larger silhouettes and market furnishings are smaller relative to dwellings. Existing saved object positions and collision footprints remain compatible. New games start with five editable houses/shops distributed across both banks; stored compositions are not repopulated.
 
 Regression tests check the complete roof footprints and separation, both bridge landing widths, hull clearance, relative scale, starter-save validity, and saved-scene preservation.
+
+## Architecture, planting, and river life
+
+The sixteen bank-aligned plots now use five architectural forms: lattice-window dwellings, long-ridge warehouses with boarded doors, open shop bays with cloth valances, three-wing courtyard compounds, and larger gallery halls with a secondary eave and timber balustrade. The validated outer roof envelopes are retained. These forms interpret the selected passage rather than claim exact building identities.
+
+Sparse spring trees, drooping willows, additional bare trees, low reeds, and irregular river stones complement the existing bare-tree groves. New planting avoids roof footprints and the bridge approaches, preserving open water and the subdued brown/olive palette.
+
+Thirty-six moving figures replace the previous eight: twelve cross the bridge and twenty-four follow both banks. Articulated legs, small body movement, varied stride phases, and brief endpoint pauses complement the existing posed crowd. Five separately batched boat groups drift, bob, and rock on bounded routes. A single reusable line buffer animates 120 short ink ripples across the channel. Boat motion is intentionally small so the composition and navigable clearances remain stable.
+
+**Pause life / Resume life** freezes all scene motion together. Reduced-motion preference starts paused; hidden tabs do not advance animation time. Tests sample full walking and boat-motion cycles, check planting and ripple clearance, and exercise the actual scene's moving geometry, local boat transforms, stable buffers, pause behavior, and draw-object budget. Browser and physical-device performance have not been measured for this update.

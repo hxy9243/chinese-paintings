@@ -8,6 +8,8 @@ import {
   RotateCcw,
   Move,
   LockKeyhole,
+  Pause,
+  Play,
 } from "lucide-react";
 import {
   createBridgeStudy,
@@ -32,6 +34,11 @@ export default function Mock3D() {
     api = useRef<StudyApi | null>(null);
   const originalDialog = useRef<HTMLDialogElement>(null),
     originalStrip = useRef<HTMLDivElement>(null);
+  const [paused, setPaused] = useState(
+    () => window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+  );
+  const pausedRef = useRef(paused);
+  pausedRef.current = paused;
   const [originalOpen, setOriginalOpen] = useState(false);
   const [lang, setLang] = useState<"en" | "zh">("en"),
     [angle, setAngle] = useState(0),
@@ -157,15 +164,22 @@ export default function Mock3D() {
         position(0);
       },
     };
-    const clock = new THREE.Clock();
+    let animationTime = 0;
+    study.update(0);
     let frame = 0,
-      last = 0;
+      last = performance.now();
     const animate = (now: number) => {
       frame = requestAnimationFrame(animate);
-      if (document.hidden || now - last < 32) return;
+      if (document.hidden) {
+        last = now;
+        return;
+      }
+      if (now - last < 32) return;
+      const delta = Math.min(0.08, (now - last) / 1000);
       last = now;
+      if (!pausedRef.current) animationTime += delta;
       controls.update();
-      study.update(clock.getElapsedTime());
+      study.update(animationTime);
       finish.render(scene, camera, paintingEnabled ? inkSoftness : 0);
     };
     frame = requestAnimationFrame(animate);
@@ -241,6 +255,16 @@ export default function Mock3D() {
             onClick={() => api.current?.travel(0, true)}
           >
             {t("Whole passage", "全景")}
+          </button>
+          <button
+            disabled={!ready}
+            aria-pressed={paused}
+            onClick={() => setPaused((value) => !value)}
+          >
+            {paused ? <Play size={14} /> : <Pause size={14} />}
+            {paused
+              ? t("Resume life", "继续生息")
+              : t("Pause life", "暂停生息")}
           </button>
           <button
             onClick={() => {

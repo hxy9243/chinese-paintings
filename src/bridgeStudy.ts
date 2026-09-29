@@ -9,15 +9,23 @@ import {
 import {
   bankOutline,
   shoreDepth,
-  onBank,
   HALLS,
   BOATS,
   BRIDGE,
   bridgeHeight,
-  bridgePoint,
   GROUND_Y,
   PERSON_SCALE,
 } from "./passageLayout";
+import {
+  BUILDING_KINDS,
+  NATURE,
+  WALKER_COUNT,
+  RIPPLE_COUNT,
+  boatPose,
+  walkPose,
+  riverRipple,
+  type BuildingKind,
+} from "./passageLife";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 
 // A shallow, camera-constrained diorama. Hidden façades are intentionally plain.
@@ -146,6 +154,85 @@ function tree(parent: THREE.Object3D, x: number, z: number, leafy: boolean) {
       }
     }
   }
+  return g;
+}
+function riversideNature(parent: THREE.Group) {
+  for (const n of NATURE) {
+    const p = scrollPoint(n.s, n.d);
+    if (n.kind === "bare" || n.kind === "spring") {
+      const t = tree(parent, p.x, p.z, n.kind === "spring");
+      t.scale.setScalar(n.size * (n.kind === "spring" ? 0.7 : 0.8));
+      continue;
+    }
+    const g = new THREE.Group();
+    g.position.set(p.x, GROUND_Y, p.z);
+    g.scale.setScalar(n.size);
+    parent.add(g);
+    if (n.kind === "rock") {
+      const rock = mesh(
+        g,
+        new THREE.DodecahedronGeometry(0.16, 0),
+        pale,
+        0,
+        0.07,
+        0,
+      );
+      rock.scale.set(1.6, 0.6, 0.9);
+    } else if (n.kind === "reed") {
+      for (let j = 0; j < 9; j++) {
+        const angle = j * 2.4,
+          reach = 0.09 + j * 0.007;
+        beam(
+          g,
+          [Math.sin(j) * 0.055, 0, Math.cos(j) * 0.055],
+          [
+            Math.cos(angle) * reach,
+            0.13 + (j % 3) * 0.07,
+            Math.sin(angle) * reach,
+          ],
+          0.005,
+          green,
+        );
+      }
+    } else {
+      beam(g, [0, 0, 0], [0.12, 1.3, 0], 0.07);
+      for (let j = 0; j < 9; j++) {
+        const a = j * 2.4,
+          x = Math.cos(a) * 0.65,
+          z = Math.sin(a) * 0.65;
+        beam(g, [0.12, 1.05, 0], [x, 1.5 + (j % 3) * 0.12, z], 0.02);
+        for (let strand = 0; strand < 3; strand++) {
+          const pts = [];
+          for (let k = 0; k <= 9; k++) {
+            const t = k / 9;
+            pts.push(
+              new THREE.Vector3(
+                x + Math.cos(a) * t * 0.22 + strand * 0.035,
+                1.6 + (j % 3) * 0.12 - t * t * (0.8 + strand * 0.12),
+                z + Math.sin(a) * t * 0.23,
+              ),
+            );
+          }
+          g.add(
+            new THREE.Line(
+              new THREE.BufferGeometry().setFromPoints(pts),
+              riverInk,
+            ),
+          );
+          for (let k = 2; k < 9; k += 2) {
+            const v = pts[k];
+            beam(
+              g,
+              v.toArray(),
+              [v.x + 0.03, v.y - 0.085, v.z + 0.025],
+              0.008,
+              green,
+            );
+          }
+        }
+      }
+    }
+  }
 }
 function boat(parent: THREE.Object3D, x: number, z: number, cargo: boolean) {
   const g = new THREE.Group();
@@ -227,7 +314,8 @@ function stall(
 }
 // Batch the static model: details should not require hundreds of draw calls.
 function batchStatic(group: THREE.Group) {
-  group.updateMatrixWorld(true);
+  group.updateWorldMatrix(true, true);
+  const inverse = group.matrixWorld.clone().invert();
   const batches = new Map<
     THREE.Material,
     { geometries: THREE.BufferGeometry[]; lines: boolean }
@@ -257,7 +345,7 @@ function batchStatic(group: THREE.Group) {
       geometry.dispose();
       geometry = flat;
     }
-    geometry.applyMatrix4(obj.matrixWorld);
+    geometry.applyMatrix4(inverse.clone().multiply(obj.matrixWorld));
     geometry.deleteAttribute("uv");
     const batch = batches.get(material) ?? {
       geometries: [],
@@ -282,7 +370,7 @@ function batchStatic(group: THREE.Group) {
       );
   });
 }
-function person(parent: THREE.Object3D, variant: number) {
+function person(parent: THREE.Object3D, variant: number, walking = false) {
   const g = new THREE.Group();
   parent.add(g);
   const robe = [dark, linen, green][variant % 3];
@@ -291,8 +379,10 @@ function person(parent: THREE.Object3D, variant: number) {
   if (variant % 3 === 0)
     mesh(g, new THREE.ConeGeometry(0.15, 0.065, 10), linen, 0, 0.53, 0);
   else box(g, 0.13, 0.05, 0.12, 0, 0.515, 0, dark);
-  beam(g, [-0.045, 0.12, 0], [-0.055, 0.02, 0.025], 0.02, dark);
-  beam(g, [0.045, 0.12, 0], [0.06, 0.02, -0.025], 0.02, dark);
+  if (!walking) {
+    beam(g, [-0.045, 0.12, 0], [-0.055, 0.02, 0.025], 0.02, dark);
+    beam(g, [0.045, 0.12, 0], [0.06, 0.02, -0.025], 0.02, dark);
+  }
   beam(g, [-0.06, 0.36, 0], [-0.12, 0.24, 0.04], 0.029, robe);
   beam(g, [0.06, 0.36, 0], [0.12, 0.24, 0.04], 0.029, robe);
   if (variant % 4 === 0) {
@@ -307,6 +397,17 @@ function person(parent: THREE.Object3D, variant: number) {
         0.13,
         0,
       );
+    }
+  }
+  if (walking) {
+    batchStatic(g);
+    for (const side of [-1, 1]) {
+      const leg = new THREE.Group();
+      leg.name = side === -1 ? "left-leg" : "right-leg";
+      leg.position.set(side * 0.05, 0.13, 0);
+      g.add(leg);
+      beam(leg, [0, 0, 0], [0, -0.115, 0.025], 0.021, dark);
+      batchStatic(leg);
     }
   }
   return g;
@@ -382,17 +483,39 @@ function hall(
   depth: number,
   h: number,
   turn = 0,
+  kind: BuildingKind = "dwelling",
 ) {
   const g = new THREE.Group();
   parent.add(g);
   g.position.copy(scrollPoint(s, d));
   g.position.y = GROUND_Y;
   g.rotation.y = turn;
-  box(g, w, h, depth, 0, h / 2, 0, plaster);
+  if (kind === "courtyard") {
+    for (const side of [-1, 1]) {
+      const wing = hall(g, 0, 0, w * 0.27, depth * 0.92, h * 0.86);
+      wing.position.set(side * w * 0.34, 0, 0);
+    }
+    const rear = hall(g, 0, 0, w * 0.36, depth * 0.28, h);
+    rear.position.set(0, 0, -depth * 0.35);
+    for (const side of [-1, 1])
+      box(
+        g,
+        w * 0.1,
+        h * 0.36,
+        0.1,
+        side * w * 0.18,
+        h * 0.18,
+        depth / 2,
+        plaster,
+      );
+    box(g, w * 0.24, 0.07, 0.34, 0, h * 0.44, depth / 2, roof);
+    return g;
+  }
+  box(g, w, h, depth, 0, h / 2, 0, kind === "warehouse" ? wood : plaster);
   // Hipped tile roof: short ridge, broad roof planes, triangular hip ends.
   const e = w / 2 + 0.2,
     f = depth / 2 + 0.23,
-    r = w * 0.29,
+    r = w * (kind === "warehouse" ? 0.48 : 0.29),
     y = h + 0.1,
     top = h + Math.min(0.55, depth * 0.21);
   const geo = new THREE.BufferGeometry();
@@ -444,6 +567,77 @@ function hall(
     for (let z = -depth / 2; z <= depth / 2; z += 0.5)
       box(g, 0.035, h, 0.032, (side * w) / 2, h / 2, z, dark);
   box(g, w, 0.032, 0.035, 0, h * 0.28, depth / 2 + 0.04, dark);
+  if (kind === "shop") {
+    // Deep dark shop bays, counter, and a restrained cloth valance under the eaves.
+    for (const x of [-w * 0.3, 0, w * 0.3]) {
+      box(g, w * 0.25, h * 0.7, 0.025, x, h * 0.42, depth / 2 + 0.05, dark);
+      box(g, w * 0.25, h * 0.23, 0.16, x, h * 0.12, depth / 2 + 0.07, wood);
+    }
+    const awning = box(g, w * 0.94, 0.035, 0.38, 0, h * 0.83, depth / 2, linen);
+    awning.rotation.x = 0.12;
+    box(g, w * 0.94, 0.09, 0.025, 0, h * 0.75, depth / 2 + 0.18, linen);
+    box(g, 0.14, h * 0.57, 0.035, -w * 0.41, h * 0.65, depth / 2 + 0.09, linen);
+  } else if (kind === "gallery") {
+    // Recessed upper gallery and a second shallow eave distinguish larger halls.
+    box(g, w * 0.88, h * 0.3, 0.025, 0, h * 0.68, depth / 2 + 0.05, dark);
+    box(g, w + 0.25, 0.055, depth + 0.28, 0, h * 0.48, 0, roof);
+    for (let x = -w * 0.43; x <= w * 0.44; x += 0.22)
+      box(g, 0.025, h * 0.22, 0.025, x, h * 0.59, depth / 2 + 0.08, wood);
+    for (const y of [h * 0.5, h * 0.69])
+      beam(
+        g,
+        [-w * 0.45, y, depth / 2 + 0.1],
+        [w * 0.45, y, depth / 2 + 0.1],
+        0.015,
+        wood,
+      );
+  } else if (kind === "warehouse") {
+    for (const side of [-1, 1]) {
+      box(
+        g,
+        w * 0.26,
+        h * 0.8,
+        0.03,
+        side * w * 0.2,
+        h * 0.4,
+        depth / 2 + 0.055,
+        dark,
+      );
+      for (let i = 0; i < 5; i++)
+        box(
+          g,
+          0.035,
+          h * 0.78,
+          0.035,
+          side * w * 0.2 - w * 0.11 + i * w * 0.055,
+          h * 0.4,
+          depth / 2 + 0.08,
+          wood,
+        );
+    }
+  } else {
+    for (const x of [-w * 0.27, w * 0.27]) {
+      box(g, w * 0.2, h * 0.34, 0.025, x, h * 0.57, depth / 2 + 0.055, dark);
+      for (let i = -2; i <= 2; i++)
+        box(
+          g,
+          0.016,
+          h * 0.33,
+          0.02,
+          x + i * w * 0.037,
+          h * 0.57,
+          depth / 2 + 0.075,
+          linen,
+        );
+      beam(
+        g,
+        [x - w * 0.1, h * 0.57, depth / 2 + 0.08],
+        [x + w * 0.1, h * 0.57, depth / 2 + 0.08],
+        0.012,
+        linen,
+      );
+    }
+  }
   return g;
 }
 function workingBoat(
@@ -501,21 +695,6 @@ export function createBridgeStudy() {
   river.rotation.x = -Math.PI / 2;
   bank(group, bankOutline("far"));
   bank(group, bankOutline("near"));
-  // Quiet water strokes follow the broad bend rather than a straight channel.
-  for (let i = 0; i < 180; i++) {
-    const s = -21 + ((i * 0.731) % 42),
-      d = -3.9 + ((i * 0.417) % 7);
-    if (onBank("far", { s, d }) || onBank("near", { s, d })) continue;
-    const p = scrollPoint(s, d);
-    const q = p.clone().add(scrollPoint(0.25 + (i % 3) * 0.14, 0.03));
-    p.y = q.y = -0.02;
-    group.add(
-      new THREE.Line(
-        new THREE.BufferGeometry().setFromPoints([p, q]),
-        riverInk,
-      ),
-    );
-  }
   const bridge = new THREE.Group();
   bridge.position.copy(scrollPoint(BRIDGE.center.s, BRIDGE.center.d));
   bridge.rotation.y = REFERENCE_AZIMUTH - BRIDGE.angle;
@@ -590,7 +769,7 @@ export function createBridgeStudy() {
       0,
     );
   }
-  for (const h of HALLS) {
+  for (const [index, h] of HALLS.entries()) {
     hall(
       group,
       h.s,
@@ -599,6 +778,7 @@ export function createBridgeStudy() {
       h.depth,
       h.height,
       REFERENCE_AZIMUTH - h.angle + (h.side === "near" ? Math.PI : 0),
+      BUILDING_KINDS[index],
     );
   }
   for (const [s, d] of [
@@ -621,6 +801,7 @@ export function createBridgeStudy() {
     const p = scrollPoint(s, safeDepth);
     tree(group, p.x, p.z, false);
   }
+  riversideNature(group);
   const market = [
     [-10, 0.9],
     [-11.9, 2.1],
@@ -641,17 +822,6 @@ export function createBridgeStudy() {
     stall(group, p.x, p.z, i % 3 === 0);
     if (i % 2 === 0) parasol(group, p.x + 0.4, p.z + 0.3);
   });
-  for (const b of BOATS) {
-    workingBoat(
-      group,
-      b.s,
-      b.d,
-      b.length,
-      b.width,
-      b.cabin,
-      REFERENCE_AZIMUTH + Math.PI / 2 - b.angle,
-    );
-  }
   for (let i = 0; i < 50; i++) {
     const onApproach = i < 34;
     const s = onApproach
@@ -673,11 +843,40 @@ export function createBridgeStudy() {
     p.position.set(x, height(x), i % 2 ? 0.7 : -0.7);
   }
   batchStatic(group);
-  const people = Array.from({ length: 8 }, (_, i) => {
-    const p = person(group, i);
-    batchStatic(p);
+  const boats = BOATS.map((b) => {
+    const vessel = workingBoat(
+      group,
+      b.s,
+      b.d,
+      b.length,
+      b.width,
+      b.cabin,
+      REFERENCE_AZIMUTH + Math.PI / 2 - b.angle,
+    );
+    vessel.name = "working-boat";
+    batchStatic(vessel);
+    return vessel;
+  });
+  const rippleGeometry = new THREE.BufferGeometry();
+  const ripplePositions = new THREE.Float32BufferAttribute(
+    new Float32Array(RIPPLE_COUNT * 8 * 3),
+    3,
+  );
+  ripplePositions.setUsage(THREE.DynamicDrawUsage);
+  rippleGeometry.setAttribute("position", ripplePositions);
+  const ripples = new THREE.LineSegments(rippleGeometry, riverInk);
+  ripples.name = "river-ripples";
+  ripples.frustumCulled = false;
+  group.add(ripples);
+  const people = Array.from({ length: WALKER_COUNT }, (_, i) => {
+    const p = person(group, i, true);
+    p.name = "walking-person";
     p.scale.setScalar(PERSON_SCALE);
-    return p;
+    return {
+      group: p,
+      left: p.getObjectByName("left-leg")!,
+      right: p.getObjectByName("right-leg")!,
+    };
   });
   return {
     group,
@@ -686,25 +885,42 @@ export function createBridgeStudy() {
     },
     update(time: number) {
       people.forEach((p, i) => {
-        const phase = (time * 0.018 + i * 0.173) % 2,
-          travel = phase < 1 ? phase : 2 - phase;
-        if (i < 4) {
-          const x = -half + travel * BRIDGE.length;
-          const point = bridgePoint(x, i % 2 ? 0.3 : -0.3);
-          p.position.copy(scrollPoint(point.s, point.d));
-          p.position.y = height(x);
-          p.rotation.y =
-            bridge.rotation.y + (phase < 1 ? Math.PI / 2 : -Math.PI / 2);
-        } else {
-          const s = -10.2 + travel * 2.4;
-          p.position.copy(
-            scrollPoint(s, shoreDepth("near", s) + 0.45 + (i - 4) * 0.3),
-          );
-          p.position.y = GROUND_Y;
-          p.rotation.y =
-            REFERENCE_AZIMUTH + (phase < 1 ? Math.PI / 2 : -Math.PI / 2);
-        }
+        const pose = walkPose(i, time),
+          stride = pose.moving ? Math.sin(time * (5 + (i % 3) * 0.3) + i) : 0;
+        p.group.position.copy(scrollPoint(pose.s, pose.d));
+        p.group.position.y = pose.y + Math.abs(stride) * 0.006;
+        p.group.rotation.y = REFERENCE_AZIMUTH - pose.angle + Math.PI / 2;
+        p.left.rotation.x = stride * 0.46;
+        p.right.rotation.x = -stride * 0.46;
       });
+      boats.forEach((vessel, i) => {
+        const pose = boatPose(i, time);
+        vessel.position.copy(scrollPoint(pose.s, pose.d));
+        vessel.position.y = pose.y;
+        vessel.rotation.set(
+          pose.pitch,
+          REFERENCE_AZIMUTH + Math.PI / 2 - pose.angle,
+          pose.roll,
+        );
+      });
+      for (let i = 0; i < RIPPLE_COUNT; i++) {
+        const ripple = riverRipple(i, time);
+        for (let segment = 0; segment < 4; segment++)
+          for (let end = 0; end < 2; end++) {
+            const t = (segment + end) / 4,
+              s = ripple.s + t * ripple.length;
+            const far = shoreDepth("far", s),
+              near = shoreDepth("near", s);
+            const p = scrollPoint(
+              s,
+              far +
+                (near - far) * ripple.fraction +
+                Math.sin(t * Math.PI * 2 + i) * 0.025,
+            );
+            ripplePositions.setXYZ(i * 8 + segment * 2 + end, p.x, -0.019, p.z);
+          }
+      }
+      ripplePositions.needsUpdate = true;
     },
   };
 }
