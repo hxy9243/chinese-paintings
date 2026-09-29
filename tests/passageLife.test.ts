@@ -90,7 +90,7 @@ describe("life in the reference passage", () => {
       );
     }
   });
-  it("keeps the horse-cart footprints dry and clear of roofs", () => {
+  it("keeps the horse-cart footprints on the bridge or dry street and clear of roofs", () => {
     expect(CARTS.length).toBeGreaterThanOrEqual(6);
     for (const cart of CARTS)
       for (let x = -1.5; x <= 1.5; x += 0.25)
@@ -104,7 +104,13 @@ describe("life in the reference passage", () => {
               0.7 * (x * Math.sin(cart.angle) + z * Math.cos(cart.angle)),
           };
           expect(
-            onBank("near", p) || onBank("far", p),
+            onBank("near", p) ||
+              onBank("far", p) ||
+              Math.abs(
+                -(p.s - BRIDGE.center.s) * Math.sin(BRIDGE.angle) +
+                  (p.d - BRIDGE.center.d) * Math.cos(BRIDGE.angle),
+              ) <
+                BRIDGE.width / 2,
             `cart at ${cart.s},${cart.d}`,
           ).toBe(true);
           expect(insideRoof(p, 0.05), `cart at ${cart.s},${cart.d}`).toBe(

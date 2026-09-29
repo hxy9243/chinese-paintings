@@ -17,7 +17,7 @@ import {
 } from "../src/passageLife";
 import { WALKER_RADIUS, STATIC_OBSTACLES, distance } from "../src/passageSpace";
 import { MOORED_BOATS } from "../src/moorings";
-import { BOATS } from "../src/passageLayout";
+import { BOATS, BRIDGE } from "../src/passageLayout";
 
 describe("independent activity and browsing", () => {
   it("gives every walker repeatable pauses followed by movement, without synchronized stops", () => {
@@ -74,7 +74,9 @@ describe("independent activity and browsing", () => {
         const own = STATIC_OBSTACLES.find(
           (o) => o.s === home.s && o.d === home.d,
         )!;
-        expect(own.radius).toBe(RESIDENT_SPACE);
+        expect(own.radius).toBe(
+          homes === SHOP_VISITORS ? 0.44 : RESIDENT_SPACE,
+        );
       });
     }
   });
@@ -102,11 +104,11 @@ describe("independent activity and browsing", () => {
       for (let t = 0; t < 800; t += 0.7) {
         const a = cartPose(i, t),
           b = cartPose(i, t + 0.7);
-        expect(a.angle).toBe(0);
+        expect(a.angle).toBe(BRIDGE.angle);
         expect(a.turning).toBe(false);
         if (b.s < a.s) {
-          expect(a.s).toBeGreaterThan(26);
-          expect(b.s).toBeLessThan(-26);
+          expect(Math.abs(a.d)).toBeGreaterThan(19);
+          expect(Math.abs(b.d)).toBeGreaterThan(19);
         }
       }
     let passes = 0;

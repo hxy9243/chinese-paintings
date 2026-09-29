@@ -67,6 +67,14 @@ export function createCrowd(
               "mat3(modelMatrix)*normal",
               "mat3(modelMatrix*crowdMatrix)*normal",
             );
+        material.fragmentShader = material.fragmentShader.replace(
+          "void main(){",
+          `void main(){
+          float edgeS=point.x*.64278761+point.z*.76604444;
+          float edgeD=-point.x*.76604444+point.z*.64278761;
+          if(length(vec2(max(0.,abs(edgeS)-16.),max(0.,abs(edgeD)-8.)))>6.)discard;
+        `,
+        );
         const drawable =
           pool.source instanceof THREE.Line
             ? new THREE.LineSegments(geo, material)

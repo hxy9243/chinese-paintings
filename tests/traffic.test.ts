@@ -5,7 +5,6 @@ import {
   BOATS,
   HALLS,
   bridgeHeight,
-  bridgePoint,
   shoreDepth,
 } from "../src/passageLayout";
 import {
@@ -17,6 +16,7 @@ import {
   CARTS,
   NATURE,
   MARKET,
+  observerPose,
 } from "../src/passageLife";
 import {
   CART_RADIUS,
@@ -25,6 +25,7 @@ import {
   WALKER_RADIUS,
   STATIC_OBSTACLES,
 } from "../src/passageSpace";
+import { REFERENCE_AZIMUTH } from "../src/scrollLayout";
 import { createBridgeStudy } from "../src/bridgeStudy";
 
 const distance = (a: { s: number; d: number }, b: { s: number; d: number }) =>
@@ -44,6 +45,23 @@ function hallDistance(p: { s: number; d: number }, h: (typeof HALLS)[number]) {
       Math.abs(-s * Math.sin(h.angle) + d * Math.cos(h.angle)) -
         h.depth / 2 -
         0.23,
+    ),
+  );
+}
+function cartGap(
+  cart: { s: number; d: number; angle: number },
+  p: { s: number; d: number },
+) {
+  const ds = p.s - cart.s,
+    dd = p.d - cart.d;
+  return Math.hypot(
+    Math.max(
+      0,
+      Math.abs(ds * Math.cos(cart.angle) + dd * Math.sin(cart.angle)) - 1.35,
+    ),
+    Math.max(
+      0,
+      Math.abs(-ds * Math.sin(cart.angle) + dd * Math.cos(cart.angle)) - 0.32,
     ),
   );
 }
@@ -81,20 +99,17 @@ describe("shared space and continuous traffic", () => {
         }
       for (const walker of walkers.slice(0, BRIDGE_WALKERS))
         for (let i = 0; i < 12; i++) {
-          const observer = bridgePoint(
-            -BRIDGE.length / 2 + 0.4 + (i * (BRIDGE.length - 0.8)) / 11,
-            i % 2 ? 0.9 : -0.9,
-          );
+          const observer = observerPose(i, time);
           minPeople = Math.min(
             minPeople,
             distance(walker, observer) - WALKER_RADIUS - PERSON_RADIUS,
           );
         }
       for (let i = 0; i < carts.length; i++) {
-        for (const person of walkers)
+        for (const person of walkers.filter((p) => Math.abs(p.d) < 14.3))
           minCarts = Math.min(
             minCarts,
-            distance(carts[i], person) - CART_RADIUS - WALKER_RADIUS,
+            cartGap(carts[i], person) - WALKER_RADIUS,
           );
         for (let j = i + 1; j < carts.length; j++)
           minCarts = Math.min(
@@ -107,19 +122,28 @@ describe("shared space and continuous traffic", () => {
           minStatic = Math.min(
             minStatic,
             p.radius === CART_LANE_RADIUS
-              ? Math.hypot(
-                  Math.max(0, Math.abs(p.s - obstacle.s) - 1.12),
-                  Math.max(0, Math.abs(p.d - obstacle.d) - 0.32),
-                ) - obstacle.radius
+              ? cartGap(p as (typeof carts)[number], obstacle) - obstacle.radius
               : distance(p, obstacle) - p.radius - obstacle.radius,
           );
         for (const h of HALLS)
           if (p.radius === CART_LANE_RADIUS) {
-            for (let x = -1.12; x <= 1.121; x += 0.14)
+            for (let x = -1.35; x <= 1.351; x += 0.135)
               for (const d of [-0.32, 0.32])
                 minRoof = Math.min(
                   minRoof,
-                  hallDistance({ s: p.s + x, d: p.d + d }, h),
+                  hallDistance(
+                    {
+                      s:
+                        p.s +
+                        x * Math.cos(BRIDGE.angle) -
+                        d * Math.sin(BRIDGE.angle),
+                      d:
+                        p.d +
+                        x * Math.sin(BRIDGE.angle) +
+                        d * Math.cos(BRIDGE.angle),
+                    },
+                    h,
+                  ),
                 );
           } else minRoof = Math.min(minRoof, hallDistance(p, h) - p.radius);
       }
@@ -232,11 +256,19 @@ describe("shared space and continuous traffic", () => {
           const attr = n.geometry.getAttribute("position"),
             v = new THREE.Vector3();
           for (let i = 0; i < attr.count; i += 7) {
-            v.fromBufferAttribute(attr, i)
-              .applyMatrix4(n.matrixWorld)
-              .sub(cart.position);
+            v.fromBufferAttribute(attr, i).applyMatrix4(n.matrixWorld);
+            const s =
+                v.x * Math.cos(REFERENCE_AZIMUTH) -
+                v.z * Math.sin(REFERENCE_AZIMUTH),
+              d =
+                v.x * Math.sin(REFERENCE_AZIMUTH) +
+                v.z * Math.cos(REFERENCE_AZIMUTH);
+            const along =
+              (s - BRIDGE.center.s) * Math.cos(BRIDGE.angle) +
+              (d - BRIDGE.center.d) * Math.sin(BRIDGE.angle);
+            minY = Math.min(minY, v.y - bridgeHeight(along));
+            v.sub(cart.position);
             maxRadius = Math.max(maxRadius, Math.hypot(v.x, v.z));
-            minY = Math.min(minY, v.y);
           }
         });
     }

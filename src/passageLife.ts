@@ -87,14 +87,14 @@ function laneLoop(phase: number, start: number, end: number, radius: number) {
 export function walkPose(index: number, time: number, seed = 0) {
   const activity = activityClock(index, time, seed);
   if (index < BRIDGE_WALKERS) {
-    const start = -BRIDGE.length / 2 + 0.8,
-      end = BRIDGE.length / 2 - 0.8;
-    const perimeter = 2 * (end - start) + 2 * Math.PI * 0.3;
+    const start = -22,
+      end = 22;
+    const perimeter = 2 * (end - start) + 2 * Math.PI * 0.72;
     const p = laneLoop(
       activity.progress * 0.13 + (index / BRIDGE_WALKERS) * perimeter,
       start,
       end,
-      0.3,
+      0.72,
     );
     return {
       ...bridgePoint(p.s, p.lateral),
@@ -131,13 +131,17 @@ export function walkPose(index: number, time: number, seed = 0) {
 }
 export const CARTS = CART_ROUTES;
 export function cartPose(index: number, time: number) {
-  const speed = 0.16,
-    clock = time * speed + (index * 56) / 6 + 8;
+  const clock = time * 0.16 + (index * 44) / 6 + 5,
+    x = -22 + (((clock % 44) + 44) % 44);
+  const slope = (bridgeHeight(x + 0.7) - bridgeHeight(x - 0.7)) / 1.4;
+  let y = GROUND_Y;
+  for (let u = -1.15; u <= 1.151; u += 0.115)
+    y = Math.max(y, bridgeHeight(x + u) - u * slope);
   return {
-    s: -28 + (((clock % 56) + 56) % 56),
-    d: 12.9,
-    y: GROUND_Y,
-    angle: 0,
+    ...bridgePoint(x),
+    y: y + 0.005,
+    angle: BRIDGE.angle,
+    slope,
     moving: true,
     turning: false,
     traveled: clock,
@@ -183,8 +187,12 @@ export function riverRipple(index: number, time: number) {
     length: (0.25 + (index % 5) * 0.13) * Math.sin(Math.PI * phase) ** 2,
   };
 }
+// Keep a tall willow grove clear before allocating the denser market.
+const willowGrove = reserve({ s: 19, d: -11 }, 1.1, "willow")
+  ? [{ s: 19, d: -11, kind: "willow" as const, size: 1.15 }]
+  : [];
 export const MARKET: (PassagePoint & { parasol: boolean })[] = [];
-for (let i = 0; i < 18; i++) {
+for (let i = 0; i < 28; i++) {
   const candidates: PassagePoint[] = [];
   for (let s = -20; s <= 20; s += 0.55)
     for (const side of ["near", "far"] as const)
@@ -193,7 +201,10 @@ for (let i = 0; i < 18; i++) {
           s,
           d: shoreDepth(side, s) + (side === "near" ? 1 : -1) * offset,
         });
-  const target = { s: -19 + (i % 9) * 4.5, d: i < 9 ? 5 : -8 };
+  const target =
+    i < 14
+      ? { s: -7.8 + (i % 2 ? -3.3 : 3.3), d: 4.7 + Math.floor(i / 2) * 1.15 }
+      : { s: -19 + ((i - 14) % 7) * 6, d: i < 21 ? 5 : -8 };
   candidates.sort(
     (a, b) =>
       Math.hypot(a.s - target.s, a.d - target.d) -
@@ -210,14 +221,14 @@ for (let i = 0; i < 18; i++) {
 export const SHOP_VISITORS: (PassagePoint & { shop: number })[] = [];
 MARKET.forEach((shop, index) => {
   let placed = 0;
-  for (let j = 0; j < 24 && placed < 2; j++) {
-    const angle = (j * Math.PI) / 12,
-      offset = (shop.parasol ? 0.97 : 0.7) + 0.6 + 0.12;
+  for (let j = 0; j < 36 && placed < 4; j++) {
+    const angle = (j * Math.PI) / 18,
+      offset = (shop.parasol ? 0.97 : 0.7) + 0.44 + 0.12;
     const p = {
       s: shop.s + Math.cos(angle) * offset,
       d: shop.d + Math.sin(angle) * offset,
     };
-    if (reserve(p, 0.6, "shopper")) {
+    if (reserve(p, 0.44, "shopper")) {
       SHOP_VISITORS.push({ ...p, shop: index });
       placed++;
     }
@@ -226,7 +237,7 @@ MARKET.forEach((shop, index) => {
 export function shopperPose(index: number, time: number, seed = 0) {
   const home = SHOP_VISITORS[index],
     shop = MARKET[home.shop],
-    p = wander(index + 300, time, 0.42, seed);
+    p = wander(index + 300, time, 0.26, seed);
   const s = home.s + p.s,
     d = home.d + p.d;
   return {
@@ -266,7 +277,9 @@ for (const [s, d] of [
     FEATURE_TREES.push({ s, d, size, form });
 }
 export type NatureKind = "bare" | "spring" | "willow" | "reed" | "rock";
-export const NATURE: (PassagePoint & { kind: NatureKind; size: number })[] = [];
+export const NATURE: (PassagePoint & { kind: NatureKind; size: number })[] = [
+  ...willowGrove,
+];
 for (const side of ["near", "far"] as const)
   for (let i = 0; i < 44; i++) {
     const s = -20.4 + i * 0.95,
@@ -313,7 +326,7 @@ for (const side of ["near", "far"] as const)
 
 // Additional tall groves behind the roof rows; trunks stay clear of architecture.
 for (const side of ["near", "far"] as const)
-  for (let i = 0; i < 18; i++) {
+  for (let i = 0; i < 28; i++) {
     const s = -17 + i * 2;
     const d = (side === "far" ? -1 : 1) * (10.7 + (i % 3) * 0.8);
     const p = { s, d };
@@ -332,7 +345,7 @@ for (const side of ["near", "far"] as const)
 // extend above the footpaths; conservative trunk/root discs keep traffic clear.
 for (
   let i = 0;
-  i < 600 &&
+  i < 4000 &&
   NATURE.filter(
     (n) => n.kind === "bare" || n.kind === "spring" || n.kind === "willow",
   ).length < 30;
@@ -382,7 +395,7 @@ export function observerPose(index: number, time: number, seed = 0) {
     x = home + p.s;
   return {
     ...p,
-    ...bridgePoint(x, index % 2 ? 0.9 : -0.9),
+    ...bridgePoint(x, index % 2 ? 1.3 : -1.3),
     y: bridgeHeight(x),
     angle: BRIDGE.angle + (p.angle > 0 ? 0 : Math.PI),
   };

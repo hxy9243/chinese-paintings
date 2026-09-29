@@ -3,13 +3,14 @@ import {
   HALLS,
   SHORELINES,
   shoreDepth,
+  bridgePoint,
   type PassagePoint,
   type BankSide,
 } from "./passageLayout";
 
 export const PERSON_RADIUS = 0.255;
 export const WALKER_RADIUS = 0.14;
-export const CART_RADIUS = 1.22;
+export const CART_RADIUS = 1.35;
 export type Segment = { a: PassagePoint; b: PassagePoint };
 export type Disc = PassagePoint & { radius: number; kind: string };
 export function distance(a: PassagePoint, b: PassagePoint) {
@@ -111,24 +112,21 @@ export function walkingClear(p: PassagePoint, radius: number) {
 }
 export type CartRoute = Segment &
   PassagePoint & { angle: number; length: number };
-// A continuous one-way road behind the near-bank roof row. Vehicles enter
-// and leave through the rounded edge; the full corridor is reserved first.
+// The main street continues the bridge axis through both banks.
+export const STREET_HALF_WIDTH = 1.85;
 export const CART_LANE_RADIUS = 0.46;
+export const MAIN_STREET: Segment = { a: bridgePoint(-22), b: bridgePoint(22) };
 export const CART_ROUTES: CartRoute[] = Array.from({ length: 6 }, (_, i) => ({
-  s: -20 + i * 7,
-  d: 12.9,
-  angle: 0,
-  length: 56,
-  a: { s: -28, d: 12.9 },
-  b: { s: 28, d: 12.9 },
+  ...bridgePoint(-14 + i * 4),
+  angle: BRIDGE.angle,
+  length: 44,
+  ...MAIN_STREET,
 }));
 export function trafficClear(p: PassagePoint, radius: number) {
   return (
     walkingClear(p, radius) &&
     bridgeClear(p, radius) &&
-    CART_ROUTES.every(
-      (route) => segmentDistance(p, route) > radius + CART_LANE_RADIUS + 0.08,
-    )
+    segmentDistance(p, MAIN_STREET) > radius + STREET_HALF_WIDTH + 0.08
   );
 }
 export const STATIC_OBSTACLES: Disc[] = [];

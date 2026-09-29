@@ -24,8 +24,8 @@ Open the local address printed by Vite. The private Sites project is recorded in
 - Drag to turn and tilt; use the three sliders for ±30° rotation on each axis.
 - Right-drag to pan; pinch or scroll to zoom. Reset restores the authored view.
 - Focus on the bridge, far-bank shops, river bend, or whole passage.
-- Horse carts travel one way along the foreground road. Boats pass in opposite lanes and enter from both sides.
-- People walk, pause independently, and browse the market stands. Standing figures, boat crews, and drivers also have gentle idle motion.
+- Horse carts travel one way along the open main street and over the bridge. Boats pass in opposite lanes and enter from both sides.
+- People walk, pause independently, and browse 28 market stands in small groups. Standing figures, boat crews, and drivers also have gentle idle motion.
 - Pause life freezes the whole scene. Reduced-motion preference starts paused.
 - Compare the ink treatment with the plain model, and adjust ink softness.
 - Open the reference crop to compare with the original painting.

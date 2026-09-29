@@ -142,18 +142,23 @@ export const HALLS: HallLayout[] = [
 ];
 // Compact foreground street: matching roof axes and narrow gaps between eaves.
 [
-  { s: -16.7, d: 5.4 },
-  { s: -11, d: 8.2 },
-  { s: -5, d: 9.8 },
-  { s: 0.4, d: 10 },
+  { s: -16.7, d: 4.4 },
+  { s: -13.7, d: 10 },
+  { s: -3.4, d: 9.8 },
+  { s: 1.5, d: 10 },
 ].forEach((p, i) => Object.assign(HALLS[7 + i], p, { angle: 0.08 }));
+// Leave the bridge axis open as a continuous market street on both banks.
+HALLS[8].width = 4.4;
+HALLS[9].width = 4;
+HALLS[2].s = -9.55;
+HALLS[2].width = 2.4;
 // Both full-width landings sit inland. Local x runs from near bank to far bank.
 const near = { s: -7.4, d: 3.35 },
   far = { s: -5.9, d: -7.35 };
 export const BRIDGE = {
   near,
   far,
-  width: 2.3,
+  width: 3.2,
   rise: 2.05,
   length: Math.hypot(far.s - near.s, far.d - near.d),
   angle: Math.atan2(far.d - near.d, far.s - near.s),

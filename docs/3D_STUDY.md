@@ -133,3 +133,10 @@ Articulated people share instanced mesh and ink geometry, so the larger animated
 ## Far-bank moored boats — 2026-09-29
 
 Four smaller vessels now remain beside the far-bank buildings in two clusters, following the supplied crop. Their berths follow the shore tangent and reserve the full hull/oar footprint. Mooring posts stay fixed, lines follow gentle bobbing, and two softly animated crew members occupy each boat. They share Pause life and reduced-motion behavior with the rest of the scene. The seven passing boats retain their opposing routes. Tests verify shore, bridge, berth, and passing-traffic clearance over twenty simulated minutes, plus rendered bobbing and pause behavior.
+
+
+## Open bridge approaches and market street — 2026-09-29
+
+The bridge now leads into a continuous 3.7-unit main street on both banks, with houses moved or narrowed to face the route instead of blocking it. A pale earth surface makes both approaches visible. The bridge deck widens to 3.2 units, leaving room for a central cart lane, side pedestrian lanes, and spectators by the rails. Six one-way carts now follow the street over the arch; their elevation and pitch follow the deck, and recycling remains outside the rounded scene.
+
+Twenty-eight stalls replace eighteen, with 56 local shoppers arranged into browsing clusters. Street-side stalls face the approach. Smaller reserved browsing spaces permit denser groups while retaining random pauses, gentle idle motion, and separation from traffic. Thirty tall trees and the four far-bank moorings remain. Geometry tests verify a clear corridor through both landings, all roof and prop clearances, cart crossings, foot/body clearance, pedestrian lanes, and populated stall clusters.
