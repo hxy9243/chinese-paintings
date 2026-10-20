@@ -14,32 +14,45 @@ const local = (p: { s: number; d: number }) => ({
     (p.d - BRIDGE.center.d) * Math.cos(BRIDGE.angle),
 });
 describe("full-span bridge flow and connected mud roads", () => {
-  it("keeps a moving crowd across the length and both inner/outer footways of the actual span", () => {
-    for (let t = 0; t < 180; t += 2.7) {
+  it("populates the full street and bridge at comparable walking density, with mixed directions and pauses", () => {
+    let bridgePopulation = 0,
+      streetPopulation = 0,
+      pauses = 0,
+      forward = 0,
+      backward = 0;
+    for (let t = 0; t < 300; t += 2.7) {
       const poses = Array.from({ length: BRIDGE_WALKERS }, (_, i) =>
         walkPose(i, t, 9243),
       );
       const span = poses
         .map(local)
         .filter((p) => Math.abs(p.u) < BRIDGE.length / 2 - 0.2);
-      expect(span.length).toBeGreaterThanOrEqual(72);
-      for (const third of [-1, 0, 1])
-        expect(
-          span.filter((p) => Math.abs(p.u - third * 3.3) < 1.65).length,
-        ).toBeGreaterThan(15);
+      expect(span.length).toBeGreaterThanOrEqual(16);
       for (const side of [-1, 1])
-        for (const inner of [true, false])
-          expect(
-            span.filter(
-              (p) => Math.sign(p.v) === side && Math.abs(p.v) < 0.68 === inner,
-            ).length,
-          ).toBeGreaterThan(12);
-      poses.forEach((p, i) => {
-        const q = walkPose(i, t + 0.5, 9243);
-        expect(Math.hypot(q.s - p.s, q.d - p.d)).toBeGreaterThan(0.065);
-        expect(p.y).toBeCloseTo(bridgeHeight(local(p).u));
-      });
+        expect(
+          span.filter((p) => Math.sign(p.v) === side).length,
+        ).toBeGreaterThan(4);
+      for (const p of poses) {
+        const point = local(p);
+        expect(p.y).toBeCloseTo(bridgeHeight(point.u));
+        expect(Math.abs(point.v)).toBeGreaterThan(0.5);
+        expect(Math.abs(point.v)).toBeLessThan(0.9);
+        if (Math.abs(point.u) < BRIDGE.length / 2) bridgePopulation++;
+        else if (Math.abs(point.u) < 13.5) streetPopulation++;
+        if (!p.moving) pauses++;
+        if (Math.cos(p.angle - BRIDGE.angle) > 0) forward++;
+        else backward++;
+      }
     }
+    const ratio =
+      streetPopulation /
+      (27 - BRIDGE.length) /
+      (bridgePopulation / BRIDGE.length);
+    expect(ratio).toBeGreaterThan(0.65);
+    expect(ratio).toBeLessThan(1.5);
+    expect(pauses).toBeGreaterThan(100);
+    expect(forward).toBeGreaterThan(100);
+    expect(backward).toBeGreaterThan(100);
   });
   it("joins the bank roads into both bridge approaches without a raised overlay mesh", () => {
     for (const side of [-1, 1]) {
@@ -72,8 +85,9 @@ describe("full-span bridge flow and connected mud roads", () => {
     const original = roof.uniforms.pigment.value.clone();
     setScenePalette("indigo-amber");
     expect(paletteAmount.value).toBe(1);
-    expect(roof.uniforms.alternatePigment.value.b).toBeGreaterThan(
-      roof.uniforms.alternatePigment.value.r,
+    const c = roof.uniforms.alternatePigment.value;
+    expect(Math.max(c.r, c.g, c.b) - Math.min(c.r, c.g, c.b)).toBeLessThan(
+      0.05,
     );
     expect(wood.uniforms.alternatePigment.value.r).toBeGreaterThan(
       wood.uniforms.alternatePigment.value.b,

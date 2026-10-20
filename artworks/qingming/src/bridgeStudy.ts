@@ -5,6 +5,7 @@ import { REFERENCE_AZIMUTH, scrollPoint } from "./scrollLayout";
 import {
   paintMaterial,
   paintingAmount,
+  waterTime,
   createDryInk,
   brushEdges,
 } from "./paintMaterial";
@@ -53,6 +54,7 @@ import { chooseDetail, projectedHeightPixels, type DetailLevel } from "../../../
 import { idleMotion } from "./peopleMotion";
 import { bridgeActivity, bridgeRole, bridgeVariant } from "./bridgeActivity";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
+import { createBoatWakes } from "./boatWakes";
 
 // A shallow, camera-constrained diorama. Hidden façades are intentionally plain.
 // The original passage runs from the near lower-left approach to the far upper-right.
@@ -865,7 +867,7 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
   const river = mesh(
     group,
     new THREE.ShapeGeometry(waterShape),
-    mat(0xcfbd8e, true),
+    mat(0xcfbd8e, true, false, true),
     0,
     -0.04,
     0,
@@ -1138,7 +1140,10 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
   const ripples = new THREE.LineSegments(rippleGeometry, riverInk);
   ripples.name = "river-ripples";
   ripples.frustumCulled = false;
+  ripples.renderOrder = 1;
   group.add(ripples);
+  const wakes = createBoatWakes();
+  group.add(wakes.mesh);
   const crowd = createCrowd(group, (i, level) => person(new THREE.Group(), i, true, level));
   const addPerson = (parent: THREE.Object3D, i: number, name: string) => {
     const p = crowd.add(parent, i, name);
@@ -1224,18 +1229,23 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
   return {
     group,
     metadata() {
-      const passingPeople=people.slice(0,BRIDGE_WALKERS).filter(p=>{
+      const mainStreet=people.slice(0,BRIDGE_WALKERS).map(p=>{
         const {x,z}=p.group.position;
         const s=x*Math.cos(REFERENCE_AZIMUTH)-z*Math.sin(REFERENCE_AZIMUTH)-BRIDGE.center.s;
         const d=x*Math.sin(REFERENCE_AZIMUTH)+z*Math.cos(REFERENCE_AZIMUTH)-BRIDGE.center.d;
-        return Math.abs(s*Math.cos(BRIDGE.angle)+d*Math.sin(BRIDGE.angle))<BRIDGE.length/2;
-      }).length;
+        return s*Math.cos(BRIDGE.angle)+d*Math.sin(BRIDGE.angle);
+      });
+      const passingPeople=mainStreet.filter(x=>Math.abs(x)<BRIDGE.length/2).length;
+      const approachPeople=mainStreet.filter(x=>Math.abs(x)>=BRIDGE.length/2&&Math.abs(x)<13.5).length;
       const roles=observers.reduce((counts,p)=>{
         const role=p.group.userData.activity as string;counts[role]=(counts[role]??0)+1;return counts;
       },{} as Record<string,number>);
       return {crowd:crowd.metadata(),seed,palette:getScenePalette(),vegetationLevel:plantDetail,
         buildings:detailedBuildings.map(b=>b.detail),traffic:CART_KINDS,bridgeCounters,
         marketTypes:MARKET_TYPES,referenceTrees:FEATURE_TREES.map(t=>t.id),
+        streetLife:{walkers:people.length,mainStreetWalkers:BRIDGE_WALKERS,approachPeople,
+          bridgeWalkingDensity:passingPeople/BRIDGE.length,
+          streetWalkingDensity:approachPeople/(27-BRIDGE.length)},
         bridgeLife:{stands:bridgeCounters.length,stationaryPeople:observers.length,passingPeople,roles}};
     },
     setPalette(value:ScenePalette){setScenePalette(value);},
@@ -1243,6 +1253,8 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
       paintingAmount.value = enabled ? 1 : 0;
     },
     update(time: number, camera?: THREE.Camera, viewportHeight = 800) {
+      waterTime.value = time;
+      wakes.update(time);
       const ortho=camera as THREE.OrthographicCamera|undefined;
       if(camera){
         const screen=(height:number,center:THREE.Vector3)=>projectedHeightPixels({height,viewportHeight,zoom:ortho?.zoom??1,

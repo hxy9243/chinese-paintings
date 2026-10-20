@@ -276,8 +276,8 @@ export function bridgePoint(x: number, lateral = 0): PassagePoint {
       lateral * Math.cos(BRIDGE.angle),
   };
 }
-// Two dense edge rows leave the centre available for carts and passing feet.
-export const BRIDGE_PEOPLE_PER_SIDE = 32;
+// Looser browsing groups leave gaps between counters and river watchers.
+export const BRIDGE_PEOPLE_PER_SIDE = 16;
 export const BRIDGE_SHOPS = [-1, 1].flatMap((side) =>
   Array.from({ length: 8 }, (_, i) => {
     const station = 1 + i * 4;
@@ -285,7 +285,7 @@ export const BRIDGE_SHOPS = [-1, 1].flatMap((side) =>
       x:
         -BRIDGE.length / 2 +
         0.4 +
-        (station * (BRIDGE.length - 0.8)) / (BRIDGE_PEOPLE_PER_SIDE - 1),
+        (station * (BRIDGE.length - 0.8)) / 31,
       lateral: side * (BRIDGE.width / 2 + 0.04),
       width: 0.84,
       depth: 0.24,

@@ -1,11 +1,7 @@
-import { activityClock, wander } from "./peopleMotion";
-import {
-  BANK_LOOPS,
-  bankCenter,
-  CART_ROUTES,
-  reserve,
-  roofClear,
-} from "./passageSpace";
+import { wander } from "./peopleMotion";
+import { pedestrianPoses } from "./pedestrians";
+export { WALKER_COUNT, MAIN_STREET_WALKERS } from "./pedestrians";
+import { CART_ROUTES, reserve, roofClear } from "./passageSpace";
 import {
   BOATS,
   REFERENCE_TREE,
@@ -56,8 +52,8 @@ export const BUILDING_KINDS: BuildingKind[] = [
   "compound",
   "courtyard",
 ];
-export const WALKER_COUNT = 132;
-export const BRIDGE_WALKERS = 108;
+// Keep the historic export for callers; these people now use the whole street.
+export { MAIN_STREET_WALKERS as BRIDGE_WALKERS } from "./pedestrians";
 export const BRIDGE_OBSERVERS = BRIDGE_PEOPLE_PER_SIDE * 2;
 
 export function insideRoof(p: PassagePoint, margin = 0) {
@@ -72,76 +68,8 @@ export function insideRoof(p: PassagePoint, margin = 0) {
     );
   });
 }
-// Closed passing lanes: everyone keeps their spacing and turns on clear end caps.
-function laneLoop(phase: number, start: number, end: number, radius: number) {
-  const straight = end - start,
-    perimeter = 2 * straight + 2 * Math.PI * radius;
-  let q = ((phase % perimeter) + perimeter) % perimeter;
-  if (q < straight) return { s: start + q, lateral: -radius, angle: 0 };
-  q -= straight;
-  if (q < Math.PI * radius) {
-    const a = -Math.PI / 2 + q / radius;
-    return {
-      s: end + radius * Math.cos(a),
-      lateral: radius * Math.sin(a),
-      angle: a + Math.PI / 2,
-    };
-  }
-  q -= Math.PI * radius;
-  if (q < straight) return { s: end - q, lateral: radius, angle: Math.PI };
-  q -= straight;
-  const a = Math.PI / 2 + q / radius;
-  return {
-    s: start + radius * Math.cos(a),
-    lateral: radius * Math.sin(a),
-    angle: a + Math.PI / 2,
-  };
-}
 export function walkPose(index: number, time: number, seed = 0) {
-  const activity = activityClock(index, time, seed);
-  if (index < BRIDGE_WALKERS) {
-    // Two nested circuits concentrate traffic on the span instead of spending
-    // 75% of each trip on the long approaches. Staggered positions, speeds and
-    // stride phases break the old two sparse lines while keeping a cart corridor.
-    const side=index<54?-1:1,slot=index%54,count=54;
-    const radius=.18,start=-6.0,end=6.0;
-    const perimeter=2*(end-start)+2*Math.PI*radius;
-    const phase=slot/count*perimeter+(side<0?.17:.39)+Math.sin(index*17.3)*.012;
-    const progress=time*.18+.008*(Math.sin(time*.43+index*1.7)-Math.sin(index*1.7));
-    const p=laneLoop(phase+progress,start,end,radius);
-    // Each circuit stays on its own side even around the end cap. A circuit
-    // around the whole road would turn through the path of oncoming horses.
-    const lateral=side*.68+p.lateral+Math.sin(time*.33+index*2.1)*.008;
-    return {
-      ...bridgePoint(p.s,lateral),y:bridgeHeight(p.s),angle:BRIDGE.angle+p.angle,
-      moving:true,stride:progress*15+index*1.3,
-    };
-  }
-
-  const k = index - BRIDGE_WALKERS;
-  // Alternate near/far banks while distributing six walkers over each half-bank loop.
-  const loop = BANK_LOOPS[(k % 2) * 2 + (Math.floor(k / 2) % 2)];
-  const perimeter = 2 * (loop.end - loop.start) + 2 * Math.PI * 0.26;
-  const p = laneLoop(
-    activity.progress * 0.12 + (Math.floor(k / 4) / 6) * perimeter,
-    loop.start,
-    loop.end,
-    0.26,
-  );
-  const slope =
-    (shoreDepth(loop.side, p.s + 0.01) - shoreDepth(loop.side, p.s - 0.01)) /
-    0.02;
-  return {
-    s: p.s,
-    d: bankCenter(loop.side, p.s) + p.lateral,
-    y: GROUND_Y,
-    angle: Math.atan2(
-      Math.sin(p.angle) + slope * Math.cos(p.angle),
-      Math.cos(p.angle),
-    ),
-    moving: activity.moving,
-    stride: activity.progress * 5,
-  };
+  return pedestrianPoses(time, seed)[index];
 }
 export const CARTS = CART_ROUTES;
 export const CART_KINDS = [

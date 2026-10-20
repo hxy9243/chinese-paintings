@@ -7,6 +7,8 @@ const timber = paintMaterial(0x9f895f),
   ceramic = paintMaterial(0xb8ad8c),
   food = paintMaterial(0x918866),
   cloth = paintMaterial(0x8d8e80);
+// Varied dyed cloths and glazes, shared across batches instead of one red canopy.
+const fabrics = [0xb86c50, 0xc59b4d, 0x6d8d81, 0x72839a, 0xc6ae7a, 0x906b6b].map(c => paintMaterial(c));
 const ink = createDryInk(0.55);
 type P = [number, number, number];
 function put(
@@ -142,6 +144,7 @@ export function marketStall(
 ) {
   const g = new THREE.Group();
   g.name = MARKET_TYPES[index % 6];
+  const fabric = fabrics[(index * 5 + Math.floor(index / 6)) % fabrics.length];
   parent.add(g);
   box(g, [1.3, 0.07, 0.66], [0, 0.61, 0]);
   for (const x of [-0.55, 0.55])
@@ -198,7 +201,7 @@ export function marketStall(
         g,
         [0.4, 0.028, 0.25],
         [-0.36 + i * 0.19, 0.67 + i * 0.014, 0],
-        i % 2 ? cloth : linen,
+        fabrics[(index + i) % fabrics.length],
       );
       mark(g, [
         [-0.5 + i * 0.19, 0.69 + i * 0.014, -0.11],
@@ -278,7 +281,7 @@ export function marketStall(
     geo.setAttribute("position", new THREE.Float32BufferAttribute(vertices, 3));
     geo.setIndex(ids);
     geo.computeVertexNormals();
-    put(g, geo, linen);
+    put(g, geo, fabric);
     for (let i = 0; i < 5; i++)
       mark(g, [
         [-0.76 + i * 0.38, 1.47, -0.49],
@@ -291,7 +294,7 @@ export function marketStall(
         [-0.76 + i * 0.1, 1.47, 0.49],
         [-0.76 + i * 0.1, 1.36 + (i % 3) * 0.016, 0.49],
         0.009,
-        linen,
+        fabric,
       );
     for (const x of [-0.63, 0.63])
       mark(g, [
@@ -354,7 +357,7 @@ export function bridgeMarket(
     if (layout.canopy) {
       for (const x of [-0.4, 0.4])
         rod(g, [x, 0, side * 0.1], [x, 0.67, side * 0.1], 0.01);
-      const roof = box(g, [0.96, 0.025, 0.42], [0, 0.68, side * 0.07], linen);
+      const roof = box(g, [0.96, 0.025, 0.42], [0, 0.68, side * 0.07], fabrics[i % fabrics.length]);
       roof.rotation.x = side * 0.12;
       for (let j = 0; j < 10; j++)
         rod(
@@ -362,7 +365,7 @@ export function bridgeMarket(
           [-0.43 + j * 0.095, 0.67, side * 0.26],
           [-0.43 + j * 0.095, 0.59, side * 0.26],
           0.006,
-          linen,
+          fabrics[i % fabrics.length],
         );
       box(g, [0.11, 0.23, 0.018], [0.4, 0.45, side * 0.12], linen);
     }

@@ -13,6 +13,7 @@ const timber = paintMaterial(0x917344),
   recess = paintMaterial(0x655b45),
   reed = paintMaterial(0xb4a178),
   leaf = paintMaterial(0x858167);
+const leafGlazes = [leaf, paintMaterial(0x7a9c53), paintMaterial(0x4c7955), paintMaterial(0xa1ad63)];
 const ink = createDryInk(0.7);
 type P = [number, number, number];
 const v = (p: P) => new THREE.Vector3(...p);
@@ -343,14 +344,14 @@ export function buildReferenceTree(
           );
         }
       if (leafy && k % 2 === 0)
-        for (let q = 0; q < (detail === 0 ? 2 : 7); q++) {
+        for (let q = 0; q < (detail === 0 ? 3 : 11); q++) {
           // Sparse spring foliage consists of small leaves, leaving branches visible.
-          const m = solid(g, new THREE.IcosahedronGeometry(0.065, 0), leaf, [
+          const m = solid(g, new THREE.IcosahedronGeometry(0.065, 0), leafGlazes[(q + k) % leafGlazes.length], [
             end[0] + Math.sin(q * 2.4) * 0.12,
             end[1] + Math.cos(q * 1.8) * 0.11,
             end[2] + Math.cos(q * 2.4) * 0.1,
           ]);
-          m.scale.set(1, 0.45, 0.7);
+          m.scale.set(0.8 + (q % 3) * 0.25, 0.38, 0.6 + (q % 2) * 0.2);
         }
     }
   });

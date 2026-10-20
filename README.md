@@ -9,7 +9,7 @@ Editable, code-driven interpretations of Chinese paintings, with shared modeling
 | 清明上河图 · Rainbow Bridge | `artworks/qingming/` | `/qingming/` |
 | 千里江山图 · A Thousand Miles of Rivers and Mountains | `artworks/thousand-miles/` | `/thousand-miles/` |
 
-**Status:** both artwork projects are imported. The local gallery and viewers run from this repository; Qingming geometry, people, traffic, and screen-space detail are being refined before any shader changes.
+**Status:** both artwork projects are imported. The local gallery and viewers run from this repository; Qingming now combines modeled geometry with seeded street crowds, layered pigment, drifting river washes, and fading boat wakes. Its historical palette and local visual review are documented under `artworks/qingming/docs/`.
 
 The canonical directory and route name for 千里江山图 is **`thousand-miles`**.
 

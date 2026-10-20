@@ -493,7 +493,7 @@ export default function Mock3D() {
             <select aria-label={t('Color palette','设色')} value={palette} disabled={!ready}
               onChange={e=>{const value=e.target.value as ScenePalette;setPalette(value);api.current?.palette(value);try{localStorage.setItem('qingming.palette',value);}catch{}}}>
               <option value="silk">{t('Original silk','原作绢色')}</option>
-              <option value="indigo-amber">{t('Indigo & amber','靛蓝与琥珀')}</option>
+              <option value="indigo-amber">{t('River & ochre','碧水赭彩')}</option>
             </select>
           </label>
           <label className="angle-control softness-control">

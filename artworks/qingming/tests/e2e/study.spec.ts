@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./fixtures";
 
 test("the home page opens the 3D study and preserves existing local data", async ({
   page,

@@ -97,7 +97,7 @@ describe("independent activity and browsing", () => {
         minimum=Math.min(minimum,localClearance(people.map(p=>({...p,radius:WALKER_RADIUS}))));
       }
     expect(minimum).toBeGreaterThan(0.02);
-  });
+  }, 60000); // Three 20-minute fixed-step crowd simulations.
   it("keeps carts facing forward, wraps offstage, and brings simultaneous opposing boats", () => {
     for (let i = 0; i < 6; i++)
       for (let t = 0; t < 800; t += 0.7) {

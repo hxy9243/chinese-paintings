@@ -21,18 +21,24 @@ export function createInkFinish(renderer: THREE.WebGLRenderer) {
         vec2 jitter=(vec2(hash(floor(pixel/2.)),hash(floor(pixel/2.)+71.))-.5)*texel*strength;
         vec2 p=uvPoint+jitter;
         vec3 core=samplePaper(p),wash=core*4.,bleed=core;
+        float edge=0.;
         for(int i=0;i<8;i++){
           float a=float(i)*.785398;
           vec3 neighbor=samplePaper(p+vec2(cos(a),sin(a))*texel*(1.1+strength));
-          wash+=neighbor;bleed=min(bleed,neighbor);
+          // Limit diffusion across high-contrast fine linework.
+          float contrast=length(core-neighbor);
+          wash+=mix(neighbor,core,smoothstep(.12,.40,contrast));
+          bleed=min(bleed,neighbor);edge+=contrast;
         }
         wash/=12.;
-        vec3 color=mix(core,wash,strength*.52);
-        color=mix(color,bleed,strength*.16);
+        vec3 color=mix(core,wash,strength*.40);
+        color=mix(color,bleed,strength*.13);
+        float pooled=smoothstep(.06,.32,edge/8.);
+        color*=1.-pooled*strength*.055;
         float grain=hash(pixel)*.6+hash(floor(pixel*.4))*.4;
         float fibers=sin(pixel.y*2.1+sin(pixel.x*.06))*.5+.5;
         float presence=smoothstep(.01,.22,length(core-paper));
-        color*=1.-presence*strength*(grain*.085+fibers*.035);
+        color*=1.-presence*strength*(grain*.047+fibers*.022);
         gl_FragColor=vec4(color,1.);
         #include <tonemapping_fragment>
         #include <colorspace_fragment>
