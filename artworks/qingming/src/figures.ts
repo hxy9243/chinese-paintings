@@ -440,7 +440,7 @@ export function buildFigure(
     arm.name = side < 0 ? "left-arm" : "right-arm";
     arm.position.set(side * 0.072, 0.478, forward);
     g.add(arm);
-    const holding = ["ledger", "scroll", "tray"].includes(profile.load),
+    const holding = ["ledger", "scroll", "cup"].includes(profile.load),
       bend = holding ? 0.09 : porter ? 0.035 : 0.015;
     const grip = porter && side > 0;
     const elbow: P = grip
@@ -535,25 +535,45 @@ export function buildFigure(
           [wrist[0] + 0.024, wrist[1] + 0.009, wrist[2]],
         ]);
       }
-      if (side > 0 && profile.load === "tray") {
-        solid(
-          lower,
-          new THREE.LatheGeometry(
-            [
-              [0.009, 0],
-              [0.025, 0.017],
-              [0.026, 0.022],
-              [0.022, 0.022],
-              [0.008, 0.005],
-            ].map((v) => new THREE.Vector2(...v)),
-            n,
-          ),
-          cloth,
-          [end[0], end[1] + 0.009, end[2] + 0.01],
-        );
-      }
     }
     batch(forearm);
+    if (detail > 0 && side > 0 && profile.load === "cup") {
+      const cup = new THREE.Group();
+      cup.name = "held-cup";
+      cup.position.set(
+        wrist[0] - elbow[0],
+        wrist[1] - 0.022 - elbow[1] + 0.013,
+        wrist[2] + 0.008 - elbow[2] + 0.016,
+      );
+      forearm.add(cup);
+      solid(
+        cup,
+        new THREE.LatheGeometry(
+          [
+            [0.011, 0],
+            [0.031, 0.023],
+            [0.033, 0.032],
+            [0.029, 0.032],
+            [0.01, 0.009],
+          ].map((v) => new THREE.Vector2(...v)),
+          n,
+        ),
+        cloth,
+      );
+      line(
+        cup,
+        Array.from(
+          { length: 17 },
+          (_, i) =>
+            [
+              Math.cos((i / 16) * Math.PI * 2) * 0.032,
+              0.032,
+              Math.sin((i / 16) * Math.PI * 2) * 0.032,
+            ] as P,
+        ),
+      );
+      batch(cup);
+    }
     const leg = new THREE.Group();
     leg.name = side < 0 ? "left-leg" : "right-leg";
     leg.position.set(side * 0.039, 0.265, 0);
@@ -733,22 +753,6 @@ export function buildFigure(
             [-0.035, 0.367, 0.12 + j * 0.012],
             [0.025, 0.367, 0.12 + j * 0.012],
           ]);
-    } else if (profile.load === "tray") {
-      block(gear, [0.18, 0.012, 0.11], [0, 0.36, 0.14], bamboo);
-      for (const x of [-0.05, 0.025])
-        solid(
-          gear,
-          new THREE.LatheGeometry(
-            [
-              new THREE.Vector2(0.012, 0),
-              new THREE.Vector2(0.025, 0.019),
-              new THREE.Vector2(0.026, 0.022),
-            ],
-            n,
-          ),
-          cloth,
-          [x, 0.367, 0.14],
-        );
     } else if (profile.load === "tools") {
       block(gear, [0.098, 0.057, 0.056], [0.115, 0.305, 0.01], bamboo);
       stroke(

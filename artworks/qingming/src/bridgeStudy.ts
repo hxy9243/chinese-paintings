@@ -1355,7 +1355,7 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
     );
     p.torso.rotation.set(0,0,0);p.leftElbow.rotation.set(0,0,0);p.rightElbow.rotation.set(0,0,0);
     const profile=FIGURE_TYPES[p.group.userData.variant % FIGURE_TYPES.length];
-    const holding=['ledger','scroll','tray'].includes(profile.load);
+    const holding=['ledger','scroll','cup'].includes(profile.load);
     const loaded=profile.load==='baskets',elder=profile.name==='elder';
     const step=loaded?.30:elder?.24:.42;
     p.left.rotation.x=stride*step;p.right.rotation.x=-stride*step;

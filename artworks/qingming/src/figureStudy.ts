@@ -135,7 +135,7 @@ function render(
   figures.forEach((p, i) => {
     const profile = FIGURE_TYPES[i],
       phase = seconds * 3 + i * 0.7,
-      holding = ["ledger", "scroll", "tray"].includes(profile.load),
+      holding = ["ledger", "scroll", "cup"].includes(profile.load),
       loaded = profile.load === "baskets";
     p.rotation.y = turn;
     p.getObjectByName("left-arm")!.rotation.z = restArms[i].left;

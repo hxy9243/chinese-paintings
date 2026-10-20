@@ -82,6 +82,13 @@ describe("busy bridge market", () => {
       study.group.updateMatrixWorld(true);
       actors.forEach((a, i) => {
         samples[i].hands.push(hand(a));
+        if (a.userData.activity === "vendor")
+          expect(
+            a
+              .getObjectByName("held-cup")!
+              .getWorldPosition(new THREE.Vector3())
+              .distanceTo(hand(a)),
+          ).toBeLessThan(0.03);
         samples[i].feet.push(feet(a));
         samples[i].torso.push(a.getObjectByName("torso")!.rotation.x);
         samples[i].elbow.push(a.getObjectByName(workingArm(a))!.rotation.x);

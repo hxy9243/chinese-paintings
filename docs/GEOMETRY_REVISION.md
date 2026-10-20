@@ -14,7 +14,7 @@ The supplied Rainbow Bridge crop is the working reference, rather than an invent
 
 ## People and traffic
 
-The twelve figure types are rebuilt with adult proportions of approximately 6.5 heads, shaped shoulders and jaw, overlapping collars, sashes, garment folds, bent sleeves, palms and fingers, leg wraps and rounded shoes. Close faces include brows, eyelids, eyes, nose, mouth and ears. Carried baskets have rims, vertical stakes and horizontal weaving; the porter holds the curved yoke with one raised hand. Scholars and shopkeepers hold their books or trays with restrained arm motion.
+The twelve figure types are rebuilt with adult proportions of approximately 6.5 heads, shaped shoulders and jaw, overlapping collars, sashes, garment folds, bent sleeves, palms and fingers, leg wraps and rounded shoes. Close faces include brows, eyelids, eyes, nose, mouth and ears. Carried baskets have rims, vertical stakes and horizontal weaving; the porter holds the curved yoke with one raised hand. Scholars hold books or scrolls; shopkeepers carry a cup attached to the forearm rig.
 
 Sixty-four anchored bridge figures now form four groups: sixteen sellers, sixteen buyers, sixteen river watchers and sixteen people conversing. Sixteen counters line both edges. Thirty-six passing walkers circulate through the bridge street, with about eight on the span in the sampled views. Every bank stall has a vendor who reaches toward the counter; some sit on the low stool. Browsers look toward wares while stopped. These actions use absolute scene time and keep the existing passing lanes clear.
 
