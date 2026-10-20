@@ -1,0 +1,1218 @@
+{
+  "passed": true,
+  "measurements": {
+    "homepageLoadsSceneCode": false,
+    "overview": {
+      "crowd": {
+        "variants": 12,
+        "levels": [
+          {
+            "level": 0,
+            "actors": 0,
+            "triangles": 0
+          },
+          {
+            "level": 1,
+            "actors": 281,
+            "triangles": 436860
+          },
+          {
+            "level": 2,
+            "actors": 0,
+            "triangles": 0
+          }
+        ]
+      },
+      "seed": 9243,
+      "vegetationLevel": 1,
+      "buildings": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "traffic": [
+        "horse-cart",
+        "covered-cart",
+        "horse-cart",
+        "covered-cart",
+        "ox-cart",
+        "covered-cart",
+        "pack-horse",
+        "handcart"
+      ],
+      "bridgeCounters": [
+        {
+          "x": -4.679584362825313,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -3.3886645385976406,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -2.097744714369968,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -0.8068248901422956,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 0.48409493408537685,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 1.7750147583130493,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 3.065934582540722,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 4.356854406768395,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -4.679584362825313,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -3.3886645385976406,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -2.097744714369968,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -0.8068248901422956,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 0.48409493408537685,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 1.7750147583130493,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 3.065934582540722,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 4.356854406768395,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        }
+      ],
+      "marketTypes": [
+        "tea-and-bowls",
+        "woven-baskets",
+        "food-and-skewers",
+        "cloth-and-scrolls",
+        "grain-and-jars",
+        "fishmonger"
+      ],
+      "referenceTrees": [
+        "near-quay-old-tree",
+        "west-near-fork",
+        "near-landing-pollard",
+        "far-landing-bare",
+        "foreground-pollard-west",
+        "foreground-pollard-east",
+        "east-yard-bare",
+        "far-east-bare"
+      ],
+      "bridgeLife": {
+        "stands": 16,
+        "stationaryPeople": 64,
+        "passingPeople": 8,
+        "roles": {
+          "river-watcher": 16,
+          "vendor": 16,
+          "customer": 16,
+          "conversation": 16
+        }
+      },
+      "triangles": 774829,
+      "calls": 616
+    },
+    "layout-reference-view": {
+      "crowd": {
+        "variants": 12,
+        "levels": [
+          {
+            "level": 0,
+            "actors": 0,
+            "triangles": 0
+          },
+          {
+            "level": 1,
+            "actors": 281,
+            "triangles": 436860
+          },
+          {
+            "level": 2,
+            "actors": 0,
+            "triangles": 0
+          }
+        ]
+      },
+      "seed": 9243,
+      "vegetationLevel": 1,
+      "buildings": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "traffic": [
+        "horse-cart",
+        "covered-cart",
+        "horse-cart",
+        "covered-cart",
+        "ox-cart",
+        "covered-cart",
+        "pack-horse",
+        "handcart"
+      ],
+      "bridgeCounters": [
+        {
+          "x": -4.679584362825313,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -3.3886645385976406,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -2.097744714369968,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -0.8068248901422956,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 0.48409493408537685,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 1.7750147583130493,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 3.065934582540722,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 4.356854406768395,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -4.679584362825313,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -3.3886645385976406,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -2.097744714369968,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -0.8068248901422956,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 0.48409493408537685,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 1.7750147583130493,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 3.065934582540722,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 4.356854406768395,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        }
+      ],
+      "marketTypes": [
+        "tea-and-bowls",
+        "woven-baskets",
+        "food-and-skewers",
+        "cloth-and-scrolls",
+        "grain-and-jars",
+        "fishmonger"
+      ],
+      "referenceTrees": [
+        "near-quay-old-tree",
+        "west-near-fork",
+        "near-landing-pollard",
+        "far-landing-bare",
+        "foreground-pollard-west",
+        "foreground-pollard-east",
+        "east-yard-bare",
+        "far-east-bare"
+      ],
+      "bridgeLife": {
+        "stands": 16,
+        "stationaryPeople": 64,
+        "passingPeople": 8,
+        "roles": {
+          "river-watcher": 16,
+          "vendor": 16,
+          "customer": 16,
+          "conversation": 16
+        }
+      },
+      "triangles": 773477,
+      "calls": 597
+    },
+    "bridge": {
+      "crowd": {
+        "variants": 12,
+        "levels": [
+          {
+            "level": 0,
+            "actors": 0,
+            "triangles": 0
+          },
+          {
+            "level": 1,
+            "actors": 0,
+            "triangles": 0
+          },
+          {
+            "level": 2,
+            "actors": 281,
+            "triangles": 1639968
+          }
+        ]
+      },
+      "seed": 9243,
+      "vegetationLevel": 2,
+      "buildings": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        1,
+        2,
+        2,
+        1,
+        1,
+        1,
+        2,
+        2
+      ],
+      "traffic": [
+        "horse-cart",
+        "covered-cart",
+        "horse-cart",
+        "covered-cart",
+        "ox-cart",
+        "covered-cart",
+        "pack-horse",
+        "handcart"
+      ],
+      "bridgeCounters": [
+        {
+          "x": -4.679584362825313,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -3.3886645385976406,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -2.097744714369968,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -0.8068248901422956,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 0.48409493408537685,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 1.7750147583130493,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 3.065934582540722,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 4.356854406768395,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -4.679584362825313,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -3.3886645385976406,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -2.097744714369968,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -0.8068248901422956,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 0.48409493408537685,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 1.7750147583130493,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 3.065934582540722,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 4.356854406768395,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        }
+      ],
+      "marketTypes": [
+        "tea-and-bowls",
+        "woven-baskets",
+        "food-and-skewers",
+        "cloth-and-scrolls",
+        "grain-and-jars",
+        "fishmonger"
+      ],
+      "referenceTrees": [
+        "near-quay-old-tree",
+        "west-near-fork",
+        "near-landing-pollard",
+        "far-landing-bare",
+        "foreground-pollard-west",
+        "foreground-pollard-east",
+        "east-yard-bare",
+        "far-east-bare"
+      ],
+      "bridgeLife": {
+        "stands": 16,
+        "stationaryPeople": 64,
+        "passingPeople": 8,
+        "roles": {
+          "river-watcher": 16,
+          "vendor": 16,
+          "customer": 16,
+          "conversation": 16
+        }
+      },
+      "triangles": 2664049,
+      "calls": 646
+    },
+    "landmark-tree": {
+      "crowd": {
+        "variants": 12,
+        "levels": [
+          {
+            "level": 0,
+            "actors": 0,
+            "triangles": 0
+          },
+          {
+            "level": 1,
+            "actors": 0,
+            "triangles": 0
+          },
+          {
+            "level": 2,
+            "actors": 281,
+            "triangles": 1639968
+          }
+        ]
+      },
+      "seed": 9243,
+      "vegetationLevel": 2,
+      "buildings": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        1,
+        2,
+        2,
+        1,
+        1,
+        1,
+        2,
+        2
+      ],
+      "traffic": [
+        "horse-cart",
+        "covered-cart",
+        "horse-cart",
+        "covered-cart",
+        "ox-cart",
+        "covered-cart",
+        "pack-horse",
+        "handcart"
+      ],
+      "bridgeCounters": [
+        {
+          "x": -4.679584362825313,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -3.3886645385976406,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -2.097744714369968,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -0.8068248901422956,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 0.48409493408537685,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 1.7750147583130493,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 3.065934582540722,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 4.356854406768395,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -4.679584362825313,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -3.3886645385976406,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -2.097744714369968,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -0.8068248901422956,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 0.48409493408537685,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 1.7750147583130493,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 3.065934582540722,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 4.356854406768395,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        }
+      ],
+      "marketTypes": [
+        "tea-and-bowls",
+        "woven-baskets",
+        "food-and-skewers",
+        "cloth-and-scrolls",
+        "grain-and-jars",
+        "fishmonger"
+      ],
+      "referenceTrees": [
+        "near-quay-old-tree",
+        "west-near-fork",
+        "near-landing-pollard",
+        "far-landing-bare",
+        "foreground-pollard-west",
+        "foreground-pollard-east",
+        "east-yard-bare",
+        "far-east-bare"
+      ],
+      "bridgeLife": {
+        "stands": 16,
+        "stationaryPeople": 64,
+        "passingPeople": 8,
+        "roles": {
+          "river-watcher": 16,
+          "vendor": 16,
+          "customer": 16,
+          "conversation": 16
+        }
+      },
+      "triangles": 2645571,
+      "calls": 519
+    },
+    "near": {
+      "crowd": {
+        "variants": 12,
+        "levels": [
+          {
+            "level": 0,
+            "actors": 0,
+            "triangles": 0
+          },
+          {
+            "level": 1,
+            "actors": 0,
+            "triangles": 0
+          },
+          {
+            "level": 2,
+            "actors": 281,
+            "triangles": 1639968
+          }
+        ]
+      },
+      "seed": 9243,
+      "vegetationLevel": 2,
+      "buildings": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        1,
+        2,
+        2,
+        1,
+        1,
+        1,
+        2,
+        2
+      ],
+      "traffic": [
+        "horse-cart",
+        "covered-cart",
+        "horse-cart",
+        "covered-cart",
+        "ox-cart",
+        "covered-cart",
+        "pack-horse",
+        "handcart"
+      ],
+      "bridgeCounters": [
+        {
+          "x": -4.679584362825313,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -3.3886645385976406,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -2.097744714369968,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -0.8068248901422956,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 0.48409493408537685,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 1.7750147583130493,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 3.065934582540722,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 4.356854406768395,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -4.679584362825313,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -3.3886645385976406,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -2.097744714369968,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -0.8068248901422956,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 0.48409493408537685,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 1.7750147583130493,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 3.065934582540722,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 4.356854406768395,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        }
+      ],
+      "marketTypes": [
+        "tea-and-bowls",
+        "woven-baskets",
+        "food-and-skewers",
+        "cloth-and-scrolls",
+        "grain-and-jars",
+        "fishmonger"
+      ],
+      "referenceTrees": [
+        "near-quay-old-tree",
+        "west-near-fork",
+        "near-landing-pollard",
+        "far-landing-bare",
+        "foreground-pollard-west",
+        "foreground-pollard-east",
+        "east-yard-bare",
+        "far-east-bare"
+      ],
+      "bridgeLife": {
+        "stands": 16,
+        "stationaryPeople": 64,
+        "passingPeople": 8,
+        "roles": {
+          "river-watcher": 16,
+          "vendor": 16,
+          "customer": 16,
+          "conversation": 16
+        }
+      },
+      "triangles": 2649661,
+      "calls": 558
+    },
+    "far": {
+      "crowd": {
+        "variants": 12,
+        "levels": [
+          {
+            "level": 0,
+            "actors": 281,
+            "triangles": 55676
+          },
+          {
+            "level": 1,
+            "actors": 0,
+            "triangles": 0
+          },
+          {
+            "level": 2,
+            "actors": 0,
+            "triangles": 0
+          }
+        ]
+      },
+      "seed": 9243,
+      "vegetationLevel": 0,
+      "buildings": [
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "traffic": [
+        "horse-cart",
+        "covered-cart",
+        "horse-cart",
+        "covered-cart",
+        "ox-cart",
+        "covered-cart",
+        "pack-horse",
+        "handcart"
+      ],
+      "bridgeCounters": [
+        {
+          "x": -4.679584362825313,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -3.3886645385976406,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -2.097744714369968,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -0.8068248901422956,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 0.48409493408537685,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 1.7750147583130493,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 3.065934582540722,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 4.356854406768395,
+          "lateral": -1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -4.679584362825313,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -3.3886645385976406,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -2.097744714369968,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -0.8068248901422956,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 0.48409493408537685,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 1.7750147583130493,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 3.065934582540722,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 4.356854406768395,
+          "lateral": 1.6400000000000001,
+          "width": 0.84,
+          "depth": 0.24
+        }
+      ],
+      "marketTypes": [
+        "tea-and-bowls",
+        "woven-baskets",
+        "food-and-skewers",
+        "cloth-and-scrolls",
+        "grain-and-jars",
+        "fishmonger"
+      ],
+      "referenceTrees": [
+        "near-quay-old-tree",
+        "west-near-fork",
+        "near-landing-pollard",
+        "far-landing-bare",
+        "foreground-pollard-west",
+        "foreground-pollard-east",
+        "east-yard-bare",
+        "far-east-bare"
+      ],
+      "bridgeLife": {
+        "stands": 16,
+        "stationaryPeople": 64,
+        "passingPeople": 8,
+        "roles": {
+          "river-watcher": 16,
+          "vendor": 16,
+          "customer": 16,
+          "conversation": 16
+        }
+      },
+      "triangles": 294005,
+      "calls": 460
+    },
+    "sameTimeReplay": true,
+    "figureBackView": true,
+    "figureGalleryRestored": true,
+    "mobileOverflow": false,
+    "thousandMiles": {
+      "ready": true,
+      "graphicsError": 0
+    }
+  },
+  "errors": [],
+  "failedResponses": [],
+  "sourceHashes": {
+    "bridgeStudy.ts": "6e20a2f63c41c0342bdfc641831ac750b0ca7eed40e5ab64166eb9dbf70b386b",
+    "crowd.ts": "84b0b74fb6bae456dcb7cc19a9c16d7d95b2bca3a7f65d5fdac698e4ab5dc1ff",
+    "passageLayout.ts": "08042f6b64e8135d85e8b29dec1008ed5d86d2c80a723dc7a1c5a5fa89f737c8",
+    "passageLife.ts": "79e36a62e290db77795acd5d29723e5ba17d363570f471aaddbec69f4bdac9f6",
+    "passageSpace.ts": "bfdd37aec812ba27df41e78277b7c90add581a160b19e51d7afd3851616e9dd3",
+    "figureTypes.ts": "32a6f740a1d2316b481f794276486ed4220fe98fa44b683426ed1b90c5c79c77",
+    "figures.ts": "77c4f21e9db745bd5186bbb9998bf030d832b128505d32bf5ee7fef48354b26d",
+    "marketModels.ts": "1dc40bd384232b81186a1d23d8ebf56337042ebd1337c1d3846869373b32122f",
+    "figureStudy.ts": "677a0178916b6926dc4d67cd98f17d564d62029e62b76906a0df647faff284e6",
+    "bridgeActivity.ts": "cd15350f9a30e2656e19f9a439906c72d898296c860ee416fe1769e916f29b9c",
+    "peopleMotion.ts": "6d238af5c89f10b3cf92324b1fa4b4e70b22c5e408a56054a5fda83250819ff3",
+    "Mock3D.tsx": "464679403c0dd5d81426fda6a229b6d8f067160e1ecf040a56a1f3f04ef6094d",
+    "paintMaterial.ts": "b36c6f8997e8891794cca54e31f5992984f9a1fc8b63c36756d5483ee54bf16f",
+    "inkFinish.ts": "16c17bfb6a805045636d257dc32b7877de443069bd53ef951ea95159887de380"
+  },
+  "motion": {
+    "fps": 12,
+    "frames": 48,
+    "durationSeconds": 4,
+    "width": 1232,
+    "kind": "offline scene-time sample; no realtime performance claim"
+  },
+  "sourceCommit": "b1495162d2ec005664752d2422f3a52075ff9c29",
+  "validation": {
+    "unitGeometry": "48 passed; 12 activity/rig/LOD checks rerun after the final cup correction",
+    "desktopMobile": "6 passed; 2 playback/interaction tests rerun after clock lifecycle handling",
+    "build": "combined build passed",
+    "figureActionsAt390Pixels": {
+      "overflow": false,
+      "galleryRestored": true,
+      "pageErrors": []
+    },
+    "movieDecode": {
+      "passed": true,
+      "frames": 48,
+      "fps": 12,
+      "seconds": 4,
+      "width": 1232,
+      "height": 744
+    },
+    "visualReview": "self-review of production stills and decoded motion contact sheet"
+  },
+  "artifactHashes": {
+    "actions.jpg": "92fbf42cfb5b4c322c97a930f9d7fb32bee20de3a4f2f905c6907ace70e8ea73",
+    "activity-conversation.png": "a4bcb2b1bb55d030bb120365d4de4bb93d035d6d2411f6b57e2c42005e8ec58e",
+    "activity-customer.png": "8a030081a6b835d78770d64f1ee5556627600e641ab1b16ac38f749a4f1f5528",
+    "activity-river-watcher.png": "1beb02075ff10b38a5db9f8abc574e3d4dbcfb17bad98d891dc7f502c8131593",
+    "activity-vendor.png": "26156955b18c0a09bf890bff9cef4e933724cd7db9b2b084c0ed99a79488a8a2",
+    "bridge-comparison.jpg": "a6fad84ff100337454ec62d69d68576648df96ee356907b1a70a1ed0cb800b46",
+    "bridge.png": "afd593c876cab3e3bf0ec8d90091f5d9b0be8f8843c689fa0b1701e34b5e7178",
+    "figures.png": "610d2ed3b7ccf8359ce30cc1a7747922b2c1a9d8fd203df1cb45a15286fea65a",
+    "motion-contact.jpg": "5b28065d1a998f8bc2024d089ed6c3fe5ed39e265a357d4399588a984fe38d10",
+    "motion.mp4": "ee6966527e752366b2cb5ad88208dd4d467983dc1d2f01cea7b90b4afc32cb42",
+    "overview.png": "32fbfa3501879ce2471e60921abc69935836a36aa87dfa30e739194879d1a822"
+  }
+}
