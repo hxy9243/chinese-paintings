@@ -147,6 +147,12 @@ export function buildReferenceTree(
             marks.push(...p.toArray());
           }
         }
+    // Subpixel twig meshes disappear in the overview. Persistent ink strokes
+    // keep the fine branching readable, as in the drawn crown of the reference.
+    if (detail > 0 && r <= 0.012)
+      for (let j = 0; j < 5; j++)
+        for (const t of [j / 5, (j + 1) / 5])
+          marks.push(...curve.getPoint(t).toArray());
     curves.push({ curve, radius: r });
     return curve;
   };
