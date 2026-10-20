@@ -43,6 +43,7 @@ export function createInkFinish(renderer: THREE.WebGLRenderer) {
   const quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material);
   scene.add(quad);
   return {
+    setPaper(color:number){material.uniforms.paper.value.set(color);},
     resize(width: number, height: number) {
       // Cap the offscreen pass independently of high-DPI phone screens.
       const ratio = Math.min(renderer.getPixelRatio(), 1.5);

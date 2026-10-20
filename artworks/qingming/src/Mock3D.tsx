@@ -20,6 +20,7 @@ import {
 import "./mock3d.css";
 import { createInkFinish } from "./inkFinish";
 import { advanceSceneTime } from "./peopleMotion";
+import { PALETTES,type ScenePalette } from "./scenePalette";
 import { SCROLL_STOPS, scrollPoint } from "./scrollLayout";
 
 type StudyApi = {
@@ -30,6 +31,7 @@ type StudyApi = {
   reset: () => void;
   painting: (enabled: boolean) => void;
   softness: (amount: number) => void;
+  palette: (value:ScenePalette) => void;
 };
 export default function Mock3D() {
   const host = useRef<HTMLDivElement>(null),
@@ -47,6 +49,7 @@ export default function Mock3D() {
     [pitch, setPitch] = useState(0),
     [roll, setRoll] = useState(0),
     [painted, setPainted] = useState(true),
+    [palette,setPalette]=useState<ScenePalette>(()=>{try{return localStorage.getItem('qingming.palette')==='indigo-amber'?'indigo-amber':'silk';}catch{return 'silk';}}),
     [softness, setSoftness] = useState(70),
     [scrollControlsOpen, setScrollControlsOpen] = useState(false),
     [ready, setReady] = useState(false),
@@ -87,6 +90,7 @@ export default function Mock3D() {
     const study = createBridgeStudy(9243);
     scene.add(study.group);
     study.setPainting(true);
+    study.setPalette(palette);finish.setPaper(PALETTES[palette].paper);
     const camera = new THREE.OrthographicCamera(-12, 12, 9, -9, 0.1, 250);
     let needsRender=true;
     const controls = new OrbitControls(camera, renderer.domElement);
@@ -189,6 +193,7 @@ export default function Mock3D() {
         paintingEnabled = enabled;
         study.setPainting(enabled);
       },
+      palette(value){needsRender=true;study.setPalette(value);finish.setPaper(PALETTES[value].paper);},
       softness(amount) {
         needsRender=true;
         inkSoftness = Math.max(0, Math.min(1, amount));
@@ -235,7 +240,8 @@ export default function Mock3D() {
     };
     frame = requestAnimationFrame(animate);
     const reviewApi={
-      frame(seconds:number,options:{zoom?:number;angle?:number;pitch?:number;target?:[number,number]}={}){
+      frame(seconds:number,options:{zoom?:number;angle?:number;pitch?:number;target?:[number,number];palette?:ScenePalette}={}){
+        if(options.palette){study.setPalette(options.palette);finish.setPaper(PALETTES[options.palette].paper);setPalette(options.palette);}
         if(options.target){controls.target.copy(scrollPoint(...options.target));controls.target.y=1.1;}
         if(options.zoom!==undefined){camera.zoom=options.zoom;camera.updateProjectionMatrix();}
         position(options.angle??0,options.pitch??0);animationTime=seconds;
@@ -271,6 +277,7 @@ export default function Mock3D() {
   return (
     <div
       className="study-shell"
+      data-palette={palette}
       data-painting={painted}
       data-softness={softness}
     >
@@ -481,6 +488,14 @@ export default function Mock3D() {
           className="painting-controls"
           aria-label={t("Painting controls", "绘画设置")}
         >
+          <label className="palette-control">
+            <span>{t('Color palette','设色')}</span>
+            <select aria-label={t('Color palette','设色')} value={palette} disabled={!ready}
+              onChange={e=>{const value=e.target.value as ScenePalette;setPalette(value);api.current?.palette(value);try{localStorage.setItem('qingming.palette',value);}catch{}}}>
+              <option value="silk">{t('Original silk','原作绢色')}</option>
+              <option value="indigo-amber">{t('Indigo & amber','靛蓝与琥珀')}</option>
+            </select>
+          </label>
           <label className="angle-control softness-control">
             <span>
               {t("Ink softness", "墨色晕染")} <output>{softness}%</output>

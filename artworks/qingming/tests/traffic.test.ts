@@ -1,3 +1,4 @@
+import {localClearance} from "./helpers/clearance";
 import { describe, it, expect } from "vitest";
 import * as THREE from "three";
 import {
@@ -92,21 +93,9 @@ describe("shared space and continuous traffic", () => {
         ...cartPose(i, time),
         radius: CART_LANE_RADIUS,
       }));
-      for (let i = 0; i < walkers.length; i++)
-        for (let j = i + 1; j < walkers.length; j++) {
-          const a = walkers[i],
-            b = walkers[j];
-          // Bridge and bank walkers use physically disjoint routes, including their approaches.
-          minPeople = Math.min(minPeople, distance(a, b) - a.radius - b.radius);
-        }
-      for (const walker of walkers.slice(0, BRIDGE_WALKERS))
-        for (let i = 0; i < BRIDGE_OBSERVERS; i++) {
-          const observer = observerPose(i, time);
-          minPeople = Math.min(
-            minPeople,
-            distance(walker, observer) - WALKER_RADIUS - PERSON_RADIUS,
-          );
-        }
+      minPeople=Math.min(minPeople,localClearance([
+        ...walkers,...Array.from({length:BRIDGE_OBSERVERS},(_,i)=>({...observerPose(i,time),radius:PERSON_RADIUS,observer:true}))
+      ],true));
       for (let i = 0; i < carts.length; i++) {
         for (const person of walkers.filter((p) => Math.abs(p.d) < 14.3))
           minCarts = Math.min(

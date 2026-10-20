@@ -1,3 +1,4 @@
+import {localClearance} from "./helpers/clearance";
 import { describe, it, expect } from "vitest";
 import * as THREE from "three";
 import { activityClock } from "../src/peopleMotion";
@@ -93,12 +94,7 @@ describe("independent activity and browsing", () => {
         people.push(
           ...Array.from({ length: BRIDGE_OBSERVERS }, (_, i) => observerPose(i, t, seed)),
         );
-        for (let i = 0; i < people.length; i++)
-          for (let j = i + 1; j < people.length; j++)
-            minimum = Math.min(
-              minimum,
-              distance(people[i], people[j]) - WALKER_RADIUS * 2,
-            );
+        minimum=Math.min(minimum,localClearance(people.map(p=>({...p,radius:WALKER_RADIUS}))));
       }
     expect(minimum).toBeGreaterThan(0.02);
   });

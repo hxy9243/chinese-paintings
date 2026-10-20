@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import {setScenePalette,getScenePalette,type ScenePalette} from "./scenePalette";
 import { buildReferenceTree, buildReferenceBoat, addReferenceArchitecture, type TreeForm } from "./referenceAssets";
 import { REFERENCE_AZIMUTH, scrollPoint } from "./scrollLayout";
 import {
@@ -449,7 +450,7 @@ function bank(parent: THREE.Group, outline: number[][]) {
   const ground = mesh(
     parent,
     new THREE.ShapeGeometry(shape),
-    mat(0xb09a6d, true),
+    mat(0xb09a6d, true, true),
     0,
     GROUND_Y,
     0,
@@ -1232,11 +1233,12 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
       const roles=observers.reduce((counts,p)=>{
         const role=p.group.userData.activity as string;counts[role]=(counts[role]??0)+1;return counts;
       },{} as Record<string,number>);
-      return {crowd:crowd.metadata(),seed,vegetationLevel:plantDetail,
+      return {crowd:crowd.metadata(),seed,palette:getScenePalette(),vegetationLevel:plantDetail,
         buildings:detailedBuildings.map(b=>b.detail),traffic:CART_KINDS,bridgeCounters,
         marketTypes:MARKET_TYPES,referenceTrees:FEATURE_TREES.map(t=>t.id),
         bridgeLife:{stands:bridgeCounters.length,stationaryPeople:observers.length,passingPeople,roles}};
     },
+    setPalette(value:ScenePalette){setScenePalette(value);},
     setPainting(enabled: boolean) {
       paintingAmount.value = enabled ? 1 : 0;
     },

@@ -32,8 +32,8 @@ describe("life in the reference passage", () => {
       expect(insideRoof(n, 0.1)).toBe(false);
     }
   });
-  it("keeps all 60 walkers on the bridge or dry, unobstructed bank lanes", () => {
-    expect(WALKER_COUNT).toBe(60);
+  it("keeps all walkers on the bridge or dry, unobstructed bank lanes", () => {
+    expect(WALKER_COUNT).toBe(132);
     for (let t = 0; t <= 400; t += 2.5)
       for (let i = 0; i < WALKER_COUNT; i++) {
         const p = walkPose(i, t);

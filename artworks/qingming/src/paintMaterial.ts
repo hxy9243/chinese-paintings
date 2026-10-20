@@ -1,13 +1,20 @@
 import * as THREE from "three";
+import {paletteAmount,palettePaper,paletteInk,indigoPigment,PALETTES} from "./scenePalette";
+import {roadUniforms,roadShader} from "./roadSurface";
 
 // World-space pigment stays attached to the artwork while the camera moves.
 // No screen-space noise animation or extra postprocessing framebuffer is needed.
 export const paintingAmount = { value: 1 };
-export function paintMaterial(color: number, ground = false) {
+export function paintMaterial(color: number, ground = false, bank = false) {
   return new THREE.ShaderMaterial({
     clipping: true,
     uniforms: {
       pigment: { value: new THREE.Color(color) },
+      alternatePigment:{value:new THREE.Color(indigoPigment(color))},
+      paletteAmount,palettePaper,
+      bank:{value:bank?1:0},...roadUniforms,
+      roadPigment:{value:new THREE.Color(PALETTES.silk.road)},
+      alternateRoadPigment:{value:new THREE.Color(PALETTES['indigo-amber'].road)},
       painting: paintingAmount,
       ground: { value: ground ? 1 : 0 },
     },
@@ -23,23 +30,29 @@ export function paintMaterial(color: number, ground = false) {
       }`,
     fragmentShader: `
       #include <clipping_planes_pars_fragment>
-      uniform vec3 pigment;uniform float painting;uniform float ground;
+      uniform vec3 pigment;uniform vec3 alternatePigment;uniform float paletteAmount;uniform vec3 palettePaper;
+      uniform vec3 roadPigment;uniform vec3 alternateRoadPigment;uniform float bank;
+      uniform float painting;uniform float ground;
       varying vec3 point;varying vec3 facing;
       float hash(vec3 p){return fract(sin(dot(p,vec3(127.1,311.7,74.7)))*43758.5453);}
       float noise(vec3 p){vec3 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
         return mix(mix(mix(hash(i),hash(i+vec3(1,0,0)),f.x),mix(hash(i+vec3(0,1,0)),hash(i+vec3(1,1,0)),f.x),f.y),
           mix(mix(hash(i+vec3(0,0,1)),hash(i+vec3(1,0,1)),f.x),mix(hash(i+vec3(0,1,1)),hash(i+vec3(1,1,1)),f.x),f.y),f.z);}
+      ${roadShader}
       void main(){
         #include <clipping_planes_fragment>
         float wash=noise(point*2.8)*.65+noise(point*10.)*.25+noise(point*90.)*.1;
         float shade=.75+.25*max(0.,dot(normalize(facing),normalize(vec3(-.6,1.,.8))));
-        vec3 paper=vec3(.78,.68,.46);
+        vec3 paper=palettePaper;
+        vec3 localPigment=mix(pigment,alternatePigment,paletteAmount);
+        if(bank>.5){vec2 p=vec2(point.x*.64278761+point.z*.76604444,-point.x*.76604444+point.z*.64278761);
+          localPigment=mix(localPigment,mix(roadPigment,alternateRoadPigment,paletteAmount),wornRoad(p)*.55);}
         float pool=smoothstep(.43,.75,noise(point*15.));
         float dry=smoothstep(.62,.85,noise(point*vec3(90.,35.,65.)));
-        vec3 painted=mix(pigment,paper,.03+wash*.12+dry*.12);
+        vec3 painted=mix(localPigment,paper,.03+wash*.12+dry*.12);
         painted*=.86+wash*.23-pool*.12;
         painted*=mix(.96,1.02,max(0.,facing.y));
-        vec3 result=mix(pigment*shade,painted,painting);
+        vec3 result=mix(localPigment*shade,painted,painting);
         float scroll=point.x*.64278761+point.z*.76604444;
         float depth=-point.x*.76604444+point.z*.64278761;
         float edge=min((22.-abs(scroll))/2.,(14.-abs(depth))/1.3);
@@ -56,7 +69,7 @@ export function createDryInk(fade = 1) {
     clipping: true,
     transparent: true,
     depthWrite: false,
-    uniforms: { painting: paintingAmount, fade: { value: fade } },
+    uniforms: { painting: paintingAmount, fade: { value: fade },paletteInk },
     vertexShader: `
       #include <clipping_planes_pars_vertex>
       varying vec3 point;
@@ -66,14 +79,14 @@ export function createDryInk(fade = 1) {
       }`,
     fragmentShader: `
       #include <clipping_planes_pars_fragment>
-      uniform float painting;uniform float fade;varying vec3 point;
+      uniform float painting;uniform float fade;uniform vec3 paletteInk;varying vec3 point;
       void main(){
         #include <clipping_planes_fragment>
         float grain=fract(sin(dot(floor(point*95.),vec3(127.1,311.7,74.7)))*43758.5453);
         float flow=.5+.5*sin(point.x*41.+point.y*29.+point.z*37.);
         float opacity=mix(.65,.28+flow*.40+grain*.18,painting);
         if(painting>.5 && grain>.92)opacity*=.22;
-        gl_FragColor=vec4(vec3(.095,.077,.05),opacity*fade);
+        gl_FragColor=vec4(paletteInk,opacity*fade);
         #include <tonemapping_fragment>
         #include <colorspace_fragment>
       }`,

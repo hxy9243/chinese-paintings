@@ -56,8 +56,8 @@ export const BUILDING_KINDS: BuildingKind[] = [
   "compound",
   "courtyard",
 ];
-export const WALKER_COUNT = 60;
-export const BRIDGE_WALKERS = 36;
+export const WALKER_COUNT = 132;
+export const BRIDGE_WALKERS = 108;
 export const BRIDGE_OBSERVERS = BRIDGE_PEOPLE_PER_SIDE * 2;
 
 export function insideRoof(p: PassagePoint, margin = 0) {
@@ -100,23 +100,24 @@ function laneLoop(phase: number, start: number, end: number, radius: number) {
 export function walkPose(index: number, time: number, seed = 0) {
   const activity = activityClock(index, time, seed);
   if (index < BRIDGE_WALKERS) {
-    const start = -22,
-      end = 22;
-    const perimeter = 2 * (end - start) + 2 * Math.PI * 0.72;
-    const p = laneLoop(
-      activity.progress * 0.13 + (index / BRIDGE_WALKERS) * perimeter,
-      start,
-      end,
-      0.72,
-    );
+    // Two nested circuits concentrate traffic on the span instead of spending
+    // 75% of each trip on the long approaches. Staggered positions, speeds and
+    // stride phases break the old two sparse lines while keeping a cart corridor.
+    const side=index<54?-1:1,slot=index%54,count=54;
+    const radius=.18,start=-6.0,end=6.0;
+    const perimeter=2*(end-start)+2*Math.PI*radius;
+    const phase=slot/count*perimeter+(side<0?.17:.39)+Math.sin(index*17.3)*.012;
+    const progress=time*.18+.008*(Math.sin(time*.43+index*1.7)-Math.sin(index*1.7));
+    const p=laneLoop(phase+progress,start,end,radius);
+    // Each circuit stays on its own side even around the end cap. A circuit
+    // around the whole road would turn through the path of oncoming horses.
+    const lateral=side*.68+p.lateral+Math.sin(time*.33+index*2.1)*.008;
     return {
-      ...bridgePoint(p.s, p.lateral),
-      y: bridgeHeight(p.s),
-      angle: BRIDGE.angle + p.angle,
-      moving: activity.moving,
-      stride: activity.progress * 5,
+      ...bridgePoint(p.s,lateral),y:bridgeHeight(p.s),angle:BRIDGE.angle+p.angle,
+      moving:true,stride:progress*15+index*1.3,
     };
   }
+
   const k = index - BRIDGE_WALKERS;
   // Alternate near/far banks while distributing six walkers over each half-bank loop.
   const loop = BANK_LOOPS[(k % 2) * 2 + (Math.floor(k / 2) % 2)];
@@ -431,7 +432,7 @@ export function observerPose(index: number, time: number, seed = 0) {
     x = home + p.s;
   return {
     ...p,
-    ...bridgePoint(x, index % 2 ? 1.22 : -1.22),
+    ...bridgePoint(x, index % 2 ? 1.32 : -1.32),
     y: bridgeHeight(x),
     angle: BRIDGE.angle + (index % 2 ? Math.PI / 2 : -Math.PI / 2),
   };
