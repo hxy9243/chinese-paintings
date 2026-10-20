@@ -123,14 +123,14 @@ export function paintMaterial(
         float depth=-point.x*.76604444+point.z*.64278761;
         vec2 q=abs(vec2(scroll,depth))-vec2(16.,8.);
         float boundary=length(max(q,0.))+min(max(q.x,q.y),0.)-6.;
-        float ragged=(noise(vec3(river*.9,7.))-.5)*.8+(noise(vec3(river*6.,3.))-.5)*.22;
+        float ragged=(noise(vec3(river*.65,7.))-.5)*1.15+(noise(vec3(river*4.,3.))-.5)*.28;
         // A long, irregular absorption band replaces the cut-out perimeter.
-        float alpha=ground>.5 ? 1.-smoothstep(-3.6,.1,boundary+ragged) : 1.;
+        float alpha=ground>.5 ? 1.-smoothstep(-6.2,.15,boundary+ragged) : 1.;
         if(bank>.5)alpha*=smoothstep(-.30,.24,shore+(noise(vec3(river*12.,5.))-.5)*.15);
         if(ground<.5 && painting>.5){
-          float soak=1.-smoothstep(-2.8,.05,boundary+ragged);
-          if(noise(point*95.)>soak)discard;
-          result=mix(paper,result,smoothstep(0.,.6,soak));
+          float soak=1.-smoothstep(-5.1,.1,boundary+ragged);
+          if(noise(point*95.)>sqrt(soak))discard;
+          result=mix(paper,result,soak);
         }
         gl_FragColor=vec4(result,alpha);
         #include <tonemapping_fragment>
@@ -163,8 +163,8 @@ export function createDryInk(fade = 1) {
         if(painting>.5 && grain>.92)opacity*=.22;
         vec2 p=abs(vec2(point.x*.64278761+point.z*.76604444,-point.x*.76604444+point.z*.64278761))-vec2(16.,8.);
         float boundary=length(max(p,0.))+min(max(p.x,p.y),0.)-6.;
-        float soak=1.-smoothstep(-2.8,.05,boundary);
-        gl_FragColor=vec4(paletteInk,opacity*fade*mix(1.,soak,painting));
+        float soak=1.-smoothstep(-5.1,.1,boundary);
+        gl_FragColor=vec4(paletteInk,opacity*fade*mix(1.,soak*soak,painting));
         #include <tonemapping_fragment>
         #include <colorspace_fragment>
       }`,

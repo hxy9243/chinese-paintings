@@ -66,29 +66,48 @@ try {
     failedRequests.push({ url: r.url(), error: r.failure()?.errorText }),
   );
   await page.goto("http://127.0.0.1:4173/?capture=1");
-  await page.waitForFunction(() => window.qingmingStudy, { timeout: 120000 });
+  await page.waitForFunction(() => window.qingmingStudy, undefined, {
+    timeout: 120000,
+  });
   await page.evaluate(async () => {
     await document.fonts.ready;
   });
-  for (const [view, options] of [
-    ["river-overview", { zoom: 1.08, angle: 30, pitch: 3, target: [0, 0] }],
-    [
-      "bridge-and-streets",
-      { zoom: 2.6, angle: -50, pitch: 6, target: [-6, 1] },
-    ],
-    ["water-and-banks", { zoom: 2.4, angle: 70, pitch: -10, target: [6, -1] }],
-  ]) {
+  const views =
+    process.env.REVIEW_WIDE_EDGES === "1"
+      ? [
+          [
+            "wide-edge-front",
+            { zoom: 1.0, angle: 30, pitch: 3, target: [0, 0] },
+          ],
+          [
+            "wide-edge-reverse",
+            { zoom: 1.0, angle: -40, pitch: 6, target: [0, 0] },
+          ],
+        ]
+      : [
+          [
+            "river-overview",
+            { zoom: 1.08, angle: 30, pitch: 3, target: [0, 0] },
+          ],
+          [
+            "bridge-and-streets",
+            { zoom: 2.6, angle: -50, pitch: 6, target: [-6, 1] },
+          ],
+          [
+            "water-and-banks",
+            { zoom: 2.4, angle: 70, pitch: -10, target: [6, -1] },
+          ],
+        ];
+  for (const [view, options] of views) {
     measurements[view] = await page.evaluate(
       (o) => window.qingmingStudy.frame(24, o),
       { ...options, palette: "indigo-amber" },
     );
-    await page
-      .locator(".study-stage")
-      .screenshot({
-        path: path.join(out, view + ".jpg"),
-        type: "jpeg",
-        quality: 94,
-      });
+    await page.locator(".study-stage").screenshot({
+      path: path.join(out, view + ".jpg"),
+      type: "jpeg",
+      quality: 94,
+    });
   }
   const replay = () =>
     page.evaluate(() =>

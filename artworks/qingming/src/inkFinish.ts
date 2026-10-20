@@ -36,16 +36,16 @@ export function createInkFinish(renderer: THREE.WebGLRenderer) {
         // Broad capillary bleed is confined to the translucent outer wash.
         // Fine figures and architecture retain their small-radius treatment.
         vec3 halo=vec3(0.);
-        for(int i=0;i<8;i++){
-          float a=float(i)*.785398;
+        for(int i=0;i<16;i++){
+          float a=float(i)*.392699;
           vec2 direction=vec2(cos(a),sin(a));
-          float radius=7.+float(i%3)*7.;
+          float radius=14.+float(i%4)*16.;
           vec4 neighbor=texture2D(source,p+direction*texel*radius*(.6+strength));
           halo+=neighbor.rgb+paper*(1.-neighbor.a);
         }
-        halo/=8.;
+        halo/=16.;
         float outer=(1.-smoothstep(.25,.94,texture2D(source,p).a));
-        color=mix(color,min(paper,halo),outer*strength*.62);
+        color=mix(color,min(paper,halo),outer*strength*.82);
         float pooled=smoothstep(.06,.32,edge/8.);
         color*=1.-pooled*strength*.055;
         float grain=hash(pixel)*.6+hash(floor(pixel*.4))*.4;
