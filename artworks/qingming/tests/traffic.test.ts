@@ -9,12 +9,14 @@ import {
 } from "../src/passageLayout";
 import {
   WALKER_COUNT,
+  BRIDGE_OBSERVERS,
   BRIDGE_WALKERS,
   walkPose,
   cartPose,
   boatPose,
   CARTS,
   NATURE,
+  FEATURE_TREES,
   MARKET,
   observerPose,
 } from "../src/passageLife";
@@ -71,7 +73,7 @@ describe("shared space and continuous traffic", () => {
     expect(MARKET.length).toBeGreaterThanOrEqual(6);
     expect(
       NATURE.filter((n) => ["bare", "spring", "willow"].includes(n.kind))
-        .length,
+        .length + FEATURE_TREES.length,
     ).toBeGreaterThanOrEqual(18);
     for (let i = 0; i < CARTS.length; i++)
       expect(distance(cartPose(i, 0), cartPose(i, 3))).toBeGreaterThan(0.1);
@@ -98,7 +100,7 @@ describe("shared space and continuous traffic", () => {
           minPeople = Math.min(minPeople, distance(a, b) - a.radius - b.radius);
         }
       for (const walker of walkers.slice(0, BRIDGE_WALKERS))
-        for (let i = 0; i < 12; i++) {
+        for (let i = 0; i < BRIDGE_OBSERVERS; i++) {
           const observer = observerPose(i, time);
           minPeople = Math.min(
             minPeople,

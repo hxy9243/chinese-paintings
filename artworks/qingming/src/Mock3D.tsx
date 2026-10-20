@@ -534,6 +534,7 @@ export default function Mock3D() {
               "选段立体习作：宽阔屋顶、行舟与小人物，施以旧绢墨色。取意原作，并非逐笔复刻。",
             )}
           </p>
+          <p><a href="./figure-study.html">{t("Look closely at the people →", "放大细看人物 →")}</a></p>
         </footer>
         <dialog
           ref={originalDialog}

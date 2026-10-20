@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { FIGURE_HEIGHT } from "./figures";
 import { chooseDetail, projectedHeightPixels, type DetailLevel } from "../../../packages/scene-kit/lod";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 import { FIGURE_TYPES } from "./figureTypes";
@@ -87,7 +88,7 @@ export function createCrowd(parent: THREE.Group,
         if(!camera) continue;
         actor.getWorldPosition(center);actor.getWorldScale(scale);
         const ortho=camera as THREE.OrthographicCamera,perspective=camera as THREE.PerspectiveCamera;
-        const pixels=projectedHeightPixels({height:.57*scale.y,viewportHeight,zoom:ortho.zoom??1,
+        const pixels=projectedHeightPixels({height:FIGURE_HEIGHT*scale.y,viewportHeight,zoom:ortho.zoom??1,
           orthographicSpan:ortho.isOrthographicCamera?ortho.top-ortho.bottom:undefined,
           distance:center.distanceTo(camera.position),verticalFov:perspective.fov});
         actor.userData.detail=chooseDetail(pixels,actor.userData.detail);

@@ -17,7 +17,7 @@ try{
  await page.screenshot({path:path.join(out,'gallery.png'),fullPage:true});
  measurements.homepageLoadsSceneCode=homeRequests.some(url=>/\/src\/|\/vendor\/|\/assets\/.*\.js/.test(url));
  await page.goto(base+'/qingming/?capture=1');await page.waitForFunction(()=>window.qingmingStudy,{timeout:120000});
- for(const [name,options] of [['overview',{zoom:1.25}],['bridge',{target:[-6,1],zoom:2.5}],['landmark-tree',{target:[7,5],zoom:2.5}],['near',{target:[0,0],zoom:2.5}],['far',{target:[0,0],zoom:.5}]]){
+ for(const [name,options] of [['overview',{zoom:1.25,angle:30}],['layout-reference-view',{zoom:1.25,angle:0}],['bridge',{target:[-6,1],zoom:2.5,angle:30,pitch:-12}],['landmark-tree',{target:[6,5],zoom:2.5,angle:30,pitch:-12}],['near',{target:[0,0],zoom:2.5}],['far',{target:[0,0],zoom:.5}]]){
   measurements[name]=await page.evaluate(o=>window.qingmingStudy.frame(8,o),options);
   await page.locator('.study-stage').screenshot({path:path.join(out,name+'.png')});
  }
@@ -28,12 +28,17 @@ try{
  measurements.sameTimeReplay=before.equals(after);
  await page.goto(base+'/qingming/figure-study.html?capture=1');await page.waitForFunction(()=>window.figureStudy,{timeout:120000});
  await page.evaluate(()=>window.figureStudy.frame(4));await page.screenshot({path:path.join(out,'figures.png')});
+ await page.evaluate(()=>window.figureStudy.frame(4,{focus:1,turn:.75}));await page.screenshot({path:path.join(out,'porter-close.png')});
+ await page.getByRole('button',{name:'背面',exact:true}).click();
+ measurements.figureBackView=await page.getByRole('button',{name:'背面',exact:true}).getAttribute('aria-pressed')==='true';
+ await page.selectOption('#figure-choice','-1');
+ measurements.figureGalleryRestored=await page.locator('.labels').isVisible();
  await page.setViewportSize({width:390,height:844});await page.goto(base+'/');await page.screenshot({path:path.join(out,'gallery-mobile.png'),fullPage:true});
  measurements.mobileOverflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth);
  await page.setViewportSize({width:1280,height:900});await page.goto(base+'/qingming/?capture=1');await page.waitForFunction(()=>window.qingmingStudy,{timeout:120000});
  const frames=path.join(out,'frames');fs.mkdirSync(frames,{recursive:true});
  for(let i=0;i<96;i++){
-  await page.evaluate(t=>window.qingmingStudy.frame(t,{zoom:2.5,angle:12,target:[-6,1]}),i/12);
+  await page.evaluate(t=>window.qingmingStudy.frame(t,{zoom:2.5,angle:30,pitch:-12,target:[-6,1]}),i/12);
   await page.locator('.study-stage').screenshot({path:path.join(frames,String(i).padStart(4,'0')+'.png')});
  }
  execFileSync('ffmpeg',['-y','-v','error','-framerate','12','-i',path.join(frames,'%04d.png'),'-vf','pad=ceil(iw/2)*2:ceil(ih/2)*2','-c:v','libx264','-preset','fast','-crf','19','-pix_fmt','yuv420p','-movflags','+faststart',path.join(out,'motion.mp4')]);
@@ -41,9 +46,9 @@ try{
  await page.goto(base+'/thousand-miles/?capture=1');await page.waitForFunction(()=>window.inkLab?.ready,{timeout:120000});
  measurements.thousandMiles=await page.evaluate(()=>{inkLab.frame(0,{viewName:'painting',width:1280,height:576,seconds:2});return {ready:inkLab.ready,graphicsError:valley.renderer.getContext().getError()};});
  await page.screenshot({path:path.join(out,'thousand-miles.png')});
- const files=['bridgeStudy.ts','crowd.ts','passageLayout.ts','passageLife.ts','passageSpace.ts','figureTypes.ts','Mock3D.tsx','paintMaterial.ts','inkFinish.ts'];
+ const files=['bridgeStudy.ts','crowd.ts','passageLayout.ts','passageLife.ts','passageSpace.ts','figureTypes.ts','figures.ts','marketModels.ts','figureStudy.ts','Mock3D.tsx','paintMaterial.ts','inkFinish.ts'];
  const hashes=Object.fromEntries(files.map(name=>[name,crypto.createHash('sha256').update(fs.readFileSync(path.join(root,'artworks/qingming/src',name))).digest('hex')]));
- const report={passed:errors.length===0&&failedResponses.length===0&&measurements.sameTimeReplay&&!measurements.mobileOverflow&&!measurements.homepageLoadsSceneCode&&measurements.far.crowd.levels[0].actors>100&&measurements.thousandMiles.graphicsError===0,measurements,errors,failedResponses,sourceHashes:hashes,motion:{fps:12,frames:96,durationSeconds:8,width:1232,kind:'offline scene-time sample; no realtime performance claim'}};
+ const report={passed:errors.length===0&&failedResponses.length===0&&measurements.sameTimeReplay&&measurements.figureBackView&&measurements.figureGalleryRestored&&!measurements.mobileOverflow&&!measurements.homepageLoadsSceneCode&&measurements.far.crowd.levels[0].actors>100&&measurements.thousandMiles.graphicsError===0,measurements,errors,failedResponses,sourceHashes:hashes,motion:{fps:12,frames:96,durationSeconds:8,width:1232,kind:'offline scene-time sample; no realtime performance claim'}};
  fs.writeFileSync(path.join(out,'review.json'),JSON.stringify(report,null,2)+'\n');
  console.log(JSON.stringify(report,null,2));if(!report.passed)process.exitCode=1;
 }finally{await browser.close();}

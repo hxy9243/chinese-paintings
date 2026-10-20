@@ -3,7 +3,7 @@
 export type BankSide = "far" | "near";
 export type PassagePoint = { s: number; d: number };
 export const GROUND_Y = 0.015;
-export const PERSON_SCALE = 0.65; // about 0.36 units tall in the painted passage
+export const PERSON_SCALE = 0.65; // about 0.44 units tall in the painted passage
 export const SHORELINES: Record<BankSide, PassagePoint[]> = {
   far: [
     [-22, -5.8],
@@ -101,10 +101,7 @@ function waterfrontHall(
   height: number,
   setback: number,
 ): HallLayout {
-  const angle = Math.atan2(
-    shoreDepth(side, s + width / 2) - shoreDepth(side, s - width / 2),
-    width,
-  );
+  const angle = 0; // Roofs follow the two street/courtyard axes, not shoreline bends.
   const h: HallLayout = {
     side,
     s,
@@ -143,12 +140,14 @@ export const HALLS: HallLayout[] = [
 ];
 // Compact foreground street: matching roof axes and narrow gaps between eaves.
 [
-  { s: -16.7, d: 4.4 },
+  { s: -16.7, d: 4.6 },
   { s: -13.7, d: 10 },
   { s: -3.4, d: 9.8 },
   { s: 1.6, d: 10.5 },
-].forEach((p, i) => Object.assign(HALLS[7 + i], p, { angle: 0.08 }));
+].forEach((p, i) => Object.assign(HALLS[7 + i], p, { angle: 0 }));
 // Leave the bridge axis open as a continuous market street on both banks.
+HALLS[1].d = -11.3;
+HALLS[1].depth = 2.05;
 HALLS[8].width = 4.4;
 HALLS[9].width = 4;
 HALLS[2].s = -9.55;
@@ -156,21 +155,103 @@ HALLS[2].width = 2.4;
 // Broad foreground roofs and a small waterside shelter frame the open right
 // reach in the reference. Keep their full eaves on dry land and off the street.
 HALLS.push(
-  { ...waterfrontHall("near", 6.9, 3.8, 2.5, 1.05, 2.2), d: 9.0, angle: -.1 },
-  waterfrontHall("near", 11.4, 3.3, 2.0, .88, 1.55),
-  waterfrontHall("far", 6.6, 1.6, 1.2, .58, 1.4),
+  { ...waterfrontHall("near", 6.9, 3.8, 2.5, 1.05, 2.2), d: 9.0, angle: 0 },
+  waterfrontHall("near", 11.4, 3.3, 2.0, 0.88, 1.55),
+  waterfrontHall("far", 6.6, 1.6, 1.2, 0.58, 1.4),
 );
 // Hand-read roof axes: the foreground hall immediately right of the bridge
-// shows an oblique end gable. It must not inherit the bank-parallel shop axis.
-HALLS[9].angle = 1.13;
+// has its ridge perpendicular to the adjoining hall and the riverfront shops.
+HALLS[9].angle = Math.PI / 2;
 HALLS[9].gable = true;
 HALLS[9].depth = 3.0;
-HALLS[10].angle = -.08;
-HALLS[3].angle = .20;
+HALLS[10].angle = 0;
+HALLS[3].angle = 0;
 HALLS[3].width = 3.35;
+// Small shelter beside the near landing and roofs partly visible behind the
+// far street. These were omitted when the scene was reduced to landmark blocks.
+Object.assign(HALLS[11], {
+  s: -3.8,
+  d: 6.2,
+  width: 1.8,
+  depth: 1.1,
+  height: 0.65,
+  angle: 0,
+});
+HALLS.push(
+  {
+    side: "near",
+    s: -19,
+    d: 9.4,
+    width: 2.4,
+    depth: 2.7,
+    height: 0.85,
+    angle: Math.PI / 2,
+    gable: true,
+  },
+  {
+    side: "near",
+    s: 11.6,
+    d: 11.2,
+    width: 2.1,
+    depth: 1.6,
+    height: 0.78,
+    angle: Math.PI / 2,
+    gable: true,
+  },
+  {
+    side: "far",
+    s: -16.4,
+    d: -13.35,
+    width: 2.5,
+    depth: 0.6,
+    height: 0.55,
+    angle: 0,
+  },
+  {
+    side: "far",
+    s: -11.8,
+    d: -13.35,
+    width: 2.6,
+    depth: 0.6,
+    height: 0.67,
+    angle: 0,
+  },
+  {
+    side: "far",
+    s: 1.3,
+    d: -13.4,
+    width: 2.9,
+    depth: 0.7,
+    height: 0.64,
+    angle: 0,
+  },
+  {
+    side: "far",
+    s: 12,
+    d: -11.7,
+    width: 3.4,
+    depth: 1.6,
+    height: 0.86,
+    angle: 0,
+  },
+  {
+    side: "near",
+    s: 17.5,
+    d: 11.3,
+    width: 3.1,
+    depth: 2,
+    height: 0.8,
+    angle: 0,
+  },
+);
 // The old bare tree's trunk stands beside the near quay, behind the foreground
 // roof line, with the crown reaching into the water silhouette.
-export const REFERENCE_TREE = { s: 8.1, d: 4.95, size: 1.45, form: "spreading" as const };
+export const REFERENCE_TREE = {
+  s: 6.1,
+  d: 4.4,
+  size: 1.45,
+  form: "spreading" as const,
+};
 // Both full-width landings sit inland. Local x runs from near bank to far bank.
 const near = { s: -7.4, d: 3.35 },
   far = { s: -5.9, d: -7.35 };
@@ -195,6 +276,12 @@ export function bridgePoint(x: number, lateral = 0): PassagePoint {
       lateral * Math.cos(BRIDGE.angle),
   };
 }
+export const BRIDGE_SHOPS = [-2.5, -0.5, 1.7, 3.4].map((x, i) => ({
+  x,
+  lateral: (i < 2 ? -1 : 1) * (BRIDGE.width / 2 + 0.04),
+  width: 0.72,
+  depth: 0.22,
+}));
 export function bridgeHeight(x: number): number {
   return (
     GROUND_Y + BRIDGE.rise * Math.max(0, 1 - ((2 * x) / BRIDGE.length) ** 2)

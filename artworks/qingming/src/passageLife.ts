@@ -47,9 +47,17 @@ export const BUILDING_KINDS: BuildingKind[] = [
   "dwelling",
   "openhall",
   "shop",
+  "warehouse",
+  "shed",
+  "dwelling",
+  "warehouse",
+  "dwelling",
+  "compound",
+  "courtyard",
 ];
 export const WALKER_COUNT = 36;
 export const BRIDGE_WALKERS = 12;
+export const BRIDGE_OBSERVERS = 32;
 
 export function insideRoof(p: PassagePoint, margin = 0) {
   return HALLS.some((h) => {
@@ -134,13 +142,22 @@ export function walkPose(index: number, time: number, seed = 0) {
   };
 }
 export const CARTS = CART_ROUTES;
-export const CART_KINDS = ["horse-cart", "covered-cart", "horse-cart", "covered-cart", "ox-cart", "covered-cart", "pack-horse", "handcart"] as const;
+export const CART_KINDS = [
+  "horse-cart",
+  "covered-cart",
+  "horse-cart",
+  "covered-cart",
+  "ox-cart",
+  "covered-cart",
+  "pack-horse",
+  "handcart",
+] as const;
 export function cartPose(index: number, time: number) {
   const clock = time * 0.16 + (index * 44) / CARTS.length + 5,
     x = -22 + (((clock % 44) + 44) % 44);
   const slope = (bridgeHeight(x + 0.55) - bridgeHeight(x - 0.55)) / 1.1;
   let y = GROUND_Y;
-  for (let u = -.66; u <= .661; u += .066)
+  for (let u = -0.66; u <= 0.661; u += 0.066)
     y = Math.max(y, bridgeHeight(x + u) - u * slope);
   return {
     ...bridgePoint(x),
@@ -194,7 +211,35 @@ export function riverRipple(index: number, time: number) {
 }
 // Reserve the reference landmark's actual trunk/root footprint before stalls.
 // Its elevated crown may overhang water, like the painting; the roots may not.
-if (!reserve(REFERENCE_TREE, .68, "reference-tree")) throw new Error("Reference tree root is obstructed");
+if (!reserve(REFERENCE_TREE, 0.68, "reference-tree"))
+  throw new Error("Reference tree root is obstructed");
+// Explicit observed trees are reserved before markets. Reserve roots, not the
+// elevated crown: crown-sized exclusion discs silently erased riverside trees.
+export const FEATURE_TREES: (PassagePoint & {
+  id: string;
+  size: number;
+  form: "spreading" | "pollard" | "sapling";
+})[] = [{ ...REFERENCE_TREE, id: "near-quay-old-tree" }];
+const observedTrees = [
+  { id: "west-near-fork", s: -20, d: 2.5, size: 0.92, form: "spreading" },
+  { id: "near-landing-pollard", s: -11.5, d: 4.7, size: 0.9, form: "pollard" },
+  { id: "far-landing-bare", s: -7.8, d: -10.6, size: 1.04, form: "spreading" },
+  {
+    id: "foreground-pollard-west",
+    s: -1.1,
+    d: 5.7,
+    size: 0.92,
+    form: "pollard",
+  },
+  { id: "foreground-pollard-east", s: 0.8, d: 6.1, size: 0.8, form: "pollard" },
+  { id: "east-yard-bare", s: 13.7, d: 10, size: 1.05, form: "sapling" },
+  { id: "far-east-bare", s: 19.2, d: -8.8, size: 0.96, form: "spreading" },
+] as const;
+for (const t of observedTrees) {
+  if (!reserve(t, 0.24, "reference-tree"))
+    throw new Error("Observed tree root obstructed: " + t.id);
+  FEATURE_TREES.push(t);
+}
 // Keep a tall willow grove clear before allocating the denser market.
 const willowGrove = reserve({ s: 19, d: -11 }, 1.1, "willow")
   ? [{ s: 19, d: -11, kind: "willow" as const, size: 1.15 }]
@@ -210,7 +255,7 @@ for (const lateral of [-2.55, 2.55, -3.75, 3.75, -4.85, 4.85]) {
   }
 }
 
-for (let i = 0; i < 28; i++) {
+for (let i = 0; i < 36; i++) {
   const candidates: PassagePoint[] = [];
   for (let s = -20; s <= 20; s += 0.55)
     for (const side of ["near", "far"] as const)
@@ -269,34 +314,6 @@ export function shopperPose(index: number, time: number, seed = 0) {
     angle: p.moving ? p.angle : Math.atan2(shop.d - d, shop.s - s),
   };
 }
-export const FEATURE_TREES: (PassagePoint & {
-  size: number;
-  form: "spreading" | "pollard" | "sapling";
-})[] = [REFERENCE_TREE];
-for (const [s, d] of [
-  [-19, 3],
-  [-14.1, 5],
-  [-5.8, -10],
-  [6.8, -11.5],
-  [8, 2.1],
-  [10.2, 4],
-  [6, 3.2],
-  [3.5, 4.8],
-  [12, 5.7],
-  [20.7, -8.5],
-]) {
-  const size =
-    s === 8 ? 1.18 : s === -19 ? 0.94 : 0.78 + Math.abs(Math.sin(s)) * 0.22;
-  const form =
-    s === 8 || s === -19
-      ? "spreading"
-      : s === 6 || s === 12
-        ? "pollard"
-        : "sapling";
-  const radius = (form === "spreading" ? 2.0 : 0.5) * size;
-  if (roofClear({ s, d }, size * 1.3) && reserve({ s, d }, radius, "tree"))
-    FEATURE_TREES.push({ s, d, size, form });
-}
 export type NatureKind = "bare" | "spring" | "willow" | "reed" | "rock";
 export const NATURE: (PassagePoint & { kind: NatureKind; size: number })[] = [
   ...willowGrove,
@@ -335,14 +352,7 @@ for (const side of ["near", "far"] as const)
           : kind === "willow"
             ? p.size * 0.95
             : 0.45 * p.size;
-    if (
-      roofClear(
-        p,
-        kind === "bare" || kind === "spring" ? p.size * 1.05 : radius,
-      ) &&
-      reserve(p, radius, kind)
-    )
-      NATURE.push(p);
+    if (roofClear(p, radius) && reserve(p, radius, kind)) NATURE.push(p);
   }
 
 // Additional tall groves behind the roof rows; trunks stay clear of architecture.
@@ -352,7 +362,7 @@ for (const side of ["near", "far"] as const)
     const d = (side === "far" ? -1 : 1) * (10.7 + (i % 3) * 0.8);
     const p = { s, d };
     if (
-      roofClear(p, 1.35 + (i % 3) * 0.2) &&
+      roofClear(p, 0.45 * (1.35 + (i % 3) * 0.2)) &&
       reserve(p, 0.45 * (1.35 + (i % 3) * 0.2), "tree")
     )
       NATURE.push({
@@ -378,7 +388,7 @@ for (
   const kind: NatureKind =
     i % 7 === 0 ? "willow" : i % 3 === 0 ? "spring" : "bare";
   const radius = (kind === "willow" ? 0.95 : 0.45) * size;
-  if (roofClear({ s, d }, size * 1.05) && reserve({ s, d }, radius, kind))
+  if (roofClear({ s, d }, radius) && reserve({ s, d }, radius, kind))
     NATURE.push({ s, d, size, kind });
 }
 for (let i = 0; i < 100 && !NATURE.some((n) => n.kind === "rock"); i++) {
@@ -411,13 +421,16 @@ export function residentPose(index: number, time: number, seed = 0) {
   return { ...p, s: home.s + p.s, d: home.d + p.d, y: GROUND_Y };
 }
 export function observerPose(index: number, time: number, seed = 0) {
-  const home = -BRIDGE.length / 2 + 0.4 + (index * (BRIDGE.length - 0.8)) / 11;
-  const p = wander(index + 200, time, 0.15, seed),
+  const home =
+    -BRIDGE.length / 2 +
+    0.4 +
+    (index * (BRIDGE.length - 0.8)) / (BRIDGE_OBSERVERS - 1);
+  const p = wander(index + 200, time, 0.07, seed),
     x = home + p.s;
   return {
     ...p,
-    ...bridgePoint(x, index % 2 ? 1.3 : -1.3),
+    ...bridgePoint(x, index % 2 ? 1.22 : -1.22),
     y: bridgeHeight(x),
-    angle: BRIDGE.angle + (p.angle > 0 ? 0 : Math.PI),
+    angle: BRIDGE.angle + (index % 2 ? Math.PI / 2 : -Math.PI / 2),
   };
 }

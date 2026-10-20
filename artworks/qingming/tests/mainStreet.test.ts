@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import {
   BRIDGE,
+  BRIDGE_SHOPS,
   HALLS,
   roofFootprint,
   bridgeHeight,
@@ -54,7 +55,11 @@ describe("bridge market street", () => {
     }
   });
   it("adds market clusters beside the street with shoppers who both linger and move", () => {
-    expect(MARKET.length).toBeGreaterThanOrEqual(40);
+    expect(MARKET.length+BRIDGE_SHOPS.length).toBeGreaterThanOrEqual(40);
+    for(const shop of BRIDGE_SHOPS) {
+      expect(Math.abs(shop.lateral)-shop.depth/2).toBeGreaterThan(1.5);
+      expect(Math.abs(shop.x)+shop.width/2).toBeLessThan(BRIDGE.length/2);
+    }
     expect(SHOP_VISITORS.length).toBeGreaterThanOrEqual(85);
     expect(
       MARKET.filter((p) => segmentDistance(p, MAIN_STREET) < 5.5).length,

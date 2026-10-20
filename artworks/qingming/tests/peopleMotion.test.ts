@@ -4,6 +4,7 @@ import { activityClock } from "../src/peopleMotion";
 import { createBridgeStudy } from "../src/bridgeStudy";
 import {
   WALKER_COUNT,
+  BRIDGE_OBSERVERS,
   CARTS,
   STATIC_PEOPLE,
   SHOP_VISITORS,
@@ -90,7 +91,7 @@ describe("independent activity and browsing", () => {
           walkPose(i, t, seed),
         );
         people.push(
-          ...Array.from({ length: 12 }, (_, i) => observerPose(i, t, seed)),
+          ...Array.from({ length: BRIDGE_OBSERVERS }, (_, i) => observerPose(i, t, seed)),
         );
         for (let i = 0; i < people.length; i++)
           for (let j = i + 1; j < people.length; j++)
@@ -133,16 +134,18 @@ describe("independent activity and browsing", () => {
       "shop-visitor",
       "boat-crew",
       "cart-driver",
+      "market-vendor",
     ];
     const actors: THREE.Object3D[] = [];
     study.group.traverse((n) => {
       if (names.includes(n.name)) actors.push(n);
     });
-    expect(new Set(actors.map((a) => a.name)).size).toBe(6);
+    expect(new Set(actors.map((a) => a.name)).size).toBe(7);
     expect(actors.length).toBe(
       WALKER_COUNT +
         STATIC_PEOPLE.length +
-        12 +
+        BRIDGE_OBSERVERS +
+        MARKET.length +
         SHOP_VISITORS.length +
         (BOATS.length + MOORED_BOATS.length) * 2 +
         CARTS.length,
@@ -170,7 +173,7 @@ describe("independent activity and browsing", () => {
     ).toBe(true);
     expect(after).not.toEqual(before);
     // Twelve types with articulated heads and arms remain instanced.
-    expect(after.length).toBeLessThan(220);
+    expect(after.length).toBeLessThan(360);
     study.update(12);
     expect(snapshots()).toEqual(later);
     expect(matrices()).toEqual(after);

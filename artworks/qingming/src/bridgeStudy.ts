@@ -28,6 +28,7 @@ import {
   MARKET,
   STATIC_PEOPLE,
   WALKER_COUNT,
+  BRIDGE_OBSERVERS,
   RIPPLE_COUNT,
   boatPose,
   walkPose,
@@ -42,6 +43,8 @@ import { MOORED_BOATS, mooredBoatPose, mooringAnchor } from "./moorings";
 import { MAIN_STREET, segmentDistance } from "./passageSpace";
 import { createCrowd } from "./crowd";
 import { FIGURE_TYPES } from "./figureTypes";
+import { buildFigure, FIGURE_HEIGHT } from "./figures";
+import { marketStall, bridgeMarket, MARKET_TYPES } from "./marketModels";
 import { chooseDetail, projectedHeightPixels, type DetailLevel } from "../../../packages/scene-kit/lod";
 import { idleMotion } from "./peopleMotion";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
@@ -116,103 +119,63 @@ type TreeForm = "upright" | "spreading" | "pollard" | "sapling";
 // Bare crowns in the supplied crop range from fine upright sprays to old,
 // low-forking riverbank trees. Forms are deterministic across visits.
 function characterTree(
-  parent: THREE.Object3D,
-  x: number,
-  z: number,
-  form: TreeForm,
-  seed: number,
+  parent: THREE.Object3D, x: number, z: number, form: TreeForm, seed: number,
 ) {
-  const g = new THREE.Group();
-  parent.add(g);
-  g.position.set(x, GROUND_Y, z);
-  const old = form === "spreading",
-    short = form === "pollard";
-  const landmark = Math.abs(seed-REFERENCE_TREE.s)<.001;
-  if(landmark)g.name="great-riverbank-tree";
-  const height = old ? (landmark?2.05:1.35) : short ? 1.65 : 2.25;
-  const thick = old ? (landmark?.23:.16) : short ? .11 : .045;
-  const lean = landmark ? .18 : Math.sin(seed * 2.1) * .23;
-  const trunk = [
-    [0, 0, 0],
-    [lean * 0.6, height * 0.38, 0.07],
-    [-0.08, height * 0.72, 0.02],
-    [lean, height, 0],
-  ];
-  for (let i = 0; i < 3; i++)
-    beam(g, trunk[i], trunk[i + 1], thick * (1 - i * 0.19));
-  // Buttress roots and bark strokes keep old trunks from reading as poles.
-  if (old || short)
-    for (let j = 0; j < 5; j++) {
-      const a = j * 1.26;
-      beam(
-        g,
-        [Math.cos(a) * 0.29, 0.015, Math.sin(a) * 0.29],
-        [lean * 0.3, 0.4, 0.02],
-        0.033,
-        dark,
-      );
-      beam(
-        g,
-        [Math.cos(a) * thick, 0.15, Math.sin(a) * thick],
-        [
-          lean * 0.6 + Math.cos(a) * thick * 0.6,
-          height * 0.7,
-          0.02 + Math.sin(a) * thick * 0.6,
-        ],
-        0.006,
-        dark,
-      );
+  const g=new THREE.Group();g.position.set(x,GROUND_Y,z);parent.add(g);
+  const old=form==='spreading',pollard=form==='pollard',landmark=Math.abs(seed-REFERENCE_TREE.s)<.001;
+  if(landmark)g.name='great-riverbank-tree';
+  const height=old?(landmark?2.05:1.6):pollard?1.5:2.0;
+  const thick=old?(landmark?.21:.12):pollard?.085:.042;
+  const lean=Math.sin(seed*1.7)*.16;
+  // Taper around a curved centreline. Forks grow out of the trunk, rather than
+  // straight cylinders meeting at sharp elbows or dark spheres stuck on bark.
+  const limb=(points:number[][],radius:number,end=.07)=>{
+    const curve=new THREE.CatmullRomCurve3(points.map(p=>new THREE.Vector3(...p)));
+    const rings=geometryDetail===2?12:geometryDetail===1?7:4,radial=geometryDetail===2?7:5;
+    const vertices:number[]=[],indices:number[]=[];
+    for(let j=0;j<=rings;j++){
+      const t=j/rings,p=curve.getPoint(t),tangent=curve.getTangent(t),
+        normal=new THREE.Vector3(0,0,1).cross(tangent).normalize(),binormal=tangent.clone().cross(normal).normalize();
+      for(let i=0;i<radial;i++){
+        const angle=i/radial*Math.PI*2,r=radius*(1-(1-end)*t)*(1+.08*Math.sin(i*2.7+j*.6));
+        const v=p.clone().addScaledVector(normal,Math.cos(angle)*r).addScaledVector(binormal,Math.sin(angle)*r);vertices.push(...v.toArray());
+        if(j<rings){const a=j*radial+i,b=j*radial+(i+1)%radial;indices.push(a,a+radial,b,b,a+radial,b+radial);}
+      }
     }
-  if(landmark && geometryDetail>0){
-    for(let j=0;j<14;j++){
-      const y=.14+j*.12,a=j*2.399;
-      const knot=mesh(g,new THREE.DodecahedronGeometry(.055+(j%3)*.014,0),j%2?dark:wood,
-        lean*y/height+Math.cos(a)*thick*.9,y,Math.sin(a)*thick*.8,false);
-      knot.scale.set(1,.8,.7);
+    const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));geo.setIndex(indices);geo.computeVertexNormals();mesh(g,geo,wood,0,0,0,false);
+    if(geometryDetail>0&&radius>.035)for(let k=0;k<(geometryDetail===2?4:2);k++){
+      const marks=[];for(let j=0;j<=10;j++){
+        const t=j/10,p=curve.getPoint(t),a=k*1.7+.1*Math.sin(j*.8),r=radius*(1-(1-end)*t)*1.015;
+        p.x+=Math.cos(a)*r;p.z+=Math.sin(a)*r;marks.push(p);
+      }
+      g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(marks),ink));
     }
-    for(const side of [-1,1]){
-      beam(g,[side*.12,.12,.05],[side*.1,.8,.03],.075,wood);
-      beam(g,[side*.1,.8,.03],[side*.48,1.5,.12],.052,wood);
-    }
+  };
+  const trunk=[[0,0,0],[-thick*.3,height*.17,0],[lean,height*.42,.035],[-.07,height*.72,.04],[lean*.8,height,0]];
+  limb(trunk,thick,.19);
+  if(old||pollard)for(let j=0;j<5;j++){
+    const a=j*1.256+seed;limb([[Math.cos(a)*thick*1.9,.018,Math.sin(a)*thick*1.9],[Math.cos(a)*thick*.8,.15,Math.sin(a)*thick*.8],[lean*.2,.42,.01]],thick*.3,.35);
   }
-  const branches = old ? (landmark?13:9) : short ? 12 : 6;
-  for (let j = 0; j < branches; j++) {
-    const a = j * 2.399 + seed,
-      originY = short ? height * 0.86 : height * (0.42 + (j % 4) * 0.13);
-    const reach = old
-      ? (landmark?1.5:1.15) + (j % 3) * 0.22
-      : short
-        ? 0.44 + (j % 3) * 0.12
-        : 0.4 + (j % 3) * 0.1;
-    const tip = [
-      lean + Math.cos(a) * reach,
-      height + (j % 4) * 0.15,
-      Math.sin(a) * reach * 0.68,
-    ];
-    const elbow = [tip[0] * 0.62, originY + 0.3, tip[2] * 0.52];
-    beam(g, [lean * 0.5, originY, 0.02], elbow, old ? 0.048 : 0.027);
-    beam(g, elbow, tip, old ? 0.031 : 0.015);
-    for (let k = 0; k < (landmark?(geometryDetail===0?3:8):geometryDetail===2?7:geometryDetail===1?3:1); k++) {
-      const spread = (k - 3) * 0.11;
-      const end = [
-        tip[0] + Math.cos(a + spread * 2) * 0.35 + spread,
-        tip[1] + 0.24 + (k % 3) * 0.14,
-        tip[2] + Math.sin(a + spread * 2) * 0.26,
-      ];
-      beam(g, tip, end, 0.007, dark);
-      beam(
-        g,
-        end,
-        [end[0] + spread * 0.7, end[1] + 0.18, end[2] + 0.08 * Math.sin(k)],
-        0.004,
-        dark,
-      );
+  const count=old?11:pollard?9:6;
+  for(let j=0;j<count;j++){
+    const angle=j*2.399+seed,origin=height*(pollard?.77:.32+(j%5)*.12),reach=old?(landmark?1.6:1.1)+(j%3)*.15:pollard?.43+(j%3)*.14:.4+(j%3)*.12;
+    const start=[lean*.6,origin,.025],mid=[Math.cos(angle)*reach*.5,origin+(height-origin)*.32,Math.sin(angle)*reach*.32],
+      tip=[Math.cos(angle)*reach,height+(j%4)*.13,Math.sin(angle)*reach*.7];
+    limb([start,mid,[tip[0]*.84,tip[1]-.2,tip[2]*.86],tip],old?.055:.027,.13);
+    const twigs=geometryDetail===2?8:geometryDetail===1?4:1;
+    for(let k=0;k<twigs;k++){
+      const t=.35+k/twigs*.6,a=angle+(k%2?1:-1)*(.35+(k%3)*.2),base=[mid[0]+(tip[0]-mid[0])*t,mid[1]+(tip[1]-mid[1])*t,mid[2]+(tip[2]-mid[2])*t],
+        end=[base[0]+Math.cos(a)*(.22+k*.025),base[1]+.18+(k%3)*.12,base[2]+Math.sin(a)*.3];
+      limb([base,[base[0]*.4+end[0]*.6,base[1]+.12,base[2]*.4+end[2]*.6],end],geometryDetail===0?.008:.011,.08);
+      if(geometryDetail===2)for(let q=0;q<3;q++){
+        const twig=[end[0]+Math.cos(a+q*.7)*.18,end[1]+.11+q*.045,end[2]+Math.sin(a+q*.7)*.14];
+        limb([end,[(end[0]+twig[0])*.5,end[1]+.07,(end[2]+twig[2])*.5],twig],.0035,.04);
+      }
     }
-    if (short)
-      mesh(g, new THREE.SphereGeometry(0.085, 6, 4), wood, lean, originY, 0.02);
   }
   return g;
 }
+
 function tree(parent: THREE.Object3D, x: number, z: number, leafy: boolean) {
   const g = new THREE.Group();
   parent.add(g);
@@ -409,39 +372,6 @@ function boat(parent: THREE.Object3D, x: number, z: number, cargo: boolean) {
     }
   }
   beam(g, [0.3, 0.32, -0.7], [0.68, 0.1, -1.55], 0.022, dark);
-}
-function stall(
-  parent: THREE.Object3D,
-  x: number,
-  z: number,
-  covered: boolean,
-  turn = REFERENCE_AZIMUTH,
-  size = 1,
-) {
-  const g = new THREE.Group();
-  parent.add(g);
-  g.position.set(x, GROUND_Y, z);
-  g.rotation.y = turn;
-  g.scale.setScalar(0.55 * size);
-  box(g, 1.3, 0.1, 0.7, 0, 0.62, 0);
-  for (const a of [-0.53, 0.53])
-    for (const b of [-0.24, 0.24]) box(g, 0.05, 0.63, 0.05, a, 0.3, b);
-  for (let i = 0; i < 5; i++)
-    mesh(
-      g,
-      new THREE.SphereGeometry(0.095, 6, 4),
-      i % 2 ? green : linen,
-      -0.43 + i * 0.21,
-      0.75,
-      0.04,
-    );
-  if (covered) {
-    for (const a of [-0.62, 0.62])
-      for (const b of [-0.3, 0.3]) box(g, 0.035, 1.45, 0.035, a, 0.72, b);
-    const canopy = box(g, 1.5, 0.06, 1, 0, 1.47, 0, linen);
-    canopy.rotation.z = 0.05;
-    box(g, 1.5, 0.18, 0.04, 0, 1.36, 0.47, linen);
-  }
 }
 function horseCart(parent: THREE.Group, index: number) {
   const layout = CARTS[index],kind=CART_KINDS[index];
@@ -642,72 +572,9 @@ function batchStatic(group: THREE.Group) {
   });
 }
 export function person(parent: THREE.Object3D, variant: number, walking = false, detail: DetailLevel = 2) {
-  const profile=FIGURE_TYPES[variant%FIGURE_TYPES.length];
-  const g=new THREE.Group();g.userData.figureType=profile.name;
-  g.scale.set(profile.width,profile.height,profile.width);parent.add(g);
-  const robe=[dark,linen,green][profile.robe],segments=detail===2?9:detail===1?5:3;
-  const long=profile.name==="scholar"||profile.name==="woman"||profile.name==="elder";
-  mesh(g,new THREE.CylinderGeometry(.067,long?.105:.088,long?.30:.23,segments),robe,0,long?.245:.28,0,detail>0);
-  if(detail>0){
-    box(g,.15,.025,.13,0,.245,0,dark);
-    beam(g,[-.045,.38,.064],[.025,.28,.08],.009,linen);
-    if(detail===2)for(const x of [-.04,0,.04])beam(g,[x,.22,.074],[x*1.5,.13,.085],.003,dark);
-  }
-  batchStatic(g);
-  const head=new THREE.Group();head.name="head";head.position.y=.455;g.add(head);
-  mesh(head,new THREE.SphereGeometry(.062,segments+1,detail===2?7:3),wood,0,0,0,false);
-  if(profile.hat==="straw")mesh(head,new THREE.ConeGeometry(.135,.05,segments+3),linen,0,.075,0,detail>0);
-  else if(profile.hat==="tall"){
-    box(head,.1,.085,.085,0,.065,-.008,dark);
-    if(detail>0)beam(head,[-.13,.06,0],[.13,.06,0],.008,dark);
-  }else if(profile.hat==="bun"){
-    mesh(head,new THREE.SphereGeometry(.032,segments,3),dark,0,.065,-.012,detail>0);
-    if(detail===2)beam(head,[-.05,.066,0],[.055,.066,0],.004,linen);
-  }else if(profile.hat==="wrap")mesh(head,new THREE.CylinderGeometry(.067,.06,.033,segments),linen,0,.035,0,detail>0);
-  else box(head,.112,.035,.105,0,.05,0,dark);
-  if(detail===2){
-    mesh(head,new THREE.SphereGeometry(.014,5,3),wood,0,-.003,.061,false);
-    for(const x of [-.025,.025])mesh(head,new THREE.SphereGeometry(.006,4,3),dark,x,.015,.054,false);
-    if(profile.name==="elder"||profile.name==="scholar")mesh(head,new THREE.ConeGeometry(.03,.062,5),dark,0,-.06,.044);
-  }
-  batchStatic(head);
-  for(const side of [-1,1]){
-    const arm=new THREE.Group();arm.name=side<0?"left-arm":"right-arm";arm.position.set(side*.065,.36,0);g.add(arm);
-    beam(arm,[0,0,0],[side*.045,-.085,.015],detail===0?.022:.03,robe);
-    if(detail>0){beam(arm,[side*.045,-.085,.015],[side*.05,-.135,.045],.022,robe);
-      mesh(arm,new THREE.SphereGeometry(.018,segments,3),wood,side*.05,-.14,.048,false);}
-    batchStatic(arm);
-    const leg=new THREE.Group();leg.name=side<0?"left-leg":"right-leg";leg.position.set(side*.044,.13,0);g.add(leg);
-    beam(leg,[0,0,0],[0,-.115,.01],.019,dark);
-    if(detail>0)box(leg,.043,.025,.075,0,-.115,.024,dark);
-    batchStatic(leg);
-  }
-  if(detail>0){
-    const gear=new THREE.Group();g.add(gear);
-    const basket=(x:number,y:number,z:number,r=.05)=>{
-      mesh(gear,new THREE.CylinderGeometry(r*1.1,r*.75,.085,segments),linen,x,y,z);
-      if(detail===2)for(const dy of [-.02,.015,.035])mesh(gear,new THREE.TorusGeometry(r,.003,3,10),dark,x,y+dy,z).rotation.x=Math.PI/2;
-    };
-    if(profile.load==="baskets"){
-      beam(gear,[-.27,.38,0],[.27,.38,0],.011,wood);
-      for(const side of [-1,1]){beam(gear,[side*.25,.38,0],[side*.25,.19,0],.004,dark);basket(side*.25,.15,0,.052);}
-    }else if(profile.load==="basket")basket(.14,.22,.04);
-    else if(profile.load==="bundle"){
-      mesh(gear,new THREE.SphereGeometry(.09,segments,4),linen,0,.28,-.1);
-      beam(gear,[-.06,.36,.035],[.06,.21,.065],.009,dark);
-    }else if(profile.load==="staff")beam(gear,[.13,0,.07],[.13,.39,.07],.007,wood);
-    else if(profile.load==="scroll"||profile.load==="ledger")box(gear,.11,.025,.07,.02,.3,.14,linen);
-    else if(profile.load==="tray"){
-      box(gear,.21,.015,.12,0,.28,.14,wood);
-      for(const x of [-.06,.04])basket(x,.32,.14,.027);
-    }else if(profile.load==="tools"){
-      box(gear,.12,.065,.07,.12,.22,.015,wood);
-      beam(gear,[.14,.24,.01],[.14,.32,.01],.007,dark);
-    }
-    batchStatic(gear);
-  }
-  return g;
+  return buildFigure(parent, variant, walking, detail, batchStatic);
 }
+
 function parasol(parent: THREE.Object3D, x: number, z: number) {
   const g = new THREE.Group();
   parent.add(g);
@@ -790,7 +657,7 @@ function hall(
   if (kind === "compound") {
     const rear = hall(g, 0, 0, w * 0.9, depth * 0.35, h, 0, "dwelling");
     rear.position.set(0, 0, -depth * 0.28);
-    const wing = hall(g, 0, 0, w * 0.27, depth * 0.5, h * 0.74, 0, "warehouse");
+    const wing = hall(g, 0, 0, depth * 0.5, w * 0.27, h * 0.74, Math.PI/2, "warehouse");
     wing.position.set(-w * 0.31, 0, depth * 0.14);
     // Low yard wall and a recessed gate rather than another enclosed hall.
     box(
@@ -818,7 +685,7 @@ function hall(
   }
   if (kind === "courtyard") {
     for (const side of [-1, 1]) {
-      const wing = hall(g, 0, 0, w * 0.27, depth * 0.92, h * 0.86);
+      const wing = hall(g, 0, 0, depth * 0.92, w * 0.27, h * 0.86, Math.PI/2);
       wing.position.set(side * w * 0.34, 0, 0);
     }
     const rear = hall(g, 0, 0, w * 0.36, depth * 0.28, h);
@@ -1282,6 +1149,7 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
       0,
     );
   }
+  const bridgeCounters=bridgeMarket(bridge,height,BRIDGE.width,BRIDGE.length);
   const detailedBuildings: {root:THREE.Group; base:THREE.Group; fine:THREE.Group; coarse:THREE.Group; height:number; detail:DetailLevel}[]=[];
   for (const [index,h] of HALLS.entries()) {
     const root=new THREE.Group();root.name="reference-building";
@@ -1322,6 +1190,7 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
     }
     riversideNature(plants);batchStatic(plants);return plants;
   });geometryDetail=2;
+  const vendorSites: {position:THREE.Vector3;turn:number;shop:number}[]=[];
   MARKET.forEach(({ s, d, parasol: covered, size }, i) => {
     const p = scrollPoint(s, d);
     const lateral =
@@ -1331,7 +1200,10 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
       segmentDistance({ s, d }, MAIN_STREET) < 5.5
         ? REFERENCE_AZIMUTH - BRIDGE.angle + (lateral > 0 ? Math.PI : 0)
         : REFERENCE_AZIMUTH + (d > 0 ? Math.PI : 0);
-    stall(group, p.x, p.z, i % 3 === 0, turn, size);
+    const shopRoot=new THREE.Group();shopRoot.position.set(p.x,GROUND_Y,p.z);shopRoot.rotation.y=turn;shopRoot.scale.setScalar(.55*size);group.add(shopRoot);
+    marketStall(shopRoot,i,i%3===0);
+    shopRoot.updateMatrixWorld(true);
+    vendorSites.push({position:shopRoot.localToWorld(new THREE.Vector3(-.22,0,-.58)),turn,shop:i});
     if (covered) parasol(group, p.x + 0.4, p.z + 0.3);
   });
   batchStatic(group);
@@ -1425,12 +1297,13 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
   const residents = STATIC_PEOPLE.map((_, i) =>
     addPerson(group, i, "resident-person"),
   );
-  const observers = Array.from({ length: 12 }, (_, i) =>
+  const observers = Array.from({ length: BRIDGE_OBSERVERS }, (_, i) =>
     addPerson(group, i, "bridge-observer"),
   );
   const shoppers = SHOP_VISITORS.map((_, i) =>
     addPerson(group, i, "shop-visitor"),
   );
+  const vendors=vendorSites.map((_,i)=>addPerson(group,i%2?5:9,"market-vendor"));
   const drivers = carts.map((c,i)=>{
     const driver=addPerson(c.group,i,"cart-driver");driver.group.scale.multiplyScalar(1/c.group.scale.x);return driver;
   });
@@ -1457,16 +1330,30 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
       REFERENCE_AZIMUTH - pose.angle + Math.PI / 2 + idle.look,
       idle.lean,
     );
-    p.left.rotation.x = stride * 0.46;
-    p.right.rotation.x = -stride * 0.46;
-    p.leftArm.rotation.x = -stride * .32;
-    p.rightArm.rotation.x = stride * .32;
-    p.head.rotation.y = idle.look * 1.8;
+    const profile=FIGURE_TYPES[p.group.userData.variant % FIGURE_TYPES.length];
+    const holding=['ledger','scroll','tray'].includes(profile.load);
+    const loaded=profile.load==='baskets',elder=profile.name==='elder';
+    const step=loaded?.30:elder?.24:.42;
+    p.left.rotation.x=stride*step;p.right.rotation.x=-stride*step;
+    p.leftArm.rotation.x=holding?-.12-stride*.035:loaded?-.22-stride*.06:-stride*.26;
+    p.rightArm.rotation.x=holding?-.12+stride*.035:loaded?.15+stride*.025:stride*.26;
+    p.head.rotation.y=idle.look*1.8;
+    p.head.rotation.x=loaded?.13:elder?.09:0;
+    // Looking over the bridge rail and reaching toward wares are distinct from
+    // a walking cycle. Offsets are derived from absolute time, including seeks.
+    if(p.group.name==='bridge-observer'){
+      p.leftArm.rotation.x=-.72+idle.lean;p.rightArm.rotation.x=-.61-idle.lean;
+      p.head.rotation.x=.27+idle.lean;p.group.rotation.x=.10;
+    }else if(!pose.moving&&p.group.name==='shop-visitor'){
+      p.rightArm.rotation.x=-.65+Math.sin(time*.55+id)*.09;
+      p.head.rotation.x=.16;p.head.rotation.y+=.12;
+    }
+
   }
   return {
     group,
     metadata() { return { crowd: crowd.metadata(), seed, vegetationLevel:plantDetail,
-      buildings:detailedBuildings.map(b=>b.detail), traffic:CART_KINDS }; },
+      buildings:detailedBuildings.map(b=>b.detail), traffic:CART_KINDS, bridgeCounters, marketTypes:MARKET_TYPES, referenceTrees:FEATURE_TREES.map(t=>t.id) }; },
     setPainting(enabled: boolean) {
       paintingAmount.value = enabled ? 1 : 0;
     },
@@ -1480,7 +1367,7 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
           b.detail=chooseDetail(screen(b.height,b.root.position)/3,b.detail);
           b.base.visible=b.detail>0;b.fine.visible=b.detail===2;b.coarse.visible=b.detail===0;
         }
-        plantDetail=chooseDetail(screen(.57*PERSON_SCALE,new THREE.Vector3()),plantDetail);
+        plantDetail=chooseDetail(screen(FIGURE_HEIGHT*PERSON_SCALE,new THREE.Vector3()),plantDetail);
       }
       vegetationLevels.forEach((g,i)=>g.visible=i===plantDetail);
       carts.forEach((cart, i) => {
@@ -1518,6 +1405,15 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
       shoppers.forEach((p, i) =>
         animatePerson(p, i + 300, time, shopperPose(i, time, seed)),
       );
+      vendors.forEach((p,i)=>{
+        const site=vendorSites[i],idle=idleMotion(i+700,time,seed),seated=i%3===0;
+        p.group.position.copy(site.position);p.group.position.y+=idle.breath-(seated?.04:0);
+        p.group.rotation.set(.04,site.turn+idle.look,0);
+        p.head.rotation.set(.17,idle.look,0);
+        p.leftArm.rotation.x=-.75+Math.sin(time*.6+i)*.08;
+        p.rightArm.rotation.x=-1.05+Math.sin(time*.6+i+.5)*.13;
+        p.left.rotation.x=seated?-.9:0;p.right.rotation.x=seated?-.9:0;
+      });
       drivers.forEach((p, i) => {
         const idle = idleMotion(i + 400, time, seed);
         const kind=CART_KINDS[i];
