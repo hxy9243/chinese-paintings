@@ -8,6 +8,7 @@ import {
 } from "./passageSpace";
 import {
   BOATS,
+  REFERENCE_TREE,
   BRIDGE,
   GROUND_Y,
   HALLS,
@@ -41,6 +42,9 @@ export const BUILDING_KINDS: BuildingKind[] = [
   "openhall",
   "shop",
   "shed",
+  "openhall",
+  "shop",
+  "dwelling",
   "openhall",
   "shop",
 ];
@@ -107,12 +111,12 @@ export function walkPose(index: number, time: number, seed = 0) {
   const k = index - BRIDGE_WALKERS;
   // Alternate near/far banks while distributing six walkers over each half-bank loop.
   const loop = BANK_LOOPS[(k % 2) * 2 + (Math.floor(k / 2) % 2)];
-  const perimeter = 2 * (loop.end - loop.start) + 2 * Math.PI * 0.2;
+  const perimeter = 2 * (loop.end - loop.start) + 2 * Math.PI * 0.26;
   const p = laneLoop(
     activity.progress * 0.12 + (Math.floor(k / 4) / 6) * perimeter,
     loop.start,
     loop.end,
-    0.2,
+    0.26,
   );
   const slope =
     (shoreDepth(loop.side, p.s + 0.01) - shoreDepth(loop.side, p.s - 0.01)) /
@@ -130,12 +134,13 @@ export function walkPose(index: number, time: number, seed = 0) {
   };
 }
 export const CARTS = CART_ROUTES;
+export const CART_KINDS = ["horse-cart", "covered-cart", "horse-cart", "covered-cart", "ox-cart", "covered-cart", "pack-horse", "handcart"] as const;
 export function cartPose(index: number, time: number) {
-  const clock = time * 0.16 + (index * 44) / 6 + 5,
+  const clock = time * 0.16 + (index * 44) / CARTS.length + 5,
     x = -22 + (((clock % 44) + 44) % 44);
-  const slope = (bridgeHeight(x + 0.7) - bridgeHeight(x - 0.7)) / 1.4;
+  const slope = (bridgeHeight(x + 0.55) - bridgeHeight(x - 0.55)) / 1.1;
   let y = GROUND_Y;
-  for (let u = -1.15; u <= 1.151; u += 0.115)
+  for (let u = -.66; u <= .661; u += .066)
     y = Math.max(y, bridgeHeight(x + u) - u * slope);
   return {
     ...bridgePoint(x),
@@ -187,6 +192,9 @@ export function riverRipple(index: number, time: number) {
     length: (0.25 + (index % 5) * 0.13) * Math.sin(Math.PI * phase) ** 2,
   };
 }
+// Reserve the reference landmark's actual trunk/root footprint before stalls.
+// Its elevated crown may overhang water, like the painting; the roots may not.
+if (!reserve(REFERENCE_TREE, .68, "reference-tree")) throw new Error("Reference tree root is obstructed");
 // Keep a tall willow grove clear before allocating the denser market.
 const willowGrove = reserve({ s: 19, d: -11 }, 1.1, "willow")
   ? [{ s: 19, d: -11, kind: "willow" as const, size: 1.15 }]
@@ -264,7 +272,7 @@ export function shopperPose(index: number, time: number, seed = 0) {
 export const FEATURE_TREES: (PassagePoint & {
   size: number;
   form: "spreading" | "pollard" | "sapling";
-})[] = [];
+})[] = [REFERENCE_TREE];
 for (const [s, d] of [
   [-19, 3],
   [-14.1, 5],

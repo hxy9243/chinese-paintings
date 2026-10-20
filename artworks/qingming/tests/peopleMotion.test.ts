@@ -4,6 +4,7 @@ import { activityClock } from "../src/peopleMotion";
 import { createBridgeStudy } from "../src/bridgeStudy";
 import {
   WALKER_COUNT,
+  CARTS,
   STATIC_PEOPLE,
   SHOP_VISITORS,
   SHOPPER_SPACE,
@@ -144,7 +145,7 @@ describe("independent activity and browsing", () => {
         12 +
         SHOP_VISITORS.length +
         (BOATS.length + MOORED_BOATS.length) * 2 +
-        6,
+        CARTS.length,
     );
     const snapshots = () =>
       actors.map((a) => [...a.position.toArray(), ...a.quaternion.toArray()]);
@@ -153,7 +154,7 @@ describe("independent activity and browsing", () => {
       study.group.traverse((n) => {
         if (n instanceof THREE.Mesh || n instanceof THREE.Line) {
           const a = n.geometry.getAttribute("crowdMatrix");
-          if (a) data.push(Array.from(a.array));
+          if (a && (n.geometry as THREE.InstancedBufferGeometry).instanceCount>0) data.push(Array.from(a.array));
         }
       });
       return data;
@@ -168,7 +169,8 @@ describe("independent activity and browsing", () => {
       later.every((a, i) => a.some((value, j) => value !== initial[i][j])),
     ).toBe(true);
     expect(after).not.toEqual(before);
-    expect(after.length).toBeLessThan(32);
+    // Twelve types with articulated heads and arms remain instanced.
+    expect(after.length).toBeLessThan(220);
     study.update(12);
     expect(snapshots()).toEqual(later);
     expect(matrices()).toEqual(after);

@@ -181,7 +181,8 @@ describe("life in the reference passage", () => {
     let draws = 0;
     study.group.traverse((n) => {
       if (n instanceof THREE.Mesh || n instanceof THREE.Line) {
-        draws++;
+        let visible=true;for(let p:THREE.Object3D|null=n;p;p=p.parent)visible&&=p.visible;
+        if(visible && (!(n.geometry instanceof THREE.InstancedBufferGeometry)||n.geometry.instanceCount>0))draws++;
         n.geometry.computeBoundingBox();
         expect(Number.isFinite(n.geometry.boundingBox!.min.x)).toBe(true);
         n.geometry.dispose();

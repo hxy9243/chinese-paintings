@@ -82,10 +82,12 @@ export default function Mock3D() {
     const sunlight = new THREE.DirectionalLight(0xfff0d3, 2);
     sunlight.position.set(-5, 12, 8);
     scene.add(sunlight);
-    const study = createBridgeStudy();
+    const capture=new URLSearchParams(location.search).has("capture");
+    const study = createBridgeStudy(9243);
     scene.add(study.group);
     study.setPainting(true);
     const camera = new THREE.OrthographicCamera(-12, 12, 9, -9, 0.1, 250);
+    let needsRender=true;
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableRotate = true;
     controls.minAzimuthAngle =
@@ -96,6 +98,7 @@ export default function Mock3D() {
     controls.maxPolarAngle = ELEVATION + THREE.MathUtils.degToRad(TILT_LIMIT);
     controls.rotateSpeed = 0.45;
     controls.addEventListener("change", () => {
+      needsRender=true;
       setAngle(
         Math.round(
           THREE.MathUtils.radToDeg(controls.getAzimuthalAngle() - VIEW_ANGLE),
@@ -149,6 +152,7 @@ export default function Mock3D() {
       const w = el.clientWidth,
         h = el.clientHeight;
       if (!w || !h) return;
+      needsRender=true;
       renderer.setSize(w, h);
       finish.resize(w, h);
       const aspect = w / h;
@@ -165,6 +169,7 @@ export default function Mock3D() {
     api.current = {
       view: position,
       roll(degrees) {
+        needsRender=true;
         rollAngle = THREE.MathUtils.degToRad(
           THREE.MathUtils.clamp(degrees, -TILT_LIMIT, TILT_LIMIT),
         );
@@ -179,10 +184,12 @@ export default function Mock3D() {
         position(0, 0);
       },
       painting(enabled) {
+        needsRender=true;
         paintingEnabled = enabled;
         study.setPainting(enabled);
       },
       softness(amount) {
+        needsRender=true;
         inkSoftness = Math.max(0, Math.min(1, amount));
       },
       zoom(factor) {
@@ -205,6 +212,7 @@ export default function Mock3D() {
       last = performance.now();
     const animate = (now: number) => {
       frame = requestAnimationFrame(animate);
+      if (capture) return;
       if (document.hidden) {
         last = now;
         return;
@@ -212,13 +220,27 @@ export default function Mock3D() {
       if (now - last < 32) return;
       const delta = Math.min(0.08, (now - last) / 1000);
       last = now;
-      if (!pausedRef.current) animationTime += delta;
+      if (!pausedRef.current && !capture) {animationTime += delta;needsRender=true;}
       controls.update();
+      if(!needsRender)return;
+      needsRender=false;
       camera.rotateZ(rollAngle);
-      study.update(animationTime);
+      study.update(animationTime, camera, el.clientHeight);
       finish.render(scene, camera, paintingEnabled ? inkSoftness : 0);
     };
     frame = requestAnimationFrame(animate);
+    const reviewApi={
+      frame(seconds:number,options:{zoom?:number;angle?:number;pitch?:number;target?:[number,number]}={}){
+        if(options.target){controls.target.copy(scrollPoint(...options.target));controls.target.y=1.1;}
+        if(options.zoom!==undefined){camera.zoom=options.zoom;camera.updateProjectionMatrix();}
+        position(options.angle??0,options.pitch??0);animationTime=seconds;
+        study.update(seconds,camera,el.clientHeight);renderer.info.autoReset=false;renderer.info.reset();
+        finish.render(scene,camera,paintingEnabled?inkSoftness:0);
+        const stats={...study.metadata(),triangles:renderer.info.render.triangles,calls:renderer.info.render.calls};renderer.info.autoReset=true;return stats;
+      },
+      metadata:()=>study.metadata(),
+    };
+    if(capture)(window as unknown as {qingmingStudy:typeof reviewApi}).qingmingStudy=reviewApi;
     setReady(true);
     return () => {
       cancelAnimationFrame(frame);
@@ -237,6 +259,7 @@ export default function Mock3D() {
       renderer.dispose();
       renderer.domElement.remove();
       api.current = null;
+      if(capture)delete (window as unknown as {qingmingStudy?:unknown}).qingmingStudy;
     };
   }, []);
   return (
@@ -247,7 +270,7 @@ export default function Mock3D() {
     >
       <header className="study-header">
         <div className="study-wordmark">
-          清明小景 <span> / {t("LIVING INK", "立体水墨")}</span>
+          <a href="/" aria-label="画中行 · Gallery">清明小景</a> <span> / {t("LIVING INK", "立体水墨")}</span>
         </div>
         <button
           onClick={() => setLang(lang === "en" ? "zh" : "en")}

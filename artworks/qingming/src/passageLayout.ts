@@ -25,9 +25,9 @@ export const SHORELINES: Record<BankSide, PassagePoint[]> = {
     [0, 4],
     [4, 1.5],
     [7, 0.7],
-    [10, 3],
-    [16, 5.4],
-    [22, 6],
+    [10, 4.2],
+    [16, 6.1],
+    [22, 6.4],
   ].map(([s, d]) => ({ s, d })),
 };
 export function shoreDepth(side: BankSide, s: number): number {
@@ -68,6 +68,7 @@ export interface HallLayout extends PassagePoint {
   depth: number;
   height: number;
   angle: number;
+  gable?: boolean;
 }
 // Sample the whole roof footprint, including overhanging eaves, at shoreline bends.
 export function roofFootprint(h: HallLayout): PassagePoint[] {
@@ -124,13 +125,13 @@ function waterfrontHall(
 // Low waterfront shops, rear warehouses, broad foreground roofs; heights are
 // relative to the same person scale rather than arbitrary per-object scaling.
 export const HALLS: HallLayout[] = [
-  waterfrontHall("far", -18, 4.4, 2.1, 0.85, 3.7),
-  waterfrontHall("far", -13.25, 3.8, 2.6, 1.05, 3.7),
+  waterfrontHall("far", -18.3, 3.8, 2.0, 0.72, 3.7),
+  waterfrontHall("far", -13.5, 3.4, 2.2, 0.86, 3.7),
   waterfrontHall("far", -9.2, 3, 2.2, 0.95, 1.6),
   waterfrontHall("far", -0.7, 3.8, 2.7, 1.1, 3.7),
   waterfrontHall("far", 3.45, 3.3, 2.3, 1, 3.7),
-  waterfrontHall("far", 9.7, 5.4, 3.1, 1.2, 1.4),
-  waterfrontHall("far", 15.5, 5.1, 2.9, 1, 1.4),
+  waterfrontHall("far", 10.2, 4.4, 2.3, 0.88, 1.4),
+  waterfrontHall("far", 16, 4.6, 2.4, 0.83, 1.4),
   waterfrontHall("near", -16.5, 4.8, 3.8, 1.15, 2.5),
   waterfrontHall("near", -10.4, 5.4, 3.8, 1.35, 3.9),
   waterfrontHall("near", -4.4, 5.2, 3.6, 1.2, 2.5),
@@ -145,13 +146,31 @@ export const HALLS: HallLayout[] = [
   { s: -16.7, d: 4.4 },
   { s: -13.7, d: 10 },
   { s: -3.4, d: 9.8 },
-  { s: 1.5, d: 10 },
+  { s: 1.6, d: 10.5 },
 ].forEach((p, i) => Object.assign(HALLS[7 + i], p, { angle: 0.08 }));
 // Leave the bridge axis open as a continuous market street on both banks.
 HALLS[8].width = 4.4;
 HALLS[9].width = 4;
 HALLS[2].s = -9.55;
 HALLS[2].width = 2.4;
+// Broad foreground roofs and a small waterside shelter frame the open right
+// reach in the reference. Keep their full eaves on dry land and off the street.
+HALLS.push(
+  { ...waterfrontHall("near", 6.9, 3.8, 2.5, 1.05, 2.2), d: 9.0, angle: -.1 },
+  waterfrontHall("near", 11.4, 3.3, 2.0, .88, 1.55),
+  waterfrontHall("far", 6.6, 1.6, 1.2, .58, 1.4),
+);
+// Hand-read roof axes: the foreground hall immediately right of the bridge
+// shows an oblique end gable. It must not inherit the bank-parallel shop axis.
+HALLS[9].angle = 1.13;
+HALLS[9].gable = true;
+HALLS[9].depth = 3.0;
+HALLS[10].angle = -.08;
+HALLS[3].angle = .20;
+HALLS[3].width = 3.35;
+// The old bare tree's trunk stands beside the near quay, behind the foreground
+// roof line, with the crown reaching into the water silhouette.
+export const REFERENCE_TREE = { s: 8.1, d: 4.95, size: 1.45, form: "spreading" as const };
 // Both full-width landings sit inland. Local x runs from near bank to far bank.
 const near = { s: -7.4, d: 3.35 },
   far = { s: -5.9, d: -7.35 };

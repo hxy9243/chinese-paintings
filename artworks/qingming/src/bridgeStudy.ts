@@ -16,11 +16,13 @@ import {
   bridgeHeight,
   GROUND_Y,
   PERSON_SCALE,
+  REFERENCE_TREE,
 } from "./passageLayout";
 import {
   BUILDING_KINDS,
   NATURE,
   CARTS,
+  CART_KINDS,
   cartPose,
   FEATURE_TREES,
   MARKET,
@@ -39,6 +41,8 @@ import {
 import { MOORED_BOATS, mooredBoatPose, mooringAnchor } from "./moorings";
 import { MAIN_STREET, segmentDistance } from "./passageSpace";
 import { createCrowd } from "./crowd";
+import { FIGURE_TYPES } from "./figureTypes";
+import { chooseDetail, projectedHeightPixels, type DetailLevel } from "../../../packages/scene-kit/lod";
 import { idleMotion } from "./peopleMotion";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 
@@ -107,6 +111,7 @@ function beam(
   );
   return obj;
 }
+let geometryDetail: DetailLevel = 2;
 type TreeForm = "upright" | "spreading" | "pollard" | "sapling";
 // Bare crowns in the supplied crop range from fine upright sprays to old,
 // low-forking riverbank trees. Forms are deterministic across visits.
@@ -122,9 +127,11 @@ function characterTree(
   g.position.set(x, GROUND_Y, z);
   const old = form === "spreading",
     short = form === "pollard";
-  const height = old ? 1.35 : short ? 1.65 : 2.25;
-  const thick = old ? 0.16 : short ? 0.11 : 0.045;
-  const lean = Math.sin(seed * 2.1) * 0.23;
+  const landmark = Math.abs(seed-REFERENCE_TREE.s)<.001;
+  if(landmark)g.name="great-riverbank-tree";
+  const height = old ? (landmark?2.05:1.35) : short ? 1.65 : 2.25;
+  const thick = old ? (landmark?.23:.16) : short ? .11 : .045;
+  const lean = landmark ? .18 : Math.sin(seed * 2.1) * .23;
   const trunk = [
     [0, 0, 0],
     [lean * 0.6, height * 0.38, 0.07],
@@ -156,12 +163,24 @@ function characterTree(
         dark,
       );
     }
-  const branches = old ? 9 : short ? 12 : 6;
+  if(landmark && geometryDetail>0){
+    for(let j=0;j<14;j++){
+      const y=.14+j*.12,a=j*2.399;
+      const knot=mesh(g,new THREE.DodecahedronGeometry(.055+(j%3)*.014,0),j%2?dark:wood,
+        lean*y/height+Math.cos(a)*thick*.9,y,Math.sin(a)*thick*.8,false);
+      knot.scale.set(1,.8,.7);
+    }
+    for(const side of [-1,1]){
+      beam(g,[side*.12,.12,.05],[side*.1,.8,.03],.075,wood);
+      beam(g,[side*.1,.8,.03],[side*.48,1.5,.12],.052,wood);
+    }
+  }
+  const branches = old ? (landmark?13:9) : short ? 12 : 6;
   for (let j = 0; j < branches; j++) {
     const a = j * 2.399 + seed,
       originY = short ? height * 0.86 : height * (0.42 + (j % 4) * 0.13);
     const reach = old
-      ? 1.15 + (j % 3) * 0.22
+      ? (landmark?1.5:1.15) + (j % 3) * 0.22
       : short
         ? 0.44 + (j % 3) * 0.12
         : 0.4 + (j % 3) * 0.1;
@@ -173,7 +192,7 @@ function characterTree(
     const elbow = [tip[0] * 0.62, originY + 0.3, tip[2] * 0.52];
     beam(g, [lean * 0.5, originY, 0.02], elbow, old ? 0.048 : 0.027);
     beam(g, elbow, tip, old ? 0.031 : 0.015);
-    for (let k = 0; k < 7; k++) {
+    for (let k = 0; k < (landmark?(geometryDetail===0?3:8):geometryDetail===2?7:geometryDetail===1?3:1); k++) {
       const spread = (k - 3) * 0.11;
       const end = [
         tip[0] + Math.cos(a + spread * 2) * 0.35 + spread,
@@ -206,7 +225,7 @@ function tree(parent: THREE.Object3D, x: number, z: number, leafy: boolean) {
       end = [Math.cos(a) * (0.55 + i * 0.035), y + 0.55, Math.sin(a) * 0.53];
     beam(g, [0.06, y, 0], end, 0.04);
     beam(g, end, [end[0] * 1.4, end[1] + 0.32, end[2] * 1.3], 0.018);
-    for (let twig = 0; twig < 7; twig++) {
+    for (let twig = 0; twig < (geometryDetail===2?7:geometryDetail===1?3:1); twig++) {
       const tip = [
         end[0] * 1.35 + Math.sin(twig * 2.4) * 0.27,
         end[1] + 0.18 + twig * 0.075,
@@ -217,8 +236,8 @@ function tree(parent: THREE.Object3D, x: number, z: number, leafy: boolean) {
     if (leafy) {
       const cloud = new THREE.Shape();
       const radius = 0.44 + (i % 3) * 0.1;
-      for (let j = 0; j <= 64; j++) {
-        const angle = (j / 64) * Math.PI * 2;
+      for (let j = 0; j <= (geometryDetail===2?64:16); j++) {
+        const angle = (j / (geometryDetail===2?64:16)) * Math.PI * 2;
         const r =
           radius * (1 + 0.13 * Math.sin(j * 1.8) + 0.07 * Math.sin(j * 3.1));
         const px = Math.cos(angle) * r,
@@ -235,7 +254,7 @@ function tree(parent: THREE.Object3D, x: number, z: number, leafy: boolean) {
       );
       canopy.rotation.y = VIEW_ANGLE;
       // Individually drawn leaf dabs break the geometric silhouette.
-      for (let j = 0; j < 28; j++) {
+      for (let j = 0; j < (geometryDetail===2?28:geometryDetail===1?10:0); j++) {
         const a = j * 2.399,
           r = Math.sqrt(j / 28) * radius;
         const leaf = new THREE.Shape();
@@ -312,7 +331,7 @@ function riversideNature(parent: THREE.Group) {
           x = Math.cos(a) * 0.65,
           z = Math.sin(a) * 0.65;
         beam(g, [0.12, 1.05, 0], [x, 1.5 + (j % 3) * 0.12, z], 0.02);
-        for (let strand = 0; strand < 3; strand++) {
+        for (let strand = 0; strand < (geometryDetail===0?1:3); strand++) {
           const pts = [];
           for (let k = 0; k <= 9; k++) {
             const t = k / 9;
@@ -425,16 +444,18 @@ function stall(
   }
 }
 function horseCart(parent: THREE.Group, index: number) {
-  const layout = CARTS[index];
+  const layout = CARTS[index],kind=CART_KINDS[index];
   const g = new THREE.Group();
   g.position.copy(scrollPoint(layout.s, layout.d));
   g.position.y = GROUND_Y;
   g.rotation.y = REFERENCE_AZIMUTH - layout.angle;
-  g.scale.setScalar(0.7);
+  g.scale.setScalar(0.4);
   parent.add(g);
+  g.userData.trafficKind=kind;
+  const animal=new THREE.Group();animal.name="draught-animal";g.add(animal);
   const coat = index % 2 ? dark : wood;
   // Horse faces local +x: rounded barrel, sloping neck, muzzle and alert ears.
-  const body = mesh(g, new THREE.SphereGeometry(1, 10, 7), coat, 0.65, 0.65, 0);
+  const body = mesh(animal, new THREE.SphereGeometry(1, 10, 7), coat, 0.65, 0.65, 0);
   body.scale.set(0.48, 0.22, 0.2);
   const headGroup = new THREE.Group();
   g.add(headGroup);
@@ -462,8 +483,14 @@ function horseCart(parent: THREE.Group, index: number) {
       box(leg, 0.105, 0.06, 0.075, 0.025, -0.56, 0, coat);
       legs.push(leg);
     }
-  beam(g, [0.22, 0.72, 0], [0.04, 0.35, 0.03], 0.055, dark);
-  beam(g, [0.94, 0.88, 0], [1.05, 1.12, 0], 0.045, dark);
+  if(kind==="ox-cart")for(const side of [-1,1]){
+    beam(headGroup,[1.1,1.1,side*.07],[1.07,1.24,side*.18],.025,linen);
+    beam(headGroup,[1.07,1.24,side*.18],[1.18,1.28,side*.21],.014,linen);
+  }
+  beam(animal, [0.22, 0.72, 0], [0.04, 0.35, 0.03], 0.055, dark);
+  beam(animal, [0.94, 0.88, 0], [1.05, 1.12, 0], 0.045, dark);
+  const wheels: THREE.Group[] = [];
+  if(kind!=="pack-horse") {
   // Two wooden shafts visibly join harness and cart.
   for (const z of [-0.24, 0.24]) {
     beam(g, [-1.1, 0.38, z], [0.85, 0.47, z], 0.025);
@@ -471,7 +498,6 @@ function horseCart(parent: THREE.Group, index: number) {
     beam(g, [-0.58, 0.86, z / 2], [1.3, 1.02, z / 3], 0.008, dark);
   }
   box(g, 1.05, 0.1, 0.64, -0.85, 0.43, 0);
-  const wheels: THREE.Group[] = [];
   for (const z of [-0.31, 0.31]) {
     box(g, 1.08, 0.23, 0.04, -0.85, 0.58, z);
     const wheel = new THREE.Group();
@@ -512,12 +538,25 @@ function horseCart(parent: THREE.Group, index: number) {
       );
       sack.scale.set(0.8, 0.8, 1.25);
     }
+  } else {
+    // Independent laden pack horse: saddlebags replace the cart, not just its color.
+    for(const side of [-1,1]){
+      box(animal,.37,.28,.19,.6,.62,side*.23,linen);
+      beam(animal,[.39,.78,side*.19],[.79,.51,side*.33],.014,dark);
+    }
+  }
+  if(kind==="handcart"){
+    animal.removeFromParent();headGroup.removeFromParent();legs.forEach(leg=>leg.removeFromParent());
+    legs.length=0;
+    // Handles reach the porter's hands; no invisible horse is rendered.
+    for(const side of [-1,1])beam(g,[-.4,.43,side*.24],[.58,.54,side*.24],.024,wood);
+  }
   const animated = [...legs, ...wheels, headGroup];
   animated.forEach((part) => g.remove(part));
   batchStatic(g);
   animated.forEach((part) => {
     batchStatic(part);
-    g.add(part);
+    if(kind!=="handcart"||part!==headGroup)g.add(part);
   });
   // Clip the traffic to the same rounded ground boundary. Each train wraps
   // only after its entire horse, cart and driver have left that boundary.
@@ -602,45 +641,70 @@ function batchStatic(group: THREE.Group) {
       );
   });
 }
-function person(parent: THREE.Object3D, variant: number, walking = false) {
-  const g = new THREE.Group();
-  parent.add(g);
-  const robe = [dark, linen, green][variant % 3];
-  mesh(g, new THREE.CylinderGeometry(0.065, 0.115, 0.33, 6), robe, 0, 0.245, 0);
-  mesh(g, new THREE.SphereGeometry(0.064, 7, 5), wood, 0, 0.46, 0);
-  if (variant % 3 === 0)
-    mesh(g, new THREE.ConeGeometry(0.15, 0.065, 10), linen, 0, 0.53, 0);
-  else box(g, 0.13, 0.05, 0.12, 0, 0.515, 0, dark);
-  if (!walking) {
-    beam(g, [-0.045, 0.12, 0], [-0.055, 0.02, 0.025], 0.02, dark);
-    beam(g, [0.045, 0.12, 0], [0.06, 0.02, -0.025], 0.02, dark);
+export function person(parent: THREE.Object3D, variant: number, walking = false, detail: DetailLevel = 2) {
+  const profile=FIGURE_TYPES[variant%FIGURE_TYPES.length];
+  const g=new THREE.Group();g.userData.figureType=profile.name;
+  g.scale.set(profile.width,profile.height,profile.width);parent.add(g);
+  const robe=[dark,linen,green][profile.robe],segments=detail===2?9:detail===1?5:3;
+  const long=profile.name==="scholar"||profile.name==="woman"||profile.name==="elder";
+  mesh(g,new THREE.CylinderGeometry(.067,long?.105:.088,long?.30:.23,segments),robe,0,long?.245:.28,0,detail>0);
+  if(detail>0){
+    box(g,.15,.025,.13,0,.245,0,dark);
+    beam(g,[-.045,.38,.064],[.025,.28,.08],.009,linen);
+    if(detail===2)for(const x of [-.04,0,.04])beam(g,[x,.22,.074],[x*1.5,.13,.085],.003,dark);
   }
-  beam(g, [-0.06, 0.36, 0], [-0.12, 0.24, 0.04], 0.029, robe);
-  beam(g, [0.06, 0.36, 0], [0.12, 0.24, 0.04], 0.029, robe);
-  if (!walking && variant % 4 === 0) {
-    beam(g, [-0.3, 0.39, 0], [0.3, 0.39, 0], 0.014, dark);
-    for (const side of [-1, 1]) {
-      beam(g, [side * 0.27, 0.39, 0], [side * 0.27, 0.14, 0], 0.009, dark);
-      mesh(
-        g,
-        new THREE.CylinderGeometry(0.08, 0.055, 0.12, 8),
-        linen,
-        side * 0.27,
-        0.13,
-        0,
-      );
-    }
+  batchStatic(g);
+  const head=new THREE.Group();head.name="head";head.position.y=.455;g.add(head);
+  mesh(head,new THREE.SphereGeometry(.062,segments+1,detail===2?7:3),wood,0,0,0,false);
+  if(profile.hat==="straw")mesh(head,new THREE.ConeGeometry(.135,.05,segments+3),linen,0,.075,0,detail>0);
+  else if(profile.hat==="tall"){
+    box(head,.1,.085,.085,0,.065,-.008,dark);
+    if(detail>0)beam(head,[-.13,.06,0],[.13,.06,0],.008,dark);
+  }else if(profile.hat==="bun"){
+    mesh(head,new THREE.SphereGeometry(.032,segments,3),dark,0,.065,-.012,detail>0);
+    if(detail===2)beam(head,[-.05,.066,0],[.055,.066,0],.004,linen);
+  }else if(profile.hat==="wrap")mesh(head,new THREE.CylinderGeometry(.067,.06,.033,segments),linen,0,.035,0,detail>0);
+  else box(head,.112,.035,.105,0,.05,0,dark);
+  if(detail===2){
+    mesh(head,new THREE.SphereGeometry(.014,5,3),wood,0,-.003,.061,false);
+    for(const x of [-.025,.025])mesh(head,new THREE.SphereGeometry(.006,4,3),dark,x,.015,.054,false);
+    if(profile.name==="elder"||profile.name==="scholar")mesh(head,new THREE.ConeGeometry(.03,.062,5),dark,0,-.06,.044);
   }
-  if (walking) {
-    batchStatic(g);
-    for (const side of [-1, 1]) {
-      const leg = new THREE.Group();
-      leg.name = side === -1 ? "left-leg" : "right-leg";
-      leg.position.set(side * 0.05, 0.13, 0);
-      g.add(leg);
-      beam(leg, [0, 0, 0], [0, -0.115, 0.025], 0.021, dark);
-      batchStatic(leg);
+  batchStatic(head);
+  for(const side of [-1,1]){
+    const arm=new THREE.Group();arm.name=side<0?"left-arm":"right-arm";arm.position.set(side*.065,.36,0);g.add(arm);
+    beam(arm,[0,0,0],[side*.045,-.085,.015],detail===0?.022:.03,robe);
+    if(detail>0){beam(arm,[side*.045,-.085,.015],[side*.05,-.135,.045],.022,robe);
+      mesh(arm,new THREE.SphereGeometry(.018,segments,3),wood,side*.05,-.14,.048,false);}
+    batchStatic(arm);
+    const leg=new THREE.Group();leg.name=side<0?"left-leg":"right-leg";leg.position.set(side*.044,.13,0);g.add(leg);
+    beam(leg,[0,0,0],[0,-.115,.01],.019,dark);
+    if(detail>0)box(leg,.043,.025,.075,0,-.115,.024,dark);
+    batchStatic(leg);
+  }
+  if(detail>0){
+    const gear=new THREE.Group();g.add(gear);
+    const basket=(x:number,y:number,z:number,r=.05)=>{
+      mesh(gear,new THREE.CylinderGeometry(r*1.1,r*.75,.085,segments),linen,x,y,z);
+      if(detail===2)for(const dy of [-.02,.015,.035])mesh(gear,new THREE.TorusGeometry(r,.003,3,10),dark,x,y+dy,z).rotation.x=Math.PI/2;
+    };
+    if(profile.load==="baskets"){
+      beam(gear,[-.27,.38,0],[.27,.38,0],.011,wood);
+      for(const side of [-1,1]){beam(gear,[side*.25,.38,0],[side*.25,.19,0],.004,dark);basket(side*.25,.15,0,.052);}
+    }else if(profile.load==="basket")basket(.14,.22,.04);
+    else if(profile.load==="bundle"){
+      mesh(gear,new THREE.SphereGeometry(.09,segments,4),linen,0,.28,-.1);
+      beam(gear,[-.06,.36,.035],[.06,.21,.065],.009,dark);
+    }else if(profile.load==="staff")beam(gear,[.13,0,.07],[.13,.39,.07],.007,wood);
+    else if(profile.load==="scroll"||profile.load==="ledger")box(gear,.11,.025,.07,.02,.3,.14,linen);
+    else if(profile.load==="tray"){
+      box(gear,.21,.015,.12,0,.28,.14,wood);
+      for(const x of [-.06,.04])basket(x,.32,.14,.027);
+    }else if(profile.load==="tools"){
+      box(gear,.12,.065,.07,.12,.22,.015,wood);
+      beam(gear,[.14,.24,.01],[.14,.32,.01],.007,dark);
     }
+    batchStatic(gear);
   }
   return g;
 }
@@ -716,6 +780,7 @@ function hall(
   h: number,
   turn = 0,
   kind: BuildingKind = "dwelling",
+  gableRoof = false,
 ) {
   const g = new THREE.Group();
   parent.add(g);
@@ -803,7 +868,7 @@ function hall(
     );
   // Low shop/warehouse gables contrast with broad hipped dwelling roofs.
   // Restrained concave eaves follow the crop rather than pagoda silhouettes.
-  const gabled = kind === "warehouse" || kind === "shop" || kind === "shed";
+  const gabled = gableRoof || kind === "warehouse" || kind === "shop" || kind === "shed";
   const e = w / 2 + 0.2,
     f = depth / 2 + 0.23;
   const r = gabled ? e : w * 0.29;
@@ -1217,25 +1282,46 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
       0,
     );
   }
-  for (const [index, h] of HALLS.entries()) {
-    hall(
-      group,
-      h.s,
-      h.d,
-      h.width,
-      h.depth,
-      h.height,
-      REFERENCE_AZIMUTH - h.angle + (h.side === "near" ? Math.PI : 0),
-      BUILDING_KINDS[index],
-    );
+  const detailedBuildings: {root:THREE.Group; base:THREE.Group; fine:THREE.Group; coarse:THREE.Group; height:number; detail:DetailLevel}[]=[];
+  for (const [index,h] of HALLS.entries()) {
+    const root=new THREE.Group();root.name="reference-building";
+    root.position.copy(scrollPoint(h.s,h.d));root.position.y=GROUND_Y;
+    root.rotation.y=REFERENCE_AZIMUTH-h.angle+(h.side==="near"?Math.PI:0);
+    const base=hall(new THREE.Group(),0,0,h.width,h.depth,h.height,0,BUILDING_KINDS[index],h.gable);
+    base.position.set(0,0,0);batchStatic(base);root.add(base);
+    const fine=new THREE.Group();fine.name="close-architecture";root.add(fine);
+    // Recessed lattice screens, brackets and stacked wares add real depth.
+    for(let x=-h.width*.4;x<h.width*.45;x+=.55){
+      for(const side of [-1,1]){
+        beam(fine,[x,h.height-.14,side*h.depth*.48],[x+.1,h.height-.03,side*(h.depth*.5+.1)],.012,dark);
+        box(fine,.17,.035,.22,x,h.height-.06,side*h.depth*.5,wood);
+      }
+      if(index%3!==2)for(const dx of [-.06,0,.06])beam(fine,[x+dx,h.height*.4,h.depth*.5+.035],[x+dx+.05,h.height*.7,h.depth*.5+.035],.004,linen);
+    }
+    if(index%3===0)for(let j=0;j<3;j++){
+      const crate=box(fine,.19,.17,.17,-h.width*.32+j*.2,.085,h.depth*.5+.12,wood);
+      beam(crate,[-.095,-.085,.086],[.095,.085,.086],.009,dark);
+    }
+    batchStatic(fine);
+    const coarse=new THREE.Group();coarse.name="distant-architecture";root.add(coarse);
+    // Same footprint and roof envelope, but no rafters, tile ribs or lattice.
+    box(coarse,h.width,h.height,h.depth,0,h.height/2,0,plaster);
+    const w=h.width/2+.2,d=h.depth/2+.23,y=h.height+.08,top=h.height+Math.min(.64,h.depth*.23),ridge=h.gable?w:w*.58;
+    const vertices=[-w,y,-d,w,y,-d,w,y,d,-w,y,d,-ridge,top,0,ridge,top,0];
+    const roofGeo=new THREE.BufferGeometry();roofGeo.setAttribute("position",new THREE.Float32BufferAttribute(vertices,3));
+    roofGeo.setIndex([0,4,5,0,5,1,3,2,5,3,5,4,0,3,4,1,5,2]);roofGeo.computeVertexNormals();mesh(coarse,roofGeo,roof);
+    box(coarse,h.width*.55,h.height*.5,.025,0,h.height*.38,h.depth/2+.02,dark);batchStatic(coarse);
+    fine.visible=false;coarse.visible=false;
+    detailedBuildings.push({root,base,fine,coarse,height:top,detail:1});
   }
-  for (const { s, d, size, form } of FEATURE_TREES) {
-    const p = scrollPoint(s, d),
-      t = characterTree(group, p.x, p.z, form, s);
-    t.scale.set(size * 1.15, size * 1.5, size * 1.15);
-    t.rotation.y = s * 0.31;
-  }
-  riversideNature(group);
+  const vegetationLevels=[0,1,2].map(level=>{
+    geometryDetail=level as DetailLevel;const plants=new THREE.Group();plants.name="vegetation-detail-"+level;
+    for (const {s,d,size,form} of FEATURE_TREES){
+      const p=scrollPoint(s,d),t=characterTree(plants,p.x,p.z,form,s);
+      t.scale.set(size*1.15,size*1.5,size*1.15);t.rotation.y=s*.31;
+    }
+    riversideNature(plants);batchStatic(plants);return plants;
+  });geometryDetail=2;
   MARKET.forEach(({ s, d, parasol: covered, size }, i) => {
     const p = scrollPoint(s, d);
     const lateral =
@@ -1249,6 +1335,9 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
     if (covered) parasol(group, p.x + 0.4, p.z + 0.3);
   });
   batchStatic(group);
+  detailedBuildings.forEach(b=>group.add(b.root));
+  vegetationLevels.forEach(g=>group.add(g));
+  let plantDetail:DetailLevel=1;
   const carts = CARTS.map((_, i) => horseCart(group, i));
   const boats = BOATS.map((b) => {
     const vessel = workingBoat(
@@ -1317,14 +1406,17 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
   ripples.name = "river-ripples";
   ripples.frustumCulled = false;
   group.add(ripples);
-  const crowd = createCrowd(group, (i) => person(new THREE.Group(), i, true));
+  const crowd = createCrowd(group, (i, level) => person(new THREE.Group(), i, true, level));
   const addPerson = (parent: THREE.Object3D, i: number, name: string) => {
     const p = crowd.add(parent, i, name);
-    p.scale.setScalar(PERSON_SCALE);
+    p.scale.multiplyScalar(PERSON_SCALE);
     return {
       group: p,
       left: p.getObjectByName("left-leg")!,
       right: p.getObjectByName("right-leg")!,
+      leftArm: p.getObjectByName("left-arm")!,
+      rightArm: p.getObjectByName("right-arm")!,
+      head: p.getObjectByName("head")!,
     };
   };
   const people = Array.from({ length: WALKER_COUNT }, (_, i) =>
@@ -1339,7 +1431,9 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
   const shoppers = SHOP_VISITORS.map((_, i) =>
     addPerson(group, i, "shop-visitor"),
   );
-  const drivers = carts.map((c, i) => addPerson(c.group, i, "cart-driver"));
+  const drivers = carts.map((c,i)=>{
+    const driver=addPerson(c.group,i,"cart-driver");driver.group.scale.multiplyScalar(1/c.group.scale.x);return driver;
+  });
   const crew = [...boats, ...moored].flatMap((b, i) =>
     [-1, 1].map((side) => ({
       rig: addPerson(b, i + (side + 1) / 2, "boat-crew"),
@@ -1365,13 +1459,30 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
     );
     p.left.rotation.x = stride * 0.46;
     p.right.rotation.x = -stride * 0.46;
+    p.leftArm.rotation.x = -stride * .32;
+    p.rightArm.rotation.x = stride * .32;
+    p.head.rotation.y = idle.look * 1.8;
   }
   return {
     group,
+    metadata() { return { crowd: crowd.metadata(), seed, vegetationLevel:plantDetail,
+      buildings:detailedBuildings.map(b=>b.detail), traffic:CART_KINDS }; },
     setPainting(enabled: boolean) {
       paintingAmount.value = enabled ? 1 : 0;
     },
-    update(time: number) {
+    update(time: number, camera?: THREE.Camera, viewportHeight = 800) {
+      const ortho=camera as THREE.OrthographicCamera|undefined;
+      if(camera){
+        const screen=(height:number,center:THREE.Vector3)=>projectedHeightPixels({height,viewportHeight,zoom:ortho?.zoom??1,
+          orthographicSpan:ortho?.isOrthographicCamera?ortho.top-ortho.bottom:undefined,
+          distance:center.distanceTo(camera.position),verticalFov:(camera as THREE.PerspectiveCamera).fov});
+        for(const b of detailedBuildings){
+          b.detail=chooseDetail(screen(b.height,b.root.position)/3,b.detail);
+          b.base.visible=b.detail>0;b.fine.visible=b.detail===2;b.coarse.visible=b.detail===0;
+        }
+        plantDetail=chooseDetail(screen(.57*PERSON_SCALE,new THREE.Vector3()),plantDetail);
+      }
+      vegetationLevels.forEach((g,i)=>g.visible=i===plantDetail);
       carts.forEach((cart, i) => {
         const pose = cartPose(i, time),
           stride = pose.moving ? pose.traveled * 15 : time * 2.4;
@@ -1409,7 +1520,12 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
       );
       drivers.forEach((p, i) => {
         const idle = idleMotion(i + 400, time, seed);
-        p.group.position.set(-0.42, 0.48 + idle.breath, 0);
+        const kind=CART_KINDS[i];
+        p.group.position.set(kind==="handcart"?.5:kind==="pack-horse"?.65:-.42,
+          (kind==="handcart"?0:kind==="pack-horse"?.6:.48)+idle.breath,0);
+        const walking=kind==="handcart",stride=walking?Math.sin(time*3+i)*.32:0;
+        p.left.rotation.x=walking?stride:-.8;p.right.rotation.x=walking?-stride:-.8;
+        p.leftArm.rotation.x=walking?-.5:-.35;p.rightArm.rotation.x=walking?-.5:-.35;
         p.group.rotation.set(
           idle.lean,
           Math.PI / 2 + idle.look,
@@ -1467,7 +1583,7 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
         }
         positions.needsUpdate = true;
       });
-      crowd.update();
+      crowd.update(camera, viewportHeight);
       for (let i = 0; i < RIPPLE_COUNT; i++) {
         const ripple = riverRipple(i, time);
         for (let segment = 0; segment < 4; segment++)

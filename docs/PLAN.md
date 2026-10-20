@@ -10,10 +10,10 @@
 - Build a Chinese-first bilingual artwork gallery. Review it locally before any website publication.
 - Aim for detailed, editable 3D with bounded camera movement. Sharing infrastructure alone does not establish reference-level visual quality.
 
-## 1. Repository foundation — current milestone
+## 1. Repository foundation — complete
 
 - Initialize the public `hxy9243/chinese-paintings` repository with this plan, a README, and directory placeholders.
-- Do not import artwork sources, change the existing projects, or deploy a website in this milestone.
+- The initial repository milestone contained only the plan and scaffold; artwork imports and geometry work are now the active follow-up milestone. Website deployment remains deferred.
 - Verify public visibility, pushed commit identity, canonical artwork naming, and a clean local checkout.
 
 ## 2. Preserve and import the artworks
@@ -66,6 +66,7 @@
 
 ## 5. Visual development after migration
 
+- Active revision: [geometry, reference landmarks, varied people and traffic, and screen-space LOD](GEOMETRY_REVISION.md). Correct the house axes and great bare tree near the bridge before the shader work.
 - Start with one small Qingming market-and-boat passage as a separate study rather than replacing an accepted scene immediately.
 - Combine modeled structures and moving subjects with authored or source-derived painted surfaces. Concentrate geometric detail on silhouettes, depth, focal structures, and visible moving objects.
 - Establish bounded camera views, a production still, and a short motion excerpt before expanding the scene.

@@ -107,7 +107,7 @@ export const WALK_SEGMENTS: Segment[] = BANK_LOOPS.flatMap((loop) => {
 export function walkingClear(p: PassagePoint, radius: number) {
   return WALK_SEGMENTS.every(
     (segment) =>
-      segmentDistance(p, segment) > radius + 0.27 + WALKER_RADIUS + 0.04,
+      segmentDistance(p, segment) > radius + 0.31 + WALKER_RADIUS + 0.04,
   );
 }
 export type CartRoute = Segment &
@@ -116,8 +116,8 @@ export type CartRoute = Segment &
 export const STREET_HALF_WIDTH = 1.85;
 export const CART_LANE_RADIUS = 0.46;
 export const MAIN_STREET: Segment = { a: bridgePoint(-22), b: bridgePoint(22) };
-export const CART_ROUTES: CartRoute[] = Array.from({ length: 6 }, (_, i) => ({
-  ...bridgePoint(-14 + i * 4),
+export const CART_ROUTES: CartRoute[] = Array.from({ length: 8 }, (_, i) => ({
+  ...bridgePoint(-17 + i * 4.6),
   angle: BRIDGE.angle,
   length: 44,
   ...MAIN_STREET,

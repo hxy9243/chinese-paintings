@@ -1,0 +1,12 @@
+{
+  "name": "chinese-paintings",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "setup": "npm ci --prefix artworks/qingming && npm ci --prefix artworks/thousand-miles",
+    "dev": "node scripts/dev.mjs",
+    "build": "node scripts/build.mjs",
+    "test": "npm test --prefix artworks/qingming",
+    "test:e2e": "npm run test:e2e --prefix artworks/qingming"
+  }
+}

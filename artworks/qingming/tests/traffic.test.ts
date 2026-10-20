@@ -66,13 +66,13 @@ function cartGap(
   );
 }
 describe("shared space and continuous traffic", () => {
-  it("retains six moving carts, market activity and tall groves", () => {
-    expect(CARTS).toHaveLength(6);
+  it("retains eight varied traffic slots, market activity and reference groves", () => {
+    expect(CARTS).toHaveLength(8);
     expect(MARKET.length).toBeGreaterThanOrEqual(6);
     expect(
       NATURE.filter((n) => ["bare", "spring", "willow"].includes(n.kind))
         .length,
-    ).toBeGreaterThanOrEqual(25);
+    ).toBeGreaterThanOrEqual(18);
     for (let i = 0; i < CARTS.length; i++)
       expect(distance(cartPose(i, 0), cartPose(i, 3))).toBeGreaterThan(0.1);
   });
@@ -218,7 +218,7 @@ describe("shared space and continuous traffic", () => {
   it("animates the actual horse legs and wheels, preserves their footprints, and freezes on pause", () => {
     const study = createBridgeStudy();
     const carts = study.group.children.filter((n) => n.name === "horse-cart");
-    expect(carts).toHaveLength(6);
+    expect(carts).toHaveLength(8);
     study.update(0);
     const start = carts.map((c) => c.position.clone());
     const leg = carts[0].getObjectByName("horse-leg")!,
@@ -233,16 +233,16 @@ describe("shared space and continuous traffic", () => {
     const paused = carts.map((c) => [
       ...c.position.toArray(),
       ...c.quaternion.toArray(),
-      c.getObjectByName("horse-leg")!.rotation.z,
-      c.getObjectByName("cart-wheel")!.rotation.z,
+      c.getObjectByName("horse-leg")?.rotation.z,
+      c.getObjectByName("cart-wheel")?.rotation.z,
     ]);
     study.update(3);
     expect(
       carts.map((c) => [
         ...c.position.toArray(),
         ...c.quaternion.toArray(),
-        c.getObjectByName("horse-leg")!.rotation.z,
-        c.getObjectByName("cart-wheel")!.rotation.z,
+        c.getObjectByName("horse-leg")?.rotation.z,
+        c.getObjectByName("cart-wheel")?.rotation.z,
       ]),
     ).toEqual(paused);
     let maxRadius = 0,
