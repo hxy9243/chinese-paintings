@@ -1,0 +1,65 @@
+{
+  "passed": true,
+  "samples": [
+    {
+      "viewName": "painting",
+      "sha256": "688a62885f4ae1c5f6aa444aec61b029a64c21945d73f8519c45eb71c563cc52",
+      "identicalToReviewedWorkingTree": true
+    },
+    {
+      "viewName": "mountains",
+      "sha256": "c2a23083fc064d3027d2aa562f939463c843174323187b7893fee64e1fd2f09b",
+      "identicalToReviewedWorkingTree": true
+    }
+  ],
+  "threePasses": true,
+  "separateExperimentExcluded": true,
+  "galleryImages": [
+    {
+      "source": "./reference/source.png",
+      "width": 1779,
+      "alt": true
+    },
+    {
+      "source": "./renders/natural-study/before-painting.png",
+      "width": 1779,
+      "alt": true
+    },
+    {
+      "source": "./renders/natural-study/after-painting.png",
+      "width": 1779,
+      "alt": true
+    },
+    {
+      "source": "./renders/natural-study/before-clay.png",
+      "width": 1779,
+      "alt": true
+    },
+    {
+      "source": "./renders/natural-study/after-clay.png",
+      "width": 1779,
+      "alt": true
+    },
+    {
+      "source": "./renders/natural-study/tree-detail.png",
+      "width": 1779,
+      "alt": true
+    },
+    {
+      "source": "./renders/natural-study/after-mountains.png",
+      "width": 1779,
+      "alt": true
+    },
+    {
+      "source": "./renders/natural-study/after-entry.png",
+      "width": 1779,
+      "alt": true
+    },
+    {
+      "source": "./renders/natural-study/after-back.png",
+      "width": 1779,
+      "alt": true
+    }
+  ],
+  "errors": []
+}

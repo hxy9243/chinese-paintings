@@ -1,0 +1,76 @@
+{
+  "revision": "blue-green-06",
+  "question": "How can colored ink washes remain coherent on a freely moving 3D reconstruction?",
+  "sources": [
+    {
+      "authors": "Barbara J. Meier",
+      "year": 1996,
+      "title": "Painterly Rendering for Animation",
+      "url": "https://disneyanimation.com/publications/painterly-rendering-for-animation/",
+      "finding": "Attaching brush strokes to 3D surface particles supports spatial and temporal coherence.",
+      "adaptation": "Seeded deposits use undeformed surface coordinates, with rooted vegetation deformation applied afterward.",
+      "notImplemented": "The paper's complete particle stroke renderer."
+    },
+    {
+      "authors": "Emil Praun, Hugues Hoppe, Matthew Webb, Adam Finkelstein",
+      "year": 2001,
+      "title": "Real-Time Hatching",
+      "url": "https://hhoppe.com/proj/hatching/",
+      "finding": "Tonal art maps coordinate stroke patterns across tone and resolution.",
+      "adaptation": "Three cumulative, mipmapped brush maps share earlier marks as density rises; triplanar surface sampling supplies coordinates.",
+      "notImplemented": "Curvature-aligned lapped surface parameterization and the full published hatching method."
+    },
+    {
+      "authors": "Adrien Bousseau, Matt Kaplan, Joelle Thollot, Francois X. Sillion",
+      "year": 2006,
+      "title": "Interactive Watercolor Rendering with Temporal Coherence and Abstraction",
+      "url": "https://www.matt-kaplan.com/npr/watercolor/",
+      "finding": "Abstracted color regions can be combined with coherent pigment variation, dry brush and edge effects.",
+      "adaptation": "Separate broad painted shadows, colored glazes, dry lifts and a small depth-gated edge treatment.",
+      "notImplemented": "A full watercolor or fluid simulation; this experiment is an optical approximation."
+    },
+    {
+      "authors": "Ming Yan, Jie Wang, Yinghua Shen, Chaohui Lv",
+      "year": 2022,
+      "title": "A non-photorealistic rendering method based on Chinese ink and wash painting style for 3D mountain models",
+      "url": "https://doi.org/10.1186/s40494-022-00825-z",
+      "authorPaperRead": "https://www.researchgate.net/publication/365449284_A_non-photorealistic_rendering_method_based_on_Chinese_ink_and_wash_painting_style_for_3D_mountain_models",
+      "finding": "Feature lines, interior wrinkle texture and ink coloring can be treated as distinct mountain-rendering layers.",
+      "adaptation": "Separate silhouette and cleft ink, surface-following cun ribbons and color wash density.",
+      "notImplemented": "The paper's curvature extraction, texture quilting, or Gabor dynamic-canvas algorithm."
+    }
+  ],
+  "experiment": {
+    "seed": 610155,
+    "tonalStrokeCounts": [
+      100,
+      280,
+      560
+    ],
+    "sampling": "Triplanar undeformed world coordinates, shared across camera poses; derivative-based detail fading and texture mipmaps",
+    "paintOrder": [
+      "warm support",
+      "ochre earth",
+      "green faces and ledges",
+      "blue crests",
+      "painted shadow bands",
+      "cleft and dry-brush ink",
+      "sparse vegetation deposits",
+      "depth-aware edge pooling",
+      "world-space moving mist",
+      "faint display silk"
+    ],
+    "comparisonBaseline": "1371ddf282363e466eeaa0b676fc631b49261be4",
+    "comparison": "Same-camera revision 5 versus 6 geometry with held color settings; wash off/on uses the current geometry.",
+    "limits": [
+      "No source image projection",
+      "No learned style transfer",
+      "No physical pigment or fluid simulation",
+      "Triplanar seams can remain at unusual close angles",
+      "Screen contours vary with visibility; surface pigment is the temporally attached component",
+      "The reconstruction is still an interpretation, not an exact match"
+    ]
+  },
+  "colorPassRevision": "blue-green-05",
+  "geometryPassNote": "Current geometry revised with palette and paint shaders held at revision 5."
+}

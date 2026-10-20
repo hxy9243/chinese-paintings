@@ -1,0 +1,296 @@
+{
+  "title": "Around the bridge pavilion",
+  "baseSceneRevision": "blue-green-06",
+  "baseSceneCommit": "0ebe9465d231a087c44097e54fdd553cc4e867fe",
+  "baseSceneManifestSha256": "2c33dcf4b7916542bc0963c1b1b30f16029b74d3677889a4971c23092af8915b",
+  "unchangedBaseSourceAndArtifactHashes": 90,
+  "sceneGeometryAndPaletteChanged": false,
+  "film": {
+    "duration": 30,
+    "fps": 24,
+    "width": 1600,
+    "height": 900,
+    "farPlane": 2200,
+    "holdFrom": 28.5
+  },
+  "cameraKeys": [
+    {
+      "seconds": 0,
+      "position": [
+        0,
+        52,
+        218
+      ],
+      "target": [
+        0,
+        28,
+        -105
+      ],
+      "fov": 40
+    },
+    {
+      "seconds": 3,
+      "position": [
+        -2,
+        41,
+        161
+      ],
+      "target": [
+        16.620970511817475,
+        12.8,
+        45.42
+      ],
+      "fov": 40
+    },
+    {
+      "seconds": 7,
+      "position": [
+        -6.379029488182525,
+        24,
+        94.42
+      ],
+      "target": [
+        16.620970511817475,
+        10.485,
+        45.42
+      ],
+      "fov": 39
+    },
+    {
+      "seconds": 10,
+      "position": [
+        -0.3790294881825247,
+        17.6,
+        69.42
+      ],
+      "target": [
+        16.620970511817475,
+        10.485,
+        45.42
+      ],
+      "fov": 39
+    },
+    {
+      "seconds": 13,
+      "position": [
+        11.620970511817475,
+        16.7,
+        70.42
+      ],
+      "target": [
+        16.620970511817475,
+        10.485,
+        45.42
+      ],
+      "fov": 37
+    },
+    {
+      "seconds": 16,
+      "position": [
+        32.620970511817475,
+        17.7,
+        66.42
+      ],
+      "target": [
+        16.620970511817475,
+        10.485,
+        45.42
+      ],
+      "fov": 39
+    },
+    {
+      "seconds": 19,
+      "position": [
+        46.620970511817475,
+        20.5,
+        47.42
+      ],
+      "target": [
+        16.620970511817475,
+        10.585,
+        45.42
+      ],
+      "fov": 41
+    },
+    {
+      "seconds": 21,
+      "position": [
+        64.62097051181748,
+        28,
+        69.42
+      ],
+      "target": [
+        16.620970511817475,
+        11.085,
+        45.42
+      ],
+      "fov": 42
+    },
+    {
+      "seconds": 24,
+      "position": [
+        70.62097051181748,
+        45,
+        145.42000000000002
+      ],
+      "target": [
+        12.620970511817475,
+        19,
+        -4
+      ],
+      "fov": 43
+    },
+    {
+      "seconds": 28.5,
+      "position": [
+        18,
+        70,
+        262
+      ],
+      "target": [
+        0,
+        33,
+        -105
+      ],
+      "fov": 40
+    }
+  ],
+  "validation": {
+    "ink_pilot": true,
+    "ink_replay": true,
+    "ink_delivery": true,
+    "clay_pilot": true,
+    "clay_replay": true,
+    "clay_delivery": true,
+    "player": true
+  },
+  "sources": {
+    "src/pavilion-flight.js": "5726646eb7a7adc9b54f25df19e10aa1f7c2979149989914097805390ee684b3",
+    "scripts/pavilion-film.cjs": "25b7064acee7ce1f39bc7058ef71f4b01a9fb2e99eb87bcb36ba0f650f0c0bdb",
+    "scripts/pavilion-delivery.py": "7fa8be83003b704792eb42c676d65f3b9011a5c0deb5514cb6a49dc7b9205589",
+    "scripts/pavilion-player-check.cjs": "2d9d47cd9b1187e8880e54cbcb16560313c0542a93ba50ba69098db953ca7a62",
+    "scripts/pavilion-audit.py": "bd1080d1f40beef8d3fa7fd1e3df1a3d77eac7aaed23b262afd69b7c1f0d487f",
+    "pavilion-flight.html": "243b01ba4fa479d14cfc49a47ff6b665d6c19881a41f7f633a911e83c88abbab"
+  },
+  "artifacts": {
+    "renders/pavilion-flyby.mp4": {
+      "bytes": 28857165,
+      "sha256": "59a4dafdbe0e5383fb858b79f7d08f1c929b656dfb748b775c33392a672f772e"
+    },
+    "renders/pavilion-flyby-clay.mp4": {
+      "bytes": 30717316,
+      "sha256": "efdc6852efc0c1beadaab9d4a4629d0384576ddac83d53a73e5abcbe52c9e7ff"
+    },
+    "renders/pavilion-flight-ink-17.png": {
+      "bytes": 2367679,
+      "sha256": "c5396925ded8e742bd380b21852ebff129f792f57015ab88ae7260cfdcd7f43d"
+    },
+    "renders/pavilion-flight-ink-20.png": {
+      "bytes": 2270465,
+      "sha256": "9cf04fce532f672a6ac6e8c34c3cfc86a47a3ef826ed59548f334e050852abed"
+    },
+    "renders/pavilion-flight-clay-0.png": {
+      "bytes": 627609,
+      "sha256": "b0c86939447dc16a1a15d793d65bb8aa5a8d301a4e4d642cf3cd029200cdc62f"
+    },
+    "renders/pavilion-flight-ink-0.png": {
+      "bytes": 2197999,
+      "sha256": "f474c71699a7a3d881cf5c0a30393c0f2766da29040255b602491c54bca59102"
+    },
+    "renders/pavilion-flight-clay-8.png": {
+      "bytes": 749330,
+      "sha256": "64206e1a30f38cd7f7e7aed8d6adfc7366b8052031a664b82cbab65e4220a7f3"
+    },
+    "renders/pavilion-flight-ink-8.png": {
+      "bytes": 2341881,
+      "sha256": "5de7a030de64a76e53a2f477f89e1f0fb98a2932991efcdb4b49fe1ed30bd726"
+    },
+    "renders/pavilion-flight-player-clay.png": {
+      "bytes": 426912,
+      "sha256": "9b175777e8d62aa8c2d91e16ae5454eab27e30214a40015e8dc1577d26a30eef"
+    },
+    "renders/pavilion-flight-clay-17.png": {
+      "bytes": 936839,
+      "sha256": "ddc074ac770b37d1a6066ed213e19e60eaa053994d20619df5836d82ecb08d69"
+    },
+    "renders/pavilion-flight-clay-11.png": {
+      "bytes": 893190,
+      "sha256": "6ed29aead6ee2828e5335ef74f46de8298a99c81054fdfce2d8033e33f6d87bd"
+    },
+    "renders/pavilion-flight-clay-4.png": {
+      "bytes": 701554,
+      "sha256": "8a6a9a75f866ea21025ef30f60e09e61765f6ba61531135e79e7c061ce00df20"
+    },
+    "renders/pavilion-flight-clay-24.png": {
+      "bytes": 679606,
+      "sha256": "d86a991662047c5d50f014683807e0e90753e180c4471bd9a7ddcb4408ada6c9"
+    },
+    "renders/pavilion-flight-ink-28-5.png": {
+      "bytes": 2193916,
+      "sha256": "3efcb978af3ce422098ab65e00ac11020d369b92f0b282ceb4998fce060415f1"
+    },
+    "renders/pavilion-flight-clay-14.png": {
+      "bytes": 824729,
+      "sha256": "5f18c39a33cfffbfb2c85f3ce049761544ed08cf483dda2143e7d894af4bc931"
+    },
+    "renders/pavilion-flight-player.png": {
+      "bytes": 980958,
+      "sha256": "f38a635186ad38770c7f5e50ace230ca2bab09ff5e9bcd3862280766cee18a1a"
+    },
+    "renders/pavilion-flight-clay-20.png": {
+      "bytes": 738327,
+      "sha256": "c1f6e47dc2462479c82f7c505237dd8fcf1fffdfbc5d048f5a0b42b033b980db"
+    },
+    "renders/pavilion-flight-ink-11.png": {
+      "bytes": 2411121,
+      "sha256": "4a7a012c4fe20550c1ff2e528ddce3c23d1e04c1ec5e1fdf2f9964f1196b8d3d"
+    },
+    "renders/pavilion-flight-ink-4.png": {
+      "bytes": 2301757,
+      "sha256": "153fab64a60000790c36a7289d96023e405ea583ae2c2599721cb598e829e4ba"
+    },
+    "renders/pavilion-flight-clay-28-5.png": {
+      "bytes": 617289,
+      "sha256": "fd44f40c377ff7aed63c8331e62aaa68ae638c3761713c8bf25bc07fe46e2e8c"
+    },
+    "renders/pavilion-flight-ink-24.png": {
+      "bytes": 2254760,
+      "sha256": "c2a493327f96663a7240f4a4d1c9b125cfbfa9dc8001af44abf8c793b866e73c"
+    },
+    "renders/pavilion-flight-ink-14.png": {
+      "bytes": 2335390,
+      "sha256": "a4c3e09e713a8300368177e740707e8840908ff955b45a895fb6fd7cef06fb54"
+    },
+    "renders/pavilion-flight-clay-contact.jpg": {
+      "bytes": 270200,
+      "sha256": "2a1598beb45c81c3b98e41e071028e081a3b883a2102a0926e069e815b0e2087"
+    },
+    "renders/pavilion-flight-ink-contact.jpg": {
+      "bytes": 333605,
+      "sha256": "ce9537c61bb0ce82b80d671af78ba880cd5068402c0cf97d8961c7b14d6aaa72"
+    }
+  },
+  "reports": {
+    "qa/pavilion-flight-ink-pilot.json": "15b53aa039d7a7598607d451365398540bd6e09494c48b9bdfb887f33415f512",
+    "qa/pavilion-flight-clay-360-720.json": "df372a11d606119217ac9993cd24885ee706cac096c34817704cd9e353154eb2",
+    "qa/pavilion-flight-clay-frames.json": "ef5120030e1cfb3a50179ebb6f001bc0b6fe9b919fad32a01bd826c0ff0ea92b",
+    "qa/pavilion-flight-ink-0-180.json": "bd7f5107273edb2f332ba5e7ac752b2170250ddf888e3f2c314734e0ccb61694",
+    "qa/pavilion-flight-ink-replay.json": "a8f23fd863591b84380e0e3730c360fba0a219cbee8d642d1197aee28d83dcb5",
+    "qa/pavilion-flight-clay-delivery.json": "4e41f0bf53c7197960f79fa2323089e19618a2e25198892fe245c3a2dcbaa6a8",
+    "qa/pavilion-flight-ink-540-720.json": "7d97d6c21666acc91d527a54395a4c5bac09ee12676c7953b28784a49045d632",
+    "qa/pavilion-flight-clay-replay.json": "6f76f604f8aa906d0e558bd770d3f456d16b6775947ead91a13eb850ed7a241b",
+    "qa/pavilion-flight-ink-frames.json": "d2c445ebfa7526a2d75ec60bb4bd1c84fef191137094273d740c2d71fa221d1b",
+    "qa/pavilion-flight-ink-180-360.json": "80e1cfbc932bfd5e2b6d972982995f4f2e852608783a9d77d9f054c1bc78d973",
+    "qa/pavilion-flight-ink-delivery.json": "12f31adc92d93115d944f78e19572787957f56094d8489f8c86ef35bbc8c0f4f",
+    "qa/pavilion-flight-clay-0-360.json": "9e6e43c2d8dd45671a7e20aea7f1831949a3d4bc8981c48dc5d0f33ea0c47dcb",
+    "qa/pavilion-flight-ink-360-540.json": "f6b8a6187206a419daf70fb4ea0fee50243026720c5c09b5d39094837b248d16",
+    "qa/pavilion-flight-clay-pilot.json": "ad90b54657bbf35bd4d50881f345cb098bb50ffb4229ed13cb97409f70131518",
+    "qa/pavilion-player.json": "30c5ded5af3d3f0676a953e8bee0a9043c88b5bfb4dd4c43aebb740e6c4c07d9"
+  },
+  "notes": [
+    "Independent 30-second camera film; the original viewer journey remains available.",
+    "Both versions use the same absolute-time camera path. Ink retains the existing world-space brush finish and environmental motion.",
+    "Camera far plane is extended only for the film, with matching depth decoding, to avoid clipping the wide sky.",
+    "Hidden geometry and fine painting detail retain the scene interpretation; route checks are not an exhaustive mesh collision proof."
+  ]
+}

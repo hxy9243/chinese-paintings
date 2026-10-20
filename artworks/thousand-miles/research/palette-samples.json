@@ -1,0 +1,160 @@
+{
+  "method": "Median 11 by 11 sRGB photograph patches. These are appearance guides, not physical pigment measurements.",
+  "source": "reference/source.png",
+  "samples": [
+    {
+      "region": "blue crest",
+      "center": [
+        331,
+        347
+      ],
+      "patchSize": 11,
+      "medianSRGB": [
+        77,
+        119,
+        133
+      ],
+      "hex": "#4d7785"
+    },
+    {
+      "region": "blue shoulder",
+      "center": [
+        107,
+        433
+      ],
+      "patchSize": 11,
+      "medianSRGB": [
+        65,
+        107,
+        126
+      ],
+      "hex": "#416b7e"
+    },
+    {
+      "region": "distant blue",
+      "center": [
+        1100,
+        420
+      ],
+      "patchSize": 11,
+      "medianSRGB": [
+        97,
+        143,
+        151
+      ],
+      "hex": "#618f97"
+    },
+    {
+      "region": "green rock face",
+      "center": [
+        150,
+        535
+      ],
+      "patchSize": 11,
+      "medianSRGB": [
+        116,
+        137,
+        99
+      ],
+      "hex": "#748963"
+    },
+    {
+      "region": "green foreground",
+      "center": [
+        394,
+        679
+      ],
+      "patchSize": 11,
+      "medianSRGB": [
+        115,
+        151,
+        111
+      ],
+      "hex": "#73976f"
+    },
+    {
+      "region": "ochre hillside",
+      "center": [
+        1480,
+        499
+      ],
+      "patchSize": 11,
+      "medianSRGB": [
+        123,
+        107,
+        61
+      ],
+      "hex": "#7b6b3d"
+    },
+    {
+      "region": "upper silk",
+      "center": [
+        800,
+        100
+      ],
+      "patchSize": 11,
+      "medianSRGB": [
+        107,
+        95,
+        55
+      ],
+      "hex": "#6b5f37"
+    },
+    {
+      "region": "lower silk",
+      "center": [
+        800,
+        230
+      ],
+      "patchSize": 11,
+      "medianSRGB": [
+        135,
+        114,
+        61
+      ],
+      "hex": "#87723d"
+    },
+    {
+      "region": "olive lake",
+      "center": [
+        815,
+        531
+      ],
+      "patchSize": 11,
+      "medianSRGB": [
+        104,
+        107,
+        64
+      ],
+      "hex": "#686b40"
+    },
+    {
+      "region": "deep lake",
+      "center": [
+        890,
+        738
+      ],
+      "patchSize": 11,
+      "medianSRGB": [
+        84,
+        90,
+        50
+      ],
+      "hex": "#545a32"
+    },
+    {
+      "region": "roof ink",
+      "center": [
+        974,
+        646
+      ],
+      "patchSize": 11,
+      "medianSRGB": [
+        49,
+        45,
+        33
+      ],
+      "hex": "#312d21"
+    }
+  ]
+}

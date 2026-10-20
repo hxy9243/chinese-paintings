@@ -1,0 +1,72 @@
+{
+  "passed": true,
+  "atlas": {
+    "passed": true,
+    "violations": 0,
+    "additions": [
+      17110,
+      26268
+    ],
+    "levels": [
+      100,
+      280,
+      560
+    ],
+    "coverage": [
+      0.008447684493719236,
+      0.02231654746859102,
+      0.04352381089154561
+    ]
+  },
+  "effect": {
+    "passed": true,
+    "changedPixels": 95589,
+    "meanAbsoluteLinear": 0.0026904458003770178
+  },
+  "vegetation": {
+    "passed": true,
+    "trees": 190,
+    "worstRootError": 0,
+    "minRoadDistance": 10.083908782894623,
+    "maxSlope": 1.2496990018358658,
+    "grass": 728
+  },
+  "controls": {
+    "passed": true
+  },
+  "matchedPoses": true,
+  "shots": [
+    {
+      "viewName": "painting",
+      "wash": 0,
+      "name": "wash-painting-0.png"
+    },
+    {
+      "viewName": "painting",
+      "wash": 1,
+      "name": "wash-painting-1.png"
+    },
+    {
+      "viewName": "mountains",
+      "wash": 0,
+      "name": "wash-mountains-0.png"
+    },
+    {
+      "viewName": "mountains",
+      "wash": 1,
+      "name": "wash-mountains-1.png"
+    },
+    {
+      "viewName": "pavilion",
+      "wash": 0,
+      "name": "wash-pavilion-0.png"
+    },
+    {
+      "viewName": "pavilion",
+      "wash": 1,
+      "name": "wash-pavilion-1.png"
+    }
+  ],
+  "errors": [],
+  "scope": "Verifies actual nested pixels, wash effect, mountain root placement, road clearance and controls. Visual source fidelity is reviewed separately; this is not a similarity score."
+}

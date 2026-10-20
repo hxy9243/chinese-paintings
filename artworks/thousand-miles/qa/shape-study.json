@@ -1,0 +1,3303 @@
+{
+  "passed": true,
+  "revision": "blue-green-06",
+  "previousCommit": "1371ddf282363e466eeaa0b676fc631b49261be4",
+  "paintSources": [
+    {
+      "file": "src/ink.js",
+      "unchanged": true
+    },
+    {
+      "file": "src/glazes.js",
+      "unchanged": true
+    },
+    {
+      "file": "src/wash.js",
+      "unchanged": true
+    },
+    {
+      "file": "src/materials.js",
+      "unchanged": true
+    },
+    {
+      "file": "src/effects.js",
+      "unchanged": true
+    }
+  ],
+  "sourceHash": "b1593a9260c87cd2512a460b373f0825441746e9829b267b5c93326550bbe614",
+  "exposedSamples": 203,
+  "meanExposedRegistrationErrorPixels": 3.78190364769264,
+  "samples": [
+    {
+      "name": "left remote",
+      "node": 0,
+      "target": [
+        0,
+        300.2247191011236
+      ],
+      "actual": [
+        0.5307541219245593,
+        301.66173720662243
+      ],
+      "errorPixels": 1.531901097809978,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left remote",
+      "node": 1,
+      "target": [
+        17.987633501967398,
+        269.6629213483146
+      ],
+      "actual": [
+        18.39878987468362,
+        269.15243146088596
+      ],
+      "errorPixels": 0.6554765350430842,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left remote",
+      "node": 2,
+      "target": [
+        33.277121978639684,
+        221.12359550561797
+      ],
+      "actual": [
+        33.86117627972354,
+        223.96633036027572
+      ],
+      "errorPixels": 2.902113174998618,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left remote",
+      "node": 3,
+      "target": [
+        49.46599213041034,
+        227.41573033707866
+      ],
+      "actual": [
+        50.07747776140717,
+        231.01007717756374
+      ],
+      "errorPixels": 3.645990110603801,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left remote",
+      "node": 4,
+      "target": [
+        64.75548060708263,
+        270.56179775280896
+      ],
+      "actual": [
+        65.22641654935101,
+        271.67702485442663
+      ],
+      "errorPixels": 1.2105833923785567,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left remote",
+      "node": 5,
+      "target": [
+        80.0449690837549,
+        310.1123595505618
+      ],
+      "actual": [
+        80.40983325129343,
+        309.3351882728327
+      ],
+      "errorPixels": 0.8585575436047839,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left tall diagonal",
+      "node": 0,
+      "target": [
+        148.39797639123103,
+        394.60674157303373
+      ],
+      "actual": [
+        148.79108354482184,
+        395.18947207948696
+      ],
+      "errorPixels": 0.70292821636033,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left tall diagonal",
+      "node": 1,
+      "target": [
+        187.07138842046095,
+        372.1348314606742
+      ],
+      "actual": [
+        187.42325826272986,
+        372.3075846922981
+      ],
+      "errorPixels": 0.39198987861277046,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left tall diagonal",
+      "node": 2,
+      "target": [
+        214.9522203485104,
+        337.97752808988764
+      ],
+      "actual": [
+        215.33725402578386,
+        339.3357070037636
+      ],
+      "errorPixels": 1.4117014184068994,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left tall diagonal",
+      "node": 3,
+      "target": [
+        255.42439572793705,
+        325.39325842696627
+      ],
+      "actual": [
+        255.72851703657395,
+        325.3460927993775
+      ],
+      "errorPixels": 0.30775699308522303,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left tall diagonal",
+      "node": 4,
+      "target": [
+        276.1101742551995,
+        297.5280898876405
+      ],
+      "actual": [
+        276.4306778951596,
+        298.2348100440518
+      ],
+      "errorPixels": 0.7759999759701768,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left tall diagonal",
+      "node": 5,
+      "target": [
+        297.6953344575604,
+        290.3370786516854
+      ],
+      "actual": [
+        298.0548366924091,
+        292.5144929117081
+      ],
+      "errorPixels": 2.2068925475907184,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left tall diagonal",
+      "node": 6,
+      "target": [
+        314.7835862844294,
+        305.61797752808985
+      ],
+      "actual": [
+        315.133720382182,
+        307.8763967448832
+      ],
+      "errorPixels": 2.285399581077787,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left tall diagonal",
+      "node": 7,
+      "target": [
+        328.274311410905,
+        341.57303370786514
+      ],
+      "actual": [
+        328.4768525557373,
+        339.7061867329342
+      ],
+      "errorPixels": 1.877802051111543,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left tall diagonal",
+      "node": 8,
+      "target": [
+        343.5637998875773,
+        358.65168539325845
+      ],
+      "actual": [
+        343.8133477793643,
+        358.4395602084239
+      ],
+      "errorPixels": 0.32752289131661566,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left blue front",
+      "node": 0,
+      "target": [
+        27.880831928049467,
+        455.7303370786517
+      ],
+      "actual": [
+        28.296397662057338,
+        455.4005951739556
+      ],
+      "errorPixels": 0.5304946776303382,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left blue front",
+      "node": 1,
+      "target": [
+        53.96290050590219,
+        414.3820224719101
+      ],
+      "actual": [
+        54.53846546643062,
+        417.32271297528837
+      ],
+      "errorPixels": 2.996487220137487,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left blue front",
+      "node": 2,
+      "target": [
+        76.44744238336145,
+        400
+      ],
+      "actual": [
+        76.78402794526251,
+        398.6437649612892
+      ],
+      "errorPixels": 1.3973773007699524,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left blue front",
+      "node": 3,
+      "target": [
+        89.03878583473862,
+        369.43820224719104
+      ],
+      "actual": [
+        89.96906676966461,
+        379.9428585621577
+      ],
+      "errorPixels": 10.545768199304204,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left blue front",
+      "node": 4,
+      "target": [
+        100.73074761101743,
+        367.64044943820227
+      ],
+      "actual": [
+        101.60434343604807,
+        377.3137029586876
+      ],
+      "errorPixels": 9.712620827412795,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left blue front",
+      "node": 5,
+      "target": [
+        116.91961776278808,
+        384.71910112359546
+      ],
+      "actual": [
+        117.46656197640081,
+        388.07645178153575
+      ],
+      "errorPixels": 3.4016101206893965,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left blue front",
+      "node": 6,
+      "target": [
+        138.50477796514895,
+        404.49438202247194
+      ],
+      "actual": [
+        138.93002773821087,
+        405.6319733463515
+      ],
+      "errorPixels": 1.214475767422019,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left blue front",
+      "node": 7,
+      "target": [
+        160.9893198426082,
+        422.4719101123595
+      ],
+      "actual": [
+        161.452716519992,
+        424.7617399672232
+      ],
+      "errorPixels": 2.336248540895292,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left green face",
+      "node": 0,
+      "target": [
+        50.36537380550872,
+        515.0561797752808
+      ],
+      "actual": [
+        50.712785262778226,
+        513.6867909562148
+      ],
+      "errorPixels": 1.4127704903575342,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left green face",
+      "node": 1,
+      "target": [
+        81.84373243395166,
+        470.11235955056185
+      ],
+      "actual": [
+        82.35956942451219,
+        472.2980428054123
+      ],
+      "errorPixels": 2.2457290779086074,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left green face",
+      "node": 2,
+      "target": [
+        116.91961776278808,
+        440.4494382022472
+      ],
+      "actual": [
+        117.3806530385864,
+        442.0330658891151
+      ],
+      "errorPixels": 1.6493726613912834,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left green face",
+      "node": 3,
+      "target": [
+        130.41034288926363,
+        424.2696629213483
+      ],
+      "actual": [
+        131.2134180930875,
+        433.20407150197104
+      ],
+      "errorPixels": 8.970428443976468,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left green face",
+      "node": 4,
+      "target": [
+        149.2973580663294,
+        424.2696629213483
+      ],
+      "actual": [
+        149.75504918548248,
+        426.25372582075306
+      ],
+      "errorPixels": 2.0361696268597154,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left green face",
+      "node": 5,
+      "target": [
+        169.08375491849355,
+        442.24719101123594
+      ],
+      "actual": [
+        169.56162747395842,
+        444.98511596260494
+      ],
+      "errorPixels": 2.779315602553161,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left green face",
+      "node": 6,
+      "target": [
+        187.9707700955593,
+        467.4157303370787
+      ],
+      "actual": [
+        188.5390222985242,
+        472.5383010830601
+      ],
+      "errorPixels": 5.153992783634754,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left green face",
+      "node": 7,
+      "target": [
+        203.26025857223158,
+        500.6741573033708
+      ],
+      "actual": [
+        203.5808375456315,
+        500.33157925183866
+      ],
+      "errorPixels": 0.4691807749447057,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left middle blue",
+      "node": 0,
+      "target": [
+        212.2540753232153,
+        501.5730337078652
+      ],
+      "actual": [
+        212.54782587117091,
+        500.7089071426495
+      ],
+      "errorPixels": 0.9126905856508744,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left middle blue",
+      "node": 1,
+      "target": [
+        237.43676222596966,
+        463.82022471910113
+      ],
+      "actual": [
+        237.8017557023953,
+        465.03605002933364
+      ],
+      "errorPixels": 1.269429565921338,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left middle blue",
+      "node": 2,
+      "target": [
+        259.9213041034289,
+        440.4494382022472
+      ],
+      "actual": [
+        260.2158536132284,
+        440.2196695777622
+      ],
+      "errorPixels": 0.37356797844683076,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left middle blue",
+      "node": 3,
+      "target": [
+        273.4120292299044,
+        418.87640449438203
+      ],
+      "actual": [
+        273.84532175122825,
+        422.53579657753994
+      ],
+      "errorPixels": 3.684954928803602,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left middle blue",
+      "node": 4,
+      "target": [
+        289.6008993816751,
+        414.3820224719101
+      ],
+      "actual": [
+        290.02726767704286,
+        418.2183337460997
+      ],
+      "errorPixels": 3.859931879679875,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left middle blue",
+      "node": 5,
+      "target": [
+        306.6891512085441,
+        426.0674157303371
+      ],
+      "actual": [
+        307.03047592307354,
+        427.89045515711905
+      ],
+      "errorPixels": 1.8547170437428324,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left middle blue",
+      "node": 6,
+      "target": [
+        321.07925801011805,
+        445.84269662921344
+      ],
+      "actual": [
+        321.3858615311155,
+        446.93965055809764
+      ],
+      "errorPixels": 1.138996769610222,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left middle blue",
+      "node": 7,
+      "target": [
+        338.1675098369871,
+        473.70786516853934
+      ],
+      "actual": [
+        338.49790851692853,
+        475.8528870854727
+      ],
+      "errorPixels": 2.1703184816591725,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left middle blue",
+      "node": 8,
+      "target": [
+        348.9600899381675,
+        505.16853932584274
+      ],
+      "actual": [
+        349.21158427588,
+        505.10988343888937
+      ],
+      "errorPixels": 0.25824390597983554,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left middle shoulder",
+      "node": 0,
+      "target": [
+        181.67509836987074,
+        417.97752808988764
+      ],
+      "actual": [
+        182.15681662229056,
+        421.0236412774473
+      ],
+      "errorPixels": 3.0839679029035665,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left middle shoulder",
+      "node": 1,
+      "target": [
+        226.64418212478924,
+        386.51685393258424
+      ],
+      "actual": [
+        227.1114309311878,
+        390.0737854884875
+      ],
+      "errorPixels": 3.5874898662520556,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left middle shoulder",
+      "node": 2,
+      "target": [
+        255.42439572793705,
+        372.1348314606742
+      ],
+      "actual": [
+        255.89046219593996,
+        376.2706553046065
+      ],
+      "errorPixels": 4.162001540201033,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left middle shoulder",
+      "node": 3,
+      "target": [
+        285.10399100618326,
+        368.53932584269666
+      ],
+      "actual": [
+        285.47303620768014,
+        370.7192141544
+      ],
+      "errorPixels": 2.2109064684533113,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left middle shoulder",
+      "node": 4,
+      "target": [
+        307.5885328836425,
+        381.12359550561797
+      ],
+      "actual": [
+        307.9414857618524,
+        383.30219485013646
+      ],
+      "errorPixels": 2.207004947473624,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left middle shoulder",
+      "node": 5,
+      "target": [
+        331.8718381112985,
+        391.91011235955057
+      ],
+      "actual": [
+        332.2651651454701,
+        395.8206934941571
+      ],
+      "errorPixels": 3.9303118153844983,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left middle shoulder",
+      "node": 6,
+      "target": [
+        354.35637998875774,
+        438.65168539325845
+      ],
+      "actual": [
+        354.6294299332685,
+        439.36440113592795
+      ],
+      "errorPixels": 0.763229979787401,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left middle shoulder",
+      "node": 7,
+      "target": [
+        372.3440134907251,
+        481.7977528089887
+      ],
+      "actual": [
+        372.5317436940666,
+        480.08364114094405
+      ],
+      "errorPixels": 1.7243611685994074,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left low foreground",
+      "node": 0,
+      "target": [
+        4.4969083754918495,
+        640.8988764044943
+      ],
+      "actual": [
+        1.8566662246906063,
+        587.356985193079
+      ],
+      "errorPixels": 53.60694911212443,
+      "coveredByOverlappingTerrain": true
+    },
+    {
+      "name": "left low foreground",
+      "node": 1,
+      "target": [
+        31.478358628442944,
+        608.5393258426966
+      ],
+      "actual": [
+        28.236747828005093,
+        542.4390603834172
+      ],
+      "errorPixels": 66.1797033414983,
+      "coveredByOverlappingTerrain": true
+    },
+    {
+      "name": "left low foreground",
+      "node": 2,
+      "target": [
+        52.16413715570545,
+        591.4606741573034
+      ],
+      "actual": [
+        48.46026274343566,
+        515.1044072646305
+      ],
+      "errorPixels": 76.44604750702919,
+      "coveredByOverlappingTerrain": true
+    },
+    {
+      "name": "left low foreground",
+      "node": 3,
+      "target": [
+        68.3530073074761,
+        571.685393258427
+      ],
+      "actual": [
+        65.5393745315478,
+        510.5721265232634
+      ],
+      "errorPixels": 61.17800176894492,
+      "coveredByOverlappingTerrain": true
+    },
+    {
+      "name": "left low foreground",
+      "node": 4,
+      "target": [
+        84.54187745924678,
+        550.1123595505618
+      ],
+      "actual": [
+        82.85228823945712,
+        509.5140838595853
+      ],
+      "errorPixels": 40.63341852234639,
+      "coveredByOverlappingTerrain": true
+    },
+    {
+      "name": "left low foreground",
+      "node": 5,
+      "target": [
+        98.03260258572232,
+        545.6179775280899
+      ],
+      "actual": [
+        97.00556215828628,
+        517.4880551593036
+      ],
+      "errorPixels": 28.14866505739717,
+      "coveredByOverlappingTerrain": true
+    },
+    {
+      "name": "left low foreground",
+      "node": 6,
+      "target": [
+        111.52332771219787,
+        557.3033707865169
+      ],
+      "actual": [
+        110.95623745082008,
+        538.0722573711279
+      ],
+      "errorPixels": 19.23947282438126,
+      "coveredByOverlappingTerrain": true
+    },
+    {
+      "name": "left low foreground",
+      "node": 7,
+      "target": [
+        127.71219786396853,
+        583.370786516854
+      ],
+      "actual": [
+        127.6172608189624,
+        573.6310202515667
+      ],
+      "errorPixels": 9.740228947254883,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left low foreground",
+      "node": 8,
+      "target": [
+        151.9955030916245,
+        621.123595505618
+      ],
+      "actual": [
+        151.60993353068983,
+        605.1404924431357
+      ],
+      "errorPixels": 15.987753043884899,
+      "coveredByOverlappingTerrain": true
+    },
+    {
+      "name": "left small front",
+      "node": 0,
+      "target": [
+        80.94435075885329,
+        652.5842696629213
+      ],
+      "actual": [
+        75.94647578912515,
+        549.0251838643096
+      ],
+      "errorPixels": 103.67961711762469,
+      "coveredByOverlappingTerrain": true
+    },
+    {
+      "name": "left small front",
+      "node": 1,
+      "target": [
+        97.13322091062395,
+        618.4269662921348
+      ],
+      "actual": [
+        94.89681876646418,
+        566.6928471181081
+      ],
+      "errorPixels": 51.78243506501789,
+      "coveredByOverlappingTerrain": true
+    },
+    {
+      "name": "left small front",
+      "node": 2,
+      "target": [
+        119.61776278808318,
+        607.6404494382023
+      ],
+      "actual": [
+        119.53940849525644,
+        598.2780648523304
+      ],
+      "errorPixels": 9.362712455745662,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left small front",
+      "node": 3,
+      "target": [
+        132.20910623946037,
+        589.6629213483146
+      ],
+      "actual": [
+        132.7337024760105,
+        592.7617209056598
+      ],
+      "errorPixels": 3.1428903747991477,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left small front",
+      "node": 4,
+      "target": [
+        151.9955030916245,
+        584.2696629213483
+      ],
+      "actual": [
+        152.51996608212696,
+        587.6991215872742
+      ],
+      "errorPixels": 3.469329642697761,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left small front",
+      "node": 5,
+      "target": [
+        172.681281618887,
+        607.6404494382023
+      ],
+      "actual": [
+        173.11228985852551,
+        609.3728898874061
+      ],
+      "errorPixels": 1.7852501260814906,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left small front",
+      "node": 6,
+      "target": [
+        193.36706014614953,
+        641.7977528089888
+      ],
+      "actual": [
+        193.68114181163395,
+        641.1900181616934
+      ],
+      "errorPixels": 0.6840969917465786,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "inner long sloping crest",
+      "node": 0,
+      "target": [
+        300.3934794828555,
+        583.370786516854
+      ],
+      "actual": [
+        295.2777885332897,
+        433.726918743376
+      ],
+      "errorPixels": 149.73128415964922,
+      "coveredByOverlappingTerrain": true
+    },
+    {
+      "name": "inner long sloping crest",
+      "node": 1,
+      "target": [
+        344.4631815626757,
+        525.8426966292135
+      ],
+      "actual": [
+        344.2353616985225,
+        511.0695154854441
+      ],
+      "errorPixels": 14.774937664745904,
+      "coveredByOverlappingTerrain": true
+    },
+    {
+      "name": "inner long sloping crest",
+      "node": 2,
+      "target": [
+        378.63968521641374,
+        497.97752808988764
+      ],
+      "actual": [
+        378.8994223771315,
+        498.7390234581125
+      ],
+      "errorPixels": 0.8045735444853063,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "inner long sloping crest",
+      "node": 3,
+      "target": [
+        411.91680719505337,
+        478.2022471910112
+      ],
+      "actual": [
+        412.1615549907965,
+        479.1635064241542
+      ],
+      "errorPixels": 0.9919278183536134,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "inner long sloping crest",
+      "node": 4,
+      "target": [
+        449.69083754918495,
+        446.7415730337078
+      ],
+      "actual": [
+        449.90850948824794,
+        447.57506362190003
+      ],
+      "errorPixels": 0.8614450845297296,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "inner long sloping crest",
+      "node": 5,
+      "target": [
+        480.2698145025295,
+        433.2584269662922
+      ],
+      "actual": [
+        480.49193430170914,
+        435.1198013931418
+      ],
+      "errorPixels": 1.8745804762979372,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "inner long sloping crest",
+      "node": 6,
+      "target": [
+        500.955593029792,
+        434.15730337078656
+      ],
+      "actual": [
+        501.1638898384125,
+        436.044202594794
+      ],
+      "errorPixels": 1.8983614624305225,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "inner long sloping crest",
+      "node": 7,
+      "target": [
+        519.8426082068578,
+        446.7415730337078
+      ],
+      "actual": [
+        520.0128926229238,
+        447.38542932739807
+      ],
+      "errorPixels": 0.6659937757062643,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "inner long sloping crest",
+      "node": 8,
+      "target": [
+        549.522203485104,
+        454.8314606741573
+      ],
+      "actual": [
+        549.7189163035652,
+        457.9573823098795
+      ],
+      "errorPixels": 3.132105043836021,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "inner long sloping crest",
+      "node": 9,
+      "target": [
+        567.5098369870714,
+        477.30337078651684
+      ],
+      "actual": [
+        567.6618901577685,
+        478.59083239122333
+      ],
+      "errorPixels": 1.2964094840413973,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "inner overlapping front",
+      "node": 0,
+      "target": [
+        332.77121978639684,
+        625.6179775280899
+      ],
+      "actual": [
+        332.21607517502736,
+        601.4474037000275
+      ],
+      "errorPixels": 24.176948209344943,
+      "coveredByOverlappingTerrain": true
+    },
+    {
+      "name": "inner overlapping front",
+      "node": 1,
+      "target": [
+        358.8532883642496,
+        573.4831460674156
+      ],
+      "actual": [
+        359.14330454625184,
+        574.8087956330423
+      ],
+      "errorPixels": 1.3570026369426855,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "inner overlapping front",
+      "node": 2,
+      "target": [
+        383.1365935919055,
+        542.0224719101124
+      ],
+      "actual": [
+        383.3810837853529,
+        542.3657203852896
+      ],
+      "errorPixels": 0.4214201827196288,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "inner overlapping front",
+      "node": 3,
+      "target": [
+        406.52051714446316,
+        512.3595505617977
+      ],
+      "actual": [
+        406.7934268954199,
+        514.1946769457888
+      ],
+      "errorPixels": 1.8553082162777024,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "inner overlapping front",
+      "node": 4,
+      "target": [
+        429.0050590219225,
+        494.38202247191015
+      ],
+      "actual": [
+        429.2665811833083,
+        496.3776434906181
+      ],
+      "errorPixels": 2.0126840515105218,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "inner overlapping front",
+      "node": 5,
+      "target": [
+        446.0933108487915,
+        497.07865168539325
+      ],
+      "actual": [
+        446.3214646298894,
+        498.2339758279793
+      ],
+      "errorPixels": 1.1776366257345496,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "inner overlapping front",
+      "node": 6,
+      "target": [
+        461.38279932546374,
+        517.7528089887641
+      ],
+      "actual": [
+        461.6236615596381,
+        519.8340344132047
+      ],
+      "errorPixels": 2.095116675316554,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "inner overlapping front",
+      "node": 7,
+      "target": [
+        482.0685778527262,
+        546.5168539325842
+      ],
+      "actual": [
+        482.30673249510903,
+        549.1183668410329
+      ],
+      "errorPixels": 2.612391059262246,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "inner overlapping front",
+      "node": 8,
+      "target": [
+        496.45868465430016,
+        586.9662921348314
+      ],
+      "actual": [
+        495.8668738247301,
+        552.1803863269892
+      ],
+      "errorPixels": 34.790939667247706,
+      "coveredByOverlappingTerrain": true
+    },
+    {
+      "name": "inner green knuckle",
+      "node": 0,
+      "target": [
+        411.017425519955,
+        643.5955056179776
+      ],
+      "actual": [
+        407.8277218261947,
+        522.7330248044559
+      ],
+      "errorPixels": 120.90456351210601,
+      "coveredByOverlappingTerrain": true
+    },
+    {
+      "name": "inner green knuckle",
+      "node": 1,
+      "target": [
+        439.7976391231029,
+        606.7415730337078
+      ],
+      "actual": [
+        437.5074618521193,
+        511.0338418734697
+      ],
+      "errorPixels": 95.73512790910628,
+      "coveredByOverlappingTerrain": true
+    },
+    {
+      "name": "inner green knuckle",
+      "node": 2,
+      "target": [
+        460.48341765036537,
+        580.6741573033707
+      ],
+      "actual": [
+        459.7071892359684,
+        541.2083387161227
+      ],
+      "errorPixels": 39.47345142387333,
+      "coveredByOverlappingTerrain": true
+    },
+    {
+      "name": "inner green knuckle",
+      "node": 3,
+      "target": [
+        482.0685778527262,
+        544.7191011235955
+      ],
+      "actual": [
+        482.35060964458773,
+        549.2382990105413
+      ],
+      "errorPixels": 4.527989782783958,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "inner green knuckle",
+      "node": 4,
+      "target": [
+        497.3580663293985,
+        538.4269662921349
+      ],
+      "actual": [
+        497.6229632685823,
+        542.7841718525864
+      ],
+      "errorPixels": 4.36525035758753,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "inner green knuckle",
+      "node": 5,
+      "target": [
+        518.043844856661,
+        551.0112359550561
+      ],
+      "actual": [
+        518.2965589681119,
+        555.6562124269093
+      ],
+      "errorPixels": 4.651845961142296,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "inner green knuckle",
+      "node": 6,
+      "target": [
+        539.629005059022,
+        586.9662921348314
+      ],
+      "actual": [
+        539.413968309398,
+        567.7458618106219
+      ],
+      "errorPixels": 19.221633194176814,
+      "coveredByOverlappingTerrain": true
+    },
+    {
+      "name": "inner green knuckle",
+      "node": 7,
+      "target": [
+        564.8116919617763,
+        628.314606741573
+      ],
+      "actual": [
+        564.010362945159,
+        573.5055695222843
+      ],
+      "errorPixels": 54.81489477412365,
+      "coveredByOverlappingTerrain": true
+    },
+    {
+      "name": "village back hill",
+      "node": 0,
+      "target": [
+        558.5160202360877,
+        556.4044943820224
+      ],
+      "actual": [
+        558.2327408890718,
+        532.3221620132668
+      ],
+      "errorPixels": 24.083998411967634,
+      "coveredByOverlappingTerrain": true
+    },
+    {
+      "name": "village back hill",
+      "node": 1,
+      "target": [
+        573.80550871276,
+        525.8426966292135
+      ],
+      "actual": [
+        573.9599332227326,
+        527.5247691082138
+      ],
+      "errorPixels": 1.6891461611982044,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "village back hill",
+      "node": 2,
+      "target": [
+        586.3968521641372,
+        507.8651685393258
+      ],
+      "actual": [
+        587.0561955840452,
+        543.037689873753
+      ],
+      "errorPixels": 35.17870081123116,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "village back hill",
+      "node": 3,
+      "target": [
+        600.786958965711,
+        500.6741573033708
+      ],
+      "actual": [
+        601.6477685473351,
+        553.0671205903341
+      ],
+      "errorPixels": 52.400034304615644,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "village back hill",
+      "node": 4,
+      "target": [
+        612.4789207419899,
+        505.16853932584274
+      ],
+      "actual": [
+        613.2216688371886,
+        552.5264686166845
+      ],
+      "errorPixels": 47.36375345609012,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "village back hill",
+      "node": 5,
+      "target": [
+        628.6677908937605,
+        520.4494382022472
+      ],
+      "actual": [
+        629.1596374336224,
+        552.583340785901
+      ],
+      "errorPixels": 32.13766650325639,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "village back hill",
+      "node": 6,
+      "target": [
+        651.1523327712198,
+        547.4157303370787
+      ],
+      "actual": [
+        651.3768861809864,
+        560.5672685256839
+      ],
+      "errorPixels": 13.153455095912177,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "inner foot rocks",
+      "node": 0,
+      "target": [
+        509.94940978077574,
+        679.5505617977528
+      ],
+      "actual": [
+        509.6970069612353,
+        659.8489670032566
+      ],
+      "errorPixels": 19.7032115308605,
+      "coveredByOverlappingTerrain": true
+    },
+    {
+      "name": "inner foot rocks",
+      "node": 1,
+      "target": [
+        536.0314783586284,
+        648.0898876404494
+      ],
+      "actual": [
+        536.2001696715962,
+        649.1552794028422
+      ],
+      "errorPixels": 1.0786641583204588,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "inner foot rocks",
+      "node": 2,
+      "target": [
+        552.220348510399,
+        627.4157303370787
+      ],
+      "actual": [
+        552.4289375085748,
+        631.2830838996631
+      ],
+      "errorPixels": 3.8729746898468504,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "inner foot rocks",
+      "node": 3,
+      "target": [
+        568.4092186621697,
+        621.123595505618
+      ],
+      "actual": [
+        568.5823254543786,
+        623.6889237348039
+      ],
+      "errorPixels": 2.571162166213319,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "inner foot rocks",
+      "node": 4,
+      "target": [
+        584.5980888139404,
+        630.1123595505618
+      ],
+      "actual": [
+        584.7870553888735,
+        634.468321220617
+      ],
+      "errorPixels": 4.360058536009804,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "inner foot rocks",
+      "node": 5,
+      "target": [
+        603.4851039910062,
+        660.6741573033707
+      ],
+      "actual": [
+        603.5804857797219,
+        659.6211684312545
+      ],
+      "errorPixels": 1.057299981282115,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "inner foot rocks",
+      "node": 6,
+      "target": [
+        639.460370994941,
+        683.1460674157303
+      ],
+      "actual": [
+        639.3823140619949,
+        668.7311681719247
+      ],
+      "errorPixels": 14.415110582088811,
+      "coveredByOverlappingTerrain": true
+    },
+    {
+      "name": "left apron shoulder",
+      "node": 0,
+      "target": [
+        252.72625070264195,
+        645.3932584269662
+      ],
+      "actual": [
+        252.9255926511861,
+        642.6685633751151
+      ],
+      "errorPixels": 2.731977367774332,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left apron shoulder",
+      "node": 1,
+      "target": [
+        271.6132658797077,
+        604.9438202247192
+      ],
+      "actual": [
+        271.92680832154457,
+        605.3809071162458
+      ],
+      "errorPixels": 0.5379161770921675,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left apron shoulder",
+      "node": 2,
+      "target": [
+        286.90275435638,
+        592.3595505617977
+      ],
+      "actual": [
+        287.3593867471766,
+        596.902967822852
+      ],
+      "errorPixels": 4.566306335362384,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left apron shoulder",
+      "node": 3,
+      "target": [
+        302.19224283305226,
+        597.7528089887641
+      ],
+      "actual": [
+        302.5430271838139,
+        599.7299893256533
+      ],
+      "errorPixels": 2.008056708691405,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left apron shoulder",
+      "node": 4,
+      "target": [
+        315.68296795952784,
+        628.314606741573
+      ],
+      "actual": [
+        315.931155666821,
+        627.6331301637108
+      ],
+      "errorPixels": 0.7252637204674028,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left outer back",
+      "node": 0,
+      "target": [
+        0,
+        371.2359550561798
+      ],
+      "actual": [
+        0.502611635364314,
+        372.17091549893973
+      ],
+      "errorPixels": 1.0614939875144882,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left outer back",
+      "node": 1,
+      "target": [
+        20.685778527262507,
+        343.3707865168539
+      ],
+      "actual": [
+        21.2729473172657,
+        346.0719219651477
+      ],
+      "errorPixels": 2.7642177732557536,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left outer back",
+      "node": 2,
+      "target": [
+        40.472175379426645,
+        319.1011235955056
+      ],
+      "actual": [
+        41.04134267168078,
+        321.7494068031397
+      ],
+      "errorPixels": 2.7087553146064534,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left outer back",
+      "node": 3,
+      "target": [
+        54.862282181000566,
+        313.70786516853934
+      ],
+      "actual": [
+        55.38460562845033,
+        315.6736343152823
+      ],
+      "errorPixels": 2.0339788892813857,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left outer back",
+      "node": 4,
+      "target": [
+        68.3530073074761,
+        324.4943820224719
+      ],
+      "actual": [
+        68.90557503496852,
+        327.224473769164
+      ],
+      "errorPixels": 2.785450060371292,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left outer back",
+      "node": 5,
+      "target": [
+        83.6424957841484,
+        355.9550561797753
+      ],
+      "actual": [
+        84.07927766025355,
+        356.6299770868229
+      ],
+      "errorPixels": 0.8039257665132674,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left upper back",
+      "node": 0,
+      "target": [
+        115.12085441259134,
+        361.34831460674155
+      ],
+      "actual": [
+        115.58756036569315,
+        363.0324947186331
+      ],
+      "errorPixels": 1.747649019669454,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left upper back",
+      "node": 1,
+      "target": [
+        132.20910623946037,
+        331.685393258427
+      ],
+      "actual": [
+        132.62167496801968,
+        332.4755282487747
+      ],
+      "errorPixels": 0.8913620245202514,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left upper back",
+      "node": 2,
+      "target": [
+        146.5992130410343,
+        307.4157303370786
+      ],
+      "actual": [
+        147.03927025647826,
+        308.9939541620107
+      ],
+      "errorPixels": 1.6384263164535504,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left upper back",
+      "node": 3,
+      "target": [
+        156.49241146711637,
+        305.61797752808985
+      ],
+      "actual": [
+        156.9534199850037,
+        307.80284581001035
+      ],
+      "errorPixels": 2.2329752042749873,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left upper back",
+      "node": 4,
+      "target": [
+        170.88251826869026,
+        320
+      ],
+      "actual": [
+        171.28635645997196,
+        321.13104343477
+      ],
+      "errorPixels": 1.2009764927233053,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left upper back",
+      "node": 5,
+      "target": [
+        188.87015177065766,
+        346.0674157303371
+      ],
+      "actual": [
+        189.25665771262592,
+        347.062958249774
+      ],
+      "errorPixels": 1.0679380839653558,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "far right tower",
+      "node": 0,
+      "target": [
+        1439.0106801573918,
+        289.438202247191
+      ],
+      "actual": [
+        1438.6540615934696,
+        289.38559046986546
+      ],
+      "errorPixels": 0.36047856974762144,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "far right tower",
+      "node": 1,
+      "target": [
+        1460.5958403597526,
+        240
+      ],
+      "actual": [
+        1460.300940881372,
+        238.3617995007995
+      ],
+      "errorPixels": 1.664531939594407,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "far right tower",
+      "node": 2,
+      "target": [
+        1474.9859471613267,
+        184.26966292134833
+      ],
+      "actual": [
+        1474.504274085189,
+        186.43346479466126
+      ],
+      "errorPixels": 2.216765097891179,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "far right tower",
+      "node": 3,
+      "target": [
+        1487.5772906127038,
+        167.19101123595507
+      ],
+      "actual": [
+        1487.1057885450384,
+        168.9598172386518
+      ],
+      "errorPixels": 1.8305706419006806,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "far right tower",
+      "node": 4,
+      "target": [
+        1519.0556492411467,
+        158.20224719101125
+      ],
+      "actual": [
+        1518.6763375652592,
+        157.71267945414047
+      ],
+      "errorPixels": 0.6193172986840898,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "far right tower",
+      "node": 5,
+      "target": [
+        1528.9488476672288,
+        143.8202247191011
+      ],
+      "actual": [
+        1528.4661849542917,
+        145.2544610231132
+      ],
+      "errorPixels": 1.513273627010693,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "far right tower",
+      "node": 6,
+      "target": [
+        1559.5278246205733,
+        139.32584269662922
+      ],
+      "actual": [
+        1558.9480171977636,
+        142.20817328674292
+      ],
+      "errorPixels": 2.9400690941286207,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "far right tower",
+      "node": 7,
+      "target": [
+        1573.9179314221471,
+        177.07865168539325
+      ],
+      "actual": [
+        1573.4132794759535,
+        178.3660707982717
+      ],
+      "errorPixels": 1.382794836192913,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "far right tower",
+      "node": 8,
+      "target": [
+        1584.7105115233276,
+        215.7303370786517
+      ],
+      "actual": [
+        1584.367660721633,
+        213.95421498268846
+      ],
+      "errorPixels": 1.8089102719569812,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "far right tower",
+      "node": 9,
+      "target": [
+        1600,
+        225.61797752808988
+      ],
+      "actual": [
+        1599.4731524781478,
+        226.9931811739968
+      ],
+      "errorPixels": 1.4726687947388202,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right long back shoulder",
+      "node": 0,
+      "target": [
+        1187.1838111298482,
+        406.2921348314607
+      ],
+      "actual": [
+        1186.9581728794778,
+        406.58637586670966
+      ],
+      "errorPixels": 0.370796988734497,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right long back shoulder",
+      "node": 1,
+      "target": [
+        1225.857223159078,
+        370.33707865168543
+      ],
+      "actual": [
+        1225.6023294676918,
+        370.8539860939938
+      ],
+      "errorPixels": 0.576336792008213,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right long back shoulder",
+      "node": 2,
+      "target": [
+        1254.637436762226,
+        343.3707865168539
+      ],
+      "actual": [
+        1254.3398364889104,
+        344.67861697615723
+      ],
+      "errorPixels": 1.3412629991761538,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right long back shoulder",
+      "node": 3,
+      "target": [
+        1271.7256885890952,
+        328.9887640449438
+      ],
+      "actual": [
+        1271.4266845284258,
+        330.0053603869853
+      ],
+      "errorPixels": 1.0596563362472076,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right long back shoulder",
+      "node": 4,
+      "target": [
+        1300.5059021922427,
+        320.8988764044944
+      ],
+      "actual": [
+        1300.2034940309957,
+        321.4975369908978
+      ],
+      "errorPixels": 0.670704997522535,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right long back shoulder",
+      "node": 5,
+      "target": [
+        1331.0848791455874,
+        300.2247191011236
+      ],
+      "actual": [
+        1330.7125986228862,
+        302.19244353034344
+      ],
+      "errorPixels": 2.0026313232672885,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right long back shoulder",
+      "node": 6,
+      "target": [
+        1358.0663293985385,
+        293.03370786516854
+      ],
+      "actual": [
+        1357.6887653121648,
+        294.65696773847844
+      ],
+      "errorPixels": 1.6665915083238882,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right long back shoulder",
+      "node": 7,
+      "target": [
+        1383.2490163012928,
+        304.71910112359546
+      ],
+      "actual": [
+        1382.8333626309736,
+        306.8511466979433
+      ],
+      "errorPixels": 2.1721846847692428,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right long back shoulder",
+      "node": 8,
+      "target": [
+        1401.2366498032602,
+        332.5842696629214
+      ],
+      "actual": [
+        1400.842235367441,
+        333.91309115947126
+      ],
+      "errorPixels": 1.3861202389676481,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right long back shoulder",
+      "node": 9,
+      "target": [
+        1426.4193367060147,
+        357.75280898876406
+      ],
+      "actual": [
+        1426.043720326812,
+        358.28541221387917
+      ],
+      "errorPixels": 0.6517314322083689,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right remote shoulder",
+      "node": 0,
+      "target": [
+        1364.3620011242272,
+        361.34831460674155
+      ],
+      "actual": [
+        1364.0653700394055,
+        360.83883819341537
+      ],
+      "errorPixels": 0.5895389861732648,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right remote shoulder",
+      "node": 1,
+      "target": [
+        1393.142214727375,
+        315.5056179775281
+      ],
+      "actual": [
+        1392.7775851770289,
+        316.2533175617096
+      ],
+      "errorPixels": 0.8318710099352762,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right remote shoulder",
+      "node": 2,
+      "target": [
+        1417.425519955031,
+        287.6404494382022
+      ],
+      "actual": [
+        1417.0132824739637,
+        289.1385878538988
+      ],
+      "errorPixels": 1.5538205988409761,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right remote shoulder",
+      "node": 3,
+      "target": [
+        1445.3063518830804,
+        296.6292134831461
+      ],
+      "actual": [
+        1444.8706090809462,
+        298.2335608254488
+      ],
+      "errorPixels": 1.662468701770232,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right remote shoulder",
+      "node": 4,
+      "target": [
+        1468.690275435638,
+        323.5955056179775
+      ],
+      "actual": [
+        1468.2587938217762,
+        324.77356574696705
+      ],
+      "errorPixels": 1.2545923842490014,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right remote shoulder",
+      "node": 5,
+      "target": [
+        1488.476672287802,
+        348.76404494382024
+      ],
+      "actual": [
+        1488.0213987961736,
+        350.16560841083856
+      ],
+      "errorPixels": 1.4736533188847536,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right blue back",
+      "node": 0,
+      "target": [
+        1413.8279932546375,
+        407.1910112359551
+      ],
+      "actual": [
+        1415.3121825680194,
+        365.3837157378821
+      ],
+      "errorPixels": 41.8336321012311,
+      "coveredByOverlappingTerrain": true
+    },
+    {
+      "name": "right blue back",
+      "node": 1,
+      "target": [
+        1430.016863406408,
+        376.62921348314603
+      ],
+      "actual": [
+        1429.6438830046093,
+        377.05412536270813
+      ],
+      "errorPixels": 0.5653887914691349,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right blue back",
+      "node": 2,
+      "target": [
+        1445.3063518830804,
+        342.4719101123595
+      ],
+      "actual": [
+        1444.8817453029567,
+        343.8278062443068
+      ],
+      "errorPixels": 1.4208254884094795,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right blue back",
+      "node": 3,
+      "target": [
+        1465.0927487352446,
+        315.5056179775281
+      ],
+      "actual": [
+        1464.6612484689108,
+        316.7340405710151
+      ],
+      "errorPixels": 1.3020040506985606,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right blue back",
+      "node": 4,
+      "target": [
+        1482.1810005621135,
+        307.4157303370786
+      ],
+      "actual": [
+        1481.7488254283899,
+        308.4291933734156
+      ],
+      "errorPixels": 1.101763437508433,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right blue back",
+      "node": 5,
+      "target": [
+        1498.3698707138842,
+        327.19101123595505
+      ],
+      "actual": [
+        1497.8900471071756,
+        328.95857533055624
+      ],
+      "errorPixels": 1.8315331070112226,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right blue back",
+      "node": 6,
+      "target": [
+        1519.955030916245,
+        346.96629213483146
+      ],
+      "actual": [
+        1519.5363895593673,
+        347.2436692849969
+      ],
+      "errorPixels": 0.5021938561176629,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right blue back",
+      "node": 7,
+      "target": [
+        1549.6346261944914,
+        347.86516853932585
+      ],
+      "actual": [
+        1549.1794953132442,
+        348.50399620783963
+      ],
+      "errorPixels": 0.7843754898794474,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right blue back",
+      "node": 8,
+      "target": [
+        1573.0185497470488,
+        379.3258426966292
+      ],
+      "actual": [
+        1572.5473431555693,
+        379.9974058474671
+      ],
+      "errorPixels": 0.8203857125871783,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right green diagonal",
+      "node": 0,
+      "target": [
+        1317.5941540191118,
+        480
+      ],
+      "actual": [
+        1317.3299239119083,
+        479.2839524699724
+      ],
+      "errorPixels": 0.7632441384061811,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right green diagonal",
+      "node": 1,
+      "target": [
+        1358.0663293985385,
+        437.75280898876406
+      ],
+      "actual": [
+        1357.71378201289,
+        438.7318658519413
+      ],
+      "errorPixels": 1.040596944288217,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right green diagonal",
+      "node": 2,
+      "target": [
+        1398.538504777965,
+        411.6853932584269
+      ],
+      "actual": [
+        1398.2055635182835,
+        411.6076786857707
+      ],
+      "errorPixels": 0.34189097268205076,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right green diagonal",
+      "node": 3,
+      "target": [
+        1430.016863406408,
+        384.71910112359546
+      ],
+      "actual": [
+        1429.5720017102742,
+        386.7471449272445
+      ],
+      "errorPixels": 2.076261929094279,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right green diagonal",
+      "node": 4,
+      "target": [
+        1448.903878583474,
+        373.0337078651686
+      ],
+      "actual": [
+        1448.4543916477674,
+        374.8746290185751
+      ],
+      "errorPixels": 1.8950011077649456,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right green diagonal",
+      "node": 5,
+      "target": [
+        1467.7908937605396,
+        372.1348314606742
+      ],
+      "actual": [
+        1467.3751376703901,
+        372.9898348651943
+      ],
+      "errorPixels": 0.9507281147822156,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right green diagonal",
+      "node": 6,
+      "target": [
+        1483.0803822372118,
+        385.61797752808985
+      ],
+      "actual": [
+        1482.6499901118746,
+        386.5774275902956
+      ],
+      "errorPixels": 1.0515616022938938,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right green diagonal",
+      "node": 7,
+      "target": [
+        1505.5649241146712,
+        412.5842696629213
+      ],
+      "actual": [
+        1505.152385332136,
+        412.90537849672154
+      ],
+      "errorPixels": 0.5227801930449926,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right green diagonal",
+      "node": 8,
+      "target": [
+        1533.4457560427206,
+        436.85393258426967
+      ],
+      "actual": [
+        1533.0147969144855,
+        437.21492834137666
+      ],
+      "errorPixels": 0.5621776470640272,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right green diagonal",
+      "node": 9,
+      "target": [
+        1575.716694772344,
+        469.21348314606746
+      ],
+      "actual": [
+        1575.2594480423754,
+        469.59975431340854
+      ],
+      "errorPixels": 0.5985649394894372,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right front crag",
+      "node": 0,
+      "target": [
+        1344.575604272063,
+        597.7528089887641
+      ],
+      "actual": [
+        1344.3186950408478,
+        596.5066984676587
+      ],
+      "errorPixels": 1.2723182714608225,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right front crag",
+      "node": 1,
+      "target": [
+        1371.5570545250139,
+        551.9101123595506
+      ],
+      "actual": [
+        1371.1512670472816,
+        553.9675817106795
+      ],
+      "errorPixels": 2.097103623553018,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right front crag",
+      "node": 2,
+      "target": [
+        1396.7397414277684,
+        526.7415730337078
+      ],
+      "actual": [
+        1396.3479402275022,
+        528.0599435990213
+      ],
+      "errorPixels": 1.3753578181749297,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right front crag",
+      "node": 3,
+      "target": [
+        1410.230466554244,
+        496.17977528089887
+      ],
+      "actual": [
+        1409.864725736686,
+        496.70329384963844
+      ],
+      "errorPixels": 0.6386219832131371,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right front crag",
+      "node": 4,
+      "target": [
+        1426.4193367060147,
+        482.6966292134831
+      ],
+      "actual": [
+        1425.8529458655598,
+        487.4744816132785
+      ],
+      "errorPixels": 4.811306697601164,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right front crag",
+      "node": 5,
+      "target": [
+        1439.0106801573918,
+        491.685393258427
+      ],
+      "actual": [
+        1438.526688296784,
+        494.41338736917305
+      ],
+      "errorPixels": 2.7705956019238633,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right front crag",
+      "node": 6,
+      "target": [
+        1459.6964586846543,
+        524.0449438202247
+      ],
+      "actual": [
+        1459.210202811119,
+        526.4839094080376
+      ],
+      "errorPixels": 2.486965603518249,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right front crag",
+      "node": 7,
+      "target": [
+        1478.58347386172,
+        564.4943820224719
+      ],
+      "actual": [
+        1478.205831030752,
+        564.421112669458
+      ],
+      "errorPixels": 0.38468494365201455,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right front crag",
+      "node": 8,
+      "target": [
+        1502.866779089376,
+        601.3483146067416
+      ],
+      "actual": [
+        1502.5011828577262,
+        600.7720637132206
+      ],
+      "errorPixels": 0.6824409841738925,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right low green shoulder",
+      "node": 0,
+      "target": [
+        1456.9983136593592,
+        651.685393258427
+      ],
+      "actual": [
+        1460.1530682899377,
+        577.7433965345601
+      ],
+      "errorPixels": 74.00926534084427,
+      "coveredByOverlappingTerrain": true
+    },
+    {
+      "name": "right low green shoulder",
+      "node": 1,
+      "target": [
+        1474.9859471613267,
+        607.6404494382023
+      ],
+      "actual": [
+        1476.2982742457903,
+        572.9819959358604
+      ],
+      "errorPixels": 34.68328994704239,
+      "coveredByOverlappingTerrain": true
+    },
+    {
+      "name": "right low green shoulder",
+      "node": 2,
+      "target": [
+        1490.275435637999,
+        587.8651685393259
+      ],
+      "actual": [
+        1489.9400701228546,
+        586.8132087301512
+      ],
+      "errorPixels": 1.1041238467068244,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right low green shoulder",
+      "node": 3,
+      "target": [
+        1510.9612141652613,
+        584.2696629213483
+      ],
+      "actual": [
+        1510.4345573186802,
+        586.749004945226
+      ],
+      "errorPixels": 2.534660589786506,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right low green shoulder",
+      "node": 4,
+      "target": [
+        1533.4457560427206,
+        599.5505617977528
+      ],
+      "actual": [
+        1532.9859184123434,
+        600.4522194807579
+      ],
+      "errorPixels": 1.0121448629682464,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right low green shoulder",
+      "node": 5,
+      "target": [
+        1564.024732996065,
+        625.6179775280899
+      ],
+      "actual": [
+        1563.5860705982086,
+        625.7885440121466
+      ],
+      "errorPixels": 0.47065658900798574,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right low green shoulder",
+      "node": 6,
+      "target": [
+        1600,
+        650.7865168539325
+      ],
+      "actual": [
+        1600.8133932783821,
+        629.0233963048173
+      ],
+      "errorPixels": 21.77831546884742,
+      "coveredByOverlappingTerrain": true
+    },
+    {
+      "name": "right outside back",
+      "node": 0,
+      "target": [
+        1545.1377178189996,
+        408.0898876404495
+      ],
+      "actual": [
+        1544.815111274396,
+        406.28217599146564
+      ],
+      "errorPixels": 1.836272416743489,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right outside back",
+      "node": 1,
+      "target": [
+        1561.32658797077,
+        365.8426966292135
+      ],
+      "actual": [
+        1561.0954491498308,
+        362.2093452292933
+      ],
+      "errorPixels": 3.6406960254664376,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right outside back",
+      "node": 2,
+      "target": [
+        1572.1191680719505,
+        328.9887640449438
+      ],
+      "actual": [
+        1571.398375871939,
+        334.23340206010744
+      ],
+      "errorPixels": 5.293937032653196,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right outside back",
+      "node": 3,
+      "target": [
+        1586.5092748735244,
+        312.80898876404495
+      ],
+      "actual": [
+        1585.5755111093965,
+        321.6431787810527
+      ],
+      "errorPixels": 8.883401827216744,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right outside back",
+      "node": 4,
+      "target": [
+        1600,
+        337.97752808988764
+      ],
+      "actual": [
+        1599.4837104194396,
+        339.15577169849917
+      ],
+      "errorPixels": 1.2863953250183773,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right small shore hill",
+      "node": 0,
+      "target": [
+        1232.1528948847667,
+        670.5617977528091
+      ],
+      "actual": [
+        1232.6336671204147,
+        647.5115284803676
+      ],
+      "errorPixels": 23.05528259368403,
+      "coveredByOverlappingTerrain": true
+    },
+    {
+      "name": "right small shore hill",
+      "node": 1,
+      "target": [
+        1257.335581787521,
+        648.0898876404494
+      ],
+      "actual": [
+        1257.2106598131086,
+        644.1095820240854
+      ],
+      "errorPixels": 3.9822654732388436,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right small shore hill",
+      "node": 2,
+      "target": [
+        1276.222596964587,
+        619.3258426966293
+      ],
+      "actual": [
+        1275.805962992535,
+        623.6520169785922
+      ],
+      "errorPixels": 4.346190030887458,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right small shore hill",
+      "node": 3,
+      "target": [
+        1293.310848791456,
+        610.3370786516854
+      ],
+      "actual": [
+        1292.9169923562608,
+        613.6085768532396
+      ],
+      "errorPixels": 3.295121147138156,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right small shore hill",
+      "node": 4,
+      "target": [
+        1307.7009555930297,
+        628.314606741573
+      ],
+      "actual": [
+        1307.375348486854,
+        629.4129843910243
+      ],
+      "errorPixels": 1.14562360677771,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right small shore hill",
+      "node": 5,
+      "target": [
+        1326.5879707700956,
+        652.5842696629213
+      ],
+      "actual": [
+        1326.2903332181813,
+        652.631432479073
+      ],
+      "errorPixels": 0.3013510304227784,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right apron rocks",
+      "node": 0,
+      "target": [
+        1511.8605958403598,
+        695.7303370786517
+      ],
+      "actual": [
+        1512.1737369961825,
+        681.9652254527394
+      ],
+      "errorPixels": 13.76867297372171,
+      "coveredByOverlappingTerrain": true
+    },
+    {
+      "name": "right apron rocks",
+      "node": 1,
+      "target": [
+        1523.5525576166385,
+        673.2584269662921
+      ],
+      "actual": [
+        1523.056953946014,
+        674.9536629852136
+      ],
+      "errorPixels": 1.766195956904385,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right apron rocks",
+      "node": 2,
+      "target": [
+        1540.6408094435076,
+        657.0786516853933
+      ],
+      "actual": [
+        1540.0373455459821,
+        660.5649781389204
+      ],
+      "errorPixels": 3.5381691333484233,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right apron rocks",
+      "node": 3,
+      "target": [
+        1556.8296795952783,
+        664.2696629213483
+      ],
+      "actual": [
+        1556.2341934792457,
+        667.3689326651752
+      ],
+      "errorPixels": 3.1559589128168817,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right apron rocks",
+      "node": 4,
+      "target": [
+        1573.0185497470488,
+        690.3370786516854
+      ],
+      "actual": [
+        1573.2409613041546,
+        678.6585274454111
+      ],
+      "errorPixels": 11.680668866905894,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "long low blue island",
+      "node": 0,
+      "target": [
+        815.7391793142216,
+        395.5056179775281
+      ],
+      "actual": [
+        815.7332098926993,
+        392.94252961177216
+      ],
+      "errorPixels": 2.5630953171247586,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "long low blue island",
+      "node": 1,
+      "target": [
+        822.03485103991,
+        373.932584269663
+      ],
+      "actual": [
+        822.0186363485711,
+        376.3806554869456
+      ],
+      "errorPixels": 2.448124915338856,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "long low blue island",
+      "node": 2,
+      "target": [
+        836.424957841484,
+        367.64044943820227
+      ],
+      "actual": [
+        836.4036500676822,
+        367.9665899038818
+      ],
+      "errorPixels": 0.3268357761599227,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "long low blue island",
+      "node": 3,
+      "target": [
+        852.6138279932546,
+        365.8426966292135
+      ],
+      "actual": [
+        852.581969027421,
+        366.4580194368241
+      ],
+      "errorPixels": 0.6161470208235817,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "long low blue island",
+      "node": 4,
+      "target": [
+        873.299606520517,
+        371.2359550561798
+      ],
+      "actual": [
+        873.2588988085197,
+        371.14540605070016
+      ],
+      "errorPixels": 0.09927859894969802,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "long low blue island",
+      "node": 5,
+      "target": [
+        903.8785834738617,
+        367.64044943820227
+      ],
+      "actual": [
+        903.8165536961509,
+        368.13768325791574
+      ],
+      "errorPixels": 0.5010879810868543,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "long low blue island",
+      "node": 6,
+      "target": [
+        926.3631253513208,
+        356.85393258426967
+      ],
+      "actual": [
+        926.2864500094522,
+        357.4874070167991
+      ],
+      "errorPixels": 0.6380979272174322,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "long low blue island",
+      "node": 7,
+      "target": [
+        938.9544688026982,
+        364.9438202247191
+      ],
+      "actual": [
+        938.8763856286847,
+        364.94573088377024
+      ],
+      "errorPixels": 0.07810654698571814,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "long low blue island",
+      "node": 8,
+      "target": [
+        966.8353007307476,
+        367.64044943820227
+      ],
+      "actual": [
+        966.7378051391044,
+        367.9582175962636
+      ],
+      "errorPixels": 0.33238831608156977,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "long low blue island",
+      "node": 9,
+      "target": [
+        998.3136593591906,
+        364.9438202247191
+      ],
+      "actual": [
+        998.2001485812981,
+        365.09274326817706
+      ],
+      "errorPixels": 0.18725055292455162,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "long low blue island",
+      "node": 10,
+      "target": [
+        1032.4901630129286,
+        358.65168539325845
+      ],
+      "actual": [
+        1032.3584022908428,
+        358.7212225443608
+      ],
+      "errorPixels": 0.14898423832070642,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "long low blue island",
+      "node": 11,
+      "target": [
+        1054.0753232152895,
+        344.2696629213483
+      ],
+      "actual": [
+        1053.917475831954,
+        345.1077281593883
+      ],
+      "errorPixels": 0.8528007619818475,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "long low blue island",
+      "node": 12,
+      "target": [
+        1070.2641933670602,
+        341.57303370786514
+      ],
+      "actual": [
+        1070.085298927514,
+        342.98444364814753
+      ],
+      "errorPixels": 1.422702091102878,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "long low blue island",
+      "node": 13,
+      "target": [
+        1092.7487352445194,
+        355.0561797752809
+      ],
+      "actual": [
+        1092.5715782568145,
+        355.66670381221854
+      ],
+      "errorPixels": 0.6357076356087737,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "long low blue island",
+      "node": 14,
+      "target": [
+        1117.0320404721754,
+        365.8426966292135
+      ],
+      "actual": [
+        1116.8478017357297,
+        366.1148241894184
+      ],
+      "errorPixels": 0.3286294585550313,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "long low blue island",
+      "node": 15,
+      "target": [
+        1160.2023608768973,
+        374.8314606741573
+      ],
+      "actual": [
+        1159.9856671829034,
+        375.39104100574355
+      ],
+      "errorPixels": 0.6000719161191176,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "long low blue island",
+      "node": 16,
+      "target": [
+        1203.372681281619,
+        388.314606741573
+      ],
+      "actual": [
+        1203.1348511017757,
+        388.7052715495299
+      ],
+      "errorPixels": 0.4573643915088915,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left foot rock 1",
+      "node": 0,
+      "target": [
+        15.28948847667229,
+        676.8539325842696
+      ],
+      "actual": [
+        13.752493964479662,
+        642.1702066375431
+      ],
+      "errorPixels": 34.71776487157754,
+      "coveredByOverlappingTerrain": true
+    },
+    {
+      "name": "left foot rock 1",
+      "node": 1,
+      "target": [
+        27.880831928049467,
+        652.5842696629213
+      ],
+      "actual": [
+        28.053969787818023,
+        647.9309729454573
+      ],
+      "errorPixels": 4.656516622889584,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left foot rock 1",
+      "node": 2,
+      "target": [
+        44.069702079820125,
+        647.191011235955
+      ],
+      "actual": [
+        44.75771436141969,
+        651.9949947529633
+      ],
+      "errorPixels": 4.853000982002715,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left foot rock 1",
+      "node": 3,
+      "target": [
+        61.15795390668916,
+        666.0674157303371
+      ],
+      "actual": [
+        61.49340168365196,
+        664.5831214529455
+      ],
+      "errorPixels": 1.5217275422908538,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left foot rock 1",
+      "node": 4,
+      "target": [
+        71.95053400786959,
+        684.943820224719
+      ],
+      "actual": [
+        71.25536920014675,
+        664.0860747698279
+      ],
+      "errorPixels": 20.86932676372025,
+      "coveredByOverlappingTerrain": true
+    },
+    {
+      "name": "left foot rock 2",
+      "node": 0,
+      "target": [
+        188.87015177065766,
+        689.438202247191
+      ],
+      "actual": [
+        188.86595690478165,
+        681.6201257456261
+      ],
+      "errorPixels": 7.8180776269631735,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left foot rock 2",
+      "node": 1,
+      "target": [
+        205.05902192242834,
+        668.7640449438203
+      ],
+      "actual": [
+        205.4980805679814,
+        671.18997294325
+      ],
+      "errorPixels": 2.4653395613286384,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left foot rock 2",
+      "node": 2,
+      "target": [
+        217.6503653738055,
+        668.7640449438203
+      ],
+      "actual": [
+        218.15664122754015,
+        672.9989375224682
+      ],
+      "errorPixels": 4.2650475252641185,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "left foot rock 2",
+      "node": 3,
+      "target": [
+        233.83923552557616,
+        688.5393258426966
+      ],
+      "actual": [
+        233.67074815928692,
+        676.7234320773805
+      ],
+      "errorPixels": 11.81709496728511,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "inner foot rock 2",
+      "node": 0,
+      "target": [
+        656.54862282181,
+        698.4269662921348
+      ],
+      "actual": [
+        656.673364866201,
+        702.6556110125915
+      ],
+      "errorPixels": 4.230484221632944,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "inner foot rock 2",
+      "node": 1,
+      "target": [
+        675.4356379988758,
+        676.8539325842696
+      ],
+      "actual": [
+        675.7645752800412,
+        705.4612892777872
+      ],
+      "errorPixels": 28.609247748325778,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "inner foot rock 2",
+      "node": 2,
+      "target": [
+        689.8257448004497,
+        678.6516853932584
+      ],
+      "actual": [
+        690.0788577122305,
+        702.5316444142566
+      ],
+      "errorPixels": 23.88130040409571,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "inner foot rock 2",
+      "node": 3,
+      "target": [
+        707.813378302417,
+        695.7303370786517
+      ],
+      "actual": [
+        707.8965966861199,
+        700.4152094119023
+      ],
+      "errorPixels": 4.6856113878813215,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right low bank rock",
+      "node": 0,
+      "target": [
+        1108.0382237211916,
+        657.0786516853933
+      ],
+      "actual": [
+        1107.3607576833983,
+        679.6442683806158
+      ],
+      "errorPixels": 22.57578386386767,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right low bank rock",
+      "node": 1,
+      "target": [
+        1126.025857223159,
+        639.1011235955056
+      ],
+      "actual": [
+        1124.9011120795326,
+        678.9523031508578
+      ],
+      "errorPixels": 39.86704859393326,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right low bank rock",
+      "node": 2,
+      "target": [
+        1145.8122540753232,
+        641.7977528089888
+      ],
+      "actual": [
+        1144.7001653857249,
+        678.4130356536705
+      ],
+      "errorPixels": 36.63216727207898,
+      "coveredByOverlappingTerrain": false
+    },
+    {
+      "name": "right low bank rock",
+      "node": 3,
+      "target": [
+        1163.7998875772905,
+        657.9775280898876
+      ],
+      "actual": [
+        1163.006588767468,
+        680.2839785294105
+      ],
+      "errorPixels": 22.320552282875028,
+      "coveredByOverlappingTerrain": false
+    }
+  ],
+  "forms": 31,
+  "shots": [
+    "renders/shape-clay-painting.png",
+    "renders/shape-clay-mountains.png",
+    "renders/shape-clay-right.png",
+    "renders/shape-clay-top.png"
+  ],
+  "errors": [],
+  "boundary": "Registration checks actual terrain triangles against hand-read crest targets. Hidden nodes are reported separately. This is not an independent silhouette IoU, historical reconstruction claim or artistic acceptance score."
+}

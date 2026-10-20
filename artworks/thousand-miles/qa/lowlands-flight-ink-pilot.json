@@ -1,0 +1,1661 @@
+{
+  "passed": true,
+  "style": "ink",
+  "sceneRevision": "blue-green-07",
+  "route": {
+    "film": {
+      "duration": 30,
+      "fps": 24,
+      "width": 1600,
+      "height": 900,
+      "farPlane": 2200,
+      "holdFrom": 28.5
+    },
+    "keys": [
+      {
+        "seconds": 0,
+        "position": [
+          0,
+          52,
+          218
+        ],
+        "target": [
+          0,
+          28,
+          -105
+        ],
+        "fov": 40
+      },
+      {
+        "seconds": 3,
+        "position": [
+          -2,
+          41,
+          161
+        ],
+        "target": [
+          16.620970511817475,
+          12.8,
+          45.42
+        ],
+        "fov": 40
+      },
+      {
+        "seconds": 7,
+        "position": [
+          -6.379029488182525,
+          24,
+          94.42
+        ],
+        "target": [
+          16.620970511817475,
+          10.485,
+          45.42
+        ],
+        "fov": 39
+      },
+      {
+        "seconds": 10,
+        "position": [
+          -0.3790294881825247,
+          17.6,
+          69.42
+        ],
+        "target": [
+          16.620970511817475,
+          10.485,
+          45.42
+        ],
+        "fov": 39
+      },
+      {
+        "seconds": 13,
+        "position": [
+          11.620970511817475,
+          16.7,
+          70.42
+        ],
+        "target": [
+          16.620970511817475,
+          10.485,
+          45.42
+        ],
+        "fov": 37
+      },
+      {
+        "seconds": 16,
+        "position": [
+          32.620970511817475,
+          17.7,
+          66.42
+        ],
+        "target": [
+          16.620970511817475,
+          10.485,
+          45.42
+        ],
+        "fov": 39
+      },
+      {
+        "seconds": 19,
+        "position": [
+          46.620970511817475,
+          20.5,
+          47.42
+        ],
+        "target": [
+          16.620970511817475,
+          10.585,
+          45.42
+        ],
+        "fov": 41
+      },
+      {
+        "seconds": 21,
+        "position": [
+          64.62097051181748,
+          28,
+          69.42
+        ],
+        "target": [
+          16.620970511817475,
+          11.085,
+          45.42
+        ],
+        "fov": 42
+      },
+      {
+        "seconds": 24,
+        "position": [
+          70.62097051181748,
+          45,
+          145.42000000000002
+        ],
+        "target": [
+          12.620970511817475,
+          19,
+          -4
+        ],
+        "fov": 43
+      },
+      {
+        "seconds": 28.5,
+        "position": [
+          18,
+          70,
+          262
+        ],
+        "target": [
+          0,
+          33,
+          -105
+        ],
+        "fov": 40
+      }
+    ],
+    "focus": [
+      16.620970511817475,
+      10.485,
+      45.42
+    ]
+  },
+  "checks": {
+    "passed": true,
+    "minimumGroundOrDeckClearance": 16.656623623128578,
+    "minimumApproximateTreeClearance": 12.329100903031165,
+    "maximumCameraStepAt8Hz": 4.87349424868392,
+    "maximumRoofFrameExtentDuringFocus": 0.6378048885318283,
+    "closestPavilionDistance": 25.343903855807632,
+    "finalPavilionDistance": 224.61262953656293,
+    "finalHoldExact": true,
+    "samples": [
+      {
+        "seconds": 0,
+        "groundClearance": 52.80000001192093,
+        "pavilionDistance": 178.2795789925327,
+        "roofFrameExtent": 0.4733373834106815
+      },
+      {
+        "seconds": 0.125,
+        "groundClearance": 52.761270266550554,
+        "pavilionDistance": 178.0642511575157,
+        "roofFrameExtent": 0.4727390117714848
+      },
+      {
+        "seconds": 0.25,
+        "groundClearance": 52.6484953822913,
+        "pavilionDistance": 177.43836641461155,
+        "roofFrameExtent": 0.4709894536340274
+      },
+      {
+        "seconds": 0.375,
+        "groundClearance": 52.46679688692093,
+        "pavilionDistance": 176.43210732417944,
+        "roofFrameExtent": 0.46812961504926004
+      },
+      {
+        "seconds": 0.5,
+        "groundClearance": 52.22129630821723,
+        "pavilionDistance": 175.07569455750576,
+        "roofFrameExtent": 0.4641690696258638
+      },
+      {
+        "seconds": 0.625,
+        "groundClearance": 51.917115173957974,
+        "pavilionDistance": 173.39937844685278,
+        "roofFrameExtent": 0.4590907859723838
+      },
+      {
+        "seconds": 0.75,
+        "groundClearance": 51.55937501192093,
+        "pavilionDistance": 171.43343163014208,
+        "roofFrameExtent": 0.45285432946826903
+      },
+      {
+        "seconds": 0.875,
+        "groundClearance": 51.15319734988389,
+        "pavilionDistance": 169.2081423805773,
+        "roofFrameExtent": 0.445398127284917
+      },
+      {
+        "seconds": 1,
+        "groundClearance": 50.703703715624634,
+        "pavilionDistance": 166.75380829113328,
+        "roofFrameExtent": 0.4366412761642589
+      },
+      {
+        "seconds": 1.125,
+        "groundClearance": 50.21601563692093,
+        "pavilionDistance": 164.10073004032586,
+        "roofFrameExtent": 0.4264853470900906
+      },
+      {
+        "seconds": 1.25,
+        "groundClearance": 49.69525464155056,
+        "pavilionDistance": 161.27920500789568,
+        "roofFrameExtent": 0.4148166853408262
+      },
+      {
+        "seconds": 1.375,
+        "groundClearance": 49.14654225729131,
+        "pavilionDistance": 158.31952054410417,
+        "roofFrameExtent": 0.4015098148083617
+      },
+      {
+        "seconds": 1.5,
+        "groundClearance": 48.57500001192093,
+        "pavilionDistance": 155.25194673051075,
+        "roofFrameExtent": 0.3864327332034553
+      },
+      {
+        "seconds": 1.625,
+        "groundClearance": 47.98574943321723,
+        "pavilionDistance": 152.10672850950516,
+        "roofFrameExtent": 0.36945512975667466
+      },
+      {
+        "seconds": 1.75,
+        "groundClearance": 47.38391204895797,
+        "pavilionDistance": 148.91407711084733,
+        "roofFrameExtent": 0.3504608577867661
+      },
+      {
+        "seconds": 1.875,
+        "groundClearance": 46.77460938692093,
+        "pavilionDistance": 145.7041607727631,
+        "roofFrameExtent": 0.3293663109619595
+      },
+      {
+        "seconds": 2,
+        "groundClearance": 46.1629629748839,
+        "pavilionDistance": 142.5070948496897,
+        "roofFrameExtent": 0.30614658718344945
+      },
+      {
+        "seconds": 2.125,
+        "groundClearance": 45.55409434062464,
+        "pavilionDistance": 139.35293152507185,
+        "roofFrameExtent": 0.2808712821753549
+      },
+      {
+        "seconds": 2.25,
+        "groundClearance": 44.95312501192093,
+        "pavilionDistance": 136.27164951051964,
+        "roofFrameExtent": 0.25375109318864103
+      },
+      {
+        "seconds": 2.375,
+        "groundClearance": 44.36517651655056,
+        "pavilionDistance": 133.29314431330167,
+        "roofFrameExtent": 0.2251946135390637
+      },
+      {
+        "seconds": 2.5,
+        "groundClearance": 43.7953703822913,
+        "pavilionDistance": 130.4472198871961,
+        "roofFrameExtent": 0.19587113004197707
+      },
+      {
+        "seconds": 2.625,
+        "groundClearance": 43.24882813692093,
+        "pavilionDistance": 127.76358273167936,
+        "roofFrameExtent": 0.16676943103340017
+      },
+      {
+        "seconds": 2.75,
+        "groundClearance": 42.730671308217225,
+        "pavilionDistance": 125.27183974200237,
+        "roofFrameExtent": 0.13923491554961664
+      },
+      {
+        "seconds": 2.875,
+        "groundClearance": 42.24602142395796,
+        "pavilionDistance": 123.00150129190294,
+        "roofFrameExtent": 0.11495971386710013
+      },
+      {
+        "seconds": 3,
+        "groundClearance": 41.80000001192093,
+        "pavilionDistance": 120.98199108876484,
+        "roofFrameExtent": 0.10541212347246377
+      },
+      {
+        "seconds": 3.125,
+        "groundClearance": 41.36313285929816,
+        "pavilionDistance": 119.06451324544564,
+        "roofFrameExtent": 0.10788133073422919
+      },
+      {
+        "seconds": 3.25,
+        "groundClearance": 40.90363421951022,
+        "pavilionDistance": 117.08440171681335,
+        "roofFrameExtent": 0.11735274031108146
+      },
+      {
+        "seconds": 3.375,
+        "groundClearance": 40.423158319677626,
+        "pavilionDistance": 115.04722978588725,
+        "roofFrameExtent": 0.12666898398606247
+      },
+      {
+        "seconds": 3.5,
+        "groundClearance": 39.92335938692093,
+        "pavilionDistance": 112.95858219747713,
+        "roofFrameExtent": 0.1357954365150046
+      },
+      {
+        "seconds": 3.625,
+        "groundClearance": 39.40589164836066,
+        "pavilionDistance": 110.8240529084142,
+        "roofFrameExtent": 0.1446944260683379
+      },
+      {
+        "seconds": 3.75,
+        "groundClearance": 38.87240933111735,
+        "pavilionDistance": 108.64924268620844,
+        "roofFrameExtent": 0.15332584957359044
+      },
+      {
+        "seconds": 3.875,
+        "groundClearance": 38.324566662311554,
+        "pavilionDistance": 106.43975649762916,
+        "roofFrameExtent": 0.1616479068770259
+      },
+      {
+        "seconds": 4,
+        "groundClearance": 37.764017869063785,
+        "pavilionDistance": 104.2012006242188,
+        "roofFrameExtent": 0.16961794984009804
+      },
+      {
+        "seconds": 4.125,
+        "groundClearance": 37.19241717849459,
+        "pavilionDistance": 101.93917943659517,
+        "roofFrameExtent": 0.17719343832539358
+      },
+      {
+        "seconds": 4.25,
+        "groundClearance": 36.6114188177245,
+        "pavilionDistance": 99.65929175378078,
+        "roofFrameExtent": 0.18433299134134648
+      },
+      {
+        "seconds": 4.375,
+        "groundClearance": 36.02267701387405,
+        "pavilionDistance": 97.36712670799555,
+        "roofFrameExtent": 0.19099751875967214
+      },
+      {
+        "seconds": 4.5,
+        "groundClearance": 35.42784599406379,
+        "pavilionDistance": 95.06825902977167,
+        "roofFrameExtent": 0.19715141730659325
+      },
+      {
+        "seconds": 4.625,
+        "groundClearance": 34.82857998541423,
+        "pavilionDistance": 92.76824366345028,
+        "roofFrameExtent": 0.2027638141893217
+      },
+      {
+        "seconds": 4.75,
+        "groundClearance": 34.226533215045926,
+        "pavilionDistance": 90.47260961985633,
+        "roofFrameExtent": 0.2078098428693393
+      },
+      {
+        "seconds": 4.875,
+        "groundClearance": 33.62335991007941,
+        "pavilionDistance": 88.1868529722359,
+        "roofFrameExtent": 0.21227193811443082
+      },
+      {
+        "seconds": 5,
+        "groundClearance": 33.020714297635216,
+        "pavilionDistance": 85.91642890468009,
+        "roofFrameExtent": 0.21614114139125598
+      },
+      {
+        "seconds": 5.125,
+        "groundClearance": 32.420250604833875,
+        "pavilionDistance": 83.66674273092362,
+        "roofFrameExtent": 0.21941841260783135
+      },
+      {
+        "seconds": 5.25,
+        "groundClearance": 31.823623058795928,
+        "pavilionDistance": 81.44313981763824,
+        "roofFrameExtent": 0.22211594978481008
+      },
+      {
+        "seconds": 5.375,
+        "groundClearance": 31.23248588664191,
+        "pavilionDistance": 79.25089437261275,
+        "roofFrameExtent": 0.22425852396546278
+      },
+      {
+        "seconds": 5.5,
+        "groundClearance": 30.648493315492356,
+        "pavilionDistance": 77.09519709736279,
+        "roofFrameExtent": 0.22588484209031492
+      },
+      {
+        "seconds": 5.625,
+        "groundClearance": 30.073299572467803,
+        "pavilionDistance": 74.98114175890579,
+        "roofFrameExtent": 0.2270489552244586
+      },
+      {
+        "seconds": 5.75,
+        "groundClearance": 29.508558884688785,
+        "pavilionDistance": 72.9137108099429,
+        "roofFrameExtent": 0.22782173308895684
+      },
+      {
+        "seconds": 5.875,
+        "groundClearance": 28.955925479275837,
+        "pavilionDistance": 70.89776028362829,
+        "roofFrameExtent": 0.22829242812189532
+      },
+      {
+        "seconds": 6,
+        "groundClearance": 28.4170535833495,
+        "pavilionDistance": 68.93800431097027,
+        "roofFrameExtent": 0.22857035331087328
+      },
+      {
+        "seconds": 6.125,
+        "groundClearance": 27.893597424030304,
+        "pavilionDistance": 67.03899975694819,
+        "roofFrameExtent": 0.2287866981337159
+      },
+      {
+        "seconds": 6.25,
+        "groundClearance": 27.387211228438787,
+        "pavilionDistance": 65.20513164482982,
+        "roofFrameExtent": 0.22909650687286995
+      },
+      {
+        "seconds": 6.375,
+        "groundClearance": 26.899549223695484,
+        "pavilionDistance": 63.44060023309038,
+        "roofFrameExtent": 0.22968084466409444
+      },
+      {
+        "seconds": 6.5,
+        "groundClearance": 26.432265636920928,
+        "pavilionDistance": 61.749410817810094,
+        "roofFrameExtent": 0.2307491810437958
+      },
+      {
+        "seconds": 6.625,
+        "groundClearance": 25.98701469523566,
+        "pavilionDistance": 60.13536754237909,
+        "roofFrameExtent": 0.23400939056136796
+      },
+      {
+        "seconds": 6.75,
+        "groundClearance": 25.565450625760214,
+        "pavilionDistance": 58.602072686759364,
+        "roofFrameExtent": 0.2452148817001199
+      },
+      {
+        "seconds": 6.875,
+        "groundClearance": 25.169227655615128,
+        "pavilionDistance": 57.152933055220274,
+        "roofFrameExtent": 0.25500563360800504
+      },
+      {
+        "seconds": 7,
+        "groundClearance": 24.80000001192093,
+        "pavilionDistance": 55.79117515342368,
+        "roofFrameExtent": 0.26291289404204204
+      },
+      {
+        "seconds": 7.125,
+        "groundClearance": 24.446557474098505,
+        "pavilionDistance": 54.47426806356442,
+        "roofFrameExtent": 0.26983304785935763
+      },
+      {
+        "seconds": 7.25,
+        "groundClearance": 24.09692647521458,
+        "pavilionDistance": 53.1594078796649,
+        "roofFrameExtent": 0.27700656551815844
+      },
+      {
+        "seconds": 7.375,
+        "groundClearance": 23.75161622285843,
+        "pavilionDistance": 51.84930012001794,
+        "roofFrameExtent": 0.28444068266546924
+      },
+      {
+        "seconds": 7.5,
+        "groundClearance": 23.41113592461934,
+        "pavilionDistance": 50.54666046501202,
+        "roofFrameExtent": 0.2921416793230304
+      },
+      {
+        "seconds": 7.625,
+        "groundClearance": 23.075994788086604,
+        "pavilionDistance": 49.25421176574558,
+        "roofFrameExtent": 0.300114656405518
+      },
+      {
+        "seconds": 7.75,
+        "groundClearance": 22.746702020849497,
+        "pavilionDistance": 47.97468124410209,
+        "roofFrameExtent": 0.30836328473322877
+      },
+      {
+        "seconds": 7.875,
+        "groundClearance": 22.423766830497318,
+        "pavilionDistance": 46.7107979208561,
+        "roofFrameExtent": 0.316889525784178
+      },
+      {
+        "seconds": 8,
+        "groundClearance": 22.107698424619343,
+        "pavilionDistance": 45.46529032424855,
+        "roofFrameExtent": 0.3256933238300565
+      },
+      {
+        "seconds": 8.125,
+        "groundClearance": 21.799006010804856,
+        "pavilionDistance": 44.24088454969756,
+        "roofFrameExtent": 0.3347722694928975
+      },
+      {
+        "seconds": 8.25,
+        "groundClearance": 21.498198796643152,
+        "pavilionDistance": 43.04030276185872,
+        "roofFrameExtent": 0.3441212350711841
+      },
+      {
+        "seconds": 8.375,
+        "groundClearance": 21.20578598972351,
+        "pavilionDistance": 41.866262252829614,
+        "roofFrameExtent": 0.3537319821148181
+      },
+      {
+        "seconds": 8.5,
+        "groundClearance": 20.922276797635217,
+        "pavilionDistance": 40.721475194237804,
+        "roofFrameExtent": 0.3635927415527923
+      },
+      {
+        "seconds": 8.625,
+        "groundClearance": 20.648180427967556,
+        "pavilionDistance": 39.60864924507865,
+        "roofFrameExtent": 0.3736877660575713
+      },
+      {
+        "seconds": 8.75,
+        "groundClearance": 20.384006088309818,
+        "pavilionDistance": 38.5304891996119,
+        "roofFrameExtent": 0.38399685314066845
+      },
+      {
+        "seconds": 8.875,
+        "groundClearance": 20.13026298625129,
+        "pavilionDistance": 37.48969987765573,
+        "roofFrameExtent": 0.39449483564487764
+      },
+      {
+        "seconds": 9,
+        "groundClearance": 19.887460329381245,
+        "pavilionDistance": 36.488990469491476,
+        "roofFrameExtent": 0.4051510338839391
+      },
+      {
+        "seconds": 9.125,
+        "groundClearance": 19.656107325288986,
+        "pavilionDistance": 35.53108054444171,
+        "roofFrameExtent": 0.41592866095004
+      },
+      {
+        "seconds": 9.25,
+        "groundClearance": 19.436713181563785,
+        "pavilionDistance": 34.61870791003407,
+        "roofFrameExtent": 0.42678417026675136
+      },
+      {
+        "seconds": 9.375,
+        "groundClearance": 19.22978710579494,
+        "pavilionDistance": 33.75463846064473,
+        "roofFrameExtent": 0.43766653337237227
+      },
+      {
+        "seconds": 9.5,
+        "groundClearance": 19.035838305571723,
+        "pavilionDistance": 32.94167807338829,
+        "roofFrameExtent": 0.4485164378076751
+      },
+      {
+        "seconds": 9.625,
+        "groundClearance": 18.855375988483427,
+        "pavilionDistance": 32.182686488116765,
+        "roofFrameExtent": 0.4592654020943171
+      },
+      {
+        "seconds": 9.75,
+        "groundClearance": 18.688909362119343,
+        "pavilionDistance": 31.48059294307181,
+        "roofFrameExtent": 0.4698348198786447
+      },
+      {
+        "seconds": 9.875,
+        "groundClearance": 18.536947634068746,
+        "pavilionDistance": 30.83841312740953,
+        "roofFrameExtent": 0.4801349713052683
+      },
+      {
+        "seconds": 10,
+        "groundClearance": 18.40000001192093,
+        "pavilionDistance": 30.259266762431636,
+        "roofFrameExtent": 0.4900640789863124
+      },
+      {
+        "seconds": 10.125,
+        "groundClearance": 18.276649317476487,
+        "pavilionDistance": 29.740925263647956,
+        "roofFrameExtent": 0.49971709901585915
+      },
+      {
+        "seconds": 10.25,
+        "groundClearance": 18.164774317476486,
+        "pavilionDistance": 29.27650452292392,
+        "roofFrameExtent": 0.5092592995752045
+      },
+      {
+        "seconds": 10.375,
+        "groundClearance": 18.06382813692093,
+        "pavilionDistance": 28.862520092087763,
+        "roofFrameExtent": 0.5186744387260233
+      },
+      {
+        "seconds": 10.5,
+        "groundClearance": 17.97326390080982,
+        "pavilionDistance": 28.49581701461005,
+        "roofFrameExtent": 0.5279325878405786
+      },
+      {
+        "seconds": 10.625,
+        "groundClearance": 17.892534734143155,
+        "pavilionDistance": 28.173491961147416,
+        "roofFrameExtent": 0.5369911931787329
+      },
+      {
+        "seconds": 10.75,
+        "groundClearance": 17.821093761920928,
+        "pavilionDistance": 27.892811789927876,
+        "roofFrameExtent": 0.5457970951715272
+      },
+      {
+        "seconds": 10.875,
+        "groundClearance": 17.75839410914315,
+        "pavilionDistance": 27.651131821807056,
+        "roofFrameExtent": 0.5542894027075527
+      },
+      {
+        "seconds": 11,
+        "groundClearance": 17.703888900809815,
+        "pavilionDistance": 27.44581695723286,
+        "roofFrameExtent": 0.5624030672644945
+      },
+      {
+        "seconds": 11.125,
+        "groundClearance": 17.65703126192093,
+        "pavilionDistance": 27.274168463156418,
+        "roofFrameExtent": 0.5700729507536171
+      },
+      {
+        "seconds": 11.25,
+        "groundClearance": 17.617274317476486,
+        "pavilionDistance": 27.133358832552958,
+        "roofFrameExtent": 0.5772381380305918
+      },
+      {
+        "seconds": 11.375,
+        "groundClearance": 17.584071192476486,
+        "pavilionDistance": 27.02037658728913,
+        "roofFrameExtent": 0.5838462182577754
+      },
+      {
+        "seconds": 11.5,
+        "groundClearance": 17.55687501192093,
+        "pavilionDistance": 26.931982287270934,
+        "roofFrameExtent": 0.5898572562265801
+      },
+      {
+        "seconds": 11.625,
+        "groundClearance": 17.53513890080982,
+        "pavilionDistance": 26.864676365899633,
+        "roofFrameExtent": 0.595247200164364
+      },
+      {
+        "seconds": 11.75,
+        "groundClearance": 17.51831598414315,
+        "pavilionDistance": 26.81467878082065,
+        "roofFrameExtent": 0.6000105267899901
+      },
+      {
+        "seconds": 11.875,
+        "groundClearance": 17.50585938692093,
+        "pavilionDistance": 26.777919896989577,
+        "roofFrameExtent": 0.6041620026395995
+      },
+      {
+        "seconds": 12,
+        "groundClearance": 17.497222234143152,
+        "pavilionDistance": 26.75004154708771,
+        "roofFrameExtent": 0.6077375336937264
+      },
+      {
+        "seconds": 12.125,
+        "groundClearance": 17.491857650809816,
+        "pavilionDistance": 26.726406871302082,
+        "roofFrameExtent": 0.6107941712736469
+      },
+      {
+        "seconds": 12.25,
+        "groundClearance": 17.489218761920927,
+        "pavilionDistance": 26.70211733831461,
+        "roofFrameExtent": 0.6134094292578812
+      },
+      {
+        "seconds": 12.375,
+        "groundClearance": 17.488758692476484,
+        "pavilionDistance": 26.67203529041154,
+        "roofFrameExtent": 0.6156801367331572
+      },
+      {
+        "seconds": 12.5,
+        "groundClearance": 17.489930567476485,
+        "pavilionDistance": 26.6308104231957,
+        "roofFrameExtent": 0.6177210965513384
+      },
+      {
+        "seconds": 12.625,
+        "groundClearance": 17.49218751192093,
+        "pavilionDistance": 26.57290878089499,
+        "roofFrameExtent": 0.6196638444848568
+      },
+      {
+        "seconds": 12.75,
+        "groundClearance": 17.494982650809817,
+        "pavilionDistance": 26.49264309445031,
+        "roofFrameExtent": 0.6216558112968406
+      },
+      {
+        "seconds": 12.875,
+        "groundClearance": 17.497769109143153,
+        "pavilionDistance": 26.38420358546427,
+        "roofFrameExtent": 0.6238601906067868
+      },
+      {
+        "seconds": 13,
+        "groundClearance": 17.50000001192093,
+        "pavilionDistance": 26.241688684229146,
+        "roofFrameExtent": 0.6264568214107777
+      },
+      {
+        "seconds": 13.125,
+        "groundClearance": 17.504003013946388,
+        "pavilionDistance": 26.081395406759146,
+        "roofFrameExtent": 0.6288579111429682
+      },
+      {
+        "seconds": 13.25,
+        "groundClearance": 17.512371250346852,
+        "pavilionDistance": 25.926610849707693,
+        "roofFrameExtent": 0.630153431540493
+      },
+      {
+        "seconds": 13.375,
+        "groundClearance": 17.52495606660843,
+        "pavilionDistance": 25.781863204252126,
+        "roofFrameExtent": 0.6300358222866775
+      },
+      {
+        "seconds": 13.5,
+        "groundClearance": 17.541608808217223,
+        "pavilionDistance": 25.651555525709387,
+        "roofFrameExtent": 0.628183817607527
+      },
+      {
+        "seconds": 13.625,
+        "groundClearance": 17.562180820659353,
+        "pavilionDistance": 25.539818551315207,
+        "roofFrameExtent": 0.6242781281523484
+      },
+      {
+        "seconds": 13.75,
+        "groundClearance": 17.586523449420927,
+        "pavilionDistance": 25.450367484176944,
+        "roofFrameExtent": 0.6180208829342644
+      },
+      {
+        "seconds": 13.875,
+        "groundClearance": 17.61448803998806,
+        "pavilionDistance": 25.38636673676434,
+        "roofFrameExtent": 0.6190752209461258
+      },
+      {
+        "seconds": 14,
+        "groundClearance": 17.645925937846854,
+        "pavilionDistance": 25.350307558543687,
+        "roofFrameExtent": 0.6273103373726912
+      },
+      {
+        "seconds": 14.125,
+        "groundClearance": 17.68068848848343,
+        "pavilionDistance": 25.343903855807632,
+        "roofFrameExtent": 0.6332314138826882
+      },
+      {
+        "seconds": 14.25,
+        "groundClearance": 17.71862703738389,
+        "pavilionDistance": 25.368011212207257,
+        "roofFrameExtent": 0.6367298955010199
+      },
+      {
+        "seconds": 14.375,
+        "groundClearance": 17.759592930034355,
+        "pavilionDistance": 25.422573102157738,
+        "roofFrameExtent": 0.6378048885318283
+      },
+      {
+        "seconds": 14.5,
+        "groundClearance": 17.803437511920926,
+        "pavilionDistance": 25.5065966517273,
+        "roofFrameExtent": 0.636556674999184
+      },
+      {
+        "seconds": 14.625,
+        "groundClearance": 17.850012128529723,
+        "pavilionDistance": 25.61815826330286,
+        "roofFrameExtent": 0.6331727235709623
+      },
+      {
+        "seconds": 14.75,
+        "groundClearance": 17.899168125346854,
+        "pavilionDistance": 25.75443728591732,
+        "roofFrameExtent": 0.62790857536206
+      },
+      {
+        "seconds": 14.875,
+        "groundClearance": 17.95075684785843,
+        "pavilionDistance": 25.911774004547528,
+        "roofFrameExtent": 0.6210663982910256
+      },
+      {
+        "seconds": 15,
+        "groundClearance": 18.004629641550558,
+        "pavilionDistance": 26.085746805866094,
+        "roofFrameExtent": 0.6129738533523122
+      },
+      {
+        "seconds": 15.125,
+        "groundClearance": 18.060637817991157,
+        "pavilionDistance": 26.27126261231095,
+        "roofFrameExtent": 0.6039653494245996
+      },
+      {
+        "seconds": 15.25,
+        "groundClearance": 18.118632764816283,
+        "pavilionDistance": 26.46265458776039,
+        "roofFrameExtent": 0.5943669966160208
+      },
+      {
+        "seconds": 15.375,
+        "groundClearance": 18.178465819401605,
+        "pavilionDistance": 26.653781617167123,
+        "roofFrameExtent": 0.5844858055971325
+      },
+      {
+        "seconds": 15.5,
+        "groundClearance": 18.2399883015284,
+        "pavilionDistance": 26.83812498334127,
+        "roofFrameExtent": 0.5746030622775053
+      },
+      {
+        "seconds": 15.625,
+        "groundClearance": 18.30305155696243,
+        "pavilionDistance": 27.008878813187167,
+        "roofFrameExtent": 0.5649713963453868
+      },
+      {
+        "seconds": 15.75,
+        "groundClearance": 18.367506914631484,
+        "pavilionDistance": 27.159032064774557,
+        "roofFrameExtent": 0.5558148574185836
+      },
+      {
+        "seconds": 15.875,
+        "groundClearance": 18.433205682595183,
+        "pavilionDistance": 27.28144094023709,
+        "roofFrameExtent": 0.5473312742856989
+      },
+      {
+        "seconds": 16,
+        "groundClearance": 18.49999924075542,
+        "pavilionDistance": 27.368891555925316,
+        "roofFrameExtent": 0.5396962478132447
+      },
+      {
+        "seconds": 16.125,
+        "groundClearance": 18.567238172109068,
+        "pavilionDistance": 27.39318811415875,
+        "roofFrameExtent": 0.5401597741136054
+      },
+      {
+        "seconds": 16.25,
+        "groundClearance": 18.634739120915413,
+        "pavilionDistance": 27.342167971980917,
+        "roofFrameExtent": 0.5453269561551869
+      },
+      {
+        "seconds": 16.375,
+        "groundClearance": 18.70305230244429,
+        "pavilionDistance": 27.232771946794827,
+        "roofFrameExtent": 0.5516549377973341
+      },
+      {
+        "seconds": 16.5,
+        "groundClearance": 18.77272794807715,
+        "pavilionDistance": 27.081990152966263,
+        "roofFrameExtent": 0.5587202253449152
+      },
+      {
+        "seconds": 16.625,
+        "groundClearance": 18.844316262464837,
+        "pavilionDistance": 26.906677879744986,
+        "roofFrameExtent": 0.5660462870043951
+      },
+      {
+        "seconds": 16.75,
+        "groundClearance": 18.918367116977798,
+        "pavilionDistance": 26.723319966203928,
+        "roofFrameExtent": 0.5730945821836972
+      },
+      {
+        "seconds": 16.875,
+        "groundClearance": 18.995430977622693,
+        "pavilionDistance": 26.54774148847254,
+        "roofFrameExtent": 0.5792667030609752
+      },
+      {
+        "seconds": 17,
+        "groundClearance": 19.076057350757086,
+        "pavilionDistance": 26.394770080988724,
+        "roofFrameExtent": 0.5839215187621228
+      },
+      {
+        "seconds": 17.125,
+        "groundClearance": 19.16079619285925,
+        "pavilionDistance": 26.277865063829154,
+        "roofFrameExtent": 0.5864104074021026
+      },
+      {
+        "seconds": 17.25,
+        "groundClearance": 19.25019656650264,
+        "pavilionDistance": 26.208739547892282,
+        "roofFrameExtent": 0.586130902391002
+      },
+      {
+        "seconds": 17.375,
+        "groundClearance": 19.344808171308262,
+        "pavilionDistance": 26.197011541417094,
+        "roofFrameExtent": 0.5825942357880686
+      },
+      {
+        "seconds": 17.5,
+        "groundClearance": 19.44518097280842,
+        "pavilionDistance": 26.249925765966463,
+        "roofFrameExtent": 0.5754962676853599
+      },
+      {
+        "seconds": 17.625,
+        "groundClearance": 19.5518633405022,
+        "pavilionDistance": 26.372186631390218,
+        "roofFrameExtent": 0.5647763844784375
+      },
+      {
+        "seconds": 17.75,
+        "groundClearance": 19.665404072073883,
+        "pavilionDistance": 26.565933367349743,
+        "roofFrameExtent": 0.550648021057838
+      },
+      {
+        "seconds": 17.875,
+        "groundClearance": 19.786352163551847,
+        "pavilionDistance": 26.83087190420921,
+        "roofFrameExtent": 0.5335894271076953
+      },
+      {
+        "seconds": 18,
+        "groundClearance": 19.915258358587522,
+        "pavilionDistance": 27.16455843593273,
+        "roofFrameExtent": 0.514293378502213
+      },
+      {
+        "seconds": 18.125,
+        "groundClearance": 20.052672057216753,
+        "pavilionDistance": 27.562811605192717,
+        "roofFrameExtent": 0.49358596929104914
+      },
+      {
+        "seconds": 18.25,
+        "groundClearance": 20.19914409035162,
+        "pavilionDistance": 28.020218194100835,
+        "roofFrameExtent": 0.47233252473517834
+      },
+      {
+        "seconds": 18.375,
+        "groundClearance": 20.35522583536581,
+        "pavilionDistance": 28.530693155871962,
+        "roofFrameExtent": 0.45134993528008327
+      },
+      {
+        "seconds": 18.5,
+        "groundClearance": 20.52147311157716,
+        "pavilionDistance": 29.088058216294517,
+        "roofFrameExtent": 0.4313396782568612
+      },
+      {
+        "seconds": 18.625,
+        "groundClearance": 20.69843596596653,
+        "pavilionDistance": 29.686611591365878,
+        "roofFrameExtent": 0.4128476045439727
+      },
+      {
+        "seconds": 18.75,
+        "groundClearance": 20.88667536667889,
+        "pavilionDistance": 30.32167138927909,
+        "roofFrameExtent": 0.3962489227539331
+      },
+      {
+        "seconds": 18.875,
+        "groundClearance": 16.656623623128578,
+        "pavilionDistance": 30.99008417944137,
+        "roofFrameExtent": 0.3817520610839115
+      },
+      {
+        "seconds": 19,
+        "groundClearance": 17.01392761784891,
+        "pavilionDistance": 31.69069618989144,
+        "roofFrameExtent": 0.3694136743128702
+      },
+      {
+        "seconds": 19.125,
+        "groundClearance": 21.545249212783496,
+        "pavilionDistance": 32.50900249449628,
+        "roofFrameExtent": 0.3611600491392105
+      },
+      {
+        "seconds": 19.25,
+        "groundClearance": 21.842682796161828,
+        "pavilionDistance": 33.515149809321635,
+        "roofFrameExtent": 0.3579081999584032
+      },
+      {
+        "seconds": 19.375,
+        "groundClearance": 22.186848816381165,
+        "pavilionDistance": 34.68896088386425,
+        "roofFrameExtent": 0.35803642253346485
+      },
+      {
+        "seconds": 19.5,
+        "groundClearance": 22.573113035934615,
+        "pavilionDistance": 36.01212521005295,
+        "roofFrameExtent": 0.3599804116491524
+      },
+      {
+        "seconds": 19.625,
+        "groundClearance": 22.996829683518317,
+        "pavilionDistance": 37.467024816044294,
+        "roofFrameExtent": 0.3623504070846397
+      },
+      {
+        "seconds": 19.75,
+        "groundClearance": 23.453349252337098,
+        "pavilionDistance": 39.03587344859956,
+        "roofFrameExtent": 0.3639877622168368
+      },
+      {
+        "seconds": 19.875,
+        "groundClearance": 23.536243861118184,
+        "pavilionDistance": 40.700166321697225,
+        "roofFrameExtent": 0.36397767141511755
+      },
+      {
+        "seconds": 20,
+        "groundClearance": 22.810314478745543,
+        "pavilionDistance": 42.440394537515786,
+        "roofFrameExtent": 0.3616348584491447
+      },
+      {
+        "seconds": 20.125,
+        "groundClearance": 21.95520936437645,
+        "pavilionDistance": 44.23596146220278,
+        "roofFrameExtent": 0.35647564094734385
+      },
+      {
+        "seconds": 20.25,
+        "groundClearance": 21.43392706376337,
+        "pavilionDistance": 46.06523889151542,
+        "roofFrameExtent": 0.348185690572126
+      },
+      {
+        "seconds": 20.375,
+        "groundClearance": 21.444197418127583,
+        "pavilionDistance": 47.90571077362813,
+        "roofFrameExtent": 0.3365892713709569
+      },
+      {
+        "seconds": 20.5,
+        "groundClearance": 21.76424816109395,
+        "pavilionDistance": 49.734165660924496,
+        "roofFrameExtent": 0.32162313181057156
+      },
+      {
+        "seconds": 20.625,
+        "groundClearance": 22.085964750933286,
+        "pavilionDistance": 51.52691229251918,
+        "roofFrameExtent": 0.3033165004117994
+      },
+      {
+        "seconds": 20.75,
+        "groundClearance": 22.396424812286284,
+        "pavilionDistance": 53.26000399132834,
+        "roofFrameExtent": 0.28177759585537654
+      },
+      {
+        "seconds": 20.875,
+        "groundClearance": 22.732199863405235,
+        "pavilionDistance": 54.90946641261041,
+        "roofFrameExtent": 0.2571864994000468
+      },
+      {
+        "seconds": 21,
+        "groundClearance": 23.114874645803077,
+        "pavilionDistance": 56.45152987298041,
+        "roofFrameExtent": 0.2297939738477701
+      },
+      {
+        "seconds": 21.125,
+        "groundClearance": 23.547430610487503,
+        "pavilionDistance": 58.02176485527405,
+        "roofFrameExtent": 0.22384577043809087
+      },
+      {
+        "seconds": 21.25,
+        "groundClearance": 23.926022061672022,
+        "pavilionDistance": 59.76944461701769,
+        "roofFrameExtent": 0.24622858198580758
+      },
+      {
+        "seconds": 21.375,
+        "groundClearance": 24.27766564877946,
+        "pavilionDistance": 61.69019510958367,
+        "roofFrameExtent": 0.26720480426618004
+      },
+      {
+        "seconds": 21.5,
+        "groundClearance": 24.835549305148138,
+        "pavilionDistance": 63.77760788188267,
+        "roofFrameExtent": 0.28609023453249344
+      },
+      {
+        "seconds": 21.625,
+        "groundClearance": 25.438606317806,
+        "pavilionDistance": 66.02324166884318,
+        "roofFrameExtent": 0.3024391059894352
+      },
+      {
+        "seconds": 21.75,
+        "groundClearance": 26.0498528260507,
+        "pavilionDistance": 68.41673438618885,
+        "roofFrameExtent": 0.3160274174984649
+      },
+      {
+        "seconds": 21.875,
+        "groundClearance": 26.787582039369347,
+        "pavilionDistance": 70.94598944535824,
+        "roofFrameExtent": 0.3268180051426465
+      },
+      {
+        "seconds": 22,
+        "groundClearance": 27.472213859129187,
+        "pavilionDistance": 73.5974036471846,
+        "roofFrameExtent": 0.3349165811053897
+      },
+      {
+        "seconds": 22.125,
+        "groundClearance": 28.414016974707046,
+        "pavilionDistance": 76.35610988374476,
+        "roofFrameExtent": 0.3405268479190182
+      },
+      {
+        "seconds": 22.25,
+        "groundClearance": 29.348798519583546,
+        "pavilionDistance": 79.2062148672966,
+        "roofFrameExtent": 0.34391033177938823
+      },
+      {
+        "seconds": 22.375,
+        "groundClearance": 30.346523139350637,
+        "pavilionDistance": 82.131018862287,
+        "roofFrameExtent": 0.3453539013576503
+      },
+      {
+        "seconds": 22.5,
+        "groundClearance": 31.305411590659734,
+        "pavilionDistance": 85.1132101485699,
+        "roofFrameExtent": 0.34514575786483875
+      },
+      {
+        "seconds": 22.625,
+        "groundClearance": 32.33035772630202,
+        "pavilionDistance": 88.13503136157664,
+        "roofFrameExtent": 0.3485585592823541
+      },
+      {
+        "seconds": 22.75,
+        "groundClearance": 33.40324834519777,
+        "pavilionDistance": 91.17841793260784,
+        "roofFrameExtent": 0.3558992018252502
+      },
+      {
+        "seconds": 22.875,
+        "groundClearance": 34.43471051103335,
+        "pavilionDistance": 94.22511077297008,
+        "roofFrameExtent": 0.3625499001837948
+      },
+      {
+        "seconds": 23,
+        "groundClearance": 35.40390119978112,
+        "pavilionDistance": 97.25674636982119,
+        "roofFrameExtent": 0.3686073161993404
+      },
+      {
+        "seconds": 23.125,
+        "groundClearance": 36.27201139266148,
+        "pavilionDistance": 100.25492785245184,
+        "roofFrameExtent": 0.37416518808286847
+      },
+      {
+        "seconds": 23.25,
+        "groundClearance": 37.13638103939077,
+        "pavilionDistance": 103.201280571455,
+        "roofFrameExtent": 0.37931231597133874
+      },
+      {
+        "seconds": 23.375,
+        "groundClearance": 37.935819296513785,
+        "pavilionDistance": 106.07749548469465,
+        "roofFrameExtent": 0.38413159528621305
+      },
+      {
+        "seconds": 23.5,
+        "groundClearance": 38.74923991118862,
+        "pavilionDistance": 108.86536328772402,
+        "roofFrameExtent": 0.38869976978811455
+      },
+      {
+        "seconds": 23.625,
+        "groundClearance": 39.44412965628828,
+        "pavilionDistance": 111.5468018447872,
+        "roofFrameExtent": 0.3930876565210094
+      },
+      {
+        "seconds": 23.75,
+        "groundClearance": 40.189695380022826,
+        "pavilionDistance": 114.10387912053388,
+        "roofFrameExtent": 0.39736066431967926
+      },
+      {
+        "seconds": 23.875,
+        "groundClearance": 40.823925881519024,
+        "pavilionDistance": 116.51883351097096,
+        "roofFrameExtent": 0.4015794830837372
+      },
+      {
+        "seconds": 24,
+        "groundClearance": 41.5721540667558,
+        "pavilionDistance": 118.77409324006646,
+        "roofFrameExtent": 0.4058008631404736
+      },
+      {
+        "seconds": 24.125,
+        "groundClearance": 42.24392272061942,
+        "pavilionDistance": 121.02661369338256,
+        "roofFrameExtent": 0.4102462563051185
+      },
+      {
+        "seconds": 24.25,
+        "groundClearance": 43.120434607206754,
+        "pavilionDistance": 123.44459009046439,
+        "roofFrameExtent": 0.41499442902500255
+      },
+      {
+        "seconds": 24.375,
+        "groundClearance": 43.921284924240474,
+        "pavilionDistance": 126.026812273446,
+        "roofFrameExtent": 0.41990116819003753
+      },
+      {
+        "seconds": 24.5,
+        "groundClearance": 44.89763780350068,
+        "pavilionDistance": 128.77094696746053,
+        "roofFrameExtent": 0.42484440720516664
+      },
+      {
+        "seconds": 24.625,
+        "groundClearance": 45.79461154376585,
+        "pavilionDistance": 131.67329618148858,
+        "roofFrameExtent": 0.42972478970217376
+      },
+      {
+        "seconds": 24.75,
+        "groundClearance": 46.705858489317656,
+        "pavilionDistance": 134.72863954424966,
+        "roofFrameExtent": 0.434464973203957
+      },
+      {
+        "seconds": 24.875,
+        "groundClearance": 47.675666521630916,
+        "pavilionDistance": 137.93015135949958,
+        "roofFrameExtent": 0.4390079715609426
+      },
+      {
+        "seconds": 25,
+        "groundClearance": 48.524946810016985,
+        "pavilionDistance": 141.26938154428075,
+        "roofFrameExtent": 0.44331484684393446
+      },
+      {
+        "seconds": 25.125,
+        "groundClearance": 49.36078174370482,
+        "pavilionDistance": 144.73628879479017,
+        "roofFrameExtent": 0.4473620420768856
+      },
+      {
+        "seconds": 25.25,
+        "groundClearance": 50.305369079049775,
+        "pavilionDistance": 148.31931426752672,
+        "roofFrameExtent": 0.45113860369705755
+      },
+      {
+        "seconds": 25.375,
+        "groundClearance": 51.25820287491107,
+        "pavilionDistance": 152.00548465933693,
+        "roofFrameExtent": 0.4546434873044087
+      },
+      {
+        "seconds": 25.5,
+        "groundClearance": 52.55707815287392,
+        "pavilionDistance": 155.78053466296822,
+        "roofFrameExtent": 0.4578830819373181
+      },
+      {
+        "seconds": 25.625,
+        "groundClearance": 53.997605244474165,
+        "pavilionDistance": 159.62904018942737,
+        "roofFrameExtent": 0.4608690342908173
+      },
+      {
+        "seconds": 25.75,
+        "groundClearance": 55.40363357185644,
+        "pavilionDistance": 163.53455531558274,
+        "roofFrameExtent": 0.4636164095317771
+      },
+      {
+        "seconds": 25.875,
+        "groundClearance": 57.01292994028076,
+        "pavilionDistance": 167.47974749077252,
+        "roofFrameExtent": 0.46614219150624964
+      },
+      {
+        "seconds": 26,
+        "groundClearance": 58.87997515125757,
+        "pavilionDistance": 171.44652701070908,
+        "roofFrameExtent": 0.46846410199131433
+      },
+      {
+        "seconds": 26.125,
+        "groundClearance": 60.076932024952484,
+        "pavilionDistance": 175.41616806955278,
+        "roofFrameExtent": 0.470599704790906
+      },
+      {
+        "seconds": 26.25,
+        "groundClearance": 60.977500011920924,
+        "pavilionDistance": 179.36941979502856,
+        "roofFrameExtent": 0.47256575392981776
+      },
+      {
+        "seconds": 26.375,
+        "groundClearance": 61.861540221111596,
+        "pavilionDistance": 183.2866065481005,
+        "roofFrameExtent": 0.47437774391429977
+      },
+      {
+        "seconds": 26.5,
+        "groundClearance": 62.725377241001866,
+        "pavilionDistance": 187.14771743920093,
+        "roofFrameExtent": 0.4760496221801221
+      },
+      {
+        "seconds": 26.625,
+        "groundClearance": 63.56533566006908,
+        "pavilionDistance": 190.93248550099807,
+        "roofFrameExtent": 0.4775936279768629
+      },
+      {
+        "seconds": 26.75,
+        "groundClearance": 64.37774006679061,
+        "pavilionDistance": 194.62045729308338,
+        "roofFrameExtent": 0.4790202269597946
+      },
+      {
+        "seconds": 26.875,
+        "groundClearance": 65.15891504964384,
+        "pavilionDistance": 198.19105392824113,
+        "roofFrameExtent": 0.4803381159407685
+      },
+      {
+        "seconds": 27,
+        "groundClearance": 65.9051851971061,
+        "pavilionDistance": 201.62362463317498,
+        "roofFrameExtent": 0.48155427712698523
+      },
+      {
+        "seconds": 27.125,
+        "groundClearance": 66.61287509765481,
+        "pavilionDistance": 204.8974940155463,
+        "roofFrameExtent": 0.4826740654979704
+      },
+      {
+        "seconds": 27.25,
+        "groundClearance": 67.27830933976729,
+        "pavilionDistance": 207.99200422695196,
+        "roofFrameExtent": 0.483701316625366
+      },
+      {
+        "seconds": 27.375,
+        "groundClearance": 67.89781251192093,
+        "pavilionDistance": 210.88655320718462,
+        "roofFrameExtent": 0.48463846520669823
+      },
+      {
+        "seconds": 27.5,
+        "groundClearance": 68.46770920259308,
+        "pavilionDistance": 213.56063018460787,
+        "roofFrameExtent": 0.4854866668936055
+      },
+      {
+        "seconds": 27.625,
+        "groundClearance": 68.98432400026113,
+        "pavilionDistance": 215.99384960394138,
+        "roofFrameExtent": 0.48624591770046305
+      },
+      {
+        "seconds": 27.75,
+        "groundClearance": 69.4439814934024,
+        "pavilionDistance": 218.16598466769602,
+        "roofFrameExtent": 0.4869151664375855
+      },
+      {
+        "seconds": 27.875,
+        "groundClearance": 69.84300627049431,
+        "pavilionDistance": 220.0570017217095,
+        "roofFrameExtent": 0.48749241627032497
+      },
+      {
+        "seconds": 28,
+        "groundClearance": 70.1777229200142,
+        "pavilionDistance": 221.6470967998406,
+        "roofFrameExtent": 0.48797481168679224
+      },
+      {
+        "seconds": 28.125,
+        "groundClearance": 70.44445603043944,
+        "pavilionDistance": 222.9167357806197,
+        "roofFrameExtent": 0.4883587068581765
+      },
+      {
+        "seconds": 28.25,
+        "groundClearance": 70.6395301902474,
+        "pavilionDistance": 223.84669981522472,
+        "roofFrameExtent": 0.4886397105519582
+      },
+      {
+        "seconds": 28.375,
+        "groundClearance": 70.75926998791545,
+        "pavilionDistance": 224.4181379820995,
+        "roofFrameExtent": 0.48881270131059745
+      },
+      {
+        "seconds": 28.5,
+        "groundClearance": 70.80000001192093,
+        "pavilionDistance": 224.61262953656293,
+        "roofFrameExtent": 0.4888718043619188
+      },
+      {
+        "seconds": 28.625,
+        "groundClearance": 70.80000001192093,
+        "pavilionDistance": 224.61262953656293,
+        "roofFrameExtent": 0.4888718043619188
+      },
+      {
+        "seconds": 28.75,
+        "groundClearance": 70.80000001192093,
+        "pavilionDistance": 224.61262953656293,
+        "roofFrameExtent": 0.4888718043619188
+      },
+      {
+        "seconds": 28.875,
+        "groundClearance": 70.80000001192093,
+        "pavilionDistance": 224.61262953656293,
+        "roofFrameExtent": 0.4888718043619188
+      },
+      {
+        "seconds": 29,
+        "groundClearance": 70.80000001192093,
+        "pavilionDistance": 224.61262953656293,
+        "roofFrameExtent": 0.4888718043619188
+      },
+      {
+        "seconds": 29.125,
+        "groundClearance": 70.80000001192093,
+        "pavilionDistance": 224.61262953656293,
+        "roofFrameExtent": 0.4888718043619188
+      },
+      {
+        "seconds": 29.25,
+        "groundClearance": 70.80000001192093,
+        "pavilionDistance": 224.61262953656293,
+        "roofFrameExtent": 0.4888718043619188
+      },
+      {
+        "seconds": 29.375,
+        "groundClearance": 70.80000001192093,
+        "pavilionDistance": 224.61262953656293,
+        "roofFrameExtent": 0.4888718043619188
+      },
+      {
+        "seconds": 29.5,
+        "groundClearance": 70.80000001192093,
+        "pavilionDistance": 224.61262953656293,
+        "roofFrameExtent": 0.4888718043619188
+      },
+      {
+        "seconds": 29.625,
+        "groundClearance": 70.80000001192093,
+        "pavilionDistance": 224.61262953656293,
+        "roofFrameExtent": 0.4888718043619188
+      },
+      {
+        "seconds": 29.75,
+        "groundClearance": 70.80000001192093,
+        "pavilionDistance": 224.61262953656293,
+        "roofFrameExtent": 0.4888718043619188
+      },
+      {
+        "seconds": 29.875,
+        "groundClearance": 70.80000001192093,
+        "pavilionDistance": 224.61262953656293,
+        "roofFrameExtent": 0.4888718043619188
+      },
+      {
+        "seconds": 30,
+        "groundClearance": 70.80000001192093,
+        "pavilionDistance": 224.61262953656293,
+        "roofFrameExtent": 0.4888718043619188
+      }
+    ]
+  },
+  "absoluteTimeReplayIdentical": true,
+  "shots": [
+    {
+      "seconds": 0,
+      "file": "renders/lowlands-flight-ink-0.png"
+    },
+    {
+      "seconds": 4,
+      "file": "renders/lowlands-flight-ink-4.png"
+    },
+    {
+      "seconds": 8,
+      "file": "renders/lowlands-flight-ink-8.png"
+    },
+    {
+      "seconds": 11,
+      "file": "renders/lowlands-flight-ink-11.png"
+    },
+    {
+      "seconds": 14,
+      "file": "renders/lowlands-flight-ink-14.png"
+    },
+    {
+      "seconds": 17,
+      "file": "renders/lowlands-flight-ink-17.png"
+    },
+    {
+      "seconds": 20,
+      "file": "renders/lowlands-flight-ink-20.png"
+    },
+    {
+      "seconds": 24,
+      "file": "renders/lowlands-flight-ink-24.png"
+    },
+    {
+      "seconds": 28.5,
+      "file": "renders/lowlands-flight-ink-28-5.png"
+    }
+  ],
+  "errors": [],
+  "limits": "Ground and deck heights, conservative tree spheres and actual roof bounds are checked. This is not an exhaustive mesh collision or full-speed smoothness proof."
+}

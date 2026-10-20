@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "createdUtc": "2026-10-16T00:27:20.073120+00:00",
+  "file": "blue-green-flythrough.mp4",
+  "bytes": 12821735,
+  "sha256": "0a94c9425f80133a1cf04c604713b647c6923904b6176404eedee17aaa9d1736",
+  "fullDecodePassed": true,
+  "sampledEncodedFrames": 11,
+  "width": 1280,
+  "height": 576,
+  "r_frame_rate": "24/1",
+  "duration": "20.000000",
+  "nb_read_frames": "480",
+  "boundary": "Decoded and sampled frames are inspected separately from subjective full-speed smoothness or exact source fidelity."
+}

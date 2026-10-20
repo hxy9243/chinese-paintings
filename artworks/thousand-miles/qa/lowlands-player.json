@@ -1,0 +1,48 @@
+{
+  "passed": true,
+  "stages": [
+    {
+      "time": 14.166252,
+      "width": 1600,
+      "height": 900,
+      "duration": 30,
+      "seekable": [
+        [
+          0,
+          30
+        ]
+      ],
+      "error": null
+    },
+    {
+      "time": 24.179019,
+      "width": 1600,
+      "height": 900,
+      "duration": 30,
+      "seekable": [
+        [
+          0,
+          30
+        ]
+      ],
+      "error": null
+    },
+    {
+      "time": 0.165656,
+      "width": 1600,
+      "height": 900,
+      "duration": 30,
+      "seekable": [
+        [
+          0,
+          30
+        ]
+      ],
+      "error": null
+    }
+  ],
+  "download": "./renders/lowlands-flyby.mp4",
+  "comparisonVisible": true,
+  "errors": [],
+  "failedResponses": []
+}

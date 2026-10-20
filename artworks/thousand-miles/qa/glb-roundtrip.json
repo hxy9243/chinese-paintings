@@ -1,0 +1,109 @@
+{
+  "parts": [
+    {
+      "name": "all",
+      "meshes": 88,
+      "instances": 74388,
+      "bounds": [
+        1800,
+        133.75270080566406,
+        2200
+      ],
+      "sourceBounds": [
+        1800,
+        133.75270080566406,
+        2200
+      ],
+      "maximumBoundsDifference": 0,
+      "valid": true
+    },
+    {
+      "name": "bridge",
+      "meshes": 7,
+      "instances": 0,
+      "bounds": [
+        67.58311176300049,
+        14.595000267028809,
+        11.160741088019307
+      ],
+      "sourceBounds": [
+        67.58311176300049,
+        14.595000267028809,
+        11.160741088019307
+      ],
+      "maximumBoundsDifference": 0,
+      "valid": true
+    },
+    {
+      "name": "architecture",
+      "meshes": 53,
+      "instances": 0,
+      "bounds": [
+        242.69185900038264,
+        14.487598190307617,
+        115.44359588623047
+      ],
+      "sourceBounds": [
+        242.69185900038264,
+        14.487598190307617,
+        115.44359588623047
+      ],
+      "maximumBoundsDifference": 0,
+      "valid": true
+    },
+    {
+      "name": "mountains",
+      "meshes": 5,
+      "instances": 0,
+      "bounds": [
+        900,
+        133.75270080566406,
+        1410
+      ],
+      "sourceBounds": [
+        900,
+        133.75270080566406,
+        1410
+      ],
+      "maximumBoundsDifference": 0,
+      "valid": true
+    },
+    {
+      "name": "water",
+      "meshes": 1,
+      "instances": 0,
+      "bounds": [
+        1800,
+        1.347111441493687e-13,
+        2200
+      ],
+      "sourceBounds": [
+        1800,
+        1.347111441493687e-13,
+        2200
+      ],
+      "maximumBoundsDifference": 0,
+      "valid": true
+    },
+    {
+      "name": "trees",
+      "meshes": 4,
+      "instances": 74249,
+      "bounds": [
+        586.7483499171797,
+        29.76193594697016,
+        389.88318878671544
+      ],
+      "sourceBounds": [
+        586.7483498991596,
+        29.761935948995742,
+        389.88318881560815
+      ],
+      "maximumBoundsDifference": 2.8892713999084663e-8,
+      "valid": true
+    }
+  ],
+  "passed": true,
+  "graphicsError": 0,
+  "errors": []
+}
