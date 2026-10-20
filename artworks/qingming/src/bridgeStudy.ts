@@ -1145,7 +1145,8 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
       0.06,
       BRIDGE.width,
       side * (half + 0.38),
-      GROUND_Y - 0.03,
+      // The board top must clear the bank: coplanar surfaces flicker on orbit.
+      GROUND_Y - 0.015,
       0,
     );
   }
