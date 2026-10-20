@@ -442,12 +442,17 @@ export function buildFigure(
     g.add(arm);
     const holding = ["ledger", "scroll", "tray"].includes(profile.load),
       bend = holding ? 0.09 : porter ? 0.035 : 0.015;
-    const elbow: P = [side * 0.027, -0.086, 0.014],
-      wrist: P = [
-        side * (holding ? 0.018 : 0.04),
-        holding ? -0.09 : -0.159,
-        0.035 + bend,
-      ];
+    const grip = porter && side > 0;
+    const elbow: P = grip
+        ? [0.043, -0.06, 0.013]
+        : [side * 0.027, -0.086, 0.014],
+      wrist: P = grip
+        ? [0.106, -0.005, -0.034]
+        : [
+            side * (holding ? 0.018 : 0.04),
+            holding ? -0.09 : -0.159,
+            0.035 + bend,
+          ];
     stroke(
       arm,
       [[0, 0, 0], [side * 0.018, -0.042, 0.005], elbow, wrist],
@@ -457,7 +462,9 @@ export function buildFigure(
     );
     if (detail > 0) {
       oval(arm, [elbow[0], elbow[1], elbow[2]], [0.029, 0.033, 0.029], robe, n);
-      const end: P = [wrist[0], wrist[1] - 0.022, wrist[2] + 0.008];
+      const end: P = grip
+        ? [wrist[0], wrist[1] + 0.013, wrist[2]]
+        : [wrist[0], wrist[1] - 0.022, wrist[2] + 0.008];
       stroke(arm, [wrist, end], 0.01, skin, 3);
       oval(arm, end, [0.011, 0.017, 0.007], skin, n);
       if (detail === 2) {
@@ -484,7 +491,7 @@ export function buildFigure(
         );
         line(arm, [
           [side * 0.017, -0.034, 0.031],
-          [side * 0.036, -0.085, 0.033],
+          [elbow[0] + 0.008, elbow[1] - 0.012, elbow[2] + 0.026],
           [wrist[0] + 0.015, wrist[1] + 0.02, wrist[2] + 0.023],
         ]);
         line(arm, [
@@ -496,7 +503,7 @@ export function buildFigure(
     }
     arm.rotation.z = porter
       ? side > 0
-        ? 1.25
+        ? 0
         : 0.16
       : side * (profile.name === "boatman" ? -0.16 : 0.035);
     batch(arm);

@@ -1305,11 +1305,11 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
   );
   const vendors=vendorSites.map((_,i)=>addPerson(group,i%2?5:9,"market-vendor"));
   const drivers = carts.map((c,i)=>{
-    const driver=addPerson(c.group,i,"cart-driver");driver.group.scale.multiplyScalar(1/c.group.scale.x);return driver;
+    const driver=addPerson(c.group,CART_KINDS[i]==="pack-horse"?4:3,"cart-driver");driver.group.scale.multiplyScalar(1/c.group.scale.x);return driver;
   });
   const crew = [...boats, ...moored].flatMap((b, i) =>
     [-1, 1].map((side) => ({
-      rig: addPerson(b, i + (side + 1) / 2, "boat-crew"),
+      rig: addPerson(b, 3, "boat-crew"),
       side,
       boat: i,
     })),
@@ -1336,7 +1336,7 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
     const step=loaded?.30:elder?.24:.42;
     p.left.rotation.x=stride*step;p.right.rotation.x=-stride*step;
     p.leftArm.rotation.x=holding?-.12-stride*.035:loaded?-.22-stride*.06:-stride*.26;
-    p.rightArm.rotation.x=holding?-.12+stride*.035:loaded?.15+stride*.025:stride*.26;
+    p.rightArm.rotation.x=holding?-.12+stride*.035:loaded?.015+stride*.008:stride*.26;
     p.head.rotation.y=idle.look*1.8;
     p.head.rotation.x=loaded?.13:elder?.09:0;
     // Looking over the bridge rail and reaching toward wares are distinct from

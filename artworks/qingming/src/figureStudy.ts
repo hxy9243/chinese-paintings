@@ -109,7 +109,7 @@ function render(
     p.getObjectByName("right-arm")!.rotation.x = holding
       ? -0.12
       : loaded
-        ? 0.15
+        ? 0.015
         : Math.sin(phase) * 0.15;
     p.getObjectByName("head")!.rotation.y = Math.sin(seconds * 0.4 + i) * 0.08;
   });
