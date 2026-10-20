@@ -36,7 +36,7 @@ export const riverShader = `
 
 /** Tessellation makes the highlights follow a real, shallow 3D surface. */
 export function riverGeometry() {
-  const g = new THREE.PlaneGeometry(50, 34, 250, 170);
+  const g = new THREE.PlaneGeometry(60, 44, 300, 220);
   g.rotateX(-Math.PI / 2);
   const p = g.getAttribute("position");
   for (let i = 0; i < p.count; i++) {

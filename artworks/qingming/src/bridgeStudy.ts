@@ -11,7 +11,6 @@ import {
 } from "./paintMaterial";
 import {
   bankOutline,
-  SHORELINES,
   shoreDepth,
   HALLS,
   BOATS,
@@ -446,12 +445,18 @@ function parasol(parent: THREE.Object3D, x: number, z: number) {
 function bank(parent: THREE.Group, outline: number[][]) {
   const shape = new THREE.Shape();
   const side = outline[0][1] < -1 ? "far" : "near";
-  const edgeCount = SHORELINES[side].length;
   const direction = side === "far" ? 1 : -1;
   const coast: number[][] = [];
-  for(let s=-22;s<=22.001;s+=.2)
+  for(let s=-29;s<=29.001;s+=.2)
     coast.push([s,shoreDepth(side,s)+direction*(.25+Math.sin(s*3.7)*.045+Math.sin(s*11.)*.025)]);
-  const expanded = [...coast,...outline.slice(edgeCount)];
+  // Extend the unoccupied substrate seven units beyond the original outline.
+  // Navigation, architecture and tree positions retain their original layout.
+  const sign=side === "far" ? -1 : 1;
+  const arc=(cx:number,start:number)=>Array.from({length:25},(_,i)=>{
+    const a=start+i/24*Math.PI/2;
+    return [cx+13*Math.cos(a),sign*(8+13*Math.sin(a))];
+  });
+  const expanded = [...coast,...arc(16,0),...arc(-16,Math.PI/2)];
   expanded.forEach(([x,z],i)=>{
     const p=scrollPoint(x,z);
     if(i===0)shape.moveTo(p.x,-p.z);else shape.lineTo(p.x,-p.z);

@@ -64,7 +64,7 @@ export function createBoatWakes() {
         vec2 river=vec2(brush.x*.64278761+brush.z*.76604444,-brush.x*.76604444+brush.z*.64278761);
         vec2 q=abs(river)-vec2(16.,8.);
         float boundary=length(max(q,0.))+min(max(q.x,q.y),0.)-6.;
-        float soak=1.-smoothstep(-6.2,.15,boundary);
+        float soak=1.-smoothstep(0.,5.5,max(boundary,0.));
         gl_FragColor=vec4(mix(palettePaper,vec3(.63,.77,.70),.16),fade*(.65+grain*.35)*softEdge*soak);
         #include <tonemapping_fragment>
         #include <colorspace_fragment>

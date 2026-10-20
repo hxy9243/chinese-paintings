@@ -70,8 +70,8 @@ export default function Mock3D() {
     // Hulls enter through the two side edges, with recycling beyond the frame.
     const along = scrollPoint(1, 0).normalize();
     renderer.clippingPlanes = [
-      new THREE.Plane(along, 25),
-      new THREE.Plane(along.clone().negate(), 25),
+      new THREE.Plane(along, 32),
+      new THREE.Plane(along.clone().negate(), 32),
     ];
     const finish = createInkFinish(renderer);
     let paintingEnabled = true,

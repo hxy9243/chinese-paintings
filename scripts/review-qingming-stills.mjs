@@ -31,7 +31,10 @@ const errors = [],
   measurements = {};
 try {
   const page = await browser.newPage({
-    viewport: { width: 1600, height: 1000 },
+    viewport:
+      process.env.REVIEW_WIDE_EDGES === "1"
+        ? { width: 2048, height: 1280 }
+        : { width: 1600, height: 1000 },
     reducedMotion: "reduce",
   });
   // Optional local font mirror for restricted-network capture machines. No app
@@ -77,11 +80,11 @@ try {
       ? [
           [
             "wide-edge-front",
-            { zoom: 1.0, angle: 30, pitch: 3, target: [0, 0] },
+            { zoom: 0.72, angle: 30, pitch: 3, target: [0, 0] },
           ],
           [
             "wide-edge-reverse",
-            { zoom: 1.0, angle: -40, pitch: 6, target: [0, 0] },
+            { zoom: 0.72, angle: -40, pitch: 6, target: [0, 0] },
           ],
         ]
       : [
