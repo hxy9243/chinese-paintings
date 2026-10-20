@@ -16,7 +16,7 @@ The supplied Rainbow Bridge crop is the working reference, rather than an invent
 
 The twelve figure types are rebuilt with adult proportions of approximately 6.5 heads, shaped shoulders and jaw, overlapping collars, sashes, garment folds, bent sleeves, palms and fingers, leg wraps and rounded shoes. Close faces include brows, eyelids, eyes, nose, mouth and ears. Carried baskets have rims, vertical stakes and horizontal weaving; the porter holds the curved yoke with one raised hand. Scholars and shopkeepers hold their books or trays with restrained arm motion.
 
-Thirty-two bridge observers face the rails and look down. Every bank stall has a vendor who reaches toward the counter; some sit on the low stool. Browsers look toward wares while stopped. These actions use absolute scene time and keep the existing passing lanes clear.
+Sixty-four anchored bridge figures now form four groups: sixteen sellers, sixteen buyers, sixteen river watchers and sixteen people conversing. Sixteen counters line both edges. Thirty-six passing walkers circulate through the bridge street, with about eight on the span in the sampled views. Every bank stall has a vendor who reaches toward the counter; some sit on the low stool. Browsers look toward wares while stopped. These actions use absolute scene time and keep the existing passing lanes clear.
 
 Eight traffic slots replace six. The scene includes open and covered horse carts, an ox-drawn cart, a laden pack horse, and a handcart. Legs and wheels animate from scene time. Traffic remains on the bridge-aligned street; pedestrians, boats, moorings, and pause behavior retain their existing systems. Traffic handlers retain pedestrian world scale rather than being shrunk again by the vehicle group.
 
@@ -26,7 +26,15 @@ The separate [figure study](../artworks/qingming/figure-study.html) shows the ac
 
 Six modeled stall assortments replace identical tables with five spheres: tea and bowls, woven baskets, skewers and food, cloth and scrolls, grain and jars, and fish. Props include turned ceramic profiles, stacked dishes, basket stakes and bands, hanging goods, sagging awnings, roof seams, cloth fringe, signs and stools.
 
-Four small counters occupy the bridge edges, outside the central passing lanes. Bridge members include crossed timbers, projecting joint blocks, pegs and rope lashings, in addition to the plank deck, rails and longitudinal courses. Counter footprints and the new crowd spacing are checked with the existing street and route geometry.
+Sixteen small counters occupy the bridge edges, outside the central passing lanes. Bridge members include crossed timbers, projecting joint blocks, pegs and rope lashings, in addition to the plank deck, rails and longitudinal courses. Counter footprints and the new crowd spacing are checked with the existing street and route geometry.
+
+## Bridge actions and playback
+
+Sellers arrange wares, turn toward buyers and extend a cup; buyers bend toward displays and reach in the same transaction phase. River watchers lean at the hips, look down and point; conversational figures nod and gesture. These movements use distinct shoulder, elbow, head and torso joints, with planted feet. Timings vary between stalls. The figure viewer has enlarged previews of all four activity types.
+
+The live viewer advances analytic poses using full visible elapsed time. Dropped frames no longer slow the scene clock by an artificial 0.08-second cap. Reduced-motion and pause behavior remain supported; Play/Pause is visible beside the zoom controls.
+
+The approaches have broken wheel-wear marks and sparse shoulder aggregate within the existing warm-earth palette. See [road-surface evidence](ROAD_SURFACE.md); no stone paving grid is assumed.
 
 ## Distant geometry
 

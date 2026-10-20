@@ -24,6 +24,11 @@ test("the home page opens the 3D study and preserves existing local data", async
   await expect(
     page.getByRole("img", { name: "Rainbow Bridge constrained 3D study" }),
   ).toBeVisible();
+  // Reduced-motion users can start and stop life without opening a menu.
+  await expect(page.getByRole('button',{name:'Resume life',exact:true})).toBeVisible();
+  await page.getByRole('button',{name:'Resume life',exact:true}).click();
+  await expect(page.getByRole('button',{name:'Pause life',exact:true})).toBeVisible();
+  await page.getByRole('button',{name:'Pause life',exact:true}).click();
   await expect(page.locator(".study-stage")).toHaveAttribute(
     "data-angle",
     "30",

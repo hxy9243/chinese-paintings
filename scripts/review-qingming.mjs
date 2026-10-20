@@ -33,6 +33,11 @@ try{
  await page.evaluate(()=>window.figureStudy.frame(4,{focus:1,turn:.75}));await page.screenshot({path:path.join(out,'porter-close.png')});
  await page.getByRole('button',{name:'背面',exact:true}).click();
  measurements.figureBackView=await page.getByRole('button',{name:'背面',exact:true}).getAttribute('aria-pressed')==='true';
+ for(const activity of ['vendor','customer','river-watcher','conversation']){
+  await page.selectOption('#activity-choice',activity);
+  await page.evaluate(activity=>window.figureStudy.frame(3,{activity,turn:.75}),activity);
+  await page.screenshot({path:path.join(out,'activity-'+activity+'.png')});
+ }
  await page.selectOption('#figure-choice','-1');
  measurements.figureGalleryRestored=await page.locator('.labels').isVisible();
  await page.setViewportSize({width:390,height:844});await page.goto(base+'/');await page.screenshot({path:path.join(out,'gallery-mobile.png'),fullPage:true});
@@ -48,9 +53,9 @@ try{
  await page.goto(base+'/thousand-miles/?capture=1');await page.waitForFunction(()=>window.inkLab?.ready,{timeout:120000});
  measurements.thousandMiles=await page.evaluate(()=>{inkLab.frame(0,{viewName:'painting',width:1280,height:576,seconds:2});return {ready:inkLab.ready,graphicsError:valley.renderer.getContext().getError()};});
  await page.screenshot({path:path.join(out,'thousand-miles.png')});
- const files=['bridgeStudy.ts','crowd.ts','passageLayout.ts','passageLife.ts','passageSpace.ts','figureTypes.ts','figures.ts','marketModels.ts','figureStudy.ts','Mock3D.tsx','paintMaterial.ts','inkFinish.ts'];
+ const files=['bridgeStudy.ts','crowd.ts','passageLayout.ts','passageLife.ts','passageSpace.ts','figureTypes.ts','figures.ts','marketModels.ts','figureStudy.ts','bridgeActivity.ts','peopleMotion.ts','Mock3D.tsx','paintMaterial.ts','inkFinish.ts'];
  const hashes=Object.fromEntries(files.map(name=>[name,crypto.createHash('sha256').update(fs.readFileSync(path.join(root,'artworks/qingming/src',name))).digest('hex')]));
- const report={passed:errors.length===0&&failedResponses.length===0&&measurements.sameTimeReplay&&measurements.figureBackView&&measurements.figureGalleryRestored&&!measurements.mobileOverflow&&!measurements.homepageLoadsSceneCode&&measurements.far.crowd.levels[0].actors>100&&measurements.thousandMiles.graphicsError===0,measurements,errors,failedResponses,sourceHashes:hashes,motion:{fps,frames:frameCount,durationSeconds:frameCount/fps,width:1232,kind:'offline scene-time sample; no realtime performance claim'}};
+ const report={passed:errors.length===0&&failedResponses.length===0&&measurements.bridge.bridgeLife.stands===16&&measurements.bridge.bridgeLife.stationaryPeople===64&&measurements.sameTimeReplay&&measurements.figureBackView&&measurements.figureGalleryRestored&&!measurements.mobileOverflow&&!measurements.homepageLoadsSceneCode&&measurements.far.crowd.levels[0].actors>100&&measurements.thousandMiles.graphicsError===0,measurements,errors,failedResponses,sourceHashes:hashes,motion:{fps,frames:frameCount,durationSeconds:frameCount/fps,width:1232,kind:'offline scene-time sample; no realtime performance claim'}};
  fs.writeFileSync(path.join(out,'review.json'),JSON.stringify(report,null,2)+'\n');
  console.log(JSON.stringify(report,null,2));if(!report.passed)process.exitCode=1;
 }finally{await browser.close();}

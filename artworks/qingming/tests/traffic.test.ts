@@ -157,7 +157,7 @@ describe("shared space and continuous traffic", () => {
       "traffic versus trees, stalls and posed people",
     ).toBeGreaterThan(0.015);
     expect(minRoof, "traffic versus roof envelopes").toBeGreaterThan(0.015);
-  });
+  }, 40000); // The 20-minute sweep now covers the denser bridge/approach crowd.
   it("keeps placed props separate and out of roofs", () => {
     for (let i = 0; i < STATIC_OBSTACLES.length; i++) {
       const a = STATIC_OBSTACLES[i];

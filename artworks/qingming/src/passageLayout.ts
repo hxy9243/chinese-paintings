@@ -276,12 +276,26 @@ export function bridgePoint(x: number, lateral = 0): PassagePoint {
       lateral * Math.cos(BRIDGE.angle),
   };
 }
-export const BRIDGE_SHOPS = [-2.5, -0.5, 1.7, 3.4].map((x, i) => ({
-  x,
-  lateral: (i < 2 ? -1 : 1) * (BRIDGE.width / 2 + 0.04),
-  width: 0.72,
-  depth: 0.22,
-}));
+// Two dense edge rows leave the centre available for carts and passing feet.
+export const BRIDGE_PEOPLE_PER_SIDE = 32;
+export const BRIDGE_SHOPS = [-1, 1].flatMap((side) =>
+  Array.from({ length: 8 }, (_, i) => {
+    const station = 1 + i * 4;
+    return {
+      x:
+        -BRIDGE.length / 2 +
+        0.4 +
+        (station * (BRIDGE.length - 0.8)) / (BRIDGE_PEOPLE_PER_SIDE - 1),
+      lateral: side * (BRIDGE.width / 2 + 0.04),
+      width: 0.84,
+      depth: 0.24,
+      station,
+      side,
+      kind: i % 4,
+      canopy: i % 4 === 0,
+    };
+  }),
+);
 export function bridgeHeight(x: number): number {
   return (
     GROUND_Y + BRIDGE.rise * Math.max(0, 1 - ((2 * x) / BRIDGE.length) ** 2)

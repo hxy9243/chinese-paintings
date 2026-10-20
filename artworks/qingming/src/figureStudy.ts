@@ -1,6 +1,11 @@
 import * as THREE from "three";
 import { person } from "./bridgeStudy";
 import { FIGURE_TYPES } from "./figureTypes";
+import {
+  bridgeActivity,
+  bridgeVariant,
+  type BridgeRole,
+} from "./bridgeActivity";
 const host = document.querySelector<HTMLElement>("#figures")!,
   labels = host.querySelector<HTMLElement>(".labels")!;
 const names = [
@@ -20,6 +25,15 @@ const names = [
 let focus = -1,
   turn = 0.75,
   lastTime = 0;
+let activity: BridgeRole | "walking" = "walking";
+const actionIndex = {
+  "river-watcher": 0,
+  vendor: 2,
+  customer: 4,
+  conversation: 6,
+};
+const actionSelect =
+  document.querySelector<HTMLSelectElement>("#activity-choice")!;
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setClearColor(0xeee5cb);
 renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
@@ -31,6 +45,10 @@ const figures = FIGURE_TYPES.map((_, i) => {
   scene.add(p);
   return p;
 });
+const restArms = figures.map((p) => ({
+  left: p.getObjectByName("left-arm")!.rotation.z,
+  right: p.getObjectByName("right-arm")!.rotation.z,
+}));
 const select = document.querySelector<HTMLSelectElement>("#figure-choice")!;
 FIGURE_TYPES.forEach((p, i) => {
   const label = document.createElement("button");
@@ -46,6 +64,8 @@ FIGURE_TYPES.forEach((p, i) => {
   select.append(option);
 });
 function choose(index: number) {
+  activity = "walking";
+  actionSelect.value = "walking";
   focus = index;
   select.value = String(index);
   labels.hidden = focus >= 0;
@@ -53,6 +73,20 @@ function choose(index: number) {
   render(lastTime);
 }
 select.addEventListener("change", () => choose(Number(select.value)));
+function chooseActivity(value: BridgeRole | "walking") {
+  activity = value;
+  actionSelect.value = value;
+  if (value !== "walking") {
+    focus = bridgeVariant(actionIndex[value]);
+    select.value = String(focus);
+    labels.hidden = true;
+    layout();
+  }
+}
+actionSelect.addEventListener("change", () => {
+  chooseActivity(actionSelect.value as BridgeRole | "walking");
+  render(lastTime);
+});
 document.querySelectorAll<HTMLButtonElement>("[data-turn]").forEach((button) =>
   button.addEventListener("click", () => {
     turn = Number(button.dataset.turn);
@@ -83,7 +117,11 @@ function layout() {
 }
 function render(
   seconds: number,
-  options: { focus?: number; turn?: number } = {},
+  options: {
+    focus?: number;
+    turn?: number;
+    activity?: BridgeRole | "walking";
+  } = {},
 ) {
   if (options.focus !== undefined) {
     focus = options.focus;
@@ -91,6 +129,7 @@ function render(
     select.value = String(focus);
     layout();
   }
+  if (options.activity !== undefined) chooseActivity(options.activity);
   if (options.turn !== undefined) turn = options.turn;
   lastTime = seconds;
   figures.forEach((p, i) => {
@@ -99,6 +138,11 @@ function render(
       holding = ["ledger", "scroll", "tray"].includes(profile.load),
       loaded = profile.load === "baskets";
     p.rotation.y = turn;
+    p.getObjectByName("left-arm")!.rotation.z = restArms[i].left;
+    p.getObjectByName("right-arm")!.rotation.z = restArms[i].right;
+    p.getObjectByName("torso")!.rotation.set(0, 0, 0);
+    p.getObjectByName("left-forearm")!.rotation.set(0, 0, 0);
+    p.getObjectByName("right-forearm")!.rotation.set(0, 0, 0);
     p.getObjectByName("left-leg")!.rotation.x = Math.sin(phase) * 0.2;
     p.getObjectByName("right-leg")!.rotation.x = -Math.sin(phase) * 0.2;
     p.getObjectByName("left-arm")!.rotation.x = holding
@@ -111,7 +155,26 @@ function render(
       : loaded
         ? 0.015
         : Math.sin(phase) * 0.15;
-    p.getObjectByName("head")!.rotation.y = Math.sin(seconds * 0.4 + i) * 0.08;
+    p.getObjectByName("head")!.rotation.set(
+      0,
+      Math.sin(seconds * 0.4 + i) * 0.08,
+      0,
+    );
+    if (activity !== "walking") {
+      const a = bridgeActivity(actionIndex[activity], seconds, 9243);
+      p.getObjectByName("torso")!.rotation.set(a.torso, a.twist, 0);
+      p.getObjectByName("left-arm")!.rotation.set(a.leftArm, 0, a.leftSpread);
+      p.getObjectByName("right-arm")!.rotation.set(
+        a.rightArm,
+        0,
+        a.rightSpread,
+      );
+      p.getObjectByName("left-forearm")!.rotation.x = a.leftElbow;
+      p.getObjectByName("right-forearm")!.rotation.x = a.rightElbow;
+      p.getObjectByName("head")!.rotation.set(a.headPitch, a.headTurn, 0);
+      p.getObjectByName("left-leg")!.rotation.x = 0;
+      p.getObjectByName("right-leg")!.rotation.x = 0;
+    }
   });
   renderer.render(scene, camera);
 }

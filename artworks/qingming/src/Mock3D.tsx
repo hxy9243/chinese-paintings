@@ -19,6 +19,7 @@ import {
 } from "./bridgeStudy";
 import "./mock3d.css";
 import { createInkFinish } from "./inkFinish";
+import { advanceSceneTime } from "./peopleMotion";
 import { SCROLL_STOPS, scrollPoint } from "./scrollLayout";
 
 type StudyApi = {
@@ -210,6 +211,8 @@ export default function Mock3D() {
     study.update(0);
     let frame = 0,
       last = performance.now();
+    const resetFrameClock=()=>{last=performance.now();};
+    document.addEventListener('visibilitychange',resetFrameClock);
     const animate = (now: number) => {
       frame = requestAnimationFrame(animate);
       if (capture) return;
@@ -218,9 +221,11 @@ export default function Mock3D() {
         return;
       }
       if (now - last < 32) return;
-      const delta = Math.min(0.08, (now - last) / 1000);
+      const delta = (now - last) / 1000;
       last = now;
-      if (!pausedRef.current && !capture) {animationTime += delta;needsRender=true;}
+      const nextTime=advanceSceneTime(animationTime,delta,pausedRef.current);
+      if(nextTime!==animationTime)needsRender=true;
+      animationTime=nextTime;
       controls.update();
       if(!needsRender)return;
       needsRender=false;
@@ -244,6 +249,7 @@ export default function Mock3D() {
     setReady(true);
     return () => {
       cancelAnimationFrame(frame);
+      document.removeEventListener("visibilitychange",resetFrameClock);
       observer.disconnect();
       controls.dispose();
       scene.traverse((obj) => {
@@ -311,16 +317,7 @@ export default function Mock3D() {
             >
               {t("Whole passage", "全景")}
             </button>
-            <button
-              disabled={!ready}
-              aria-pressed={paused}
-              onClick={() => setPaused((value) => !value)}
-            >
-              {paused ? <Play size={14} /> : <Pause size={14} />}
-              {paused
-                ? t("Resume life", "继续生息")
-                : t("Pause life", "暂停生息")}
-            </button>
+
             <button
               onClick={() => {
                 setOriginalOpen(true);
@@ -362,6 +359,17 @@ export default function Mock3D() {
             </div>
           )}
           <div className="study-zoom">
+            <button
+              className="study-play"
+              disabled={!ready}
+              aria-pressed={paused}
+              onClick={() => setPaused((value) => !value)}
+            >
+              {paused ? <Play size={14} /> : <Pause size={14} />}
+              {paused
+                ? t("Resume life", "继续生息")
+                : t("Pause life", "暂停生息")}
+            </button>
             <button
               aria-label={t("Zoom in", "放大")}
               disabled={!ready}

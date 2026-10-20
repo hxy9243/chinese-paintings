@@ -54,3 +54,12 @@ export function idleMotion(person: number, time: number, seed = 0) {
     look: Math.sin(time * 0.37 + phase) * 0.14,
   };
 }
+
+// Poses are analytic in absolute scene time: a missed frame must not slow life.
+export function advanceSceneTime(
+  current: number,
+  elapsedSeconds: number,
+  paused: boolean,
+) {
+  return paused ? current : current + Math.max(0, elapsedSeconds);
+}

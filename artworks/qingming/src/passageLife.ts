@@ -10,6 +10,7 @@ import {
   BOATS,
   REFERENCE_TREE,
   BRIDGE,
+  BRIDGE_PEOPLE_PER_SIDE,
   GROUND_Y,
   HALLS,
   bridgeHeight,
@@ -55,9 +56,9 @@ export const BUILDING_KINDS: BuildingKind[] = [
   "compound",
   "courtyard",
 ];
-export const WALKER_COUNT = 36;
-export const BRIDGE_WALKERS = 12;
-export const BRIDGE_OBSERVERS = 32;
+export const WALKER_COUNT = 60;
+export const BRIDGE_WALKERS = 36;
+export const BRIDGE_OBSERVERS = BRIDGE_PEOPLE_PER_SIDE * 2;
 
 export function insideRoof(p: PassagePoint, margin = 0) {
   return HALLS.some((h) => {
@@ -424,8 +425,9 @@ export function observerPose(index: number, time: number, seed = 0) {
   const home =
     -BRIDGE.length / 2 +
     0.4 +
-    (index * (BRIDGE.length - 0.8)) / (BRIDGE_OBSERVERS - 1);
-  const p = wander(index + 200, time, 0.07, seed),
+    (Math.floor(index / 2) * (BRIDGE.length - 0.8)) /
+      (BRIDGE_PEOPLE_PER_SIDE - 1);
+  const p = wander(index + 200, time, 0.005, seed),
     x = home + p.s;
   return {
     ...p,

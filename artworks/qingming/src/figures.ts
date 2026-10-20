@@ -455,22 +455,58 @@ export function buildFigure(
           ];
     stroke(
       arm,
-      [[0, 0, 0], [side * 0.018, -0.042, 0.005], elbow, wrist],
+      [[0, 0, 0], [side * 0.018, -0.042, 0.005], elbow],
       detail === 0 ? 0.023 : 0.028,
       robe,
-      detail === 2 ? 12 : 5,
+      detail === 2 ? 6 : 3,
     );
     if (detail > 0) {
-      oval(arm, [elbow[0], elbow[1], elbow[2]], [0.029, 0.033, 0.029], robe, n);
+      oval(arm, elbow, [0.029, 0.033, 0.029], robe, n);
+      if (detail === 2)
+        line(arm, [
+          [side * 0.017, -0.034, 0.031],
+          [elbow[0] + 0.008, elbow[1] - 0.012, elbow[2] + 0.026],
+        ]);
+    }
+    arm.rotation.z = porter
+      ? side > 0
+        ? 0
+        : 0.16
+      : side * (profile.name === "boatman" ? -0.16 : 0.035);
+    batch(arm);
+    const forearm = new THREE.Group();
+    forearm.name = side < 0 ? "left-forearm" : "right-forearm";
+    forearm.position.set(...elbow);
+    arm.add(forearm);
+    // Lower sleeve and hand keep their authored positions, now hinged at the elbow.
+    const lower = new THREE.Group();
+    lower.position.set(-elbow[0], -elbow[1], -elbow[2]);
+    forearm.add(lower);
+    stroke(
+      lower,
+      [
+        elbow,
+        [
+          (elbow[0] + wrist[0]) * 0.5,
+          (elbow[1] + wrist[1]) * 0.5,
+          (elbow[2] + wrist[2]) * 0.5,
+        ],
+        wrist,
+      ],
+      detail === 0 ? 0.022 : 0.027,
+      robe,
+      detail === 2 ? 7 : 3,
+    );
+    if (detail > 0) {
       const end: P = grip
         ? [wrist[0], wrist[1] + 0.013, wrist[2]]
         : [wrist[0], wrist[1] - 0.022, wrist[2] + 0.008];
-      stroke(arm, [wrist, end], 0.01, skin, 3);
-      oval(arm, end, [0.011, 0.017, 0.007], skin, n);
+      stroke(lower, [wrist, end], 0.01, skin, 3);
+      oval(lower, end, [0.011, 0.017, 0.007], skin, n);
       if (detail === 2) {
         for (let j = 0; j < 4; j++)
           stroke(
-            arm,
+            lower,
             [
               [end[0] + (j - 1.5) * 0.004, end[1] - 0.005, end[2]],
               [end[0] + (j - 1.5) * 0.004, end[1] - 0.018, end[2] + 0.004],
@@ -480,7 +516,7 @@ export function buildFigure(
             3,
           );
         stroke(
-          arm,
+          lower,
           [
             [end[0] + side * 0.008, end[1] + 0.006, end[2]],
             [end[0] + side * 0.016, end[1] - 0.003, end[2] + 0.005],
@@ -489,24 +525,35 @@ export function buildFigure(
           skin,
           3,
         );
-        line(arm, [
-          [side * 0.017, -0.034, 0.031],
+        line(lower, [
           [elbow[0] + 0.008, elbow[1] - 0.012, elbow[2] + 0.026],
           [wrist[0] + 0.015, wrist[1] + 0.02, wrist[2] + 0.023],
         ]);
-        line(arm, [
+        line(lower, [
           [wrist[0] - 0.024, wrist[1] + 0.009, wrist[2]],
           [wrist[0], wrist[1] + 0.015, wrist[2] + 0.027],
           [wrist[0] + 0.024, wrist[1] + 0.009, wrist[2]],
         ]);
       }
+      if (side > 0 && profile.load === "tray") {
+        solid(
+          lower,
+          new THREE.LatheGeometry(
+            [
+              [0.009, 0],
+              [0.025, 0.017],
+              [0.026, 0.022],
+              [0.022, 0.022],
+              [0.008, 0.005],
+            ].map((v) => new THREE.Vector2(...v)),
+            n,
+          ),
+          cloth,
+          [end[0], end[1] + 0.009, end[2] + 0.01],
+        );
+      }
     }
-    arm.rotation.z = porter
-      ? side > 0
-        ? 0
-        : 0.16
-      : side * (profile.name === "boatman" ? -0.16 : 0.035);
-    batch(arm);
+    batch(forearm);
     const leg = new THREE.Group();
     leg.name = side < 0 ? "left-leg" : "right-leg";
     leg.position.set(side * 0.039, 0.265, 0);
@@ -716,6 +763,18 @@ export function buildFigure(
       block(gear, [0.044, 0.013, 0.018], [0.13, 0.405, 0.01], shoe);
     }
     batch(gear);
+  }
+  // Hip pivot lets the upper body bend without tilting or sliding planted feet.
+  const upperParts = [...g.children].filter(
+    (p) => p.name !== "left-leg" && p.name !== "right-leg",
+  );
+  const torso = new THREE.Group();
+  torso.name = "torso";
+  torso.position.y = 0.265;
+  g.add(torso);
+  for (const part of upperParts) {
+    torso.add(part);
+    part.position.y -= 0.265;
   }
   g.userData.walking = walking;
   return g;

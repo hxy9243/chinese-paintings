@@ -14,6 +14,7 @@ import {
   BOATS,
   BRIDGE,
   bridgeHeight,
+  bridgePoint,
   GROUND_Y,
   PERSON_SCALE,
   REFERENCE_TREE,
@@ -28,6 +29,7 @@ import {
   MARKET,
   STATIC_PEOPLE,
   WALKER_COUNT,
+  BRIDGE_WALKERS,
   BRIDGE_OBSERVERS,
   RIPPLE_COUNT,
   boatPose,
@@ -47,6 +49,7 @@ import { buildFigure, FIGURE_HEIGHT } from "./figures";
 import { marketStall, bridgeMarket, MARKET_TYPES } from "./marketModels";
 import { chooseDetail, projectedHeightPixels, type DetailLevel } from "../../../packages/scene-kit/lod";
 import { idleMotion } from "./peopleMotion";
+import { bridgeActivity, bridgeRole, bridgeVariant } from "./bridgeActivity";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 
 // A shallow, camera-constrained diorama. Hidden façades are intentionally plain.
@@ -1150,6 +1153,22 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
       0,
     );
   }
+  // Compacted-earth approaches: broken wheel wear, retaining one ground palette.
+  // Interpretation informed by Song road traces at Shuntian Gate, not proof of
+  // the material at this bridge. No continuous stone-paving pattern is assumed.
+  const roadInk=createDryInk(.17),rutPositions:number[]=[];
+  for(const side of [-1,1])for(let x=half+.9;x<16;x+=.18){
+    const centre=bridgePoint(side*x);if(Math.abs(centre.d)>13.3)continue;
+    for(const lane of [-.16,.16])for(const end of [0,1]){
+      const p=bridgePoint(side*(x+end*.12),lane+.018*Math.sin(x*1.7));
+      const point=scrollPoint(p.s,p.d);rutPositions.push(point.x,GROUND_Y+.008,point.z);
+    }
+    if(Math.floor(x*10)%7===0)for(const shoulder of [-1,1]){
+      const p=bridgePoint(side*x,shoulder*(1.45+.13*Math.sin(x*2.3))),point=scrollPoint(p.s,p.d);
+      if(Math.abs(p.d)<13.3)mesh(group,new THREE.DodecahedronGeometry(.015,0),plaster,point.x,GROUND_Y+.008,point.z,false).scale.y=.25;
+    }
+  }
+  group.add(new THREE.LineSegments(new THREE.BufferGeometry().setAttribute('position',new THREE.Float32BufferAttribute(rutPositions,3)),roadInk));
   const bridgeCounters=bridgeMarket(bridge,height,BRIDGE.width,BRIDGE.length);
   const detailedBuildings: {root:THREE.Group; base:THREE.Group; fine:THREE.Group; coarse:THREE.Group; height:number; detail:DetailLevel}[]=[];
   for (const [index,h] of HALLS.entries()) {
@@ -1290,6 +1309,9 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
       leftArm: p.getObjectByName("left-arm")!,
       rightArm: p.getObjectByName("right-arm")!,
       head: p.getObjectByName("head")!,
+      torso: p.getObjectByName("torso")!,
+      leftElbow: p.getObjectByName("left-forearm")!,
+      rightElbow: p.getObjectByName("right-forearm")!,
     };
   };
   const people = Array.from({ length: WALKER_COUNT }, (_, i) =>
@@ -1299,7 +1321,7 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
     addPerson(group, i, "resident-person"),
   );
   const observers = Array.from({ length: BRIDGE_OBSERVERS }, (_, i) =>
-    addPerson(group, i, "bridge-observer"),
+    (()=>{const p=addPerson(group,bridgeVariant(i),"bridge-observer");p.group.userData.activity=bridgeRole(i);return p;})(),
   );
   const shoppers = SHOP_VISITORS.map((_, i) =>
     addPerson(group, i, "shop-visitor"),
@@ -1331,6 +1353,7 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
       REFERENCE_AZIMUTH - pose.angle + Math.PI / 2 + idle.look,
       idle.lean,
     );
+    p.torso.rotation.set(0,0,0);p.leftElbow.rotation.set(0,0,0);p.rightElbow.rotation.set(0,0,0);
     const profile=FIGURE_TYPES[p.group.userData.variant % FIGURE_TYPES.length];
     const holding=['ledger','scroll','tray'].includes(profile.load);
     const loaded=profile.load==='baskets',elder=profile.name==='elder';
@@ -1343,8 +1366,14 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
     // Looking over the bridge rail and reaching toward wares are distinct from
     // a walking cycle. Offsets are derived from absolute time, including seeks.
     if(p.group.name==='bridge-observer'){
-      p.leftArm.rotation.x=-.72+idle.lean;p.rightArm.rotation.x=-.61-idle.lean;
-      p.head.rotation.x=.27+idle.lean;p.group.rotation.x=.10;
+      const a=bridgeActivity(id-200,time,seed);
+      p.group.rotation.set(0,REFERENCE_AZIMUTH-BRIDGE.angle-a.facing+Math.PI/2,0);
+      p.torso.rotation.set(a.torso,a.twist,0);
+      p.leftArm.rotation.set(a.leftArm,0,a.leftSpread);
+      p.rightArm.rotation.set(a.rightArm,0,a.rightSpread);
+      p.leftElbow.rotation.x=a.leftElbow;p.rightElbow.rotation.x=a.rightElbow;
+      p.head.rotation.set(a.headPitch,a.headTurn,0);
+      p.left.rotation.x=0;p.right.rotation.x=0;
     }else if(!pose.moving&&p.group.name==='shop-visitor'){
       p.rightArm.rotation.x=-.65+Math.sin(time*.55+id)*.09;
       p.head.rotation.x=.16;p.head.rotation.y+=.12;
@@ -1353,8 +1382,21 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
   }
   return {
     group,
-    metadata() { return { crowd: crowd.metadata(), seed, vegetationLevel:plantDetail,
-      buildings:detailedBuildings.map(b=>b.detail), traffic:CART_KINDS, bridgeCounters, marketTypes:MARKET_TYPES, referenceTrees:FEATURE_TREES.map(t=>t.id) }; },
+    metadata() {
+      const passingPeople=people.slice(0,BRIDGE_WALKERS).filter(p=>{
+        const {x,z}=p.group.position;
+        const s=x*Math.cos(REFERENCE_AZIMUTH)-z*Math.sin(REFERENCE_AZIMUTH)-BRIDGE.center.s;
+        const d=x*Math.sin(REFERENCE_AZIMUTH)+z*Math.cos(REFERENCE_AZIMUTH)-BRIDGE.center.d;
+        return Math.abs(s*Math.cos(BRIDGE.angle)+d*Math.sin(BRIDGE.angle))<BRIDGE.length/2;
+      }).length;
+      const roles=observers.reduce((counts,p)=>{
+        const role=p.group.userData.activity as string;counts[role]=(counts[role]??0)+1;return counts;
+      },{} as Record<string,number>);
+      return {crowd:crowd.metadata(),seed,vegetationLevel:plantDetail,
+        buildings:detailedBuildings.map(b=>b.detail),traffic:CART_KINDS,bridgeCounters,
+        marketTypes:MARKET_TYPES,referenceTrees:FEATURE_TREES.map(t=>t.id),
+        bridgeLife:{stands:bridgeCounters.length,stationaryPeople:observers.length,passingPeople,roles}};
+    },
     setPainting(enabled: boolean) {
       paintingAmount.value = enabled ? 1 : 0;
     },

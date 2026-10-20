@@ -324,13 +324,48 @@ export function bridgeMarket(
   for (const [i, layout] of BRIDGE_SHOPS.entries()) {
     const { x, lateral } = layout,
       side = Math.sign(lateral),
-      kind = [0, 2, 0, 3][i];
+      kind = layout.kind;
     const g = new THREE.Group();
     g.position.set(x, height(x), side * (width / 2 + 0.04));
+    g.rotation.z=Math.atan2(height(x+.4)-height(x-.4),.8);
     parent.add(g);
-    box(g, [0.72, 0.035, 0.22], [0, 0.24, 0]);
+    box(g, [layout.width, 0.035, layout.depth], [0, 0.24, 0]);
     for (const u of [-0.28, 0.28]) rod(g, [u, 0, 0], [u, 0.24, 0], 0.012);
-    for (let j = 0; j < 4; j++) bowl(g, -0.25 + j * 0.16, 0.26, 0, 0.056);
+    if (kind === 0) {
+      for (let j = 0; j < 5; j++)
+        for (let k = 0; k < 2; k++)
+          bowl(g, -0.3 + j * 0.15, 0.26 + k * 0.025, 0, 0.056);
+      jar(g, 0.27, 0.275, -0.03, 0.043);
+    } else if (kind === 1) {
+      for (const x of [-0.28, 0, 0.28]) wovenBasket(g, x, 0.33, 0, 0.085, 0.14);
+      wovenBasket(g, -0.3, 0.08, side * 0.12, 0.09, 0.14);
+    } else if (kind === 2) {
+      box(g, [0.65, 0.02, 0.18], [0, 0.275, 0], linen);
+      for (let j = 0; j < 12; j++) {
+        const bun = put(g, new THREE.SphereGeometry(0.032, 6, 4), linen, [
+          -0.27 + (j % 6) * 0.105,
+          0.3,
+          Math.floor(j / 6) * 0.075 - 0.04,
+        ]);
+        bun.scale.y = 0.6;
+      }
+    }
+    // A few cloth shelters make distinct stalls without hiding the whole crowd.
+    if (layout.canopy) {
+      for (const x of [-0.4, 0.4])
+        rod(g, [x, 0, side * 0.1], [x, 0.67, side * 0.1], 0.01);
+      const roof = box(g, [0.96, 0.025, 0.42], [0, 0.68, side * 0.07], linen);
+      roof.rotation.x = side * 0.12;
+      for (let j = 0; j < 10; j++)
+        rod(
+          g,
+          [-0.43 + j * 0.095, 0.67, side * 0.26],
+          [-0.43 + j * 0.095, 0.59, side * 0.26],
+          0.006,
+          linen,
+        );
+      box(g, [0.11, 0.23, 0.018], [0.4, 0.45, side * 0.12], linen);
+    }
     if (kind === 2) wovenBasket(g, 0, 0.095, side * 0.13, 0.09, 0.16);
     if (kind === 3)
       for (let j = 0; j < 3; j++)
@@ -343,8 +378,8 @@ export function bridgeMarket(
     counters.push({
       x,
       lateral: side * (width / 2 + 0.04),
-      width: 0.72,
-      depth: 0.22,
+      width: layout.width,
+      depth: layout.depth,
     });
   }
   // Interlocked crossing timbers, projecting ends, joint pegs and rope lashings.
