@@ -1,0 +1,38 @@
+{
+  "revision": "blue-green-10-composition",
+  "source": "reference/source.png",
+  "sourceSha256": "b1593a9260c87cd2512a460b373f0825441746e9829b267b5c93326550bbe614",
+  "method": "Visual comparison at the painting camera; hand-read water-contact curves, tree-root rows and distant crest contours. Hidden depth remains interpreted.",
+  "observations": [
+    {
+      "difference": "The grey-green revision lost the iconic mineral color separation.",
+      "change": "Restore azurite-blue crests and malachite-green faces; retain warm earth, olive water and light brown paper."
+    },
+    {
+      "difference": "Tree distribution read as paired avenues and a random foreground forest.",
+      "change": "Author short curved rows from the source, vary spacing and height, and intersect their roots with terrain."
+    },
+    {
+      "difference": "The lake had become a river corridor with continuous shores.",
+      "change": "Trace curved promontories and inlets, reopen the foreground and add three distant shoals."
+    },
+    {
+      "difference": "Distant mountain lines were repeated smooth waves with uniform spacing.",
+      "change": "Trace three separate irregular contours and fade remote towers."
+    },
+    {
+      "difference": "Dense woods and repeated shoreline stones hid the small foreground hills.",
+      "change": "Reduce lowland trees and stones; reject stones placed out in open water."
+    },
+    {
+      "difference": "A blue hill was located beneath the bridge instead of behind the eastern approach.",
+      "change": "Move its crest and foot landmarks to the observed location."
+    }
+  ],
+  "remainingDifferences": [
+    "Mountain faces remain more regular and upright than the layered, leaning painted knuckles.",
+    "The right foreground crag needs more pronounced broken shelves and overhangs; the present terrain is a height field.",
+    "Village groups remain sparse and evenly arranged compared with the source.",
+    "Silk weave and brush deposits are simplified; the rendering is still more uniform than the painting."
+  ]
+}

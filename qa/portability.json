@@ -1,0 +1,56 @@
+{
+  "passed": true,
+  "method": "Export a Git snapshot into a fresh temporary directory, verify recorded hashes, serve only that directory, render the 3D painting and load its illustrated study.",
+  "snapshot": "1c428e9d3da58ad82a26ce0c1bb8b66880200df1",
+  "verifiedHashes": 91,
+  "failedHashes": [],
+  "rendered": {
+    "pngBytes": 1195705,
+    "finitePigment": true,
+    "graphicsError": 0,
+    "stats": {
+      "trees": 431,
+      "mountainTrees": 190,
+      "mountainGrass": 728,
+      "roadsideTrees": 66,
+      "treeFamilies": {
+        "bare": 82,
+        "broadleaf": 264,
+        "willow": 85
+      },
+      "branchGeometries": 14622,
+      "canopyClumps": 9765,
+      "leaves": 60057,
+      "reeds": 4427,
+      "roads": 2,
+      "mountainMasses": 31,
+      "rocks": 139,
+      "terrainVertices": 168062,
+      "sourceProjectionPlanes": 0,
+      "seed": 610152,
+      "backgroundMountainLayers": 4,
+      "bridgeLength": 68.81041643961987,
+      "bridgeSupports": 32,
+      "shoreBuildings": 9,
+      "revision": "blue-green-06"
+    }
+  },
+  "study": {
+    "title": "Blue & Green Waterways · Visual study",
+    "images": 13,
+    "loadedImages": 13
+  },
+  "research": {
+    "images": 5,
+    "loaded": 5,
+    "offWorks": true,
+    "onWorks": true
+  },
+  "shapeStudy": {
+    "images": 5,
+    "loaded": 5
+  },
+  "errors": [],
+  "externalRequests": [],
+  "failedResponses": []
+}

@@ -1,0 +1,6481 @@
+{
+  "errors": [],
+  "scene": {
+    "stats": {
+      "trees": 431,
+      "mountainTrees": 190,
+      "mountainGrass": 728,
+      "roadsideTrees": 66,
+      "treeFamilies": {
+        "bare": 82,
+        "broadleaf": 264,
+        "willow": 85
+      },
+      "branchGeometries": 14622,
+      "canopyClumps": 9765,
+      "leaves": 60057,
+      "reeds": 4427,
+      "roads": 2,
+      "mountainMasses": 31,
+      "rocks": 139,
+      "terrainVertices": 168062,
+      "sourceProjectionPlanes": 0,
+      "seed": 610152,
+      "backgroundMountainLayers": 4,
+      "bridgeLength": 68.81041643961987,
+      "bridgeSupports": 32,
+      "shoreBuildings": 9,
+      "revision": "blue-green-06"
+    },
+    "triangles": 3834848,
+    "views": {
+      "arch": {
+        "position": [
+          16.620970511817475,
+          10.785,
+          154.42000000000002
+        ],
+        "target": [
+          16.620970511817475,
+          5,
+          45.42
+        ],
+        "fov": 33
+      },
+      "pavilion": {
+        "position": [
+          16.620970511817475,
+          12.585,
+          69.42
+        ],
+        "target": [
+          16.620970511817475,
+          10.185,
+          45.42
+        ],
+        "fov": 46
+      },
+      "entry": {
+        "position": [
+          21.620970511817475,
+          10.5,
+          69.42
+        ],
+        "target": [
+          -22,
+          4,
+          37
+        ],
+        "fov": 48
+      },
+      "painting": {
+        "position": [
+          0,
+          58,
+          220
+        ],
+        "target": [
+          0,
+          29,
+          -105
+        ],
+        "fov": 32,
+        "fit": true
+      },
+      "bridge": {
+        "position": [
+          16.620970511817475,
+          12.785,
+          83.42
+        ],
+        "target": [
+          16.620970511817475,
+          10.085,
+          45.42
+        ],
+        "fov": 48
+      },
+      "gallery": {
+        "position": [
+          16.620970511817475,
+          9.585,
+          46.02
+        ],
+        "target": [
+          16.620970511817475,
+          9.585,
+          -34.58
+        ],
+        "fov": 50
+      },
+      "left": {
+        "position": [
+          -20,
+          15.162662506103516,
+          53
+        ],
+        "target": [
+          -30,
+          11.162662506103516,
+          18
+        ],
+        "fov": 46
+      },
+      "right": {
+        "position": [
+          147,
+          9.57348382472992,
+          59
+        ],
+        "target": [
+          115,
+          3.5734838247299194,
+          18
+        ],
+        "fov": 44
+      },
+      "mountains": {
+        "position": [
+          -5,
+          42,
+          86
+        ],
+        "target": [
+          -72,
+          24,
+          0
+        ],
+        "fov": 45
+      },
+      "mist": {
+        "position": [
+          4,
+          11,
+          -33
+        ],
+        "target": [
+          15,
+          8,
+          -210
+        ],
+        "fov": 44
+      },
+      "lake": {
+        "position": [
+          0,
+          7,
+          -4
+        ],
+        "target": [
+          20,
+          9,
+          -170
+        ],
+        "fov": 46
+      }
+    },
+    "treePositions": [
+      {
+        "x": -53.48912684345228,
+        "y": 2.2408040013237662,
+        "z": -33.924884788692,
+        "height": 4.440106461228748,
+        "family": "bare",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 67.8777877263569,
+        "y": 2.0227388393675305,
+        "z": -175.8173988480121,
+        "height": 7.011906435122961,
+        "family": "bare",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -63.21472216772859,
+        "y": 1.289450350818615,
+        "z": -68.181132953614,
+        "height": 7.079732987668318,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 42.331755845784386,
+        "y": 1.4069760378181975,
+        "z": -106.23148960061371,
+        "height": 4.414266697691752,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -57.853844021813906,
+        "y": 1.5489723942291527,
+        "z": -158.98838455975056,
+        "height": 5.317839324169777,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 52.94403453372566,
+        "y": 2.12194939072491,
+        "z": -152.44978509284556,
+        "height": 8.45795506183179,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -55.98716966614223,
+        "y": 1.449061688786392,
+        "z": -160.41286819987,
+        "height": 8.701783050957797,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 40.1825652775341,
+        "y": 2.041352471106713,
+        "z": -132.91908304020762,
+        "height": 6.78351155495161,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -56.0639316043042,
+        "y": 1.7948024236890316,
+        "z": -127.81290246546268,
+        "height": 5.993847864383893,
+        "family": "bare",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -54.58900231577433,
+        "y": 1.6455362712887949,
+        "z": -182.86126009747386,
+        "height": 6.470241769841801,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 61.907950108594264,
+        "y": 1.5257755965629696,
+        "z": -32.39673404954374,
+        "height": 4.716301600847267,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -55.30379090679384,
+        "y": 0.8282518523098121,
+        "z": -83.92870368249714,
+        "height": 7.617594543968556,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 57.61728902626863,
+        "y": 2.002052636140596,
+        "z": -166.90481501817703,
+        "height": 5.425189056707166,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -50.29453741421289,
+        "y": 3.130269351773829,
+        "z": -28.82218975201249,
+        "height": 5.149437605969541,
+        "family": "bare",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 72.48429589021517,
+        "y": 1.7780532369036708,
+        "z": 31.32880725339055,
+        "height": 3.6058541210380026,
+        "family": "bare",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -44.596947482813945,
+        "y": 1.504404606156076,
+        "z": -174.4147335998714,
+        "height": 4.08977694146251,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 60.306137682271114,
+        "y": 1.6678286782562486,
+        "z": -144.61047721654177,
+        "height": 5.281763986967922,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -65.27219533068725,
+        "y": 1.6926899522097416,
+        "z": -39.97982710413635,
+        "height": 4.737287350735602,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 60.749600900034295,
+        "y": 1.7601771229125993,
+        "z": 57.36208255775273,
+        "height": 4.242375121659664,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -64.6877873008856,
+        "y": 1.9795452390379062,
+        "z": -98.21318435482681,
+        "height": 6.946305548909577,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 26.029989176212368,
+        "y": 1.8942189518068926,
+        "z": -92.63772554136813,
+        "height": 4.249128171724174,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -54.95428615855935,
+        "y": 1.1899392670790678,
+        "z": -65.7037764377892,
+        "height": 7.393150015029901,
+        "family": "bare",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 31.06688923420555,
+        "y": 1.7210775004794552,
+        "z": -99.0763801317662,
+        "height": 7.444166477804693,
+        "family": "bare",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 55.114821303396994,
+        "y": 0.9727941223438005,
+        "z": -171.65034605003893,
+        "height": 3.674793939068946,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -17.671240790480553,
+        "y": 1.9885542408468377,
+        "z": 49.817488403990865,
+        "height": 5.36312925696782,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 61.944520761054065,
+        "y": 1.9613390838514113,
+        "z": -178.582025622949,
+        "height": 9.219611395035471,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -51.006282112216745,
+        "y": 1.6620988050024972,
+        "z": -22.369548086076975,
+        "height": 6.176400779782288,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -65.07200216546565,
+        "y": 1.8160066281785368,
+        "z": -86.02518063038588,
+        "height": 3.992162470390311,
+        "family": "bare",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 64.01643929922673,
+        "y": 2.0203387615338273,
+        "z": -9.470788214355707,
+        "height": 3.698749359227492,
+        "family": "bare",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -42.10371156511326,
+        "y": 1.7993508887739025,
+        "z": -3.5164157170802355,
+        "height": 4.19932476661113,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 62.39994459086275,
+        "y": 1.695457450331105,
+        "z": -30.73349711485207,
+        "height": 6.957406838827756,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -57.86500172987701,
+        "y": 1.7877109694012578,
+        "z": -130.40906020067632,
+        "height": 8.865263323253917,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 44.72814714226264,
+        "y": 1.9004281523179745,
+        "z": -124.84585937857628,
+        "height": 8.587762180799075,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -61.32400996687997,
+        "y": 1.5938958871393467,
+        "z": -87.72431259043515,
+        "height": 4.292217525888159,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 64.58221576817354,
+        "y": 1.569082638677047,
+        "z": 8.246025139465928,
+        "height": 8.548428843340494,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 33.263001984680685,
+        "y": 1.4227850114248075,
+        "z": -79.0996330268681,
+        "height": 7.783149887653911,
+        "family": "bare",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -25.43242763550521,
+        "y": 1.6592494508737314,
+        "z": 46.73061282560229,
+        "height": 6.410704093437285,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 56.364576313304944,
+        "y": 1.7856236937709422,
+        "z": -148.16649984382093,
+        "height": 8.49509103821523,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -26.693604546375937,
+        "y": 4.466775783071272,
+        "z": 33.33249817788601,
+        "height": 3.9205106453053946,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 52.9114092931718,
+        "y": 1.6398742093676477,
+        "z": -128.85425361804664,
+        "height": 6.4074882704262475,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -58.386312393200456,
+        "y": 1.432223515196839,
+        "z": -155.39725566282868,
+        "height": 6.68459691440166,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 48.370767524426256,
+        "y": 1.7947654293121675,
+        "z": -127.85822710581124,
+        "height": 4.323689739915528,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -23.636100949801193,
+        "y": 2.0583314247221085,
+        "z": 35.40282088704407,
+        "height": 4.070000101932829,
+        "family": "bare",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -59.818547637915195,
+        "y": 2.036521288372748,
+        "z": -42.96517879329622,
+        "height": 8.066560384168664,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 35.26013772115293,
+        "y": 1.7905894866405545,
+        "z": -104.6224128138274,
+        "height": 6.479219347077256,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -59.550494616628754,
+        "y": 1.5040148016784292,
+        "z": -159.32965646497905,
+        "height": 7.2492889226565165,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -61.33351314482071,
+        "y": 1.707224974411263,
+        "z": -95.29271169193089,
+        "height": 5.561422529658795,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 49.020507952450245,
+        "y": 1.3573699410566638,
+        "z": -17.171341141685843,
+        "height": 3.9404850490564605,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -56.326609955652486,
+        "y": 1.9190770029551223,
+        "z": -54.50827811844647,
+        "height": 7.2540623269111,
+        "family": "bare",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 40.40478722212933,
+        "y": 1.602108858964352,
+        "z": -136.66661763377488,
+        "height": 5.427712729013614,
+        "family": "bare",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -38.32122802468271,
+        "y": 10.792492216884703,
+        "z": 10.266941830515862,
+        "height": 9.005168455047391,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -21.86673210180963,
+        "y": 4.032425238137048,
+        "z": 19.749695917591453,
+        "height": 6.604777828730196,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 56.08530376241602,
+        "y": 2.2776853979477627,
+        "z": -20.57449638657272,
+        "height": 9.04009326983507,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -54.50468466088905,
+        "y": 2.2693420967333893,
+        "z": -37.92428859882057,
+        "height": 3.6736136325614943,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 75.46607563490903,
+        "y": 2.0511120113391534,
+        "z": 47.95893291942775,
+        "height": 3.917366008235537,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 26.75550980617258,
+        "y": 1.9287400628421372,
+        "z": -99.85731648281217,
+        "height": 6.792803158723042,
+        "family": "bare",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -53.96762919860981,
+        "y": 1.3599065594750213,
+        "z": -107.99220669455826,
+        "height": 6.080095287855239,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 48.87152619835581,
+        "y": 1.7963045454515245,
+        "z": -151.24462312087417,
+        "height": 8.343738802459436,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -64.01259638797549,
+        "y": 1.4543634239059577,
+        "z": -136.93482067622244,
+        "height": 5.623008230965095,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 64.5787956662912,
+        "y": 1.9921421030199487,
+        "z": 56.57331125251949,
+        "height": 8.351225607965727,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -62.03661691899242,
+        "y": 1.8603825053443486,
+        "z": -25.939158676192164,
+        "height": 4.392378544777525,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 43.24815304304339,
+        "y": 1.750579035969048,
+        "z": -115.7513745650649,
+        "height": 4.647806226848903,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -61.139576387246926,
+        "y": 1.389952447332841,
+        "z": -70.91308532096446,
+        "height": 4.188290242962604,
+        "family": "bare",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 34.10904418209353,
+        "y": 2.0862036754557636,
+        "z": -114.0747070144862,
+        "height": 8.507890554156095,
+        "family": "bare",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -55.76255360910647,
+        "y": 1.3537382134454243,
+        "z": -153.37525376863778,
+        "height": 6.137199072485561,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 48.62563017251344,
+        "y": 3.2558155322432745,
+        "z": -22.729859376326203,
+        "height": 5.496704701522654,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -48.00398945918316,
+        "y": 1.6043676774081497,
+        "z": -186.5236121341586,
+        "height": 6.986876885722416,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 72.05184944648266,
+        "y": 1.738600313023325,
+        "z": 31.284732842817903,
+        "height": 4.885323254337436,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -59.494219175115504,
+        "y": 1.5424310054712982,
+        "z": -64.5778834912926,
+        "height": 9.038076657500957,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 45.889987645610034,
+        "y": 1.875874656808788,
+        "z": -54.13856106065214,
+        "height": 8.813351349287604,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -54.337587687170384,
+        "y": 2.0277114288213656,
+        "z": -125.29234044067562,
+        "height": 5.056775713732572,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 38.46896469063239,
+        "y": 1.8174684251671385,
+        "z": -64.80946944467723,
+        "height": 9.101005788284342,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -28.18085375735256,
+        "y": 5.4235602426431075,
+        "z": 54.888755682855844,
+        "height": 4.50265610092006,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -62.36715991057052,
+        "y": 1.85032973361466,
+        "z": -117.8792589455843,
+        "height": 7.298098283823521,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 42.88477334991627,
+        "y": 1.4161329097637292,
+        "z": -87.28358205407858,
+        "height": 9.266688136677807,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -55.80343117142535,
+        "y": 1.566505161727674,
+        "z": -17.405141673982143,
+        "height": 8.513993282419703,
+        "family": "bare",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 30.597975413240423,
+        "y": 1.5089472601545353,
+        "z": -83.18805952556431,
+        "height": 7.19771057447094,
+        "family": "bare",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -65.19066826426595,
+        "y": 1.756081304629627,
+        "z": -121.55563680268824,
+        "height": 4.9108319056782115,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 30.372065137520895,
+        "y": 1.2825404839795973,
+        "z": -70.83962260000408,
+        "height": 4.692448124690562,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 34.585654815244546,
+        "y": 2.0436986128498824,
+        "z": -113.7329862229526,
+        "height": 6.702975738634084,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -66.34850976637347,
+        "y": 1.870951841236341,
+        "z": -111.96017235331237,
+        "height": 7.715721278111316,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 60.65715602624659,
+        "y": 2.3482466788272776,
+        "z": 41.15307818725705,
+        "height": 6.4938375608487835,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -56.02562035683703,
+        "y": 2.1217622804043925,
+        "z": -117.01302490010858,
+        "height": 7.805408219292486,
+        "family": "bare",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -56.718205228003924,
+        "y": 1.5220980518279161,
+        "z": -67.35373357869685,
+        "height": 5.054239565095149,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 57.673575117242606,
+        "y": 1.6897123012969315,
+        "z": -138.76922476105392,
+        "height": 7.288995495535344,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -19.705566972749487,
+        "y": 1.990105940685148,
+        "z": 41.63982274569571,
+        "height": 7.228851593656479,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 62.366924441152335,
+        "y": 2.606281250006849,
+        "z": 6.544318983331323,
+        "height": 5.368587784658329,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -61.36919267309515,
+        "y": 1.464403424281287,
+        "z": -145.94183328934014,
+        "height": 4.42834607274774,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 70.82957149046949,
+        "y": 1.6937842609024873,
+        "z": -168.26782612130046,
+        "height": 4.469601470032111,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -28.807755031304083,
+        "y": 2.8363315643324376,
+        "z": 59.41948855482042,
+        "height": 3.681643109461547,
+        "family": "bare",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 56.576667775644154,
+        "y": 1.6684281098495473,
+        "z": -26.979292627424,
+        "height": 4.070101227335184,
+        "family": "bare",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -63.412278453179034,
+        "y": 1.8875873865267034,
+        "z": -111.76560987718403,
+        "height": 8.76420716256893,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 60.78224463461359,
+        "y": 1.5877763482578706,
+        "z": -26.719360318034887,
+        "height": 7.984592097283903,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -66.4100539962049,
+        "y": 2.052166173000273,
+        "z": -107.92747756652534,
+        "height": 4.19452765269645,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 67.96473055210718,
+        "y": 1.6207665505228868,
+        "z": 8.269403142854571,
+        "height": 3.7680653794805408,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -59.95281998675832,
+        "y": 1.734212230244613,
+        "z": -130.01643111743033,
+        "height": 3.849477047408048,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 58.79709280656631,
+        "y": 2.708586209512971,
+        "z": 20.59860222414136,
+        "height": 4.457074743629159,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -66.67204502904713,
+        "y": 1.7269830867185387,
+        "z": -44.38465550914407,
+        "height": 4.334753141095435,
+        "family": "bare",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 48.80389903235905,
+        "y": 1.7471151866861874,
+        "z": -151.8685605917126,
+        "height": 6.987010534110222,
+        "family": "bare",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -59.19962807626012,
+        "y": 1.7982515322044412,
+        "z": -99.02962805144489,
+        "height": 5.981438045676187,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 70.90920233669871,
+        "y": 1.377953523470164,
+        "z": 10.49759317189455,
+        "height": 4.184875674388693,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -55.51927342324219,
+        "y": 1.3777991994065357,
+        "z": -162.3345483355224,
+        "height": 7.677655208066589,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 61.03885008695733,
+        "y": 1.9070075959257011,
+        "z": -158.61309170350432,
+        "height": 9.29928541495539,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -68.38953095633042,
+        "y": 2.0566209618270617,
+        "z": -101.51134073920548,
+        "height": 3.604710138034841,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -36.30062829775665,
+        "y": 12.185302112742631,
+        "z": 12.320081386715174,
+        "height": 5.859458244595228,
+        "family": "bare",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 37.94599387949438,
+        "y": 2.0912200681700823,
+        "z": -127.23462552018464,
+        "height": 6.737707381003126,
+        "family": "bare",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -68.81640603935779,
+        "y": 1.4576353757012728,
+        "z": -53.04500259459019,
+        "height": 8.129023241286703,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 62.63306943916801,
+        "y": 1.8566858502485184,
+        "z": 54.00537318736315,
+        "height": 4.560965338165591,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -54.748247010694676,
+        "y": 1.794216567576683,
+        "z": -184.41926362365484,
+        "height": 9.161596490021024,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 52.122458204088105,
+        "y": 1.5252404854092887,
+        "z": -43.22704823128879,
+        "height": 4.729776653703018,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -47.2390725833987,
+        "y": 1.405693659759406,
+        "z": -173.57576931081712,
+        "height": 5.694500255802284,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 73.81539841523383,
+        "y": 1.9718808049740018,
+        "z": 45.06738108769059,
+        "height": 6.1117344065877885,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -68.89168889370404,
+        "y": 1.6417251815434837,
+        "z": -115.02372755482793,
+        "height": 5.365534067764408,
+        "family": "bare",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 61.69875161437745,
+        "y": 2.021282342885202,
+        "z": -170.17872848175466,
+        "height": 8.674195549055932,
+        "family": "bare",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -43.36064805608276,
+        "y": 1.665888379439772,
+        "z": -6.555040925741196,
+        "height": 7.672550898518079,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 25.567064442052132,
+        "y": 1.9722883265746216,
+        "z": -90.82597970589995,
+        "height": 6.745222440168186,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -56.07410763139574,
+        "y": 1.6807520811532994,
+        "z": -19.487148014828563,
+        "height": 4.057902304584975,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 23.683711240796963,
+        "y": 1.5195675435311715,
+        "z": -89.26922802627087,
+        "height": 8.768776588471816,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -48.46572659079011,
+        "y": 1.2985364040782803,
+        "z": -173.12629184313118,
+        "height": 3.7008987188358278,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -51.25864024737393,
+        "y": 1.5463595297672466,
+        "z": -154.35046325065196,
+        "height": 5.462714853898654,
+        "family": "bare",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 54.08922963952383,
+        "y": 1.1513887872656223,
+        "z": 10.575996644794941,
+        "height": 6.469522592379496,
+        "family": "bare",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -55.030196190292145,
+        "y": 2.0268256387131185,
+        "z": -35.52313500829041,
+        "height": 7.404883370654208,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 53.84173343325358,
+        "y": 1.3951757689792648,
+        "z": 7.093864433467388,
+        "height": 3.6210739624452803,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -66.21485244343697,
+        "y": 1.685349590773451,
+        "z": -83.50552024692297,
+        "height": 7.7037102443189855,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 56.955007862030705,
+        "y": 1.921637026003629,
+        "z": -152.40939970314503,
+        "height": 6.129411855353262,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -62.24302129205162,
+        "y": 2.018613812010853,
+        "z": -31.466618355363607,
+        "height": 4.661099445987929,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 58.65546351554341,
+        "y": 1.6454287989989642,
+        "z": 53.65893060155213,
+        "height": 4.014196829416528,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -65.6366730060376,
+        "y": 1.753306872641081,
+        "z": -39.45043060928583,
+        "height": 3.9167036950308005,
+        "family": "bare",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 73.46081051836504,
+        "y": 1.979185098412389,
+        "z": 46.217695608735085,
+        "height": 4.069056235499748,
+        "family": "bare",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -51.16972261493919,
+        "y": 1.534284739134032,
+        "z": -45.818582218140364,
+        "height": 8.23834051176125,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -45.12548526012787,
+        "y": 1.4438290417585156,
+        "z": -186.82721079140902,
+        "height": 8.29306076143701,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 47.86323930642217,
+        "y": 1.7726908757383755,
+        "z": -47.051663601771,
+        "height": 8.555837259262907,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -17.773544306921366,
+        "y": 2.487585900076933,
+        "z": 28.091341983526945,
+        "height": 7.603306990648768,
+        "family": "bare",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 55.614500750044066,
+        "y": 1.9653528368446564,
+        "z": -161.87811232171953,
+        "height": 6.919974770959265,
+        "family": "bare",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 33.23736649503314,
+        "y": 1.3682548529655467,
+        "z": -80.67991318553686,
+        "height": 5.193958955403744,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -55.22945644167301,
+        "y": 1.7251985357728736,
+        "z": -179.23819508217275,
+        "height": 7.8290469863167385,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 45.94357061107645,
+        "y": 1.5726596784370517,
+        "z": -119.47452673316002,
+        "height": 6.394777678665381,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -59.762192127135464,
+        "y": 1.3835106014061331,
+        "z": -76.05838026851416,
+        "height": 5.080359678324259,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 33.17825321935753,
+        "y": 1.8130112799052265,
+        "z": -56.06504452228546,
+        "height": 4.886511024108426,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -51.621094304922806,
+        "y": 1.552881813427637,
+        "z": -146.9705786127597,
+        "height": 3.76977909391723,
+        "family": "bare",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 66.26487542664245,
+        "y": 2.094702038817544,
+        "z": -168.33398453705013,
+        "height": 8.230057833034323,
+        "family": "bare",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -41.28371324269521,
+        "y": 2.0054868044722967,
+        "z": 0.942399725317955,
+        "height": 5.4036412867946275,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 69.21040534604913,
+        "y": 1.6934129046043986,
+        "z": -9.209239879623055,
+        "height": 4.639138072521844,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -55.202729810329814,
+        "y": 1.294073636251428,
+        "z": -97.87228078581393,
+        "height": 9.197352188483947,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 57.73971388762928,
+        "y": 1.831063094839162,
+        "z": -146.59983062930405,
+        "height": 5.157486117937073,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 64.83511450081286,
+        "y": 3.436326013314692,
+        "z": 50.627759827300906,
+        "height": 4.484070604051926,
+        "family": "bare",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -60.40179009136841,
+        "y": 2.0248203169967596,
+        "z": -37.20091928914189,
+        "height": 3.6940847119353544,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -43.34754522149538,
+        "y": 5.155744814700278,
+        "z": 4.725256601348519,
+        "height": 4.56606475183278,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 56.32282765217133,
+        "y": 2.8999540232920418,
+        "z": 5.37603503651917,
+        "height": 7.767692094785158,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -50.719973770241346,
+        "y": 1.4117555881041974,
+        "z": -9.097301412373781,
+        "height": 6.421369070374352,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 71.07396951025545,
+        "y": 1.599626947915723,
+        "z": 32.64617711678147,
+        "height": 4.265049487092198,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -65.7239531916611,
+        "y": 1.7446160958799748,
+        "z": -39.65059232711792,
+        "height": 5.598775542683148,
+        "family": "bare",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 70.35093519701066,
+        "y": 1.405679906174284,
+        "z": 9.695757277309895,
+        "height": 8.837764066876117,
+        "family": "bare",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -54.86652717524946,
+        "y": 1.3231028120022439,
+        "z": -162.00326048396528,
+        "height": 5.087263684532797,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 70.66983789233865,
+        "y": 1.5995047563245273,
+        "z": 0.12879075668752193,
+        "height": 7.529389195798011,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -23.965530441451016,
+        "y": 2.2395092708529725,
+        "z": 35.746595619246364,
+        "height": 7.438425851819513,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 42.10432337573555,
+        "y": 1.299395181299445,
+        "z": -85.10413568466902,
+        "height": 4.542217949619957,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 67.22005464377725,
+        "y": 1.8466169275479563,
+        "z": 34.54470242187381,
+        "height": 4.963027770359184,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -57.508676851912064,
+        "y": 1.671327010446459,
+        "z": -91.71008732542396,
+        "height": 3.731317833460234,
+        "family": "bare",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 65.18231985824264,
+        "y": 1.9840188966968784,
+        "z": 58.79762973822653,
+        "height": 3.9869260555916304,
+        "family": "bare",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -19.808156875866135,
+        "y": 1.8421621349232453,
+        "z": 58.103417655453086,
+        "height": 6.191957931490515,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -62.616291945200665,
+        "y": 1.664764587096102,
+        "z": -79.15719752758741,
+        "height": 7.849820922696541,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 65.057556622437,
+        "y": 2.0277561986496497,
+        "z": -15.01650314219296,
+        "height": 9.21515096341559,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -64.93612337748368,
+        "y": 1.621949660240813,
+        "z": -78.85870776697993,
+        "height": 6.611754991204695,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 70.44133239823275,
+        "y": 1.7563222142576032,
+        "z": -167.1200399491936,
+        "height": 4.812190157868843,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -63.64393449376532,
+        "y": 1.5202251235839708,
+        "z": -140.6301185656339,
+        "height": 4.915390878913276,
+        "family": "bare",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 67.51281068912985,
+        "y": 1.6458431882910876,
+        "z": -1.3817644361406565,
+        "height": 4.15488920121471,
+        "family": "bare",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 61.213602467720406,
+        "y": 2.0112867563291075,
+        "z": -171.6135142762214,
+        "height": 8.12581857022322,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -65.28510775687793,
+        "y": 1.7745479650016733,
+        "z": -45.35169189982116,
+        "height": 8.447368070635891,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 53.7357621528562,
+        "y": 1.4759780635110042,
+        "z": -165.44172149710357,
+        "height": 7.408519010198472,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -25.330313039214115,
+        "y": 3.1901776061421048,
+        "z": 34.560100654140115,
+        "height": 7.549032812709879,
+        "family": "willow",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -28.71376177063939,
+        "y": 6.872074378878563,
+        "z": 33.572709226980805,
+        "height": 5.468573928093262,
+        "family": "bare",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 33.21584095265434,
+        "y": 1.925916642921917,
+        "z": -107.00710133090615,
+        "height": 6.887294179582321,
+        "family": "bare",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 46.1782352325779,
+        "y": 1.9749840339641052,
+        "z": -142.48698705993593,
+        "height": 3.6623972893551526,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -45.00808593085277,
+        "y": 1.3366845139471524,
+        "z": -166.3811361938715,
+        "height": 4.871572332224317,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -14.902594193601566,
+        "y": 2.216048115147525,
+        "z": 43.473493081365135,
+        "height": 5.489652586169541,
+        "family": "broadleaf",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -9.234328387559838,
+        "y": 1.1774403788777752,
+        "z": 42.41219109084797,
+        "height": 6.562052823835984,
+        "family": "broadleaf",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -16.864437216331304,
+        "y": 1.996508094434986,
+        "z": 37.41403642623041,
+        "height": 5.594094882439823,
+        "family": "willow",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -17.229927275873195,
+        "y": 2.1340948095484014,
+        "z": 31.271631711007334,
+        "height": 5.419900048011915,
+        "family": "broadleaf",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -11.611888992291119,
+        "y": 1.5610247737471408,
+        "z": 29.90741930802967,
+        "height": 4.513228097744286,
+        "family": "willow",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -19.668016525593664,
+        "y": 2.136599225147565,
+        "z": 26.218356415975215,
+        "height": 4.921429849974811,
+        "family": "broadleaf",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -13.110988428301647,
+        "y": 0.6958395611468658,
+        "z": 23.236484029311896,
+        "height": 5.296234545763582,
+        "family": "broadleaf",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -22.02418109522548,
+        "y": 2.986583920545078,
+        "z": 20.98407248015244,
+        "height": 6.120267535699532,
+        "family": "willow",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -16.6546913971019,
+        "y": 2.0554571257434655,
+        "z": 17.66728970834184,
+        "height": 6.095887727616355,
+        "family": "broadleaf",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -20.144077423607428,
+        "y": 1.8562120395122677,
+        "z": 12.232754778544795,
+        "height": 4.55093705537729,
+        "family": "willow",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -29.314953335112918,
+        "y": 6.9453864144763,
+        "z": 10.951136774958453,
+        "height": 5.006264359410853,
+        "family": "broadleaf",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -23.547473256109917,
+        "y": 1.4173565758843878,
+        "z": 6.943692237047425,
+        "height": 4.739465894317255,
+        "family": "broadleaf",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -27.78436123054952,
+        "y": 3.6173109319717747,
+        "z": 2.0733751768435615,
+        "height": 5.820483148377389,
+        "family": "broadleaf",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -30.900308684620978,
+        "y": 0.902236150933447,
+        "z": -3.334529630385746,
+        "height": 4.796228704787791,
+        "family": "willow",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -39.85412384668196,
+        "y": 4.189948935378692,
+        "z": -4.89902325483748,
+        "height": 4.802170782024041,
+        "family": "broadleaf",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -34.958341235019944,
+        "y": 3.5848880589752397,
+        "z": -7.835916297627823,
+        "height": 6.288802858022973,
+        "family": "broadleaf",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -37.06840964562696,
+        "y": 1.0126364254824702,
+        "z": -13.517681931891985,
+        "height": 5.501081044692547,
+        "family": "broadleaf",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -40.201552485417686,
+        "y": 2.3911120883337835,
+        "z": -18.81285457306323,
+        "height": 5.89839612133801,
+        "family": "willow",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -48.551842173360455,
+        "y": 2.6394656185960006,
+        "z": -22.09372226786349,
+        "height": 4.5232256848365076,
+        "family": "broadleaf",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -42.2701795090876,
+        "y": 1.2213231214160363,
+        "z": -24.65223219094304,
+        "height": 6.151336670666933,
+        "family": "broadleaf",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -50.888982559995405,
+        "y": 2.4447704084757356,
+        "z": -27.92999578158054,
+        "height": 6.437007866008208,
+        "family": "willow",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -44.583602099095295,
+        "y": 1.0219219192334472,
+        "z": -30.42728586285875,
+        "height": 5.0382143693044785,
+        "family": "broadleaf",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -52.86351622777016,
+        "y": 2.472357395820584,
+        "z": -33.86909105761222,
+        "height": 5.253540978673846,
+        "family": "broadleaf",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -47.21035025368853,
+        "y": 1.4174285395792134,
+        "z": -36.11598745733987,
+        "height": 4.968161167483777,
+        "family": "willow",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -55.78298356195306,
+        "y": 2.0704342878903,
+        "z": -39.39054091336732,
+        "height": 5.789568654354662,
+        "family": "broadleaf",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -48.971538727517256,
+        "y": 0.6355315796770682,
+        "z": -42.19617247015641,
+        "height": 5.346230226615444,
+        "family": "broadleaf",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 58.65361807535944,
+        "y": 2.0278300134946874,
+        "z": 43.858919007576766,
+        "height": 6.175047413446009,
+        "family": "willow",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 56.72647627427953,
+        "y": 1.7798144281779025,
+        "z": 49.29414886854382,
+        "height": 5.675271275732666,
+        "family": "broadleaf",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 59.369417689188516,
+        "y": 2.185435187063617,
+        "z": 44.50190789129867,
+        "height": 6.084162266319618,
+        "family": "broadleaf",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 66.4896156536414,
+        "y": 4.21363503981182,
+        "z": 46.85774853397132,
+        "height": 6.345810158737004,
+        "family": "willow",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 60.53864044319452,
+        "y": 2.3254008616452055,
+        "z": 39.536824334308555,
+        "height": 6.49826194588095,
+        "family": "broadleaf",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 66.31748329318859,
+        "y": 2.381016203097348,
+        "z": 39.36828664919228,
+        "height": 4.615950844017789,
+        "family": "broadleaf",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 59.399981038902865,
+        "y": 1.906808395418757,
+        "z": 33.55902434039657,
+        "height": 6.5540862286929045,
+        "family": "willow",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 66.56637573393198,
+        "y": 2.035723689100045,
+        "z": 32.83172283889892,
+        "height": 5.835714305890725,
+        "family": "broadleaf",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 59.111477496792816,
+        "y": 2.222435541793666,
+        "z": 27.383684419995095,
+        "height": 4.638902949308977,
+        "family": "broadleaf",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 65.36733111313863,
+        "y": 2.2159997592109413,
+        "z": 26.548961049956954,
+        "height": 6.571899139927701,
+        "family": "willow",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 58.13012103750682,
+        "y": 2.205903084970345,
+        "z": 21.231320371748023,
+        "height": 4.805836245557294,
+        "family": "broadleaf",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 64.58687373548074,
+        "y": 2.2278696345413205,
+        "z": 20.277575101454165,
+        "height": 5.190409743599594,
+        "family": "broadleaf",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 56.96324372535955,
+        "y": 2.338329655395712,
+        "z": 15.056069576390655,
+        "height": 5.884405222116039,
+        "family": "willow",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 63.913399416701864,
+        "y": 2.18279067739206,
+        "z": 14.046726199619691,
+        "height": 6.367813550215216,
+        "family": "broadleaf",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 56.64088024941796,
+        "y": 2.752988533277717,
+        "z": 8.785999153509847,
+        "height": 6.179657276300714,
+        "family": "broadleaf",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 62.47003396294622,
+        "y": 2.5991641556162923,
+        "z": 7.897367357785293,
+        "height": 5.7108275074977435,
+        "family": "willow",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 54.829795157330246,
+        "y": 2.370178097991075,
+        "z": 2.864602052034459,
+        "height": 6.171813155757263,
+        "family": "broadleaf",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 62.16449599233275,
+        "y": 2.298659693386443,
+        "z": 1.4574254251696261,
+        "height": 4.832357936678455,
+        "family": "broadleaf",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 54.40332976227079,
+        "y": 2.9236781971883956,
+        "z": -3.308082895854765,
+        "height": 5.40152701609768,
+        "family": "willow",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 59.956873825717615,
+        "y": 2.9503999951537696,
+        "z": -4.631780920631214,
+        "height": 4.494649967923761,
+        "family": "broadleaf",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 52.051110730826636,
+        "y": 2.1767050817861047,
+        "z": -9.035495143291715,
+        "height": 4.627972345612943,
+        "family": "broadleaf",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 59.14008321279452,
+        "y": 2.5390289543622555,
+        "z": -11.040536860192539,
+        "height": 5.682569061173126,
+        "family": "willow",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 50.86842206755786,
+        "y": 2.7415802657451063,
+        "z": -15.065207006892727,
+        "height": 4.851819648547099,
+        "family": "broadleaf",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 56.634863278583126,
+        "y": 2.802396534019818,
+        "z": -17.000860520145515,
+        "height": 6.012931484915317,
+        "family": "broadleaf",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 48.46306090567445,
+        "y": 2.2318366033242736,
+        "z": -20.737388183509495,
+        "height": 5.966514663258568,
+        "family": "willow",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 54.806921818885826,
+        "y": 2.4577106249095912,
+        "z": -23.13753142257776,
+        "height": 4.509723172942177,
+        "family": "broadleaf",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 46.1980832200523,
+        "y": 2.174732357921809,
+        "z": -26.502681183260364,
+        "height": 4.731499031279236,
+        "family": "broadleaf",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 52.48383443830107,
+        "y": 2.33019349732409,
+        "z": -29.048974985836068,
+        "height": 5.535382606647909,
+        "family": "willow",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 44.141470108504194,
+        "y": 2.7561674294385012,
+        "z": -32.40074408129209,
+        "height": 6.372388047864661,
+        "family": "broadleaf",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 49.75385635534913,
+        "y": 2.7112480243318706,
+        "z": -34.74764620491146,
+        "height": 5.801561041967943,
+        "family": "broadleaf",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 41.124774211839465,
+        "y": 2.0014747788232974,
+        "z": -37.938257454461855,
+        "height": 4.808117849892006,
+        "family": "willow",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 47.92228380626294,
+        "y": 2.111733434956659,
+        "z": -40.77748489845674,
+        "height": 5.025931021152065,
+        "family": "broadleaf",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 39.44898707207293,
+        "y": 2.837864971662438,
+        "z": -43.97484177063387,
+        "height": 5.861376820039005,
+        "family": "broadleaf",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 44.67795239162533,
+        "y": 2.7787942111587585,
+        "z": -46.26684831481488,
+        "height": 5.466309329681099,
+        "family": "willow",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 36.10875236169135,
+        "y": 2.093968139214988,
+        "z": -49.290147024176456,
+        "height": 6.16795810610056,
+        "family": "broadleaf",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 42.90848785064954,
+        "y": 2.315149448438699,
+        "z": -52.37961517215947,
+        "height": 5.364367319410667,
+        "family": "broadleaf",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 34.224909963254326,
+        "y": 2.1646828710548927,
+        "z": -55.286542623613244,
+        "height": 5.621196169639006,
+        "family": "willow",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 39.57970785629893,
+        "y": 2.1873960010425084,
+        "z": -57.754084697346684,
+        "height": 5.875354225141928,
+        "family": "broadleaf",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 31.09547654076701,
+        "y": 1.6486385583136216,
+        "z": -60.74123275903048,
+        "height": 6.242190189799294,
+        "family": "broadleaf",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": 37.48294180200766,
+        "y": 1.9001626011318515,
+        "z": -63.66252869247235,
+        "height": 4.77918118936941,
+        "family": "willow",
+        "roadside": true,
+        "mountain": false,
+        "slope": null
+      },
+      {
+        "x": -103.27773508149238,
+        "y": 5.35628762165791,
+        "z": 55.627988654887304,
+        "height": 1.8921926799695938,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.8472721739049365
+      },
+      {
+        "x": -84.08888599284433,
+        "y": 11.532184934189896,
+        "z": 20.399562656879425,
+        "height": 2.660813992423937,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.069331773913953
+      },
+      {
+        "x": 111.7158704997982,
+        "y": 12.500281247995154,
+        "z": -40.08041733223945,
+        "height": 2.3080408826470373,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.0720285777702832
+      },
+      {
+        "x": -77.50038872170691,
+        "y": 5.698611514883675,
+        "z": 29.36176436021924,
+        "height": 3.551890144823119,
+        "family": "bare",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.613388729217899
+      },
+      {
+        "x": -117.11561773154399,
+        "y": 10.714038360246475,
+        "z": 39.584424930624664,
+        "height": 1.7246070605702697,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.9897496332318244
+      },
+      {
+        "x": -69.61263909109933,
+        "y": 6.69814053684409,
+        "z": 37.401755976025015,
+        "height": 3.00263545056805,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.6457720771725032
+      },
+      {
+        "x": -47.23489405070912,
+        "y": 9.434508605635969,
+        "z": 53.76408860785887,
+        "height": 2.309602979570627,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.7121787470556507
+      },
+      {
+        "x": -44.57467363684329,
+        "y": 12.694656900223311,
+        "z": 49.34127130219713,
+        "height": 2.380755705200136,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.1063465554372751
+      },
+      {
+        "x": -95.05608503015449,
+        "y": 8.860295820836562,
+        "z": 47.55637044692412,
+        "height": 1.8426461078226566,
+        "family": "bare",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.7666959122812872
+      },
+      {
+        "x": 141.87582161220217,
+        "y": 7.598238829215179,
+        "z": -233.06716879829764,
+        "height": 2.0474378281272947,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.5365148607451232
+      },
+      {
+        "x": -37.272860196968054,
+        "y": 12.230193686430367,
+        "z": 39.860029973089695,
+        "height": 2.91536864307709,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.7898249840088681
+      },
+      {
+        "x": -122.34386637190748,
+        "y": 15.018931278254176,
+        "z": 35.46420370321721,
+        "height": 3.2110000354703514,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.1977887596312868
+      },
+      {
+        "x": -111.44602414566194,
+        "y": 13.513494341133796,
+        "z": 45.38878221344203,
+        "height": 3.532405119435862,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.1967541975168157
+      },
+      {
+        "x": -61.9202454682346,
+        "y": 18.122187559470596,
+        "z": 24.154055102262646,
+        "height": 1.6144443294033408,
+        "family": "bare",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.6274856037447242
+      },
+      {
+        "x": -103.41860012243497,
+        "y": 16.341685334044797,
+        "z": 46.215887090191245,
+        "height": 1.9304630214348435,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.224564332075695
+      },
+      {
+        "x": -97.17969831426961,
+        "y": 6.644502432734757,
+        "z": 51.930114542134106,
+        "height": 2.9797748864628373,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.2477754638559648
+      },
+      {
+        "x": -72.0069336509188,
+        "y": 9.477450149904405,
+        "z": 27.77843116153963,
+        "height": 2.940858099143952,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.8727442460181707
+      },
+      {
+        "x": 172.90587520542167,
+        "y": 15.792960025987549,
+        "z": -57.227990319021046,
+        "height": 3.5487789799924943,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.1881224115644953
+      },
+      {
+        "x": 300.5978280594433,
+        "y": 13.9864598061452,
+        "z": -201.74777458678,
+        "height": 1.7639513887465,
+        "family": "bare",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.9070419982898034
+      },
+      {
+        "x": -66.80520837737167,
+        "y": 9.497617655734784,
+        "z": 35.03802317637019,
+        "height": 1.4365911140106618,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.8090014979883806
+      },
+      {
+        "x": 179.41914334570805,
+        "y": 14.51062019155543,
+        "z": -55.625374080846086,
+        "height": 2.3518300155643375,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.1894069448240532
+      },
+      {
+        "x": 101.04199109236214,
+        "y": 13.317975311658325,
+        "z": -76.37422771891579,
+        "height": 3.1493782956618817,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.0657087379901915
+      },
+      {
+        "x": 13.683279027668732,
+        "y": 13.755189862137538,
+        "z": -242.35043394612148,
+        "height": 1.538946193177253,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.3137229015431426
+      },
+      {
+        "x": -61.19101730732187,
+        "y": 10.399347507209463,
+        "z": 49.24777116719633,
+        "height": 2.642968173651025,
+        "family": "bare",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.1220087758007302
+      },
+      {
+        "x": -118.77165412900376,
+        "y": 6.348643304801729,
+        "z": 45.325213187374175,
+        "height": 1.773392586223781,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.2380173924768634
+      },
+      {
+        "x": -88.23488840291209,
+        "y": 11.996503996530537,
+        "z": -20.503885254263878,
+        "height": 2.5629827925935387,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.9895939864031199
+      },
+      {
+        "x": -146.024883678314,
+        "y": 6.995786857444802,
+        "z": -67.86286098137498,
+        "height": 2.7989988886285575,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.9583202425557896
+      },
+      {
+        "x": 182.79135331220053,
+        "y": 7.179578861817166,
+        "z": -48.3430812403094,
+        "height": 3.2996037350036205,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.691202565175853
+      },
+      {
+        "x": 98.88754000583948,
+        "y": 6.074948307273253,
+        "z": -27.140196977183223,
+        "height": 3.175723848165944,
+        "family": "bare",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.7497811847898872
+      },
+      {
+        "x": 136.69434724655562,
+        "y": 23.970442809661666,
+        "z": -19.79331804253161,
+        "height": 3.338035709830001,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.9737628915635044
+      },
+      {
+        "x": -51.51986978480769,
+        "y": 16.9683264387841,
+        "z": 37.49546632915735,
+        "height": 1.5378568852320313,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.09160366494721024
+      },
+      {
+        "x": 155.1359954461256,
+        "y": 6.594026520447249,
+        "z": -115.25857120612636,
+        "height": 2.0478732383344322,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.8464411314325521
+      },
+      {
+        "x": -36.14545691401214,
+        "y": 13.453811456218538,
+        "z": 36.890294974669814,
+        "height": 3.3566523627378047,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.8583669775496502
+      },
+      {
+        "x": -260.47375891326567,
+        "y": 11.276524757278702,
+        "z": -170.87425239384174,
+        "height": 3.108971245167777,
+        "family": "bare",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.029825094598892
+      },
+      {
+        "x": 200.720165039119,
+        "y": 17.40814715734642,
+        "z": -131.22231078334153,
+        "height": 3.5503509864676746,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.121798607664662
+      },
+      {
+        "x": -56.166664896731994,
+        "y": 9.1249258815017,
+        "z": 56.80245286016725,
+        "height": 3.4511360119562595,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.091199281849051
+      },
+      {
+        "x": -51.433765438397856,
+        "y": 6.1160710845232895,
+        "z": 61.13762745819986,
+        "height": 2.8026874023955317,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.9884045442050311
+      },
+      {
+        "x": -67.81404640501414,
+        "y": 17.687374933545666,
+        "z": 13.042179917916656,
+        "height": 1.7080514786299317,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.5463318384424164
+      },
+      {
+        "x": 90.99551543917632,
+        "y": 6.007465041192852,
+        "z": 46.88718327321112,
+        "height": 3.408215290447697,
+        "family": "bare",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.8178228844338208
+      },
+      {
+        "x": 83.36290891950414,
+        "y": 5.33745540690315,
+        "z": 42.45443167584017,
+        "height": 3.3396005989052355,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.1789727986567482
+      },
+      {
+        "x": -129.49561298655885,
+        "y": 5.5712629020975095,
+        "z": -8.58484212309122,
+        "height": 2.303838131995872,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.5459895993700022
+      },
+      {
+        "x": -38.48293084944065,
+        "y": 13.982501734356383,
+        "z": 37.58928591944277,
+        "height": 3.344864525459707,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.6649810983170903
+      },
+      {
+        "x": -148.05057240014997,
+        "y": 5.5643878450168405,
+        "z": -59.27054950478487,
+        "height": 3.296763969771564,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.2255099763829425
+      },
+      {
+        "x": 161.45486540999912,
+        "y": 5.750780969878921,
+        "z": -14.23513013124466,
+        "height": 3.4251017031725497,
+        "family": "bare",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.38283361061597165
+      },
+      {
+        "x": 155.0175163868119,
+        "y": 8.920205154237212,
+        "z": -49.076588791795075,
+        "height": 2.1565483934711667,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.9696037402756106
+      },
+      {
+        "x": -52.2326079746735,
+        "y": 17.331251987339947,
+        "z": 49.57819852652028,
+        "height": 2.7221075430046766,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.8180716800939672
+      },
+      {
+        "x": -62.678831008396145,
+        "y": 16.008188917376184,
+        "z": 26.287637735717,
+        "height": 2.7348927019163964,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.1061378298251683
+      },
+      {
+        "x": 190.92477525421182,
+        "y": 7.499674294959307,
+        "z": -91.04452605824918,
+        "height": 3.3475358160212636,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.0321607397581738
+      },
+      {
+        "x": -64.77256778903404,
+        "y": 14.6070282231364,
+        "z": 8.589582577114925,
+        "height": 3.589880544273183,
+        "family": "bare",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.0690163614320074
+      },
+      {
+        "x": -59.36898474762815,
+        "y": 19.915492854413472,
+        "z": 27.004089910071343,
+        "height": 1.4434176891576498,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.9897746429943997
+      },
+      {
+        "x": -99.14067660036515,
+        "y": 8.888065343807252,
+        "z": 50.63906687917188,
+        "height": 1.5502317330799995,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.0098499707605446
+      },
+      {
+        "x": 127.03055520619603,
+        "y": 6.898041989314466,
+        "z": -113.17120159883052,
+        "height": 3.206119072670117,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.2451725206854365
+      },
+      {
+        "x": -74.40588973627413,
+        "y": 7.977789677864751,
+        "z": 28.86699103564024,
+        "height": 3.0006865656003354,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.45106665627050746
+      },
+      {
+        "x": -113.68915643900839,
+        "y": 9.854583566237594,
+        "z": 34.59230201411992,
+        "height": 2.9611652285326273,
+        "family": "bare",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.458352262541954
+      },
+      {
+        "x": -31.893910807621005,
+        "y": 9.457020140170735,
+        "z": 36.657509045209736,
+        "height": 2.798585152300075,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.0018044354096878
+      },
+      {
+        "x": -70.5430409805511,
+        "y": 15.544838647735995,
+        "z": 15.200649146921933,
+        "height": 2.934695355873555,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.8396550259343931
+      },
+      {
+        "x": 195.25601216770355,
+        "y": 5.502661408891752,
+        "z": -72.02796219615266,
+        "height": 3.497738989861682,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.1513215333716325
+      },
+      {
+        "x": -63.15905728066846,
+        "y": 14.094777780219207,
+        "z": 28.723646166268736,
+        "height": 2.5041077396366744,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.7264404657841032
+      },
+      {
+        "x": -101.53372441779453,
+        "y": 13.396715636850312,
+        "z": 3.127917224075645,
+        "height": 3.274693694198504,
+        "family": "bare",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.7236961119154602
+      },
+      {
+        "x": -74.53787071763706,
+        "y": 8.865183836280579,
+        "z": 3.6226321214344352,
+        "height": 1.482373978430405,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.7431962379808275
+      },
+      {
+        "x": -88.52830041080017,
+        "y": 16.695338763121082,
+        "z": 17.396355560980737,
+        "height": 2.6365046734921633,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.2099617398777924
+      },
+      {
+        "x": -111.93103546366427,
+        "y": 8.766224875200216,
+        "z": 51.03422419074923,
+        "height": 2.9002296398859473,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.081374802306893
+      },
+      {
+        "x": -75.16688965317901,
+        "y": 12.773580655527326,
+        "z": 10.05538776353933,
+        "height": 2.395327437017113,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.19830126537142512
+      },
+      {
+        "x": -59.03320631671099,
+        "y": 12.964772282689937,
+        "z": 37.46243111579679,
+        "height": 2.109089236147702,
+        "family": "bare",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.5030279820678851
+      },
+      {
+        "x": 197.40192302952636,
+        "y": 7.288709203048544,
+        "z": -119.70890837954357,
+        "height": 2.85188910975121,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.7188604543307651
+      },
+      {
+        "x": -87.18464253083482,
+        "y": 8.119350554113375,
+        "z": 24.871068239212036,
+        "height": 3.2082365393638614,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.9503930579283346
+      },
+      {
+        "x": 151.3385348158925,
+        "y": 14.668772174415848,
+        "z": -23.44879091368057,
+        "height": 2.907310014497489,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.6181776785925801
+      },
+      {
+        "x": 165.14646217108634,
+        "y": 7.0704147022091535,
+        "z": -25.197033040458336,
+        "height": 2.2989423642866313,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.723584647446411
+      },
+      {
+        "x": -240.24388566596446,
+        "y": 8.321515160235885,
+        "z": -215.79038734547794,
+        "height": 3.199406418437138,
+        "family": "bare",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.1973912416160368
+      },
+      {
+        "x": 190.5004677906457,
+        "y": 10.639065534646027,
+        "z": -64.50078787398525,
+        "height": 2.294008254306391,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.200665044745024
+      },
+      {
+        "x": 98.34912057118319,
+        "y": 12.022716674220671,
+        "z": -104.01874230708927,
+        "height": 1.8047695017419754,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.0378086663178578
+      },
+      {
+        "x": 304.19252735154447,
+        "y": 11.97613982900965,
+        "z": -202.6462375037372,
+        "height": 3.5308356894645843,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.7919899097400241
+      },
+      {
+        "x": -108.11460664503994,
+        "y": 19.77400933336897,
+        "z": 17.335151712642983,
+        "height": 1.5015557108912616,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.9542667424174385
+      },
+      {
+        "x": 40.061355903043065,
+        "y": 12.234956655769315,
+        "z": -243.38831946020946,
+        "height": 2.618920858530328,
+        "family": "bare",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.1567684968317427
+      },
+      {
+        "x": -93.24822954029327,
+        "y": 17.606802507190448,
+        "z": -23.514187479391694,
+        "height": 1.41671861265786,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.6793256214045772
+      },
+      {
+        "x": -127.11921099101927,
+        "y": 14.180256946236527,
+        "z": 32.320280080195516,
+        "height": 2.6913425988983364,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.7915565672302097
+      },
+      {
+        "x": -121.92530607215481,
+        "y": 26.182685713900153,
+        "z": 24.30789844854735,
+        "height": 2.9695738959126174,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.0993849902843809
+      },
+      {
+        "x": 50.09791004285527,
+        "y": 15.135862221622018,
+        "z": -240.11231909506023,
+        "height": 2.4741655710618944,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.821441412439345
+      },
+      {
+        "x": 106.47314909612942,
+        "y": 26.22762210719705,
+        "z": -88.94813027139753,
+        "height": 3.314373368956149,
+        "family": "bare",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.7180336743841407
+      },
+      {
+        "x": -35.88593737975846,
+        "y": 20.480267112845485,
+        "z": 22.024265277199447,
+        "height": 2.461000950494781,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.9643169406762495
+      },
+      {
+        "x": -274.1235640176923,
+        "y": 5.240460266469533,
+        "z": -215.06931669078767,
+        "height": 2.420347815193236,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.2009466385450973
+      },
+      {
+        "x": -101.89421584642605,
+        "y": 9.180576240788133,
+        "z": 24.207373179495335,
+        "height": 2.4446460735984146,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.8388324057819373
+      },
+      {
+        "x": -99.40796673336293,
+        "y": 6.180883835671743,
+        "z": 52.96889172308147,
+        "height": 2.466009672544897,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.2099684331468588
+      },
+      {
+        "x": -63.504271039097944,
+        "y": 9.47062390622451,
+        "z": 46.87721521849744,
+        "height": 2.7496622201055287,
+        "family": "bare",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.1873642744191237
+      },
+      {
+        "x": -44.99414618167644,
+        "y": 10.453907471652698,
+        "z": 51.64195276424289,
+        "height": 2.663254431821406,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.8861563082008435
+      },
+      {
+        "x": 175.4513768809146,
+        "y": 5.659325044707438,
+        "z": -107.83542151050642,
+        "height": 2.5544545313809066,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.1294452061974993
+      },
+      {
+        "x": -48.668653837418404,
+        "y": 6.172879000495923,
+        "z": 59.069516918156296,
+        "height": 2.4622727835085243,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.9925600161549294
+      },
+      {
+        "x": 201.09073381092287,
+        "y": 6.077018439248402,
+        "z": -119.53406407963485,
+        "height": 2.5447507072240114,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.6109836151242194
+      },
+      {
+        "x": 110.11135531121174,
+        "y": 5.716733658902548,
+        "z": -5.115650192368776,
+        "height": 3.1125035628676416,
+        "family": "bare",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.7431061120651595
+      },
+      {
+        "x": 189.68542198397168,
+        "y": 6.801434833085705,
+        "z": -111.99558137916028,
+        "height": 2.7681899544317274,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.9549184037296687
+      },
+      {
+        "x": -72.5939511878985,
+        "y": 5.88809189351013,
+        "z": 36.97743063559756,
+        "height": 2.628164267074317,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.622741062265759
+      },
+      {
+        "x": -44.607218478480895,
+        "y": 19.355276012983612,
+        "z": 33.408769860863686,
+        "height": 2.1559048545081168,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.8115982217074486
+      },
+      {
+        "x": -86.0182134548846,
+        "y": 22.250619716536065,
+        "z": 12.105338054709136,
+        "height": 2.1949143104255198,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.2496990018358658
+      },
+      {
+        "x": 152.14820814510864,
+        "y": 16.72880009044031,
+        "z": -28.554711709730327,
+        "height": 2.3189475596882403,
+        "family": "bare",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.726620152016357
+      },
+      {
+        "x": -95.76293782801716,
+        "y": 16.763422994305714,
+        "z": 12.714322624728084,
+        "height": 2.5304664256516842,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.2112800763700855
+      },
+      {
+        "x": 148.012366706284,
+        "y": 7.831093375650729,
+        "z": -10.905704428907484,
+        "height": 1.4801291054114698,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.7649725712693237
+      },
+      {
+        "x": -71.30506552777094,
+        "y": 7.976283998750247,
+        "z": 34.14376671472564,
+        "height": 3.299970456538722,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.5934612840711638
+      },
+      {
+        "x": -92.56148565290955,
+        "y": 6.016190285658052,
+        "z": 53.5200105975382,
+        "height": 2.0473331790417433,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.9387524343976563
+      },
+      {
+        "x": -132.1993478421516,
+        "y": 19.278556287990707,
+        "z": -26.862273630453274,
+        "height": 2.7554189442656933,
+        "family": "bare",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.9469793496658413
+      },
+      {
+        "x": 192.83942695629386,
+        "y": 10.382173405980337,
+        "z": -94.74307595635764,
+        "height": 2.3015218657441436,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.0525827214457706
+      },
+      {
+        "x": -122.28215000769868,
+        "y": 17.700855819569924,
+        "z": 33.07899633515626,
+        "height": 2.6752257745712997,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.1368199067693188
+      },
+      {
+        "x": -88.63011128519946,
+        "y": 5.592330102065747,
+        "z": 52.59808323159814,
+        "height": 2.3978644241113214,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.9672555829938122
+      },
+      {
+        "x": -32.24428587011972,
+        "y": 8.696327455493622,
+        "z": 39.17461078800261,
+        "height": 2.9351785727776587,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.9383116019560306
+      },
+      {
+        "x": -82.78257790137535,
+        "y": 7.142360267232368,
+        "z": 24.9180600726977,
+        "height": 2.9959942679386584,
+        "family": "bare",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.8811494847953878
+      },
+      {
+        "x": -101.1248621911558,
+        "y": 7.487389053291347,
+        "z": 21.532848615199327,
+        "height": 3.4336132626980542,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.5507663794364731
+      },
+      {
+        "x": -94.93658949305284,
+        "y": 5.272606401538341,
+        "z": 52.21131892781705,
+        "height": 1.9709794647525996,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.820659221687443
+      },
+      {
+        "x": -46.74503269962639,
+        "y": 16.53067016268211,
+        "z": 38.28621661616489,
+        "height": 1.5428118162322788,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.9878541794952613
+      },
+      {
+        "x": -103.156956152295,
+        "y": 8.218013738564784,
+        "z": 52.19119709543884,
+        "height": 3.4949587628711014,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.2372461660455243
+      },
+      {
+        "x": 173.63398370668807,
+        "y": 5.754310439765526,
+        "z": -97.62527462514117,
+        "height": 2.924115731939674,
+        "family": "bare",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.0350989488192963
+      },
+      {
+        "x": 191.7544023946393,
+        "y": 25.406416960150704,
+        "z": -129.32141376193613,
+        "height": 2.051614395761862,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.1800645106345524
+      },
+      {
+        "x": 136.32160400427887,
+        "y": 12.132091157140113,
+        "z": -59.23694045469165,
+        "height": 2.576526567991823,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.0193150032600167
+      },
+      {
+        "x": 98.67780404599523,
+        "y": 5.733267232042032,
+        "z": 44.53391903080046,
+        "height": 2.0693282519467173,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.2424247301622895
+      },
+      {
+        "x": 243.14801083206177,
+        "y": 7.195694248800659,
+        "z": -293.3771876003593,
+        "height": 3.501418478693813,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.9298557148864838
+      },
+      {
+        "x": 294.9984552937434,
+        "y": 20.343595345965298,
+        "z": -207.43877469468862,
+        "height": 2.372460333816707,
+        "family": "bare",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.167046255264829
+      },
+      {
+        "x": 109.30977217465139,
+        "y": 20.399271299745354,
+        "z": -76.90996234491467,
+        "height": 3.1756507277023047,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.1787416263770185
+      },
+      {
+        "x": -264.1515157494106,
+        "y": 5.422899200258447,
+        "z": -166.9154494907707,
+        "height": 2.2373437085188925,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.1629707723558032
+      },
+      {
+        "x": 109.62346230311337,
+        "y": 5.14063044189748,
+        "z": 40.074048799229786,
+        "height": 1.6198258941061794,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.8852563883641
+      },
+      {
+        "x": -92.51574309575646,
+        "y": 21.82741607916254,
+        "z": -0.9368006447330117,
+        "height": 2.323293437436223,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.7471972717324262
+      },
+      {
+        "x": -111.90455430713507,
+        "y": 10.353960049690878,
+        "z": 32.36940851062536,
+        "height": 1.708052947698161,
+        "family": "bare",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.6343220493541634
+      },
+      {
+        "x": 113.7144035404244,
+        "y": 9.121727369585866,
+        "z": -8.26639372203499,
+        "height": 1.7944840003270655,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.6231645709749722
+      },
+      {
+        "x": 120.61113108571553,
+        "y": 17.729048969443554,
+        "z": -16.356358815683052,
+        "height": 1.793672427209094,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.7419686915641881
+      },
+      {
+        "x": -107.98623001536225,
+        "y": 12.414280946128182,
+        "z": 27.363456007326022,
+        "height": 1.9278885449282823,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.0290484614244226
+      },
+      {
+        "x": 157.51841826957244,
+        "y": 13.758686376911365,
+        "z": -41.082468810491264,
+        "height": 3.448535813437775,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.9656022339217603
+      },
+      {
+        "x": 145.53061240180244,
+        "y": 7.397012860454395,
+        "z": -52.40844605839811,
+        "height": 2.5646622525993736,
+        "family": "bare",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.2003745907512597
+      },
+      {
+        "x": -109.74172231847584,
+        "y": 17.068373959972423,
+        "z": 22.247614729218185,
+        "height": 3.090409919479862,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.135644310575953
+      },
+      {
+        "x": -239.72553577055317,
+        "y": 10.587376880455796,
+        "z": -177.41349685937166,
+        "height": 2.7035607799421997,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.2056935496744403
+      },
+      {
+        "x": -44.80309676859779,
+        "y": 13.971223554958158,
+        "z": 40.88390774279833,
+        "height": 2.543570938380435,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.9108009043260072
+      },
+      {
+        "x": -43.2955697529389,
+        "y": 7.212323772215941,
+        "z": 7.0050245225429535,
+        "height": 2.5634829288814216,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.1224713212261608
+      },
+      {
+        "x": 151.17030120952694,
+        "y": 19.296084175888247,
+        "z": -38.72999889170751,
+        "height": 3.0190010806545615,
+        "family": "bare",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.6793195192340881
+      },
+      {
+        "x": -73.02742946877314,
+        "y": 6.774413298499537,
+        "z": 32.290829172125086,
+        "height": 1.6398547790013254,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.1597954981198357
+      },
+      {
+        "x": 111.71097968628112,
+        "y": 18.324183657031828,
+        "z": -30.159516487270594,
+        "height": 3.35323533564806,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.0403372988016382
+      },
+      {
+        "x": -76.48066613130189,
+        "y": 5.109400983641876,
+        "z": 32.999325735727325,
+        "height": 1.9647959178779275,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.731129492975447
+      },
+      {
+        "x": 204.21489558021824,
+        "y": 5.975848783149459,
+        "z": -122.75318925036117,
+        "height": 2.0105756433680653,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.9778618055891594
+      },
+      {
+        "x": 170.31554119852044,
+        "y": 6.675503916567125,
+        "z": -109.87172957044095,
+        "height": 2.5730493557173757,
+        "family": "bare",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.9198896639924408
+      },
+      {
+        "x": 105.08474592156513,
+        "y": 25.850461431234887,
+        "z": -93.16529371123761,
+        "height": 1.4323705224785952,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.9605435225874485
+      },
+      {
+        "x": -55.768866923469204,
+        "y": 16.589658569185417,
+        "z": 34.8348835632205,
+        "height": 1.4222236400470136,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.7627547739515239
+      },
+      {
+        "x": -36.382102672545955,
+        "y": 7.212447466169045,
+        "z": 45.88173473626375,
+        "height": 1.6093089473433793,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.9517714545861683
+      },
+      {
+        "x": 26.50520302446118,
+        "y": 11.417351171282103,
+        "z": -236.05329933576286,
+        "height": 3.083824967639521,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.6060358161965606
+      },
+      {
+        "x": -48.011893965104235,
+        "y": 17.643640987648645,
+        "z": 34.539157937048,
+        "height": 2.0004866093397142,
+        "family": "bare",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.7126847643855174
+      },
+      {
+        "x": 132.74727061553165,
+        "y": 5.341059682769625,
+        "z": 6.664805880282074,
+        "height": 3.224999273242429,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.5335216892929161
+      },
+      {
+        "x": -108.58184489751264,
+        "y": 26.66449222709033,
+        "z": 8.491979335667565,
+        "height": 1.7022201490588484,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.1444351083319255
+      },
+      {
+        "x": -67.22633555792888,
+        "y": 12.452849039999927,
+        "z": 28.288729324704036,
+        "height": 1.8658539928495883,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.643111727447053
+      },
+      {
+        "x": 119.13124093704968,
+        "y": 6.886332829277462,
+        "z": -52.99285389948636,
+        "height": 1.5575038205832241,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.6802982904358288
+      },
+      {
+        "x": -70.84549557096264,
+        "y": 7.6405319888755265,
+        "z": 52.109540635719895,
+        "height": 3.373461360996589,
+        "family": "bare",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.9812597211629118
+      },
+      {
+        "x": -63.43662244694715,
+        "y": 11.390829696808021,
+        "z": 42.58804566273466,
+        "height": 2.146080004842952,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.1752617495496562
+      },
+      {
+        "x": -120.9846221377077,
+        "y": 7.2425719246465485,
+        "z": 43.78914260864258,
+        "height": 3.5874261005781594,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.6198288219272596
+      },
+      {
+        "x": -123.70310532796053,
+        "y": 5.027938857065697,
+        "z": 0.3673492188099772,
+        "height": 2.522683226875961,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.1371601407995795
+      },
+      {
+        "x": 149.63893723229378,
+        "y": 13.300549914232729,
+        "z": -46.946994276950136,
+        "height": 1.9802021260373293,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.0002776177796875
+      },
+      {
+        "x": 141.50864225480305,
+        "y": 6.040576952427714,
+        "z": -229.67140254098922,
+        "height": 2.8665636450983585,
+        "family": "bare",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.5395525441204639
+      },
+      {
+        "x": -108.78599920678231,
+        "y": 14.696810764333366,
+        "z": 25.274512299802154,
+        "height": 3.5706929995678367,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.9505274468297686
+      },
+      {
+        "x": 30.290941254587494,
+        "y": 8.674081212388057,
+        "z": -246.30078503396362,
+        "height": 2.3144645996391775,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.8259813929319457
+      },
+      {
+        "x": -75.93434190178905,
+        "y": 10.19627974073005,
+        "z": 18.504714253824204,
+        "height": 1.4038363953586668,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.8370403554460866
+      },
+      {
+        "x": -36.141135041321284,
+        "y": 20.14606651435304,
+        "z": 25.01237215846777,
+        "height": 3.160076938197017,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.8307261372269344
+      },
+      {
+        "x": 152.14732048673926,
+        "y": 9.909138298358721,
+        "z": -13.905446196440607,
+        "height": 2.351085093477741,
+        "family": "bare",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.7202454534220359
+      },
+      {
+        "x": 205.2309924201291,
+        "y": 7.102623245112304,
+        "z": -73.5852807352785,
+        "height": 2.1806560991797594,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.9320938693116421
+      },
+      {
+        "x": -110.56217273903664,
+        "y": 5.870779716560885,
+        "z": 54.717823817394674,
+        "height": 1.6604192125145345,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.9386734727056423
+      },
+      {
+        "x": 97.90165943360934,
+        "y": 15.958005206575308,
+        "z": -85.36877890489995,
+        "height": 1.8640303259715436,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.9264178413196213
+      },
+      {
+        "x": -72.32806250401823,
+        "y": 14.106582425904064,
+        "z": 9.393673325655982,
+        "height": 2.6620256540831178,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.746773990828511
+      },
+      {
+        "x": -29.893494155588883,
+        "y": 5.930135114534347,
+        "z": 40.75748582743108,
+        "height": 3.4893511952366683,
+        "family": "bare",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.013995230283252
+      },
+      {
+        "x": -104.10301613609424,
+        "y": 25.14543982164182,
+        "z": 38.76507575251162,
+        "height": 1.453085482213646,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.0411774964624683
+      },
+      {
+        "x": 148.90078263431099,
+        "y": 18.10420847937863,
+        "z": -42.178549291566014,
+        "height": 1.7878652138169855,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.1923762927534123
+      },
+      {
+        "x": 190.46936641902622,
+        "y": 7.603339146970702,
+        "z": -57.72900903248228,
+        "height": 2.3273913443554193,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.8794387731582787
+      },
+      {
+        "x": -114.64354330219174,
+        "y": 26.243688344755714,
+        "z": -12.191346631385386,
+        "height": 2.6913330540526657,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.8410802812890199
+      },
+      {
+        "x": 102.39940288677752,
+        "y": 6.374729864179976,
+        "z": -111.09648401942104,
+        "height": 2.451055937912315,
+        "family": "bare",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.9094635799144724
+      },
+      {
+        "x": -72.27131551734635,
+        "y": 11.546138677812351,
+        "z": 21.978533446555957,
+        "height": 2.3759682454168796,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.7126874221278229
+      },
+      {
+        "x": -128.17370328635158,
+        "y": 25.30741566452284,
+        "z": -32.59426000434905,
+        "height": 2.5976438459940256,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.2390540171657647
+      },
+      {
+        "x": 167.5538056167226,
+        "y": 6.509670069561727,
+        "z": -110.33307868870907,
+        "height": 3.4092076071072372,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.8408547241866572
+      },
+      {
+        "x": 195.1364292436145,
+        "y": 8.824879235487614,
+        "z": -119.50909826322459,
+        "height": 2.2108099831268193,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.2278620445973012
+      },
+      {
+        "x": -125.15888344816695,
+        "y": 13.611034538410024,
+        "z": 34.49487633956596,
+        "height": 1.4288827434647828,
+        "family": "bare",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.1907760427229905
+      },
+      {
+        "x": -102.21534219371466,
+        "y": 13.411130350815256,
+        "z": 8.57677416689694,
+        "height": 3.543663801718503,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.35437755643373786
+      },
+      {
+        "x": -52.568460746356465,
+        "y": 6.314539812364788,
+        "z": 2.553989576874301,
+        "height": 2.1179305850993844,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.9039868663094506
+      },
+      {
+        "x": -196.4130149988524,
+        "y": 8.63276119335867,
+        "z": -82.66251132078469,
+        "height": 2.0181818281300368,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.0262074062976416
+      },
+      {
+        "x": 167.05922544396822,
+        "y": 5.547004756140342,
+        "z": -22.686901532579213,
+        "height": 2.5176610665395858,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.5502210995244262
+      },
+      {
+        "x": -65.65446409405097,
+        "y": 10.097842176161233,
+        "z": 4.284301877487451,
+        "height": 2.3126405880320817,
+        "family": "bare",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.2010508243344433
+      },
+      {
+        "x": -73.4651558670742,
+        "y": 12.863684587858323,
+        "z": 17.69404949550517,
+        "height": 1.6869965371675788,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.0452026532168452
+      },
+      {
+        "x": -117.42496525456687,
+        "y": 22.224877009503487,
+        "z": 29.644455603323877,
+        "height": 1.455494009843096,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.1460076331821487
+      },
+      {
+        "x": 190.19796389659018,
+        "y": 5.987381179986926,
+        "z": -53.19647883065045,
+        "height": 1.7203282277565448,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.6534052146407793
+      },
+      {
+        "x": -71.33258513321226,
+        "y": 9.687250832181252,
+        "z": 30.032016626559198,
+        "height": 3.5522162523586305,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.8597671267236806
+      },
+      {
+        "x": 104.10844413480055,
+        "y": 13.918220880610296,
+        "z": 26.68218531482853,
+        "height": 3.2382146022748204,
+        "family": "bare",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.112140742143538
+      },
+      {
+        "x": 107.86161710266482,
+        "y": 5.606356565459926,
+        "z": 19.323144774883986,
+        "height": 1.4872002107556908,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.2340630301786015
+      },
+      {
+        "x": 88.80921883018911,
+        "y": 12.716805141929303,
+        "z": 30.006289890035987,
+        "height": 2.8855790480971337,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.2187630617398904
+      },
+      {
+        "x": -84.3543900658619,
+        "y": 5.193479272789599,
+        "z": 27.259742256021127,
+        "height": 1.5977254278492181,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.5247467668972362
+      },
+      {
+        "x": 123.70855296361066,
+        "y": 27.45639937711774,
+        "z": -75.29475535731763,
+        "height": 1.6632016144227235,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.9133884770091616
+      },
+      {
+        "x": 236.6797216240118,
+        "y": 9.676697217538592,
+        "z": -236.04144293488935,
+        "height": 1.4391790580004453,
+        "family": "bare",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.2155399652717689
+      },
+      {
+        "x": -88.22349823851354,
+        "y": 19.68648819871174,
+        "z": 14.508181587792933,
+        "height": 2.951258635055274,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.9950425106314704
+      },
+      {
+        "x": -26.650807151833398,
+        "y": 5.196395674628765,
+        "z": 28.75314785167575,
+        "height": 2.300820443034172,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.1279339853856223
+      },
+      {
+        "x": 107.94778793554671,
+        "y": 5.874533487505696,
+        "z": -113.35784357832745,
+        "height": 3.1375708308536563,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.7987880273306592
+      },
+      {
+        "x": -35.646744927632646,
+        "y": 12.656466527474306,
+        "z": 13.353245848789811,
+        "height": 1.8026964369695633,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.2091459873712058
+      },
+      {
+        "x": -33.638100647784846,
+        "y": 6.425310780999598,
+        "z": 44.656139427330345,
+        "height": 2.9584099372848867,
+        "family": "bare",
+        "roadside": false,
+        "mountain": true,
+        "slope": 0.8760700451241032
+      },
+      {
+        "x": 159.94501196761334,
+        "y": 7.7257169241197605,
+        "z": -112.99988456210122,
+        "height": 2.100444815075025,
+        "family": "broadleaf",
+        "roadside": false,
+        "mountain": true,
+        "slope": 1.1890562349104599
+      }
+    ],
+    "roads": [
+      {
+        "name": "Left bank wooded road",
+        "width": 2.8,
+        "samples": [
+          [
+            -11.667542739521394,
+            2.3861144741214053,
+            45
+          ],
+          [
+            -11.804988790424208,
+            2.3919577685516034,
+            44.31547449550426
+          ],
+          [
+            -11.938467286104183,
+            2.3980474461706596,
+            43.62935200649272
+          ],
+          [
+            -12.068461290580702,
+            2.404398824150005,
+            42.94284208610655
+          ],
+          [
+            -12.195670232401481,
+            2.4060310240379246,
+            42.255666967986635
+          ],
+          [
+            -12.320633401584484,
+            2.4070834408568977,
+            41.56807554813667
+          ],
+          [
+            -12.443864124283584,
+            2.4051477236981436,
+            40.88022243308104
+          ],
+          [
+            -12.56587182161167,
+            2.4030707982554853,
+            40.19210053539315
+          ],
+          [
+            -12.687111068416256,
+            2.3996534131752294,
+            39.50388264438981
+          ],
+          [
+            -12.80804623720455,
+            2.3962089964877205,
+            38.81560902335513
+          ],
+          [
+            -12.929134876221326,
+            2.393104417442587,
+            38.127327492856544
+          ],
+          [
+            -13.050812424488969,
+            2.3898977226601126,
+            37.4392261522347
+          ],
+          [
+            -13.17357971299681,
+            2.388759323239767,
+            36.751185057712355
+          ],
+          [
+            -13.297860885409706,
+            2.3875710317230445,
+            36.063622647462424
+          ],
+          [
+            -13.424256711345393,
+            2.390145108204307,
+            35.37614183692013
+          ],
+          [
+            -13.553170174029104,
+            2.3929671745362278,
+            34.689639096878764
+          ],
+          [
+            -13.685417192947481,
+            2.401598763193067,
+            34.00309559705689
+          ],
+          [
+            -13.821400322388364,
+            2.4108797190474207,
+            33.31802033974735
+          ],
+          [
+            -13.962097564362287,
+            2.4284100619517046,
+            32.63343559379444
+          ],
+          [
+            -14.108232938643258,
+            2.446268757279276,
+            31.950236786490144
+          ],
+          [
+            -14.260669200867238,
+            2.476633790738999,
+            31.269285862988358
+          ],
+          [
+            -14.420908134082156,
+            2.5060052930902055,
+            30.589525509518502
+          ],
+          [
+            -14.590128818114149,
+            2.5525263157558284,
+            29.91252005544442
+          ],
+          [
+            -14.769976321987464,
+            2.5992678875093262,
+            29.2392687417919
+          ],
+          [
+            -14.962597761603961,
+            2.6704832376127166,
+            28.570737089599724
+          ],
+          [
+            -15.170544067237469,
+            2.745398617509357,
+            27.908603476233925
+          ],
+          [
+            -15.39060420587716,
+            2.8669411190684966,
+            27.253430329883315
+          ],
+          [
+            -15.620851552609118,
+            2.9804609504035096,
+            26.606689081431615
+          ],
+          [
+            -15.86321641533279,
+            3.1428199626845066,
+            25.969405287929874
+          ],
+          [
+            -16.118986925583314,
+            3.307843581818362,
+            25.34324641732571
+          ],
+          [
+            -16.389502476947655,
+            3.4918184665073237,
+            24.727420222643556
+          ],
+          [
+            -16.675089847878848,
+            3.6843525845996172,
+            24.12039647150416
+          ],
+          [
+            -16.975192607744457,
+            3.8675479644724926,
+            23.519339211579034
+          ],
+          [
+            -17.28831309213173,
+            4.042963303240468,
+            22.92098883169684
+          ],
+          [
+            -17.61207427964175,
+            4.207010089960111,
+            22.322763550512832
+          ],
+          [
+            -17.943718857351275,
+            4.330946341343002,
+            21.722994218193143
+          ],
+          [
+            -18.280505516125988,
+            4.455620936134626,
+            21.120985049755664
+          ],
+          [
+            -18.6235067923973,
+            4.5382452688724335,
+            20.51845079860491
+          ],
+          [
+            -18.97707525693541,
+            4.6178289932818,
+            19.920041748393697
+          ],
+          [
+            -19.33943624616369,
+            4.675244443800932,
+            19.32568109424714
+          ],
+          [
+            -19.70910528559987,
+            4.728034454962179,
+            18.734969355037883
+          ],
+          [
+            -20.084910345597066,
+            4.775099119908518,
+            18.14748779456678
+          ],
+          [
+            -20.46590363944593,
+            4.809850312055409,
+            17.562830409666635
+          ],
+          [
+            -20.85129880504909,
+            4.842495750333079,
+            16.980621182503523
+          ],
+          [
+            -21.24042610880774,
+            4.866544802072607,
+            16.40052214724107
+          ],
+          [
+            -21.632576210075058,
+            4.889703470536299,
+            15.822418042312316
+          ],
+          [
+            -22.027134789444418,
+            4.906377190619514,
+            15.246178468230287
+          ],
+          [
+            -22.423917305886874,
+            4.921724135168715,
+            14.671152252705154
+          ],
+          [
+            -22.822496783311934,
+            4.936082358463131,
+            14.097128961591329
+          ],
+          [
+            -23.222309632604663,
+            4.947210614422363,
+            13.524156395346688
+          ],
+          [
+            -23.623103156806064,
+            4.958271442572658,
+            12.951885284563627
+          ],
+          [
+            -24.024649261373916,
+            4.968366610075158,
+            12.379972007946115
+          ],
+          [
+            -24.426537222184905,
+            4.978521762238941,
+            11.808361506557356
+          ],
+          [
+            -24.828476362722757,
+            4.989566872340215,
+            11.236846597411532
+          ],
+          [
+            -25.230227705310178,
+            5.001163071417543,
+            10.665157514431113
+          ],
+          [
+            -25.631452785920242,
+            5.014003630423871,
+            10.093168929901083
+          ],
+          [
+            -26.03190199016786,
+            5.03008125464687,
+            9.5206241262406
+          ],
+          [
+            -26.431213295611418,
+            5.0461350587307106,
+            8.94741450600294
+          ],
+          [
+            -26.829073538673597,
+            5.066416119334192,
+            8.373341616885785
+          ],
+          [
+            -27.22574566636314,
+            5.090474948483461,
+            7.798448311220022
+          ],
+          [
+            -27.626732465622815,
+            5.117305869819924,
+            7.226938382570187
+          ],
+          [
+            -28.033333919985743,
+            5.147140135684284,
+            6.659385778053773
+          ],
+          [
+            -28.44472387799309,
+            5.179129496974121,
+            6.095538878614228
+          ],
+          [
+            -28.860256530823275,
+            5.215023515062525,
+            5.534841434917127
+          ],
+          [
+            -29.279220415251878,
+            5.2508917759648215,
+            4.976793174046482
+          ],
+          [
+            -29.700870998421976,
+            5.288340409673076,
+            4.420915790944479
+          ],
+          [
+            -30.124575938243485,
+            5.327011898575099,
+            3.866576223288459
+          ],
+          [
+            -30.54955723929917,
+            5.365709932600835,
+            3.3133389093361076
+          ],
+          [
+            -30.975241168272582,
+            5.404380172456342,
+            2.760520435713585
+          ],
+          [
+            -31.400845270457094,
+            5.442793278840794,
+            2.2077389523211948
+          ],
+          [
+            -31.82587536171473,
+            5.479975315758944,
+            1.6542782126008524
+          ],
+          [
+            -32.249515505418366,
+            5.5161887390233435,
+            1.0998907463583085
+          ],
+          [
+            -32.67143604618357,
+            5.550288768748054,
+            0.5437507039567564
+          ],
+          [
+            -33.09068194852259,
+            5.581994341482658,
+            -0.01407827972979736
+          ],
+          [
+            -33.507256736096835,
+            5.613391132246163,
+            -0.5747356629582228
+          ],
+          [
+            -33.919867290237235,
+            5.6381916184425105,
+            -1.1375404572685686
+          ],
+          [
+            -34.32880971143818,
+            5.662748009817617,
+            -1.7038843119439844
+          ],
+          [
+            -34.73307470209452,
+            5.684847548300419,
+            -2.273288120777874
+          ],
+          [
+            -35.132462546355846,
+            5.7006065012263445,
+            -2.846300788559386
+          ],
+          [
+            -35.526855704562024,
+            5.715558916264977,
+            -3.423525208719478
+          ],
+          [
+            -35.91504197077943,
+            5.724034478444371,
+            -4.003853211889235
+          ],
+          [
+            -36.29755414837924,
+            5.730825017707019,
+            -4.588667144457844
+          ],
+          [
+            -36.67399643091473,
+            5.7298701012235895,
+            -5.177906531771775
+          ],
+          [
+            -37.04336449869371,
+            5.7269269837923735,
+            -5.770418910805539
+          ],
+          [
+            -37.40623254085095,
+            5.721121635638651,
+            -6.367469776232651
+          ],
+          [
+            -37.76238783434891,
+            5.707707698719983,
+            -6.969026382303852
+          ],
+          [
+            -38.11118250594268,
+            5.692614839171298,
+            -7.574206730396037
+          ],
+          [
+            -38.45224085250462,
+            5.67019616711148,
+            -8.182387248113853
+          ],
+          [
+            -38.78752799662905,
+            5.6475043631008175,
+            -8.795848741982807
+          ],
+          [
+            -39.11649481115568,
+            5.615641954545511,
+            -9.41215487082498
+          ],
+          [
+            -39.43909951965934,
+            5.583595110129369,
+            -10.030017541234567
+          ],
+          [
+            -39.75665324842518,
+            5.546356371346705,
+            -10.650866648914565
+          ],
+          [
+            -40.06953737127748,
+            5.507214614894278,
+            -11.274509416765783
+          ],
+          [
+            -40.37809318517541,
+            5.463777935620382,
+            -11.900763364927444
+          ],
+          [
+            -40.68245116242779,
+            5.418229804186378,
+            -12.52908755519402
+          ],
+          [
+            -40.981987208095624,
+            5.370786627416554,
+            -13.157393455063959
+          ],
+          [
+            -41.27813194553647,
+            5.320010801880068,
+            -13.787951004160508
+          ],
+          [
+            -41.571110887152294,
+            5.267816176679746,
+            -14.420612874294683
+          ],
+          [
+            -41.861126305695585,
+            5.212342391606081,
+            -15.055227402877875
+          ],
+          [
+            -42.147242000984576,
+            5.156773638377126,
+            -15.689146611250576
+          ],
+          [
+            -42.430811046471554,
+            5.097629609632244,
+            -16.324806018094893
+          ],
+          [
+            -42.71204523044792,
+            5.038429212255485,
+            -16.96219650290499
+          ],
+          [
+            -42.99085183008858,
+            4.976041733454716,
+            -17.600642192037064
+          ],
+          [
+            -43.26679076927529,
+            4.913562112005433,
+            -18.238665372658996
+          ],
+          [
+            -43.540902992744,
+            4.84871235121347,
+            -18.87823672419475
+          ],
+          [
+            -43.81328424395834,
+            4.783301595194381,
+            -19.519190930824816
+          ],
+          [
+            -44.08336595624272,
+            4.716546409717998,
+            -20.159797565197174
+          ],
+          [
+            -44.35175960506496,
+            4.648818464790271,
+            -20.801126116011314
+          ],
+          [
+            -44.618810258073935,
+            4.579870518910169,
+            -21.443654852310836
+          ],
+          [
+            -44.88426753835096,
+            4.510137206655815,
+            -22.086445189929012
+          ],
+          [
+            -45.14814830155909,
+            4.4397990951575,
+            -22.7292041125633
+          ],
+          [
+            -45.41101084122403,
+            4.368410038031602,
+            -23.372977229403265
+          ],
+          [
+            -45.672772908011275,
+            4.296438008692812,
+            -24.017264312518627
+          ],
+          [
+            -45.93319562792742,
+            4.223707257704024,
+            -24.661178375723324
+          ],
+          [
+            -46.19287775924919,
+            4.150698129690884,
+            -25.3059122666763
+          ],
+          [
+            -46.45181316373205,
+            4.0767444971466835,
+            -25.9511766602708
+          ],
+          [
+            -46.70972016177414,
+            4.002801214498154,
+            -26.59599553165286
+          ],
+          [
+            -46.96713022272507,
+            3.9280222868665273,
+            -27.241430418250264
+          ],
+          [
+            -47.224062209132086,
+            3.853219920394518,
+            -27.887270437409903
+          ],
+          [
+            -47.480315362031284,
+            3.7778644167310627,
+            -28.532753619976376
+          ],
+          [
+            -47.73629232954535,
+            3.702507028464742,
+            -29.178640822219645
+          ],
+          [
+            -47.992007626396635,
+            3.6268078392730487,
+            -29.82471983163554
+          ],
+          [
+            -48.24742103545461,
+            3.5510763813606943,
+            -30.470641350794907
+          ],
+          [
+            -48.502760821453,
+            3.4752261702561063,
+            -31.116736659967067
+          ],
+          [
+            -48.75804404911721,
+            3.3993523710565214,
+            -31.762804129858768
+          ],
+          [
+            -49.013387152814104,
+            3.323539539643135,
+            -32.408893819085364
+          ],
+          [
+            -49.26886662654121,
+            3.24775567185155,
+            -33.054954295885054
+          ],
+          [
+            -49.5244933386601,
+            3.1721789181078046,
+            -33.70076734378203
+          ],
+          [
+            -49.780533229232205,
+            3.096707239782668,
+            -34.34675706485591
+          ],
+          [
+            -50.03693324072935,
+            3.021512817105613,
+            -34.99253925747605
+          ],
+          [
+            -50.29369164648286,
+            2.9466661925542716,
+            -35.63785784906057
+          ],
+          [
+            -50.55120617935719,
+            2.8719843192262906,
+            -36.283455327019695
+          ],
+          [
+            -50.80933478762028,
+            2.7978734675690613,
+            -36.92871318180629
+          ],
+          [
+            -51.06804942534503,
+            2.7241132547032354,
+            -37.57329771404375
+          ],
+          [
+            -51.32783945199205,
+            2.651071136562751,
+            -38.21815530178563
+          ],
+          [
+            -51.58855657582938,
+            2.578141414395171,
+            -38.8626359813543
+          ],
+          [
+            -51.85011395048951,
+            2.506451097822108,
+            -39.5062422438941
+          ],
+          [
+            -52.11301633400262,
+            2.434787761092931,
+            -40.14992127337736
+          ],
+          [
+            -52.37726114473516,
+            2.3647422586400277,
+            -40.793356691761865
+          ],
+          [
+            -52.64263872320391,
+            2.294711398541213,
+            -41.43572577553916
+          ],
+          [
+            -52.90954059473795,
+            2.2264635938641524,
+            -42.077653555734194
+          ],
+          [
+            -53.17836316375822,
+            2.158308686573957,
+            -42.719744603258604
+          ],
+          [
+            -53.44866336085952,
+            2.097530427242281,
+            -43.360584289457776
+          ],
+          [
+            -53.720518135237214,
+            2.0442730926980768,
+            -43.99999999999999
+          ]
+        ]
+      },
+      {
+        "name": "Right bank wooded road",
+        "width": 2.8,
+        "samples": [
+          [
+            55.68606023985687,
+            2.3941625135593596,
+            46
+          ],
+          [
+            56.36610928383369,
+            2.4202963424760253,
+            46.14662676287332
+          ],
+          [
+            57.032381826698895,
+            2.4492918098347114,
+            46.34799756821032
+          ],
+          [
+            57.69004717481948,
+            2.482421769438793,
+            46.576533938060294
+          ],
+          [
+            58.34489388850865,
+            2.5151788575233764,
+            46.81336829280468
+          ],
+          [
+            59.002599721440454,
+            2.5481581646650238,
+            47.04199100263268
+          ],
+          [
+            59.669069636645624,
+            2.580789752150444,
+            47.24357316169443
+          ],
+          [
+            60.349203642925815,
+            2.6178486260048266,
+            47.39047494310422
+          ],
+          [
+            61.04237076786094,
+            2.6516700657295504,
+            47.434901989881226
+          ],
+          [
+            61.72032491378299,
+            2.696730212572415,
+            47.29481325178067
+          ],
+          [
+            62.28415116004254,
+            2.7340266509300064,
+            46.90263578843789
+          ],
+          [
+            62.67118688199886,
+            2.7734133609283584,
+            46.326324821939956
+          ],
+          [
+            62.92951667141496,
+            2.796774115812257,
+            45.679828212634995
+          ],
+          [
+            63.10834985232606,
+            2.820516425225432,
+            45.00506105092077
+          ],
+          [
+            63.233661444969115,
+            2.8410647690225703,
+            44.3223246643306
+          ],
+          [
+            63.32209507968819,
+            2.8589271952845303,
+            43.63167059484671
+          ],
+          [
+            63.38264333674513,
+            2.876209070299674,
+            42.93734491115241
+          ],
+          [
+            63.4213960929349,
+            2.8912399187604896,
+            42.24111017080331
+          ],
+          [
+            63.442602191289076,
+            2.9061089492828565,
+            41.54359882291082
+          ],
+          [
+            63.449318751711886,
+            2.9194670469666884,
+            40.844974891670894
+          ],
+          [
+            63.44383820818594,
+            2.932729549149935,
+            40.14679047923716
+          ],
+          [
+            63.42806186819155,
+            2.9448545773240626,
+            39.45255549175042
+          ],
+          [
+            63.403303299788114,
+            2.956919195922048,
+            38.75692407987181
+          ],
+          [
+            63.37061351027732,
+            2.968244169898332,
+            38.059811704030004
+          ],
+          [
+            63.33086003169604,
+            2.979524861543988,
+            37.361301403940416
+          ],
+          [
+            63.285233721583936,
+            2.990152088341636,
+            36.66812020898267
+          ],
+          [
+            63.23397614307816,
+            3.0007392287606973,
+            35.973570724526
+          ],
+          [
+            63.1775608286277,
+            3.0109103903293115,
+            35.27727619928809
+          ],
+          [
+            63.11677011401859,
+            3.0209868135891624,
+            34.58312502774684
+          ],
+          [
+            63.05194870127699,
+            3.030724761979753,
+            33.89010571421287
+          ],
+          [
+            62.98317838641742,
+            3.040417127817575,
+            33.195373589647744
+          ],
+          [
+            62.91108447849602,
+            3.0498546794715646,
+            32.502113778573786
+          ],
+          [
+            62.835911000476095,
+            3.059208931851527,
+            31.809827631839536
+          ],
+          [
+            62.75765843455278,
+            3.0684141947663717,
+            31.11623846833256
+          ],
+          [
+            62.676885386433,
+            3.07753083859586,
+            30.42427872586297
+          ],
+          [
+            62.5936260828305,
+            3.0865347374446093,
+            29.732395317824864
+          ],
+          [
+            62.507983191633706,
+            3.0954857695068934,
+            29.039896167868253
+          ],
+          [
+            62.42039565571571,
+            3.104349684309722,
+            28.34888771281267
+          ],
+          [
+            62.3307890174073,
+            3.1131688288053136,
+            27.65746536980921
+          ],
+          [
+            62.239404304965724,
+            3.121946524496442,
+            26.966322734976025
+          ],
+          [
+            62.146391782905276,
+            3.130695508019834,
+            26.275496027976917
+          ],
+          [
+            62.05186607600328,
+            3.1394245400523015,
+            25.584813621244272
+          ],
+          [
+            61.955991874218896,
+            3.1481541055515585,
+            24.894513873741683
+          ],
+          [
+            61.85879193810771,
+            3.15688918313911,
+            24.20385247170163
+          ],
+          [
+            61.760585988268964,
+            3.1656438654856007,
+            23.514216380453256
+          ],
+          [
+            61.66125975776535,
+            3.174421042299941,
+            22.82394738679125
+          ],
+          [
+            61.56102751142105,
+            3.183259381906271,
+            22.133708318765247
+          ],
+          [
+            61.4602674105169,
+            3.192115516985293,
+            21.445250340951894
+          ],
+          [
+            61.358497386493774,
+            3.2010886109805585,
+            20.754447736601094
+          ],
+          [
+            61.256332547287435,
+            3.2101219734454864,
+            20.064633294261775
+          ],
+          [
+            61.15409949563716,
+            3.219241000864899,
+            19.377105731406743
+          ],
+          [
+            61.05102771773373,
+            3.228519549091652,
+            18.68576129373684
+          ],
+          [
+            60.94806167331672,
+            3.2379319076018866,
+            17.99595191025985
+          ],
+          [
+            60.84549159500393,
+            3.2474510808357735,
+            17.308547765689987
+          ],
+          [
+            60.74262944162507,
+            3.257239805135494,
+            16.617756144223716
+          ],
+          [
+            60.640191514203224,
+            3.267196054572536,
+            15.927050583104151
+          ],
+          [
+            60.53868641693161,
+            3.277456678921093,
+            15.238364920812106
+          ],
+          [
+            60.438321571030706,
+            3.2878776498259907,
+            14.551397888005173
+          ],
+          [
+            60.338328982266844,
+            3.2988667034738506,
+            13.85873991223184
+          ],
+          [
+            60.240086418969696,
+            3.3100565579596757,
+            13.167285562291578
+          ],
+          [
+            60.14400890118959,
+            3.32192229409206,
+            12.476791859924809
+          ],
+          [
+            60.05083969899962,
+            3.333964441071575,
+            11.790380348807975
+          ],
+          [
+            59.95623185463174,
+            3.3467513493872927,
+            11.099936130211677
+          ],
+          [
+            59.85948567749171,
+            3.359749387965903,
+            10.409814717410205
+          ],
+          [
+            59.76050528247727,
+            3.3732857921538772,
+            9.72004594535315
+          ],
+          [
+            59.65919445844863,
+            3.3870153225968997,
+            9.030659296774283
+          ],
+          [
+            59.55545710618209,
+            3.401178414240635,
+            8.34168325564757
+          ],
+          [
+            59.44919771999642,
+            3.4155217009612815,
+            7.653144702240283
+          ],
+          [
+            59.34032191111926,
+            3.4302164874691456,
+            6.965068363683137
+          ],
+          [
+            59.228713399889166,
+            3.4450531281085093,
+            6.277332927022634
+          ],
+          [
+            59.11425173249232,
+            3.4601991006153363,
+            5.589790301521494
+          ],
+          [
+            58.99690829801244,
+            3.475369433614574,
+            4.902820769963766
+          ],
+          [
+            58.87660110228246,
+            3.490773892842024,
+            4.21644453640696
+          ],
+          [
+            58.753252459009516,
+            3.5061232638771473,
+            3.530677544195607
+          ],
+          [
+            58.62678964909203,
+            3.5215748630997226,
+            2.8455314538686975
+          ],
+          [
+            58.4971455748315,
+            3.5370047420565456,
+            2.1610137386020427
+          ],
+          [
+            58.364234126710976,
+            3.552321904149532,
+            1.476999478225078
+          ],
+          [
+            58.2280157522817,
+            3.5676117011211135,
+            0.7935695363075718
+          ],
+          [
+            58.08847325808234,
+            3.582613867902632,
+            0.1108658240063759
+          ],
+          [
+            57.945570133218595,
+            3.5975905325920277,
+            -0.5711152886084996
+          ],
+          [
+            57.799278230681274,
+            3.612133428178996,
+            -1.2523803938258924
+          ],
+          [
+            57.64957813855111,
+            3.626604350225405,
+            -1.9329384108306489
+          ],
+          [
+            57.49647604231335,
+            3.640465723700749,
+            -2.6127271956117486
+          ],
+          [
+            57.33998188616642,
+            3.6542717446330037,
+            -3.29171563579183
+          ],
+          [
+            57.180101793994204,
+            3.6672944237269376,
+            -3.969931908242989
+          ],
+          [
+            57.01685415280093,
+            3.6802109891312966,
+            -4.6473904738425995
+          ],
+          [
+            56.850266373566164,
+            3.6922697574683188,
+            -5.324105540794065
+          ],
+          [
+            56.68037469941062,
+            3.7041614803106624,
+            -6.000090476610995
+          ],
+          [
+            56.50730005192325,
+            3.715051015601292,
+            -6.675063291797462
+          ],
+          [
+            56.331067003556065,
+            3.725773773231103,
+            -7.349158463694797
+          ],
+          [
+            56.151710545802786,
+            3.7353393634201355,
+            -8.022488716908672
+          ],
+          [
+            55.969297245772246,
+            3.744816073330809,
+            -8.695067607945777
+          ],
+          [
+            55.78389991655526,
+            3.753101872281962,
+            -9.366906798364484
+          ],
+          [
+            55.59559697181058,
+            3.76109834055048,
+            -10.038016001742127
+          ],
+          [
+            55.40447173832265,
+            3.768061055397908,
+            -10.708403033431201
+          ],
+          [
+            55.210611736873936,
+            3.7745493989369105,
+            -11.378073958054898
+          ],
+          [
+            55.01420413204955,
+            3.7803617628326873,
+            -12.04668945748192
+          ],
+          [
+            54.814060291923674,
+            3.7858839028538656,
+            -12.714351987880466
+          ],
+          [
+            54.6095207456873,
+            3.7917262760288515,
+            -13.380688628965643
+          ],
+          [
+            54.400812607785646,
+            3.797681873609308,
+            -14.04568708230201
+          ],
+          [
+            54.18815024318398,
+            3.803808696355005,
+            -14.709345623674515
+          ],
+          [
+            53.97169991508987,
+            3.8100910372595584,
+            -15.371781251529676
+          ],
+          [
+            53.75164267307049,
+            3.8164717289527172,
+            -16.03303376351912
+          ],
+          [
+            53.52815110591679,
+            3.8228712448417137,
+            -16.693142804516874
+          ],
+          [
+            53.30139001822677,
+            3.829223133085606,
+            -17.352147707684406
+          ],
+          [
+            53.07151705366107,
+            3.8355335535261914,
+            -18.010087369998104
+          ],
+          [
+            52.838683269227516,
+            3.84171484252704,
+            -18.667000157727355
+          ],
+          [
+            52.60303366468756,
+            3.847723731156047,
+            -19.322923837912743
+          ],
+          [
+            52.364707670914605,
+            3.853507469223722,
+            -19.977895532393855
+          ],
+          [
+            52.12383960077894,
+            3.8590179845118127,
+            -20.631951691376266
+          ],
+          [
+            51.88055906588828,
+            3.864329805968266,
+            -21.285128083916096
+          ],
+          [
+            51.63499136228014,
+            3.8691359209705194,
+            -21.937459803043627
+          ],
+          [
+            51.387257827944254,
+            3.8737644038020718,
+            -22.5889812835471
+          ],
+          [
+            51.13747617485026,
+            3.8776514452476083,
+            -23.239726330701373
+          ],
+          [
+            50.88576079796925,
+            3.8813930256428826,
+            -23.889728158456403
+          ],
+          [
+            50.63224370600408,
+            3.884160941176744,
+            -24.538966781857674
+          ],
+          [
+            50.37702051995015,
+            3.887040478601994,
+            -25.187508439739187
+          ],
+          [
+            50.12017815872303,
+            3.8887022424023097,
+            -25.835433422951372
+          ],
+          [
+            49.86181985957568,
+            3.8901528866044424,
+            -26.482773924434625
+          ],
+          [
+            49.60204690300003,
+            3.8901858001296845,
+            -27.1295616882106
+          ],
+          [
+            49.340958829176685,
+            3.8902988134768317,
+            -27.775828084548216
+          ],
+          [
+            49.07865364488419,
+            3.8890184031583908,
+            -28.421604187979053
+          ],
+          [
+            48.81522802246551,
+            3.8874430081271036,
+            -29.066920857661206
+          ],
+          [
+            48.550777492396364,
+            3.8844472757883834,
+            -29.711808819645057
+          ],
+          [
+            48.28539663096249,
+            3.88094955668661,
+            -30.356298750633762
+          ],
+          [
+            48.01917924452938,
+            3.8761174700976744,
+            -31.000421362860838
+          ],
+          [
+            47.75221499258894,
+            3.870413012951826,
+            -31.644216060051903
+          ],
+          [
+            47.48457095545247,
+            3.863941679647836,
+            -32.287775606988085
+          ],
+          [
+            47.216356083386124,
+            3.8559457161721005,
+            -32.93109166562583
+          ],
+          [
+            46.94766323192666,
+            3.8468984503576706,
+            -33.574195143101775
+          ],
+          [
+            46.678585508633205,
+            3.8363570186522895,
+            -34.21711725115241
+          ],
+          [
+            46.40921646998274,
+            3.825385571366032,
+            -34.85988958588365
+          ],
+          [
+            46.13965032595124,
+            3.8122501014639623,
+            -35.50254420513724
+          ],
+          [
+            45.86998215415321,
+            3.798187536861471,
+            -36.14511370285685
+          ],
+          [
+            45.60030812554705,
+            3.7816823604407106,
+            -36.7876312797638
+          ],
+          [
+            45.33072574387333,
+            3.765329923703485,
+            -37.43013080954253
+          ],
+          [
+            45.061334101180314,
+            3.7456922418779524,
+            -38.07264689960054
+          ],
+          [
+            44.79223415200767,
+            3.7260560845418547,
+            -38.71521494531135
+          ],
+          [
+            44.5235290090512,
+            3.702831296168023,
+            -39.3578711764593
+          ],
+          [
+            44.255324686014205,
+            3.679301881478126,
+            -40.00065167710491
+          ],
+          [
+            43.98654058563195,
+            3.6523916893879425,
+            -40.64321931136077
+          ],
+          [
+            43.71615210421789,
+            3.624666157148648,
+            -41.285023265816854
+          ],
+          [
+            43.44421876412195,
+            3.594750856984483,
+            -41.92607995817939
+          ],
+          [
+            43.170800051352785,
+            3.5626727538500353,
+            -42.56640788281616
+          ],
+          [
+            42.89595571234343,
+            3.5284149199581805,
+            -43.20602679237746
+          ],
+          [
+            42.61974572586112,
+            3.4925685330260667,
+            -43.84495766098364
+          ],
+          [
+            42.342230276800635,
+            3.455694772918495,
+            -44.48322264516531
+          ],
+          [
+            42.06346973184913,
+            3.4164538210648367,
+            -45.120845042724376
+          ],
+          [
+            41.78352461700136,
+            3.375827172403673,
+            -45.757849249677015
+          ],
+          [
+            41.502455596893455,
+            3.333192598671207,
+            -46.39426071543483
+          ],
+          [
+            41.22032345591511,
+            3.2904535830204718,
+            -47.03010589637347
+          ],
+          [
+            40.937189081051464,
+            3.2452191393905996,
+            -47.66541220793003
+          ],
+          [
+            40.65311344639834,
+            3.199652802494285,
+            -48.30020797536422
+          ],
+          [
+            40.368157599287045,
+            3.15155390325933,
+            -48.93452238331056
+          ],
+          [
+            40.08238264794895,
+            3.103629612027174,
+            -49.56838542424103
+          ],
+          [
+            39.795849750643804,
+            3.0539455922005416,
+            -50.20182784595022
+          ],
+          [
+            39.50862010617045,
+            3.0039430017468685,
+            -50.83488109816796
+          ],
+          [
+            39.22075494567352,
+            2.952512986698298,
+            -51.46757727839701
+          ],
+          [
+            38.932315525655746,
+            2.9006632327785407,
+            -52.09994907706677
+          ],
+          [
+            38.64336312210149,
+            2.8480383298309233,
+            -52.73202972208654
+          ],
+          [
+            38.35395902561317,
+            2.7947615097247196,
+            -53.36385292287771
+          ],
+          [
+            38.064164537460165,
+            2.7411188528287482,
+            -53.99545281395595
+          ],
+          [
+            37.77404096643642,
+            2.686810130228957,
+            -54.62686389813135
+          ],
+          [
+            37.483649626420906,
+            2.6323591060667852,
+            -55.258120989389184
+          ],
+          [
+            37.19305183453346,
+            2.5774341517696957,
+            -55.88925915550944
+          ],
+          [
+            36.90230890977663,
+            2.5225184099636997,
+            -56.520313660479964
+          ],
+          [
+            36.6114821720531,
+            2.467333655203252,
+            -57.151319906755994
+          ],
+          [
+            36.32063294144734,
+            2.4121434284166026,
+            -57.78231337741521
+          ],
+          [
+            36.02982253765923,
+            2.357089599036224,
+            -58.413329578257304
+          ],
+          [
+            35.739112279477574,
+            2.3020317543947444,
+            -59.04440397989485
+          ],
+          [
+            35.44856348418048,
+            2.247289555312007,
+            -59.67557195988329
+          ],
+          [
+            35.1582374667509,
+            2.19278191252408,
+            -60.30686874493702
+          ],
+          [
+            34.86819553879491,
+            2.1388402808762206,
+            -60.93832935328087
+          ],
+          [
+            34.578499007052045,
+            2.085224088303202,
+            -61.56998853718713
+          ],
+          [
+            34.289209171387334,
+            2.031991056672822,
+            -62.201880725751415
+          ],
+          [
+            34.00038732215678,
+            1.9796275719381915,
+            -62.83403996796261
+          ],
+          [
+            33.712094736838786,
+            1.9278818477901334,
+            -63.46649987612756
+          ],
+          [
+            33.42439267582696,
+            1.877219058451025,
+            -64.09929356971354
+          ],
+          [
+            33.13734237728164,
+            1.8265749666119369,
+            -64.73245361967763
+          ],
+          [
+            32.85100505094006,
+            1.77763254673173,
+            -65.36601199335709
+          ],
+          [
+            32.5654418707889,
+            1.7353667576142662,
+            -66
+          ]
+        ]
+      }
+    ],
+    "bridge": {
+      "type": "true 3D bridge",
+      "deckWidth": 3.2,
+      "length": 68.81041643961987,
+      "deckPlanks": 192,
+      "pilings": 64,
+      "supportCount": 32,
+      "supports": [
+        [
+          -11.667542739521394,
+          2.3000000000000007,
+          45
+        ],
+        [
+          -9.49484586921887,
+          2.466066011966233,
+          45.03225806451613
+        ],
+        [
+          -7.3221489989163455,
+          2.9152761816501727,
+          45.064516129032256
+        ],
+        [
+          -5.14945212861382,
+          3.5741487097296867,
+          45.096774193548384
+        ],
+        [
+          -2.9767552583112966,
+          4.369201796882641,
+          45.12903225806452
+        ],
+        [
+          -0.8040583880087713,
+          5.2269536437869,
+          45.16129032258065
+        ],
+        [
+          1.368638482293754,
+          6.07392245112033,
+          45.193548387096776
+        ],
+        [
+          3.5413353525962776,
+          6.836626419560797,
+          45.225806451612904
+        ],
+        [
+          5.714032222898801,
+          7.441583749786166,
+          45.25806451612903
+        ],
+        [
+          7.886729093201328,
+          7.815312642474304,
+          45.29032258064516
+        ],
+        [
+          10.059425963503852,
+          7.9,
+          45.32258064516129
+        ],
+        [
+          12.232122833806379,
+          7.9,
+          45.354838709677416
+        ],
+        [
+          14.404819704108903,
+          7.9,
+          45.38709677419355
+        ],
+        [
+          16.577516574411426,
+          7.9,
+          45.41935483870968
+        ],
+        [
+          18.75021344471395,
+          7.9,
+          45.45161290322581
+        ],
+        [
+          20.92291031501648,
+          7.9,
+          45.483870967741936
+        ],
+        [
+          23.095607185318997,
+          7.9,
+          45.516129032258064
+        ],
+        [
+          25.26830405562152,
+          7.866355838617895,
+          45.54838709677419
+        ],
+        [
+          27.44100092592405,
+          7.699524642116986,
+          45.58064516129032
+        ],
+        [
+          29.613697796226575,
+          7.411989231663281,
+          45.61290322580645
+        ],
+        [
+          31.786394666529098,
+          7.025050058855955,
+          45.645161290322584
+        ],
+        [
+          33.95909153683162,
+          6.560007575294181,
+          45.67741935483871
+        ],
+        [
+          36.13178840713415,
+          6.038162232577131,
+          45.70967741935484
+        ],
+        [
+          38.304485277436676,
+          5.48081448230398,
+          45.74193548387097
+        ],
+        [
+          40.4771821477392,
+          4.909264776073906,
+          45.774193548387096
+        ],
+        [
+          42.64987901804172,
+          4.344813565486076,
+          45.806451612903224
+        ],
+        [
+          44.82257588834425,
+          3.808761302139665,
+          45.83870967741935
+        ],
+        [
+          46.99527275864677,
+          3.3224084376338485,
+          45.87096774193548
+        ],
+        [
+          49.167969628949294,
+          2.907055423567801,
+          45.903225806451616
+        ],
+        [
+          51.34066649925182,
+          2.5840027115406956,
+          45.935483870967744
+        ],
+        [
+          53.513363369554355,
+          2.374550753151703,
+          45.96774193548387
+        ],
+        [
+          55.68606023985687,
+          2.3000000000000007,
+          46
+        ]
+      ],
+      "pavilion": [
+        16.620970511817475,
+        7.785,
+        45.42
+      ],
+      "pavilionFraction": 0.42,
+      "pavilionFloorMatchesDeck": true,
+      "crownHeight": 7.9,
+      "archRise": 5.6000000000000005,
+      "crownHalfWidth": 7.2,
+      "pavilionForm": {
+        "plan": "cruciform",
+        "mainRoofWidth": 14.1,
+        "mainEaveHeight": 2.85,
+        "centralCapHeight": 5.71,
+        "porches": 2,
+        "joinedLowerRoof": true,
+        "foundationPilings": 20,
+        "sourceCrop": "reference/crops/bridge-and-central-pavilion.png"
+      },
+      "sourceProjection": false
+    },
+    "cameraRoute": {
+      "duration": 20,
+      "positions": [
+        [
+          0,
+          58,
+          220
+        ],
+        [
+          7,
+          39,
+          159
+        ],
+        [
+          12,
+          20,
+          104
+        ],
+        [
+          13.620970511817475,
+          12.785,
+          83.42
+        ],
+        [
+          18.620970511817475,
+          10.885,
+          65.42
+        ],
+        [
+          16.620970511817475,
+          9.585,
+          52.42
+        ],
+        [
+          16.620970511817475,
+          9.585,
+          46.02
+        ]
+      ],
+      "targets": [
+        [
+          0,
+          29,
+          -105
+        ],
+        [
+          0,
+          18,
+          -80
+        ],
+        [
+          15,
+          8,
+          18
+        ],
+        [
+          16.620970511817475,
+          9.785,
+          45.42
+        ],
+        [
+          16.620970511817475,
+          9.585,
+          45.42
+        ],
+        [
+          16.620970511817475,
+          9.585,
+          35.42
+        ],
+        [
+          16.620970511817475,
+          9.585,
+          -34.58
+        ]
+      ]
+    },
+    "camera": {
+      "type": "PerspectiveCamera",
+      "near": 0.12,
+      "far": 1500,
+      "fov": 48
+    },
+    "sourceProjection": false
+  },
+  "ink": {
+    "backgroundMountainLayers": 4,
+    "backgroundRangeDepths": [
+      -680,
+      -820,
+      -960,
+      -1100
+    ],
+    "settings": {
+      "mode": "ink",
+      "compare": false,
+      "split": 0.5,
+      "brush": 1,
+      "layers": 1,
+      "wash": 1,
+      "lines": 1.05,
+      "ranges": true,
+      "paper": 1,
+      "mist": 0.0013,
+      "wind": 0.55,
+      "water": 0.65,
+      "atmosphere": 0.9,
+      "motion": true,
+      "seconds": 20
+    },
+    "width": 1280,
+    "height": 576,
+    "passes": 4,
+    "brushMaps": 5,
+    "paperMaps": 1,
+    "mountainStrokeSegments": 55567,
+    "structuralFoldCurves": 488,
+    "pigmentLayers": [
+      "ochre earth",
+      "azurite blue crests",
+      "malachite green faces",
+      "jade shallows",
+      "umber architecture",
+      "olive lake"
+    ],
+    "tonalBrush": {
+      "levels": [
+        100,
+        280,
+        560
+      ],
+      "coverage": [
+        0.008447684493719236,
+        0.02231654746859102,
+        0.04352381089154561
+      ],
+      "seed": 610155,
+      "nested": true
+    },
+    "method": "Nested tonal brush maps + painted wash shadows + fixed world-space pigment and brush atlas + semantic surface shaders + depth/normal contours + flat paper glaze",
+    "seed": 98173,
+    "paperSeed": 30067,
+    "textureCoordinateSpace": "undeformed world, with nested mipmapped detail",
+    "usesClock": true,
+    "windAnchoredPigment": true,
+    "fog": {
+      "coordinateSpace": "world",
+      "driftUnitsPerSecond": [
+        0.72,
+        0,
+        0.16
+      ],
+      "heightLayers": [
+        3.5,
+        12,
+        24
+      ],
+      "nearLimitZ": -75
+    },
+    "revision": "blue-green-06",
+    "sourceImageProjection": false
+  }
+}

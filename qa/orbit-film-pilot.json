@@ -1,0 +1,102 @@
+{
+  "passed": true,
+  "revision": "blue-green-08",
+  "route": {
+    "film": {
+      "duration": 40,
+      "fps": 24,
+      "width": 1600,
+      "height": 720,
+      "farPlane": 2200,
+      "orbitFrom": 7,
+      "orbitTo": 29,
+      "holdFrom": 38
+    },
+    "painting": {
+      "position": [
+        0,
+        58,
+        220
+      ],
+      "target": [
+        0,
+        29,
+        -105
+      ],
+      "fov": 32
+    },
+    "focus": [
+      16.620970511817475,
+      10.485,
+      45.42
+    ],
+    "radius": 26,
+    "height": 18.585
+  },
+  "checks": {
+    "passed": true,
+    "minimumGroundOrDeckClearance": 14.819998240645223,
+    "minimumConservativeTreeClearance": 10.832625050963905,
+    "maximumRoofFrameExtent": 0.517150532744068,
+    "actualAccumulatedOrbitDegrees": 359.99999999999994,
+    "maximumCameraStepAt8Hz": 6.032663897111492,
+    "exactPaintingCameraReturn": true,
+    "returnMatchesPaintingViewPixels": true
+  },
+  "absoluteTimeReplayIdentical": true,
+  "sourceHashes": {
+    "src/architecture.js": "54b626d994bffb1a861a37a7a2f11fb0c4b5620bd77c89d52b43cb467e76614f",
+    "src/effects.js": "ff2cae2e228678d53fca2971f6899528833512146443148914c621f1245b70dc",
+    "src/forest.js": "dcbb70d9cae2cbd458206e8e2c0bfec011df35aa4b2bd70d4b56680ab7abafac",
+    "src/geometry.js": "4d32aa80fdef14826aacc1b7f14dac32683c5770ac0f9e8cfbd2b959a438c601",
+    "src/glazes.js": "8a29295e16bd85521e276013c8de9f8477a596db8bcbf8144542570bea13b6bd",
+    "src/ink-flow.js": "bad2605a6c2f118578033230b7447001e32c22f24c9e30cb7e708e5beb9199a8",
+    "src/ink.js": "5e97edd85ec5add07c893c368a6e0bcff9031424bc3d2ed29204db26fdf00aa3",
+    "src/lowlands.js": "f0d37d585e724fa5f40b1a4eb3082fd0b748e250830ef8156a5b9e5406051853",
+    "src/main.js": "e2ff0a22fa73251b10019a4524ea3cb977e14a6529ba227367513163fd4174e1",
+    "src/materials.js": "7ade7738f8663d7d0cab3de15a36e8b2974d7709165f48d45ce5c09ea116300a",
+    "src/mountain-shapes.js": "c70da62b5bb66d079f80430ed355a6f219ff71d5bbbd03221d27e96c3a10e3a1",
+    "src/pavilion-flight.js": "5726646eb7a7adc9b54f25df19e10aa1f7c2979149989914097805390ee684b3",
+    "src/pavilion-orbit.js": "a415ecb91b73c085d71dd7e0be423fb052e0f24a4466d4f035c8e30d2ada8072",
+    "src/roads.js": "2c1d157de26da8a371ee25d80ce2f8fb286b157f735413aef4033ff69a1b465b",
+    "src/rock-form.js": "1f7c569d498158c058eebdd3652d477a7ff88d012cbe6e6e3216ba156cc36f41",
+    "src/scene.js": "9e15b685e42a11e4c43e3714a4ec0e5c7b5df90281b0cab5c9566288441aad3d",
+    "src/terrain.js": "199f613426f20fc6f559549ec43941c9768cd2941cd0f261fd7ea79e23d52156",
+    "src/wash.js": "c88ef2bc1b6d16149bc4ae4c25b8dd79056973a5f6cef36447d1a7a3ec6a6e49"
+  },
+  "shots": [
+    {
+      "seconds": 0,
+      "file": "renders/pavilion-orbit-0.png"
+    },
+    {
+      "seconds": 7,
+      "file": "renders/pavilion-orbit-7.png"
+    },
+    {
+      "seconds": 12.5,
+      "file": "renders/pavilion-orbit-12-5.png"
+    },
+    {
+      "seconds": 18,
+      "file": "renders/pavilion-orbit-18.png"
+    },
+    {
+      "seconds": 23.5,
+      "file": "renders/pavilion-orbit-23-5.png"
+    },
+    {
+      "seconds": 29,
+      "file": "renders/pavilion-orbit-29.png"
+    },
+    {
+      "seconds": 34,
+      "file": "renders/pavilion-orbit-34.png"
+    },
+    {
+      "seconds": 38,
+      "file": "renders/pavilion-orbit-38.png"
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,468 @@
+{
+  "title": "Blue & Green Waterways",
+  "revision": "blue-green-06",
+  "separateWorkspace": true,
+  "sourcePainting": {
+    "source": "User-supplied screenshot; no historical attribution inferred",
+    "dimensions": [
+      1779,
+      801
+    ],
+    "sha256": "b1593a9260c87cd2512a460b373f0825441746e9829b267b5c93326550bbe614",
+    "regions": [
+      {
+        "name": "left-mineral-mountains",
+        "bbox": [
+          0,
+          290,
+          735,
+          799
+        ]
+      },
+      {
+        "name": "bridge-and-central-pavilion",
+        "bbox": [
+          680,
+          595,
+          1300,
+          760
+        ]
+      },
+      {
+        "name": "left-shore-architecture",
+        "bbox": [
+          0,
+          388,
+          295,
+          560
+        ]
+      },
+      {
+        "name": "right-shore-settlement",
+        "bbox": [
+          1510,
+          490,
+          1779,
+          720
+        ]
+      },
+      {
+        "name": "olive-lake-and-jade-shallows",
+        "bbox": [
+          635,
+          270,
+          1330,
+          600
+        ]
+      },
+      {
+        "name": "right-mineral-peaks",
+        "bbox": [
+          1250,
+          290,
+          1779,
+          799
+        ]
+      },
+      {
+        "name": "distant-tower-peaks",
+        "bbox": [
+          1600,
+          110,
+          1779,
+          380
+        ]
+      }
+    ],
+    "palette": {
+      "azurite blue": "#298ac4",
+      "malachite green": "#82bfa0",
+      "jade shallows": "#7ead8a",
+      "olive lake": "#707344",
+      "ochre silk": "#a58e4f",
+      "umber architecture": "#413d28"
+    },
+    "interpretation": "True 3D reinterpretation. Depth, hidden sides and close architecture are inferred. Source image is used for comparison only, not projected onto the scene.",
+    "sourceFilename": "Screenshot from 2026-10-15 12-49-45.png"
+  },
+  "sceneSeed": 610152,
+  "renderer": "Three.js 0.186.0; deterministic semantic pigment shaders, cumulative tonal brush maps, painted shadows, depth/normal contours, silk and atmospheric washes",
+  "sourceImageProjectedOnGeometry": false,
+  "neuralTraining": false,
+  "geometry": {
+    "trees": 431,
+    "mountainTrees": 190,
+    "mountainGrass": 728,
+    "roadsideTrees": 66,
+    "treeFamilies": {
+      "bare": 82,
+      "broadleaf": 264,
+      "willow": 85
+    },
+    "branchGeometries": 14622,
+    "canopyClumps": 9765,
+    "leaves": 60057,
+    "reeds": 4427,
+    "roads": 2,
+    "mountainMasses": 31,
+    "rocks": 139,
+    "terrainVertices": 168062,
+    "sourceProjectionPlanes": 0,
+    "seed": 610152,
+    "backgroundMountainLayers": 4,
+    "bridgeLength": 68.81041643961987,
+    "bridgeSupports": 32,
+    "shoreBuildings": 9,
+    "revision": "blue-green-06"
+  },
+  "cameraRoute": {
+    "duration": 20,
+    "positions": [
+      [
+        0,
+        58,
+        220
+      ],
+      [
+        7,
+        39,
+        159
+      ],
+      [
+        12,
+        20,
+        104
+      ],
+      [
+        13.620970511817475,
+        12.785,
+        83.42
+      ],
+      [
+        18.620970511817475,
+        10.885,
+        65.42
+      ],
+      [
+        16.620970511817475,
+        9.585,
+        52.42
+      ],
+      [
+        16.620970511817475,
+        9.585,
+        46.02
+      ]
+    ],
+    "targets": [
+      [
+        0,
+        29,
+        -105
+      ],
+      [
+        0,
+        18,
+        -80
+      ],
+      [
+        15,
+        8,
+        18
+      ],
+      [
+        16.620970511817475,
+        9.785,
+        45.42
+      ],
+      [
+        16.620970511817475,
+        9.585,
+        45.42
+      ],
+      [
+        16.620970511817475,
+        9.585,
+        35.42
+      ],
+      [
+        16.620970511817475,
+        9.585,
+        -34.58
+      ]
+    ]
+  },
+  "validation": {
+    "browserChecks": 32,
+    "browserPassed": true,
+    "exportedGlbs": 6,
+    "allGlbsReloaded": true,
+    "shapeStudyPassed": true,
+    "shapeStudyReport": "qa/shape-study.json",
+    "inkWashPassed": true,
+    "inkWashReport": "qa/wash-study.json",
+    "windAttachmentPassed": true,
+    "refinementPassed": true,
+    "refinementReport": "qa/refinement.json",
+    "sceneStudyPassed": true,
+    "sceneStudyReport": "qa/scene-study.json",
+    "sameCameraComparison": "qa/revision-comparison.json",
+    "sameCameraComparisonPassed": true,
+    "fogMovie": {
+      "passed": true,
+      "file": "distant-mist.mp4",
+      "bytes": 281965,
+      "sha256": "466d6be01ef7a15c343d1ac7cf242a9b22df79a38aec2b3aa16815b53a2627d8",
+      "fullDecodePassed": true,
+      "sampledEncodedFrames": 5,
+      "fixedCamera": true,
+      "wind": 0,
+      "waterMotion": 0,
+      "width": 1280,
+      "height": 576,
+      "r_frame_rate": "12/1",
+      "duration": "12.000000",
+      "nb_read_frames": "144"
+    },
+    "movie": {
+      "passed": true,
+      "createdUtc": "2026-10-16T00:27:20.073120+00:00",
+      "file": "blue-green-flythrough.mp4",
+      "bytes": 12821735,
+      "sha256": "0a94c9425f80133a1cf04c604713b647c6923904b6176404eedee17aaa9d1736",
+      "fullDecodePassed": true,
+      "sampledEncodedFrames": 11,
+      "width": 1280,
+      "height": 576,
+      "r_frame_rate": "24/1",
+      "duration": "20.000000",
+      "nb_read_frames": "480",
+      "boundary": "Decoded and sampled frames are inspected separately from subjective full-speed smoothness or exact source fidelity."
+    }
+  },
+  "sources": {
+    "src/main.js": "e316caa80b88f61442a4b074ecc0c28bbba767e710423dadb16aa6584790b6d1",
+    "src/terrain.js": "4aaa63d723403f1461084624c116c3df3c4dd730bb1315c8f2dc472e26c3c235",
+    "src/materials.js": "7ade7738f8663d7d0cab3de15a36e8b2974d7709165f48d45ce5c09ea116300a",
+    "src/glazes.js": "60c111a489bfd1a090cedb82229f39001ceac2ad70fcc101d90ffeca85d11143",
+    "src/rock-form.js": "1f7c569d498158c058eebdd3652d477a7ff88d012cbe6e6e3216ba156cc36f41",
+    "src/effects.js": "d6c8f4fead724a5b12a9bc4b2349065366a6c8f2ca6b859727424bc25c5073fe",
+    "src/wash.js": "c88ef2bc1b6d16149bc4ae4c25b8dd79056973a5f6cef36447d1a7a3ec6a6e49",
+    "src/ink.js": "68ca50af4efe6b6cbd879b147638c52fff6b335d534848df6e99211a3a509229",
+    "src/roads.js": "2c1d157de26da8a371ee25d80ce2f8fb286b157f735413aef4033ff69a1b465b",
+    "src/scene.js": "6313b40403df41468948817020f2b745ad1a83a96f7da504713ca01a7467e001",
+    "src/architecture.js": "54b626d994bffb1a861a37a7a2f11fb0c4b5620bd77c89d52b43cb467e76614f",
+    "src/forest.js": "6db6ecc58974e1d3bae537e20762c9c99e83adb879bcd73b0c4151392d3f65a0",
+    "src/geometry.js": "4d32aa80fdef14826aacc1b7f14dac32683c5770ac0f9e8cfbd2b959a438c601",
+    "src/mountain-shapes.js": "c70da62b5bb66d079f80430ed355a6f219ff71d5bbbd03221d27e96c3a10e3a1",
+    "scripts/analyze.py": "6beaab15c12d8796682f292f814d7d30a7a510aed793c84ca7f3a79e1371010c",
+    "scripts/serve.py": "0b52529fba1f7e0a55a3ae0b58412783226019e6629f5d32922bc64898b86b0a",
+    "scripts/encode.py": "22dfac52f7b5993b2338a86b63846ff6e2ce9433e48e3fffef27184e52ad4ed4",
+    "scripts/delivery.py": "67ec5855de4a83c13a2d1e7fe9c212c63fb89669b830cfdb822c6cc7bf83bc62",
+    "scripts/revision-gallery.py": "b17adcf5909b1ad81a7b36fee6af18f946d7c053dd1a3a10dcd49d1d90a625a8",
+    "scripts/refinement-gallery.py": "255f457618348a39d6d543413a123bb9775163ba58f95e3c98b14a708e41a90a",
+    "scripts/galleries.py": "4cf9e169e057d71a0e81a6e13be1214293b26a747c196736e5bd8ac751b40aba",
+    "scripts/palette-study.py": "5d5e421c320033448798a02e8dd5444326309b9bdb8b785046900b7ac13c5abc",
+    "scripts/finalize.py": "515e980bf5c234ce37f1f62509056cf9070e8739cdf062503d5b025ffbaedd5b",
+    "scripts/wash-gallery.py": "208d93c98632d641464a0114b62349a6facb3aa8d0c3467ed7ca086cc948141d",
+    "scripts/shape-gallery.py": "12e07aa1e0ef3027b328823d8f411c9d28e1ad5ed03bf1cd9b2e71096aaedaff",
+    "scripts/portable.cjs": "278f8e2a0d1ff8e90c867421af3bff06dc3a9f02cf5c3bb413e025d8f5174776",
+    "scripts/wind.cjs": "c56f50b1394de050921c8cf37e1fe4a3df5c2d555075bcf496386e3972d7b0f5",
+    "scripts/refinement.cjs": "c1d14b1130959cd2f45ba3227f5792c04485fd37434904e1a478dc96aa3e084b",
+    "scripts/shape-study.cjs": "b46ad7bbd402e51e0b5a7757d1793e0d48dcb37524d61e5699360e304b7501b2",
+    "scripts/capture.cjs": "2087c00e60da7d84495a54d1d356c411d0ea75db8f283f80973439a4e96c6dc0",
+    "scripts/wash-study.cjs": "37a56d551e027f2bfa5c311d3a8a1bfade4335067a96e2bd11f153d0698e0a13",
+    "scripts/scene-study.cjs": "86672f91fa4b4ad116412e9b4cfa99adf752f41b4ea58850833519cdbe88e6ec",
+    "scripts/compare-revision.cjs": "6ed41011f363a8657dc139f4d153be388a7c0ecaae066c7dd7ede716f58a8105",
+    "scripts/roundtrip.cjs": "3149cff9adfc7c903a5d2ce3147bd4d06640d1143de5028549aa4881444ed8cf",
+    "scripts/check.cjs": "61c39fbb05964c08ea2b3f33f6dc366e4e9854c1bd3699f7297d0447d78d4a62",
+    "README.md": "34dec4279e3d805d82d4d8462e374f5197b507630dae8485baf996d810209ff7",
+    "index.html": "10b2f1419ac1acdc0adbcefbe470e5170631d3b47e43dffecc9d238d2e83a092",
+    "study.html": "f738168790b5a2d156f0ac943dc94df04de03e890db1494fef5e57dc26d1676f",
+    "research.html": "4c1049f26e5ab70a7ecc69b4c5c13f961790ef68605d51680aada51c6b45d158",
+    "shape-study.html": "94af16e6fd33c98f9cd520109d96f108d9785e3c96de21eee89ce28a1d62d40c",
+    "research/palette-samples.json": "837d1eaa853e65baff8f0527fdd66e8d8ba1507c846b1ca7f88a8ca845db8f91",
+    "research/ink-rendering.json": "5c88c43f97e10323da1e100f3439bbd507b751e3fdb66b4585cb88023f4c9e6c",
+    "research/mountain-shape-landmarks.json": "9cc4b7ce381aa686d68ab9f2070a5d3a05fd02cebe1d4ca4676ce3177991d400",
+    "package.json": "a6c645eb0970503446e9d7dc847d63ddc100da9b970a6c60c71bf6717543dfc4",
+    "package-lock.json": "c1e91e0f05757c8e9f7938a91ccc07b10efdf6beb447ad7a6f558f381d880912",
+    "reference/analysis.json": "d58363b0590f75f5ec6d85d82d2b6dfa4716e702f81e2e7bd1d8b65175a35788",
+    "reference/refinement-observations.json": "a744c94ba719a957059d7181857942c020ed4178f020aece93f96bd1ee453387",
+    "scene.json": "dc66ea82017b8951ed41810ccd470bc05293aa7db93710105eb60d0226dc4ebf"
+  },
+  "artifacts": {
+    "models/blue-green-trees.glb": {
+      "bytes": 30089540,
+      "sha256": "96dcef30ced1fa67cf946eb9d540eadbdfaa6334311908bd81aaaa45816fde8a"
+    },
+    "models/blue-green-bridge.glb": {
+      "bytes": 4252260,
+      "sha256": "b8847cd55da8794cfe2ee24b2e82c2a5798eab579b4d0e3424542ee76dc62434"
+    },
+    "models/blue-green-all.glb": {
+      "bytes": 54528888,
+      "sha256": "64e97186e4121f609adfb130fdb1eea79caab2aec69c863dc5a141f366b3027d"
+    },
+    "models/blue-green-architecture.glb": {
+      "bytes": 5466584,
+      "sha256": "75ff5dcc182f38534da45be4c050677d6c00544bda324d3af3d49a1f7ac557b7"
+    },
+    "models/blue-green-water.glb": {
+      "bytes": 442268,
+      "sha256": "be34f77c51809e346ba6b39ea481f56c354793f1fca44d5525c0b89985044e1b"
+    },
+    "models/blue-green-mountains.glb": {
+      "bytes": 15623464,
+      "sha256": "5e1b660d4993df227282ccb8fa407e789f01db8f35e53723b6b6e0d223aefbef"
+    },
+    "renders/blue-green-flythrough.mp4": {
+      "bytes": 12821735,
+      "sha256": "0a94c9425f80133a1cf04c604713b647c6923904b6176404eedee17aaa9d1736"
+    },
+    "renders/painting.png": {
+      "bytes": 1829342,
+      "sha256": "b6cbb7a3e7ba73b96477f1ac927fe745c93aec026866eaec8c7a87288e6d7fc1"
+    },
+    "renders/source-comparison.jpg": {
+      "bytes": 150969,
+      "sha256": "39675d0e1f726c1a79293ea652dde5ec9eb1739686c641a33fe314dc266fcb65"
+    },
+    "renders/scene-gallery.jpg": {
+      "bytes": 550086,
+      "sha256": "38db747af17ac599fe926138cab78b54e5dc54127e4b14e3936e2e496a4441d6"
+    },
+    "renders/zoom-gallery.jpg": {
+      "bytes": 197380,
+      "sha256": "9d420e18d87087cb95b44be82a5987aaa3ce5bd6eddf936c4a82ad79858b0bca"
+    },
+    "renders/encoded-contact-sheet.jpg": {
+      "bytes": 306782,
+      "sha256": "8c82db588293fc287b88b69fe588a49a29078646a492aa4241aa2bb27988093d"
+    },
+    "renders/refinement-comparison.jpg": {
+      "bytes": 281820,
+      "sha256": "ff20970aa67442872a81d967a2bd6d11ad7beb432fe540ad61318fc244b0822b"
+    },
+    "renders/tree-gallery.jpg": {
+      "bytes": 132962,
+      "sha256": "ec3edeeb8ee8f8ea295ee7edf393022a87f76629f9453bfe1d90f0b9cdfb25fc"
+    },
+    "renders/pavilion-detail.png": {
+      "bytes": 1571474,
+      "sha256": "befa6cbbe68a612eb7ad4e3dcba0d1ff3255a472b67575d71ea0880766dd6c24"
+    },
+    "renders/mountain-crowns.png": {
+      "bytes": 1616171,
+      "sha256": "355a08a8d47750140aaca6bdac989de851593c63bbd7fc23733ba97f5c0ad1e9"
+    },
+    "renders/pavilion.png": {
+      "bytes": 1852755,
+      "sha256": "2d16fd77ea2017863fd0f0244fc563d2db829bdb74ac60f52667dc3cf0de295f"
+    },
+    "renders/entry.png": {
+      "bytes": 1801997,
+      "sha256": "881f7126b70d026069da8048dce6130e6474cea003167c6aab130726c96ca7af"
+    },
+    "renders/mist.png": {
+      "bytes": 1653305,
+      "sha256": "354a86c1f0cbec405a1557d5c40d1ebd7bec66ccdeaa9e9c2e434f5433aae3ea"
+    },
+    "renders/distant-mist.mp4": {
+      "bytes": 281965,
+      "sha256": "466d6be01ef7a15c343d1ac7cf242a9b22df79a38aec2b3aa16815b53a2627d8"
+    },
+    "renders/fog-contact-sheet.jpg": {
+      "bytes": 89303,
+      "sha256": "00c9122518546f4cc94cb582ec1c4a484772772d6d1af50eec2c66f3fc2bdaf2"
+    },
+    "renders/arch.png": {
+      "bytes": 1746238,
+      "sha256": "446f4b72d4c6f12f56d87e45d482958d4cb437c4a1f30a07c1780f9870da32f1"
+    },
+    "renders/revision-comparison.jpg": {
+      "bytes": 882411,
+      "sha256": "3e84018a11d41a72a0261a6d6fe318c4e4549b9d8cda0498d38bc49dbfd3e3cd"
+    },
+    "renders/crown-comparison.jpg": {
+      "bytes": 258625,
+      "sha256": "0d449fdd5e3889a2a5c6c911b057347e1a26e0cfd56605398ed351a59c6e4088"
+    },
+    "renders/tonal-brush-study.jpg": {
+      "bytes": 156351,
+      "sha256": "11ef69a2445a6e556b4b0dfbe486b0d705075a402af88204397d7b92556274c5"
+    },
+    "renders/source-palette.jpg": {
+      "bytes": 54329,
+      "sha256": "ceb42296b673442af8d6631824ff51150bc1c1e3e884a1cd39b50b8279f0c7b2"
+    },
+    "renders/wash-pavilion-1.png": {
+      "bytes": 1852755,
+      "sha256": "2d16fd77ea2017863fd0f0244fc563d2db829bdb74ac60f52667dc3cf0de295f"
+    },
+    "renders/wash-painting-1.png": {
+      "bytes": 1829342,
+      "sha256": "b6cbb7a3e7ba73b96477f1ac927fe745c93aec026866eaec8c7a87288e6d7fc1"
+    },
+    "renders/wash-mountains-1.png": {
+      "bytes": 1816274,
+      "sha256": "11dcd54b37984900c3a9e319669b4ff3e5f9c9cb0e708923eab59e84f341f953"
+    },
+    "renders/wash-mountains-0.png": {
+      "bytes": 1800770,
+      "sha256": "16d428532fe50c0aed24facb685266e0ebc1503097cda64667f248d94ffbd76b"
+    },
+    "renders/wash-pavilion-0.png": {
+      "bytes": 1849401,
+      "sha256": "b73a7abc28f5da2cc56fbc9a9436a6765fd7ab9bd44359802102137ed2a4e95e"
+    },
+    "renders/wash-painting-0.png": {
+      "bytes": 1816130,
+      "sha256": "91bccfcb60bc9e69286891c187e6706cf8e8a3b0cba62fe520cd4d1f5d98b7cb"
+    },
+    "renders/tonal-brush-0.png": {
+      "bytes": 36161,
+      "sha256": "4275cdf05a3d4a049a8e47ffcea198715b878bb9ef35e45ffb840ccb8655e18d"
+    },
+    "renders/tonal-brush-1.png": {
+      "bytes": 79615,
+      "sha256": "9d785e4a1cabe346962fe3d6fdfffb2b881896a53f4c0255f2211ec9fc0df8f2"
+    },
+    "renders/tonal-brush-2.png": {
+      "bytes": 150455,
+      "sha256": "374ded872410f7ebb8b8d309008d729fc3a19756448c3f50595448fb7b10cb87"
+    },
+    "renders/shape-clay-painting.png": {
+      "bytes": 603077,
+      "sha256": "57bacc4cc3e01f40e542a873171f0cff0f00c46b7261ace773f9a90873a10d75"
+    },
+    "renders/shape-clay-right.png": {
+      "bytes": 470680,
+      "sha256": "7266baa2f81944ade3217464273a45caccab094fd9aef99860005f37dce12c48"
+    },
+    "renders/shape-clay-top.png": {
+      "bytes": 810988,
+      "sha256": "f53f37cf9b558e11923a731188a1b5ad566c340a42f143a20e44282c645c8951"
+    },
+    "renders/shape-clay-mountains.png": {
+      "bytes": 554389,
+      "sha256": "4ae95c73fe0984a4b41e46aa185ffa1705e3ccb915260e1a8f5e756542a4abee"
+    },
+    "renders/mountain-shape-comparison.jpg": {
+      "bytes": 331254,
+      "sha256": "d840b5237839f7457651218b7c2f4747e21950a9139461a4a7284dacd3d97a2e"
+    },
+    "renders/source-crest-traces.jpg": {
+      "bytes": 499076,
+      "sha256": "256101f399a24dac420feab6742f83e603e0e7ad7f5cd793c24cccf041e4744c"
+    },
+    "renders/source-grayscale.jpg": {
+      "bytes": 416503,
+      "sha256": "1d7bc437347e872bf8c7f79d9a0349ae8d30477ebbc3c5f4fe88acd84b6ca7ff"
+    }
+  },
+  "limits": [
+    "Unseen geometry and close detail are interpreted",
+    "The complete custom ink and motion finish runs in the browser; GLBs contain static geometry and base colors",
+    "Checks do not certify exact source-style fidelity, every camera angle or subjective full-speed smoothness"
+  ]
+}

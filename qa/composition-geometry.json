@@ -1,0 +1,2164 @@
+{
+  "passed": true,
+  "checks": {
+    "treeRowsFollowReference": true,
+    "distinctGroveRows": true,
+    "shoreInletsRemainOpen": true,
+    "pathsRemainOnLand": true,
+    "distantContoursRegistered": true,
+    "noMissingCrests": true,
+    "crestRegistration": true,
+    "rootsOnMesh": true,
+    "roadsClear": true,
+    "highRidgesPlanted": true,
+    "openFoliageGeometry": true,
+    "finiteGeometry": true
+  },
+  "rowCounts": {
+    "Left village upper row": 10,
+    "Left inner slope row": 7,
+    "Left green foot row": 7,
+    "Left lower terrace row": 8,
+    "Left village landing row": 4,
+    "Bridge western grove": 7,
+    "Bridge eastern grove": 8,
+    "Eastern landing pair": 3,
+    "Right lower curved terrace": 8,
+    "Right crag approach row": 6,
+    "Middle shore short row": 16,
+    "Middle meadow row": 14,
+    "Right meadow upper row": 15,
+    "Distant settlement grove": 16,
+    "Right mountain foot grove": 8,
+    "Outer crag foot row": 8,
+    "Outer village row": 8,
+    "Far shoal thin row": 26,
+    "Middle shoal thin row": 19
+  },
+  "maximumGroveRootErrorPixels": 0.002154413945008045,
+  "inletSamples": [
+    {
+      "pixel": [
+        970,
+        544
+      ],
+      "height": -1.2999999523162842
+    },
+    {
+      "pixel": [
+        1140,
+        597
+      ],
+      "height": -1.2999999523162842
+    },
+    {
+      "pixel": [
+        1135,
+        630
+      ],
+      "height": -1.2999999523162842
+    },
+    {
+      "pixel": [
+        1000,
+        750
+      ],
+      "height": -1.2999999523162842
+    },
+    {
+      "pixel": [
+        900,
+        790
+      ],
+      "height": -1.2999999523162842
+    }
+  ],
+  "minimumUngradedPathHeight": 0.6140143148441519,
+  "wetPathSamples": [],
+  "distantContours": [
+    {
+      "name": "Low left horizon",
+      "errorPixels": 0.021728375588162215
+    },
+    {
+      "name": "Low left horizon",
+      "errorPixels": 0.007211030756503168
+    },
+    {
+      "name": "Low left horizon",
+      "errorPixels": 0.15648000320137026
+    },
+    {
+      "name": "Low left horizon",
+      "errorPixels": 0.004106111087837704
+    },
+    {
+      "name": "Low left horizon",
+      "errorPixels": 0.13510418063845364
+    },
+    {
+      "name": "Low left horizon",
+      "errorPixels": 0.05274251392514001
+    },
+    {
+      "name": "Low left horizon",
+      "errorPixels": 0.1744923721256029
+    },
+    {
+      "name": "Low left horizon",
+      "errorPixels": 0.21651938510567223
+    },
+    {
+      "name": "Low left horizon",
+      "errorPixels": 0.07416465087252616
+    },
+    {
+      "name": "Low left horizon",
+      "errorPixels": 0.1285790647178112
+    },
+    {
+      "name": "Low left horizon",
+      "errorPixels": 0.13803315616376818
+    },
+    {
+      "name": "Low left horizon",
+      "errorPixels": 0.04806297283760574
+    },
+    {
+      "name": "Low left horizon",
+      "errorPixels": 0.4577134353510409
+    },
+    {
+      "name": "Low left horizon",
+      "errorPixels": 0.3775806444711976
+    },
+    {
+      "name": "Low left horizon",
+      "errorPixels": 0.35148516148103925
+    },
+    {
+      "name": "Low left horizon",
+      "errorPixels": 0.034891142785640164
+    },
+    {
+      "name": "Low left horizon",
+      "errorPixels": 0.17077570204230408
+    },
+    {
+      "name": "Low left horizon",
+      "errorPixels": 0.04258625632534284
+    },
+    {
+      "name": "Low left horizon",
+      "errorPixels": 0.1936461785772476
+    },
+    {
+      "name": "Low left horizon",
+      "errorPixels": 0.02047327683317463
+    },
+    {
+      "name": "Right receding ridge",
+      "errorPixels": 0.0784438922902172
+    },
+    {
+      "name": "Right receding ridge",
+      "errorPixels": 0.04372082940275146
+    },
+    {
+      "name": "Right receding ridge",
+      "errorPixels": 0.1394995260573
+    },
+    {
+      "name": "Right receding ridge",
+      "errorPixels": 0.11490040616508614
+    },
+    {
+      "name": "Right receding ridge",
+      "errorPixels": 0.03785725036835698
+    },
+    {
+      "name": "Right receding ridge",
+      "errorPixels": 0.08269487419640743
+    },
+    {
+      "name": "Right receding ridge",
+      "errorPixels": 0.032130090025514355
+    },
+    {
+      "name": "Right receding ridge",
+      "errorPixels": 0.10255889575972878
+    },
+    {
+      "name": "Right receding ridge",
+      "errorPixels": 0.034482415286665465
+    },
+    {
+      "name": "Right receding ridge",
+      "errorPixels": 0.0430649056321958
+    },
+    {
+      "name": "Right receding ridge",
+      "errorPixels": 0.08012294754136019
+    },
+    {
+      "name": "Right receding ridge",
+      "errorPixels": 0.08079734964952151
+    },
+    {
+      "name": "Right receding ridge",
+      "errorPixels": 0.11918738072033545
+    },
+    {
+      "name": "Right receding ridge",
+      "errorPixels": 0.03418745370653354
+    },
+    {
+      "name": "Broken middle shore ridge",
+      "errorPixels": 0.03723665380417106
+    },
+    {
+      "name": "Broken middle shore ridge",
+      "errorPixels": 0.014551694063366179
+    },
+    {
+      "name": "Broken middle shore ridge",
+      "errorPixels": 0.10547474866268802
+    },
+    {
+      "name": "Broken middle shore ridge",
+      "errorPixels": 0.15601186208168616
+    },
+    {
+      "name": "Broken middle shore ridge",
+      "errorPixels": 0.09312109112681514
+    },
+    {
+      "name": "Broken middle shore ridge",
+      "errorPixels": 0.010365351991544345
+    },
+    {
+      "name": "Broken middle shore ridge",
+      "errorPixels": 0.34813105330872524
+    },
+    {
+      "name": "Broken middle shore ridge",
+      "errorPixels": 0.12615704547328965
+    },
+    {
+      "name": "Broken middle shore ridge",
+      "errorPixels": 0.27838559329818113
+    },
+    {
+      "name": "Broken middle shore ridge",
+      "errorPixels": 0.1248874972641884
+    },
+    {
+      "name": "Broken middle shore ridge",
+      "errorPixels": 0.3037860499073925
+    },
+    {
+      "name": "Broken middle shore ridge",
+      "errorPixels": 0.16257811484948156
+    },
+    {
+      "name": "Broken middle shore ridge",
+      "errorPixels": 0.31189012023743684
+    },
+    {
+      "name": "Broken middle shore ridge",
+      "errorPixels": 0.011813219176213313
+    },
+    {
+      "name": "Broken middle shore ridge",
+      "errorPixels": 0.06469395481238652
+    },
+    {
+      "name": "Broken middle shore ridge",
+      "errorPixels": 0.1182796823865999
+    }
+  ],
+  "crest": [
+    {
+      "name": "left remote",
+      "node": 0,
+      "covered": false,
+      "errorPixels": 14.108082134866748
+    },
+    {
+      "name": "left remote",
+      "node": 1,
+      "covered": false,
+      "errorPixels": 0.3728186214895278
+    },
+    {
+      "name": "left remote",
+      "node": 2,
+      "covered": false,
+      "errorPixels": 4.0793820328646895
+    },
+    {
+      "name": "left remote",
+      "node": 3,
+      "covered": false,
+      "errorPixels": 5.263543925407129
+    },
+    {
+      "name": "left remote",
+      "node": 4,
+      "covered": false,
+      "errorPixels": 3.3011528731681072
+    },
+    {
+      "name": "left remote",
+      "node": 5,
+      "covered": false,
+      "errorPixels": 10.064054046230963
+    },
+    {
+      "name": "left tall diagonal",
+      "node": 0,
+      "covered": false,
+      "errorPixels": 1.836305048434159
+    },
+    {
+      "name": "left tall diagonal",
+      "node": 1,
+      "covered": false,
+      "errorPixels": 1.3233911241524279
+    },
+    {
+      "name": "left tall diagonal",
+      "node": 2,
+      "covered": false,
+      "errorPixels": 0.805528843340317
+    },
+    {
+      "name": "left tall diagonal",
+      "node": 3,
+      "covered": false,
+      "errorPixels": 2.000961181929229
+    },
+    {
+      "name": "left tall diagonal",
+      "node": 4,
+      "covered": false,
+      "errorPixels": 2.077733832768302
+    },
+    {
+      "name": "left tall diagonal",
+      "node": 5,
+      "covered": false,
+      "errorPixels": 1.8623283382732907
+    },
+    {
+      "name": "left tall diagonal",
+      "node": 6,
+      "covered": false,
+      "errorPixels": 5.441860818134112
+    },
+    {
+      "name": "left tall diagonal",
+      "node": 7,
+      "covered": false,
+      "errorPixels": 1.5209938779083354
+    },
+    {
+      "name": "left tall diagonal",
+      "node": 8,
+      "covered": false,
+      "errorPixels": 3.0348882911619066
+    },
+    {
+      "name": "left blue front",
+      "node": 0,
+      "covered": false,
+      "errorPixels": 4.383860569412462
+    },
+    {
+      "name": "left blue front",
+      "node": 1,
+      "covered": false,
+      "errorPixels": 3.1136260685762687
+    },
+    {
+      "name": "left blue front",
+      "node": 2,
+      "covered": false,
+      "errorPixels": 2.8829446510801886
+    },
+    {
+      "name": "left blue front",
+      "node": 3,
+      "covered": false,
+      "errorPixels": 12.080751504664086
+    },
+    {
+      "name": "left blue front",
+      "node": 4,
+      "covered": false,
+      "errorPixels": 15.276804219062024
+    },
+    {
+      "name": "left blue front",
+      "node": 5,
+      "covered": false,
+      "errorPixels": 4.149068133067113
+    },
+    {
+      "name": "left blue front",
+      "node": 6,
+      "covered": false,
+      "errorPixels": 0.7647302557465434
+    },
+    {
+      "name": "left blue front",
+      "node": 7,
+      "covered": false,
+      "errorPixels": 7.656598607759481
+    },
+    {
+      "name": "left green face",
+      "node": 0,
+      "covered": false,
+      "errorPixels": 0.8693302557397026
+    },
+    {
+      "name": "left green face",
+      "node": 1,
+      "covered": false,
+      "errorPixels": 1.7033848591254737
+    },
+    {
+      "name": "left green face",
+      "node": 2,
+      "covered": false,
+      "errorPixels": 3.3687109357204865
+    },
+    {
+      "name": "left green face",
+      "node": 3,
+      "covered": false,
+      "errorPixels": 13.0212356533219
+    },
+    {
+      "name": "left green face",
+      "node": 4,
+      "covered": false,
+      "errorPixels": 5.817199810660367
+    },
+    {
+      "name": "left green face",
+      "node": 5,
+      "covered": false,
+      "errorPixels": 3.674313468236182
+    },
+    {
+      "name": "left green face",
+      "node": 6,
+      "covered": false,
+      "errorPixels": 6.4325018689956215
+    },
+    {
+      "name": "left green face",
+      "node": 7,
+      "covered": false,
+      "errorPixels": 2.1097528833566432
+    },
+    {
+      "name": "left middle blue",
+      "node": 0,
+      "covered": false,
+      "errorPixels": 2.724429587731232
+    },
+    {
+      "name": "left middle blue",
+      "node": 1,
+      "covered": false,
+      "errorPixels": 1.1547815034936675
+    },
+    {
+      "name": "left middle blue",
+      "node": 2,
+      "covered": false,
+      "errorPixels": 3.4588126771760055
+    },
+    {
+      "name": "left middle blue",
+      "node": 3,
+      "covered": false,
+      "errorPixels": 3.4409840522247226
+    },
+    {
+      "name": "left middle blue",
+      "node": 4,
+      "covered": false,
+      "errorPixels": 1.979305370267165
+    },
+    {
+      "name": "left middle blue",
+      "node": 5,
+      "covered": false,
+      "errorPixels": 2.2618538228867346
+    },
+    {
+      "name": "left middle blue",
+      "node": 6,
+      "covered": false,
+      "errorPixels": 4.289314379421395
+    },
+    {
+      "name": "left middle blue",
+      "node": 7,
+      "covered": false,
+      "errorPixels": 3.6065300579760646
+    },
+    {
+      "name": "left middle blue",
+      "node": 8,
+      "covered": false,
+      "errorPixels": 1.285627057162159
+    },
+    {
+      "name": "left middle shoulder",
+      "node": 0,
+      "covered": false,
+      "errorPixels": 8.277219834093016
+    },
+    {
+      "name": "left middle shoulder",
+      "node": 1,
+      "covered": false,
+      "errorPixels": 2.528763756007915
+    },
+    {
+      "name": "left middle shoulder",
+      "node": 2,
+      "covered": false,
+      "errorPixels": 2.1149359423686964
+    },
+    {
+      "name": "left middle shoulder",
+      "node": 3,
+      "covered": false,
+      "errorPixels": 6.094522428362184
+    },
+    {
+      "name": "left middle shoulder",
+      "node": 4,
+      "covered": false,
+      "errorPixels": 3.8017561233782775
+    },
+    {
+      "name": "left middle shoulder",
+      "node": 5,
+      "covered": false,
+      "errorPixels": 4.085033466136846
+    },
+    {
+      "name": "left middle shoulder",
+      "node": 6,
+      "covered": false,
+      "errorPixels": 2.9325006526495203
+    },
+    {
+      "name": "left middle shoulder",
+      "node": 7,
+      "covered": false,
+      "errorPixels": 1.2884132363688647
+    },
+    {
+      "name": "left low foreground",
+      "node": 0,
+      "covered": true,
+      "errorPixels": 25.77573565374102
+    },
+    {
+      "name": "left low foreground",
+      "node": 1,
+      "covered": false,
+      "errorPixels": 2.5655828253149706
+    },
+    {
+      "name": "left low foreground",
+      "node": 2,
+      "covered": false,
+      "errorPixels": 1.7788620531852253
+    },
+    {
+      "name": "left low foreground",
+      "node": 3,
+      "covered": false,
+      "errorPixels": 1.9645385276476515
+    },
+    {
+      "name": "left low foreground",
+      "node": 4,
+      "covered": false,
+      "errorPixels": 7.333011827628965
+    },
+    {
+      "name": "left low foreground",
+      "node": 5,
+      "covered": false,
+      "errorPixels": 6.203550111724591
+    },
+    {
+      "name": "left low foreground",
+      "node": 6,
+      "covered": false,
+      "errorPixels": 6.791055370607766
+    },
+    {
+      "name": "left low foreground",
+      "node": 7,
+      "covered": false,
+      "errorPixels": 4.210118981559881
+    },
+    {
+      "name": "left low foreground",
+      "node": 8,
+      "covered": false,
+      "errorPixels": 0.6567874816300419
+    },
+    {
+      "name": "left small front",
+      "node": 0,
+      "covered": true,
+      "errorPixels": 54.23778732403439
+    },
+    {
+      "name": "left small front",
+      "node": 1,
+      "covered": true,
+      "errorPixels": 14.335583751853015
+    },
+    {
+      "name": "left small front",
+      "node": 2,
+      "covered": false,
+      "errorPixels": 1.9331326290792472
+    },
+    {
+      "name": "left small front",
+      "node": 3,
+      "covered": false,
+      "errorPixels": 3.479134233160274
+    },
+    {
+      "name": "left small front",
+      "node": 4,
+      "covered": false,
+      "errorPixels": 8.408767203315042
+    },
+    {
+      "name": "left small front",
+      "node": 5,
+      "covered": false,
+      "errorPixels": 5.530893130078324
+    },
+    {
+      "name": "left small front",
+      "node": 6,
+      "covered": false,
+      "errorPixels": 11.48922049534935
+    },
+    {
+      "name": "inner long sloping crest",
+      "node": 0,
+      "covered": true,
+      "errorPixels": 36.54720170752843
+    },
+    {
+      "name": "inner long sloping crest",
+      "node": 1,
+      "covered": false,
+      "errorPixels": 1.208726009771333
+    },
+    {
+      "name": "inner long sloping crest",
+      "node": 2,
+      "covered": false,
+      "errorPixels": 2.555515144866626
+    },
+    {
+      "name": "inner long sloping crest",
+      "node": 3,
+      "covered": false,
+      "errorPixels": 0.8825818138215608
+    },
+    {
+      "name": "inner long sloping crest",
+      "node": 4,
+      "covered": false,
+      "errorPixels": 1.752520692523
+    },
+    {
+      "name": "inner long sloping crest",
+      "node": 5,
+      "covered": false,
+      "errorPixels": 4.837276657849378
+    },
+    {
+      "name": "inner long sloping crest",
+      "node": 6,
+      "covered": false,
+      "errorPixels": 4.9077050349268685
+    },
+    {
+      "name": "inner long sloping crest",
+      "node": 7,
+      "covered": false,
+      "errorPixels": 0.9078173218357685
+    },
+    {
+      "name": "inner long sloping crest",
+      "node": 8,
+      "covered": false,
+      "errorPixels": 4.829799472554429
+    },
+    {
+      "name": "inner long sloping crest",
+      "node": 9,
+      "covered": false,
+      "errorPixels": 9.59027032956605
+    },
+    {
+      "name": "inner overlapping front",
+      "node": 0,
+      "covered": true,
+      "errorPixels": 47.980327147684854
+    },
+    {
+      "name": "inner overlapping front",
+      "node": 1,
+      "covered": false,
+      "errorPixels": 0.96165086441251
+    },
+    {
+      "name": "inner overlapping front",
+      "node": 2,
+      "covered": false,
+      "errorPixels": 2.926789225674157
+    },
+    {
+      "name": "inner overlapping front",
+      "node": 3,
+      "covered": false,
+      "errorPixels": 4.554583938345547
+    },
+    {
+      "name": "inner overlapping front",
+      "node": 4,
+      "covered": false,
+      "errorPixels": 7.186345770352442
+    },
+    {
+      "name": "inner overlapping front",
+      "node": 5,
+      "covered": false,
+      "errorPixels": 8.679107755305342
+    },
+    {
+      "name": "inner overlapping front",
+      "node": 6,
+      "covered": false,
+      "errorPixels": 6.3387039292977265
+    },
+    {
+      "name": "inner overlapping front",
+      "node": 7,
+      "covered": false,
+      "errorPixels": 7.157100014273334
+    },
+    {
+      "name": "inner overlapping front",
+      "node": 8,
+      "covered": true,
+      "errorPixels": 32.84390885868137
+    },
+    {
+      "name": "inner green knuckle",
+      "node": 0,
+      "covered": true,
+      "errorPixels": 51.73725391957096
+    },
+    {
+      "name": "inner green knuckle",
+      "node": 1,
+      "covered": false,
+      "errorPixels": 1.6934611885943058
+    },
+    {
+      "name": "inner green knuckle",
+      "node": 2,
+      "covered": false,
+      "errorPixels": 4.960285737033384
+    },
+    {
+      "name": "inner green knuckle",
+      "node": 3,
+      "covered": false,
+      "errorPixels": 0.5059280222450109
+    },
+    {
+      "name": "inner green knuckle",
+      "node": 4,
+      "covered": false,
+      "errorPixels": 8.264829823986844
+    },
+    {
+      "name": "inner green knuckle",
+      "node": 5,
+      "covered": false,
+      "errorPixels": 5.589148448482781
+    },
+    {
+      "name": "inner green knuckle",
+      "node": 6,
+      "covered": false,
+      "errorPixels": 1.292070725270096
+    },
+    {
+      "name": "inner green knuckle",
+      "node": 7,
+      "covered": true,
+      "errorPixels": 21.284228988945316
+    },
+    {
+      "name": "village back hill",
+      "node": 0,
+      "covered": true,
+      "errorPixels": 15.11478785507324
+    },
+    {
+      "name": "village back hill",
+      "node": 1,
+      "covered": false,
+      "errorPixels": 12.710303968746594
+    },
+    {
+      "name": "village back hill",
+      "node": 2,
+      "covered": false,
+      "errorPixels": 2.2413307642829428
+    },
+    {
+      "name": "village back hill",
+      "node": 3,
+      "covered": false,
+      "errorPixels": 4.014698173764405
+    },
+    {
+      "name": "village back hill",
+      "node": 4,
+      "covered": false,
+      "errorPixels": 5.22211995210042
+    },
+    {
+      "name": "village back hill",
+      "node": 5,
+      "covered": false,
+      "errorPixels": 1.0906968561755839
+    },
+    {
+      "name": "village back hill",
+      "node": 6,
+      "covered": false,
+      "errorPixels": 0.2915581437708753
+    },
+    {
+      "name": "inner foot rocks",
+      "node": 0,
+      "covered": true,
+      "errorPixels": 17.066560105481795
+    },
+    {
+      "name": "inner foot rocks",
+      "node": 1,
+      "covered": false,
+      "errorPixels": 2.284595211896852
+    },
+    {
+      "name": "inner foot rocks",
+      "node": 2,
+      "covered": false,
+      "errorPixels": 8.395360582511119
+    },
+    {
+      "name": "inner foot rocks",
+      "node": 3,
+      "covered": false,
+      "errorPixels": 9.515651524679484
+    },
+    {
+      "name": "inner foot rocks",
+      "node": 4,
+      "covered": false,
+      "errorPixels": 10.613934729213613
+    },
+    {
+      "name": "inner foot rocks",
+      "node": 5,
+      "covered": false,
+      "errorPixels": 0.9187252657377212
+    },
+    {
+      "name": "inner foot rocks",
+      "node": 6,
+      "covered": true,
+      "errorPixels": 19.14972056558155
+    },
+    {
+      "name": "left apron shoulder",
+      "node": 0,
+      "covered": true,
+      "errorPixels": 37.108918110395386
+    },
+    {
+      "name": "left apron shoulder",
+      "node": 1,
+      "covered": false,
+      "errorPixels": 1.4699412828930272
+    },
+    {
+      "name": "left apron shoulder",
+      "node": 2,
+      "covered": false,
+      "errorPixels": 6.977573372000895
+    },
+    {
+      "name": "left apron shoulder",
+      "node": 3,
+      "covered": false,
+      "errorPixels": 2.727997872186397
+    },
+    {
+      "name": "left apron shoulder",
+      "node": 4,
+      "covered": true,
+      "errorPixels": 25.53052182724328
+    },
+    {
+      "name": "left outer back",
+      "node": 0,
+      "covered": false,
+      "errorPixels": 16.108313379952722
+    },
+    {
+      "name": "left outer back",
+      "node": 1,
+      "covered": false,
+      "errorPixels": 6.041076584465146
+    },
+    {
+      "name": "left outer back",
+      "node": 2,
+      "covered": false,
+      "errorPixels": 7.67682865586076
+    },
+    {
+      "name": "left outer back",
+      "node": 3,
+      "covered": false,
+      "errorPixels": 6.560522815171227
+    },
+    {
+      "name": "left outer back",
+      "node": 4,
+      "covered": false,
+      "errorPixels": 6.8246136513187965
+    },
+    {
+      "name": "left outer back",
+      "node": 5,
+      "covered": false,
+      "errorPixels": 18.196264571774254
+    },
+    {
+      "name": "left upper back",
+      "node": 0,
+      "covered": false,
+      "errorPixels": 11.425393077023148
+    },
+    {
+      "name": "left upper back",
+      "node": 1,
+      "covered": false,
+      "errorPixels": 1.758276290753783
+    },
+    {
+      "name": "left upper back",
+      "node": 2,
+      "covered": false,
+      "errorPixels": 3.237608744113278
+    },
+    {
+      "name": "left upper back",
+      "node": 3,
+      "covered": false,
+      "errorPixels": 5.3620351305683425
+    },
+    {
+      "name": "left upper back",
+      "node": 4,
+      "covered": false,
+      "errorPixels": 3.4307799196892415
+    },
+    {
+      "name": "left upper back",
+      "node": 5,
+      "covered": false,
+      "errorPixels": 17.676432655592986
+    },
+    {
+      "name": "far right tower",
+      "node": 0,
+      "covered": false,
+      "errorPixels": 3.959114108928221
+    },
+    {
+      "name": "far right tower",
+      "node": 1,
+      "covered": false,
+      "errorPixels": 0.8498813776829881
+    },
+    {
+      "name": "far right tower",
+      "node": 2,
+      "covered": false,
+      "errorPixels": 5.357619927000615
+    },
+    {
+      "name": "far right tower",
+      "node": 3,
+      "covered": false,
+      "errorPixels": 3.7621634840561744
+    },
+    {
+      "name": "far right tower",
+      "node": 4,
+      "covered": false,
+      "errorPixels": 2.2712030634691445
+    },
+    {
+      "name": "far right tower",
+      "node": 5,
+      "covered": false,
+      "errorPixels": 4.619403604170615
+    },
+    {
+      "name": "far right tower",
+      "node": 6,
+      "covered": false,
+      "errorPixels": 7.283862537094114
+    },
+    {
+      "name": "far right tower",
+      "node": 7,
+      "covered": false,
+      "errorPixels": 3.413099447679109
+    },
+    {
+      "name": "far right tower",
+      "node": 8,
+      "covered": false,
+      "errorPixels": 0.21979256047123052
+    },
+    {
+      "name": "far right tower",
+      "node": 9,
+      "covered": false,
+      "errorPixels": 8.869479824975372
+    },
+    {
+      "name": "right long back shoulder",
+      "node": 0,
+      "covered": false,
+      "errorPixels": 2.611148665762405
+    },
+    {
+      "name": "right long back shoulder",
+      "node": 1,
+      "covered": false,
+      "errorPixels": 0.48790003787116787
+    },
+    {
+      "name": "right long back shoulder",
+      "node": 2,
+      "covered": false,
+      "errorPixels": 2.759396256170112
+    },
+    {
+      "name": "right long back shoulder",
+      "node": 3,
+      "covered": false,
+      "errorPixels": 2.24281268835204
+    },
+    {
+      "name": "right long back shoulder",
+      "node": 4,
+      "covered": false,
+      "errorPixels": 2.368701220082498
+    },
+    {
+      "name": "right long back shoulder",
+      "node": 5,
+      "covered": false,
+      "errorPixels": 3.9603502146827725
+    },
+    {
+      "name": "right long back shoulder",
+      "node": 6,
+      "covered": false,
+      "errorPixels": 5.136402829122334
+    },
+    {
+      "name": "right long back shoulder",
+      "node": 7,
+      "covered": false,
+      "errorPixels": 2.1163242972465897
+    },
+    {
+      "name": "right long back shoulder",
+      "node": 8,
+      "covered": true,
+      "errorPixels": 7.848508322971965
+    },
+    {
+      "name": "right long back shoulder",
+      "node": 9,
+      "covered": true,
+      "errorPixels": 22.645891677731452
+    },
+    {
+      "name": "right remote shoulder",
+      "node": 0,
+      "covered": true,
+      "errorPixels": 66.15862269880516
+    },
+    {
+      "name": "right remote shoulder",
+      "node": 1,
+      "covered": false,
+      "errorPixels": 2.173359574367329
+    },
+    {
+      "name": "right remote shoulder",
+      "node": 2,
+      "covered": false,
+      "errorPixels": 3.1442089756630898
+    },
+    {
+      "name": "right remote shoulder",
+      "node": 3,
+      "covered": false,
+      "errorPixels": 3.9372558696611395
+    },
+    {
+      "name": "right remote shoulder",
+      "node": 4,
+      "covered": false,
+      "errorPixels": 4.581258773320977
+    },
+    {
+      "name": "right remote shoulder",
+      "node": 5,
+      "covered": false,
+      "errorPixels": 11.9112144549822
+    },
+    {
+      "name": "right blue back",
+      "node": 0,
+      "covered": false,
+      "errorPixels": 0.5581724496689535
+    },
+    {
+      "name": "right blue back",
+      "node": 1,
+      "covered": false,
+      "errorPixels": 1.4085272672141922
+    },
+    {
+      "name": "right blue back",
+      "node": 2,
+      "covered": false,
+      "errorPixels": 5.599679104788232
+    },
+    {
+      "name": "right blue back",
+      "node": 3,
+      "covered": false,
+      "errorPixels": 1.4537055594371917
+    },
+    {
+      "name": "right blue back",
+      "node": 4,
+      "covered": false,
+      "errorPixels": 1.7111847947159495
+    },
+    {
+      "name": "right blue back",
+      "node": 5,
+      "covered": false,
+      "errorPixels": 1.9505739747982704
+    },
+    {
+      "name": "right blue back",
+      "node": 6,
+      "covered": false,
+      "errorPixels": 2.8218864567928748
+    },
+    {
+      "name": "right blue back",
+      "node": 7,
+      "covered": false,
+      "errorPixels": 1.9967287511986427
+    },
+    {
+      "name": "right blue back",
+      "node": 8,
+      "covered": false,
+      "errorPixels": 7.604541662086869
+    },
+    {
+      "name": "right green diagonal",
+      "node": 0,
+      "covered": false,
+      "errorPixels": 4.8506144217493645
+    },
+    {
+      "name": "right green diagonal",
+      "node": 1,
+      "covered": false,
+      "errorPixels": 0.7350557362010731
+    },
+    {
+      "name": "right green diagonal",
+      "node": 2,
+      "covered": false,
+      "errorPixels": 1.3265370315232277
+    },
+    {
+      "name": "right green diagonal",
+      "node": 3,
+      "covered": false,
+      "errorPixels": 2.6618250185481074
+    },
+    {
+      "name": "right green diagonal",
+      "node": 4,
+      "covered": false,
+      "errorPixels": 2.8383213324391323
+    },
+    {
+      "name": "right green diagonal",
+      "node": 5,
+      "covered": false,
+      "errorPixels": 3.232534203887159
+    },
+    {
+      "name": "right green diagonal",
+      "node": 6,
+      "covered": false,
+      "errorPixels": 4.301956306243247
+    },
+    {
+      "name": "right green diagonal",
+      "node": 7,
+      "covered": true,
+      "errorPixels": 31.504044700255943
+    },
+    {
+      "name": "right green diagonal",
+      "node": 8,
+      "covered": true,
+      "errorPixels": 41.69285860126718
+    },
+    {
+      "name": "right green diagonal",
+      "node": 9,
+      "covered": true,
+      "errorPixels": 70.25720359985287
+    },
+    {
+      "name": "right front crag",
+      "node": 0,
+      "covered": false,
+      "errorPixels": 0.3626105819938427
+    },
+    {
+      "name": "right front crag",
+      "node": 1,
+      "covered": false,
+      "errorPixels": 2.1575570472915455
+    },
+    {
+      "name": "right front crag",
+      "node": 2,
+      "covered": false,
+      "errorPixels": 4.150758753986911
+    },
+    {
+      "name": "right front crag",
+      "node": 3,
+      "covered": false,
+      "errorPixels": 6.624650288296557
+    },
+    {
+      "name": "right front crag",
+      "node": 4,
+      "covered": false,
+      "errorPixels": 8.272953116243839
+    },
+    {
+      "name": "right front crag",
+      "node": 5,
+      "covered": false,
+      "errorPixels": 4.2218022008287965
+    },
+    {
+      "name": "right front crag",
+      "node": 6,
+      "covered": false,
+      "errorPixels": 3.1337097877568745
+    },
+    {
+      "name": "right front crag",
+      "node": 7,
+      "covered": false,
+      "errorPixels": 17.24105212866643
+    },
+    {
+      "name": "right front crag",
+      "node": 8,
+      "covered": false,
+      "errorPixels": 11.958041098889385
+    },
+    {
+      "name": "right low green shoulder",
+      "node": 0,
+      "covered": true,
+      "errorPixels": 22.43008792336028
+    },
+    {
+      "name": "right low green shoulder",
+      "node": 1,
+      "covered": false,
+      "errorPixels": 4.962889419193896
+    },
+    {
+      "name": "right low green shoulder",
+      "node": 2,
+      "covered": false,
+      "errorPixels": 3.5373529132151793
+    },
+    {
+      "name": "right low green shoulder",
+      "node": 3,
+      "covered": false,
+      "errorPixels": 4.001694928047973
+    },
+    {
+      "name": "right low green shoulder",
+      "node": 4,
+      "covered": false,
+      "errorPixels": 3.1463761606951413
+    },
+    {
+      "name": "right low green shoulder",
+      "node": 5,
+      "covered": false,
+      "errorPixels": 2.383771012055842
+    },
+    {
+      "name": "right low green shoulder",
+      "node": 6,
+      "covered": true,
+      "errorPixels": 25.53457603942138
+    },
+    {
+      "name": "right outside back",
+      "node": 0,
+      "covered": true,
+      "errorPixels": 50.488174582133446
+    },
+    {
+      "name": "right outside back",
+      "node": 1,
+      "covered": true,
+      "errorPixels": 10.34624464857783
+    },
+    {
+      "name": "right outside back",
+      "node": 2,
+      "covered": false,
+      "errorPixels": 11.688270565328375
+    },
+    {
+      "name": "right outside back",
+      "node": 3,
+      "covered": false,
+      "errorPixels": 15.569934733022938
+    },
+    {
+      "name": "right outside back",
+      "node": 4,
+      "covered": false,
+      "errorPixels": 5.211723395571624
+    },
+    {
+      "name": "right small shore hill",
+      "node": 0,
+      "covered": true,
+      "errorPixels": 34.797194475754196
+    },
+    {
+      "name": "right small shore hill",
+      "node": 1,
+      "covered": false,
+      "errorPixels": 10.25558145255493
+    },
+    {
+      "name": "right small shore hill",
+      "node": 2,
+      "covered": false,
+      "errorPixels": 2.8353174505515413
+    },
+    {
+      "name": "right small shore hill",
+      "node": 3,
+      "covered": false,
+      "errorPixels": 8.440195605708121
+    },
+    {
+      "name": "right small shore hill",
+      "node": 4,
+      "covered": false,
+      "errorPixels": 1.3694823668754068
+    },
+    {
+      "name": "right small shore hill",
+      "node": 5,
+      "covered": false,
+      "errorPixels": 9.209489922457019
+    },
+    {
+      "name": "right apron rocks",
+      "node": 0,
+      "covered": false,
+      "errorPixels": 4.354728437384495
+    },
+    {
+      "name": "right apron rocks",
+      "node": 1,
+      "covered": false,
+      "errorPixels": 7.89856993421437
+    },
+    {
+      "name": "right apron rocks",
+      "node": 2,
+      "covered": false,
+      "errorPixels": 7.514856971661334
+    },
+    {
+      "name": "right apron rocks",
+      "node": 3,
+      "covered": false,
+      "errorPixels": 6.626529372965731
+    },
+    {
+      "name": "right apron rocks",
+      "node": 4,
+      "covered": false,
+      "errorPixels": 6.060192445052107
+    },
+    {
+      "name": "long low blue island",
+      "node": 0,
+      "covered": false,
+      "errorPixels": 1.2149084198212394
+    },
+    {
+      "name": "long low blue island",
+      "node": 1,
+      "covered": false,
+      "errorPixels": 3.9190802237542366
+    },
+    {
+      "name": "long low blue island",
+      "node": 2,
+      "covered": false,
+      "errorPixels": 0.6710336210071008
+    },
+    {
+      "name": "long low blue island",
+      "node": 3,
+      "covered": false,
+      "errorPixels": 1.8079889475006796
+    },
+    {
+      "name": "long low blue island",
+      "node": 4,
+      "covered": false,
+      "errorPixels": 0.19395451938596797
+    },
+    {
+      "name": "long low blue island",
+      "node": 5,
+      "covered": false,
+      "errorPixels": 1.8390298410256536
+    },
+    {
+      "name": "long low blue island",
+      "node": 6,
+      "covered": false,
+      "errorPixels": 1.4142772304181914
+    },
+    {
+      "name": "long low blue island",
+      "node": 7,
+      "covered": false,
+      "errorPixels": 1.5730134820088923
+    },
+    {
+      "name": "long low blue island",
+      "node": 8,
+      "covered": false,
+      "errorPixels": 1.1708147767245616
+    },
+    {
+      "name": "long low blue island",
+      "node": 9,
+      "covered": false,
+      "errorPixels": 0.5630811991223493
+    },
+    {
+      "name": "long low blue island",
+      "node": 10,
+      "covered": false,
+      "errorPixels": 1.7777052107188689
+    },
+    {
+      "name": "long low blue island",
+      "node": 11,
+      "covered": false,
+      "errorPixels": 2.576104984119092
+    },
+    {
+      "name": "long low blue island",
+      "node": 12,
+      "covered": false,
+      "errorPixels": 3.184084535339083
+    },
+    {
+      "name": "long low blue island",
+      "node": 13,
+      "covered": false,
+      "errorPixels": 2.8528985296283196
+    },
+    {
+      "name": "long low blue island",
+      "node": 14,
+      "covered": false,
+      "errorPixels": 1.4548939967804444
+    },
+    {
+      "name": "long low blue island",
+      "node": 15,
+      "covered": false,
+      "errorPixels": 1.3753846901308975
+    },
+    {
+      "name": "long low blue island",
+      "node": 16,
+      "covered": false,
+      "errorPixels": 1.979581184301881
+    },
+    {
+      "name": "left foot rock 1",
+      "node": 0,
+      "covered": false,
+      "errorPixels": 2.99267804456337
+    },
+    {
+      "name": "left foot rock 1",
+      "node": 1,
+      "covered": false,
+      "errorPixels": 5.596325930020448
+    },
+    {
+      "name": "left foot rock 1",
+      "node": 2,
+      "covered": false,
+      "errorPixels": 9.133161724663626
+    },
+    {
+      "name": "left foot rock 1",
+      "node": 3,
+      "covered": false,
+      "errorPixels": 3.261631272619375
+    },
+    {
+      "name": "left foot rock 1",
+      "node": 4,
+      "covered": false,
+      "errorPixels": 0.16267625121016038
+    },
+    {
+      "name": "left foot rock 2",
+      "node": 0,
+      "covered": false,
+      "errorPixels": 6.688898003724738
+    },
+    {
+      "name": "left foot rock 2",
+      "node": 1,
+      "covered": false,
+      "errorPixels": 5.327616691999143
+    },
+    {
+      "name": "left foot rock 2",
+      "node": 2,
+      "covered": false,
+      "errorPixels": 8.575297426654073
+    },
+    {
+      "name": "left foot rock 2",
+      "node": 3,
+      "covered": false,
+      "errorPixels": 1.1628797152317811
+    },
+    {
+      "name": "inner foot rock 2",
+      "node": 0,
+      "covered": false,
+      "errorPixels": 1.5320355655365228
+    },
+    {
+      "name": "inner foot rock 2",
+      "node": 1,
+      "covered": false,
+      "errorPixels": 7.089296916138869
+    },
+    {
+      "name": "inner foot rock 2",
+      "node": 2,
+      "covered": false,
+      "errorPixels": 6.99423474167607
+    },
+    {
+      "name": "inner foot rock 2",
+      "node": 3,
+      "covered": false,
+      "errorPixels": 12.332751864995874
+    },
+    {
+      "name": "right low bank rock",
+      "node": 0,
+      "covered": false,
+      "errorPixels": 2.1766231223343557
+    },
+    {
+      "name": "right low bank rock",
+      "node": 1,
+      "covered": false,
+      "errorPixels": 1.9292074974736253
+    },
+    {
+      "name": "right low bank rock",
+      "node": 2,
+      "covered": false,
+      "errorPixels": 2.5818807132522994
+    },
+    {
+      "name": "right low bank rock",
+      "node": 3,
+      "covered": false,
+      "errorPixels": 3.608903182062641
+    },
+    {
+      "name": "right low bank rock",
+      "node": 4,
+      "covered": false,
+      "errorPixels": 4.136822171768938
+    },
+    {
+      "name": "right low bank rock",
+      "node": 5,
+      "covered": false,
+      "errorPixels": 10.73852473805213
+    }
+  ],
+  "meanExposedCrestErrorPixels": 4.541655448200248,
+  "exposedCrests": 211,
+  "rootRaycasts": [
+    {
+      "x": -128.5524734601418,
+      "z": -27.23894720351305,
+      "ridge": false,
+      "height": 3.966799670288444,
+      "error": 0.0000026983978642647344
+    },
+    {
+      "x": -106.32479800495575,
+      "z": 7.386355752640924,
+      "ridge": false,
+      "height": 4.876670126332662,
+      "error": 5.477127196229503e-9
+    },
+    {
+      "x": -23.38949526415161,
+      "z": 41.79199195532718,
+      "ridge": false,
+      "height": 6.574820523586972,
+      "error": 6.026750152265947e-7
+    },
+    {
+      "x": 51.950971676634445,
+      "z": 37.54138857085729,
+      "ridge": false,
+      "height": 5.60325148919488,
+      "error": 5.5472530569034006e-8
+    },
+    {
+      "x": 39.28871406884053,
+      "z": -73.15421582383931,
+      "ridge": false,
+      "height": 4.054191745632691,
+      "error": 5.100818722958422e-8
+    },
+    {
+      "x": 70.08408366942719,
+      "z": -47.816050582257844,
+      "ridge": false,
+      "height": 5.5788756445150085,
+      "error": 6.193468331527896e-7
+    },
+    {
+      "x": 108.4486815752343,
+      "z": -74.01499972717437,
+      "ridge": false,
+      "height": 6.793105143723552,
+      "error": 1.1266986899016729e-8
+    },
+    {
+      "x": 90.99868011236445,
+      "z": -99.60702375873325,
+      "ridge": false,
+      "height": 4.39524498729529,
+      "error": 8.6882900207641e-8
+    },
+    {
+      "x": 136.47529388864353,
+      "z": -72.03843981776072,
+      "ridge": false,
+      "height": 5.789937228304111,
+      "error": 0.000001018516532003133
+    },
+    {
+      "x": -121.8187046606938,
+      "z": -365.8563027035424,
+      "ridge": false,
+      "height": 3.1052719819002124,
+      "error": 0
+    },
+    {
+      "x": -74.8494433200796,
+      "z": -343.7015849486155,
+      "ridge": false,
+      "height": 2.659912032948985,
+      "error": 0
+    },
+    {
+      "x": -95.99605073318448,
+      "z": -483.62439848140014,
+      "ridge": false,
+      "height": 3.2276832866070038,
+      "error": 0
+    },
+    {
+      "x": 166.88001681077822,
+      "z": -81.21652062478358,
+      "ridge": false,
+      "height": 2.07696192744188,
+      "error": 4.048618507113133e-8
+    },
+    {
+      "x": 125.87550435734583,
+      "z": -124.10379863968944,
+      "ridge": false,
+      "height": 2.8675608540419493,
+      "error": 7.197667031277888e-7
+    },
+    {
+      "x": -116.73480788094766,
+      "z": -33.67245536178828,
+      "ridge": false,
+      "height": 2.410027549928054,
+      "error": 9.736150090589035e-7
+    },
+    {
+      "x": -154.079398735745,
+      "z": -35.94111424504055,
+      "ridge": false,
+      "height": 2.906373697612435,
+      "error": 0.000001536160517900953
+    },
+    {
+      "x": -266.102502523743,
+      "z": -199.45061968830598,
+      "ridge": true,
+      "height": 1.0291588807772964,
+      "error": 0.0000034774882067267754
+    },
+    {
+      "x": -253.80271464856048,
+      "z": -196.57513129152912,
+      "ridge": true,
+      "height": 1.0423649511616209,
+      "error": 0.000007335993245760619
+    },
+    {
+      "x": -251.5691885551879,
+      "z": -196.37619654133746,
+      "ridge": true,
+      "height": 0.6865188279232921,
+      "error": 0.0000048129999896673326
+    },
+    {
+      "x": -162.87436056769369,
+      "z": -103.9380556090994,
+      "ridge": true,
+      "height": 0.9440233808544274,
+      "error": 0.0000011883486159547374
+    },
+    {
+      "x": -145.50987039622274,
+      "z": -100.76627215499688,
+      "ridge": true,
+      "height": 1.214749167858177,
+      "error": 9.409558998640932e-8
+    },
+    {
+      "x": -141.37852561954296,
+      "z": -100.35780022758097,
+      "ridge": true,
+      "height": 0.9524570500421519,
+      "error": 3.877188703427237e-8
+    },
+    {
+      "x": -126.97277649564582,
+      "z": -99.96554153676283,
+      "ridge": true,
+      "height": 1.1650506732354424,
+      "error": 4.1062672551106516e-7
+    },
+    {
+      "x": -150.02604394414126,
+      "z": -56.60530213093627,
+      "ridge": true,
+      "height": 0.8027126163115391,
+      "error": 0.000003163145795070932
+    },
+    {
+      "x": -143.22025451023993,
+      "z": -21.407154799463374,
+      "ridge": true,
+      "height": 0.7583193440784647,
+      "error": 0.000004524172233288937
+    },
+    {
+      "x": -132.77482216004773,
+      "z": -25.29604347261388,
+      "ridge": true,
+      "height": 1.2689642296741486,
+      "error": 6.18806506480496e-7
+    },
+    {
+      "x": -110.01734358870034,
+      "z": -38.281705749594046,
+      "ridge": true,
+      "height": 1.5389500421593185,
+      "error": 0.000003350224421438952
+    },
+    {
+      "x": -133.58992178302935,
+      "z": -69.70321798483762,
+      "ridge": true,
+      "height": 1.5979244066808809,
+      "error": 8.899497920822341e-7
+    },
+    {
+      "x": -130.66380596371522,
+      "z": -69.70438654549501,
+      "ridge": true,
+      "height": 1.6525202526849818,
+      "error": 0.0000022441308331622167
+    },
+    {
+      "x": -118.14332897403047,
+      "z": -68.98226290577324,
+      "ridge": true,
+      "height": 0.817608427647365,
+      "error": 7.071769658750782e-7
+    },
+    {
+      "x": -111.59174133209488,
+      "z": 35.051861275874984,
+      "ridge": true,
+      "height": 1.2443900383735182,
+      "error": 0.000003907740269148974
+    },
+    {
+      "x": -102.10588153324906,
+      "z": 41.082214818204264,
+      "ridge": true,
+      "height": 0.8147031145244656,
+      "error": 0.000002506571530780377
+    },
+    {
+      "x": -85.8164209580064,
+      "z": -9.484671746102432,
+      "ridge": true,
+      "height": 0.8313618201902706,
+      "error": 6.192385635372943e-7
+    },
+    {
+      "x": -71.08663547727176,
+      "z": -4.603741443362973,
+      "ridge": true,
+      "height": 1.031715920787705,
+      "error": 6.433374561964911e-7
+    },
+    {
+      "x": -48.49571966142061,
+      "z": 2.280309612035806,
+      "ridge": true,
+      "height": 0.9068282234519613,
+      "error": 3.441985576557727e-7
+    },
+    {
+      "x": -59.68974655803242,
+      "z": 22.18003488770186,
+      "ridge": true,
+      "height": 1.4824603944387753,
+      "error": 1.8437090076872664e-7
+    },
+    {
+      "x": -39.826215837419376,
+      "z": -18.696684487924106,
+      "ridge": true,
+      "height": 0.9880909585133635,
+      "error": 5.405319374318651e-7
+    },
+    {
+      "x": -198.53420010368566,
+      "z": -100.64619800181438,
+      "ridge": true,
+      "height": 1.5951499936707356,
+      "error": 7.088528803933514e-7
+    },
+    {
+      "x": -185.32452599343026,
+      "z": -101.64123015661484,
+      "ridge": true,
+      "height": 0.994917691382566,
+      "error": 0.0000044590092258545155
+    },
+    {
+      "x": -152.31865428313571,
+      "z": -87.23107058480866,
+      "ridge": true,
+      "height": 1.546083824376681,
+      "error": 0.0000011893226599113405
+    },
+    {
+      "x": 266.0055566830662,
+      "z": -257.43607521509097,
+      "ridge": true,
+      "height": 1.4351980621055171,
+      "error": 0.000006695959896774184
+    },
+    {
+      "x": 270.19198028944,
+      "z": -255.65870014683804,
+      "ridge": true,
+      "height": 1.4155541425854006,
+      "error": 0.000008887723183192975
+    },
+    {
+      "x": 290.4266503537966,
+      "z": -245.79493084256902,
+      "ridge": true,
+      "height": 1.457934209217187,
+      "error": 0.000009067918270488917
+    },
+    {
+      "x": 119.98885560671464,
+      "z": -140.72925577852692,
+      "ridge": true,
+      "height": 1.5826572441353886,
+      "error": 0.000004531379815375658
+    },
+    {
+      "x": 124.26458393103698,
+      "z": -140.4253040765149,
+      "ridge": true,
+      "height": 0.7661138568783867,
+      "error": 7.10763433886541e-7
+    },
+    {
+      "x": 141.750123419219,
+      "z": -138.55314366461621,
+      "ridge": true,
+      "height": 1.0228145710193555,
+      "error": 0.0000024943338488014888
+    },
+    {
+      "x": 165.82336146226123,
+      "z": -139.34240094596828,
+      "ridge": true,
+      "height": 1.3694934054284287,
+      "error": 0.0000015763407290592113
+    },
+    {
+      "x": 185.41289949249784,
+      "z": -139.29539743155323,
+      "ridge": true,
+      "height": 1.245665943618024,
+      "error": 0.0000019575372007807346
+    },
+    {
+      "x": 188.28352556960513,
+      "z": -140.0641041686548,
+      "ridge": true,
+      "height": 1.0125833994811808,
+      "error": 0.000001561477766642838
+    },
+    {
+      "x": 180.49417498895673,
+      "z": -106.68664785812881,
+      "ridge": true,
+      "height": 0.6568040597471059,
+      "error": 0.0000051777032155087
+    },
+    {
+      "x": 134.42270377481637,
+      "z": -89.24218092860714,
+      "ridge": true,
+      "height": 0.6641550905645335,
+      "error": 0.0000036503112355035228
+    },
+    {
+      "x": 136.13499783640472,
+      "z": -89.17799856933144,
+      "ridge": true,
+      "height": 1.2774314699194789,
+      "error": 7.864672983970422e-7
+    },
+    {
+      "x": 159.2406041703275,
+      "z": -90.5901126775154,
+      "ridge": true,
+      "height": 0.9292292545526131,
+      "error": 0.0000023218906584077104
+    },
+    {
+      "x": 86.08921951648249,
+      "z": 29.141744439823928,
+      "ridge": true,
+      "height": 1.59000496000341,
+      "error": 3.741816989588642e-8
+    },
+    {
+      "x": 97.40420959027462,
+      "z": 24.045330481788778,
+      "ridge": true,
+      "height": 0.7841228113001628,
+      "error": 5.504663391775466e-9
+    },
+    {
+      "x": 101.28263084642099,
+      "z": 40.18083057993418,
+      "ridge": true,
+      "height": 0.8329513995310203,
+      "error": 0.000001138048409288217
+    },
+    {
+      "x": 8.730339609327764,
+      "z": -235.2712896746064,
+      "ridge": true,
+      "height": 1.6539411482259059,
+      "error": 4.978980108205633e-7
+    },
+    {
+      "x": 31.48938185601536,
+      "z": -232.99036814409752,
+      "ridge": true,
+      "height": 1.0271532257985472,
+      "error": 0.0000015838241029797473
+    },
+    {
+      "x": 51.25072449993401,
+      "z": -231.29633652841636,
+      "ridge": true,
+      "height": 1.2611869586806739,
+      "error": 8.931359651853654e-8
+    },
+    {
+      "x": 69.05711176490041,
+      "z": -230.46716324469037,
+      "ridge": true,
+      "height": 1.3227789117861761,
+      "error": 0.0000012837308176472106
+    },
+    {
+      "x": 76.08967654669725,
+      "z": -230.23632806511318,
+      "ridge": true,
+      "height": 1.171495508943942,
+      "error": 0.0000017224080544053777
+    },
+    {
+      "x": 83.25365276022805,
+      "z": -230.02718571940954,
+      "ridge": true,
+      "height": 1.3124097477702663,
+      "error": 0.0000023023982720360436
+    },
+    {
+      "x": 97.98834735713143,
+      "z": -229.60134818463865,
+      "ridge": true,
+      "height": 0.6641824353949082,
+      "error": 0.000001939716991472551
+    },
+    {
+      "x": 113.54256188242083,
+      "z": -229.60329788582786,
+      "ridge": true,
+      "height": 1.1207818180304778,
+      "error": 0.0000024993983327448177
+    },
+    {
+      "x": 116.18250651359197,
+      "z": -229.62499082267928,
+      "ridge": true,
+      "height": 0.766338908416089,
+      "error": 0.0000017610462776929126
+    },
+    {
+      "x": 133.81545076257575,
+      "z": -229.800727689079,
+      "ridge": true,
+      "height": 0.7107048451653404,
+      "error": 0.0000011467940321807646
+    }
+  ],
+  "minimumRoadEdgeClearance": 0.7016245280757104,
+  "ridgeTrees": 255,
+  "highRidgeTrees": 86,
+  "triangles": 2710214,
+  "errors": [],
+  "boundary": "Raycast registration tests the retained hand-read crest points, not silhouette similarity. Mountain feet and unseen depths are interpretations. Root and road checks cover static geometry; visual review uses the source, matched panorama, clay and reverse views."
+}

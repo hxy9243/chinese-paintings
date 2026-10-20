@@ -1,0 +1,358 @@
+{
+  "passed": true,
+  "errors": [],
+  "checks": [
+    {
+      "name": "Complete perspective scene with signature components",
+      "passed": true,
+      "stats": {
+        "trees": 1202,
+        "ridgeTrees": 254,
+        "ridgeGrass": 1375,
+        "mountainTrees": 444,
+        "lowlandTrees": 516,
+        "woodlandPatches": 15,
+        "shrubs": 1602,
+        "lowlandGrass": 8153,
+        "mountainGrass": 2748,
+        "roadsideTrees": 66,
+        "treeFamilies": {
+          "bare": 226,
+          "broadleaf": 818,
+          "willow": 158
+        },
+        "branchGeometries": 39283,
+        "canopyClumps": 22296,
+        "leaves": 82440,
+        "reeds": 16050,
+        "roads": 2,
+        "mountainMasses": 31,
+        "lowlandFoothills": 15,
+        "terrainBounds": {
+          "nx": 580,
+          "nz": 510,
+          "x0": -379.5652173913044,
+          "x1": 389.5652173913044,
+          "z0": -360,
+          "z1": 334.16666666666674
+        },
+        "rocks": 347,
+        "terrainVertices": 299072,
+        "sourceProjectionPlanes": 0,
+        "seed": 610152,
+        "backgroundMountainLayers": 4,
+        "bridgeLength": 68.81041643961987,
+        "bridgeSupports": 32,
+        "shoreBuildings": 9,
+        "revision": "blue-green-09-natural"
+      },
+      "triangles": 5378870
+    },
+    {
+      "name": "No source painting texture is projected onto the 3D scene",
+      "passed": true
+    },
+    {
+      "name": "Open lake bed stays below the water surface",
+      "passed": true,
+      "samples": [
+        {
+          "x": -5,
+          "z": 65,
+          "bedHeight": -0.800000011920929
+        },
+        {
+          "x": 5,
+          "z": 45,
+          "bedHeight": -0.800000011920929
+        },
+        {
+          "x": 0,
+          "z": 0,
+          "bedHeight": -0.800000011920929
+        },
+        {
+          "x": 0,
+          "z": -65,
+          "bedHeight": -0.7972770174557088
+        }
+      ]
+    },
+    {
+      "name": "Bridge deck is continuous and raycastable across its full span",
+      "passed": true,
+      "samples": 51,
+      "deckHits": 51,
+      "largestVerticalDifference": 0.12157291187087793
+    },
+    {
+      "name": "Painting colors and clay expose different actual geometry renders",
+      "passed": true
+    },
+    {
+      "name": "Ink view omits comparison work and uses three rendering passes",
+      "passed": true,
+      "worldPasses": 2,
+      "framebufferCopies": 0,
+      "passes": 3
+    },
+    {
+      "name": "Absolute time replay is deterministic after another style and view",
+      "passed": true,
+      "sha256": "8e2bb9552db094c948afeb67a6112935f4a08c54205fa19d291e9caf5fb4d3e0"
+    },
+    {
+      "name": "Landscape color control changes rendered pigment at a fixed camera",
+      "passed": true,
+      "samples": [
+        {
+          "layers": 0,
+          "changedPixels": 0,
+          "meanChannelDifference": 0
+        },
+        {
+          "layers": 1,
+          "changedPixels": 268893,
+          "meanChannelDifference": 4.756947157118056
+        }
+      ],
+      "boundary": "Checks that the color control renders a visible change. Saturated cyan is no longer a requirement of the natural palette; this is not a style similarity score."
+    },
+    {
+      "name": "Finite pigment and working viewpoint: painting",
+      "passed": true
+    },
+    {
+      "name": "Finite pigment and working viewpoint: bridge",
+      "passed": true
+    },
+    {
+      "name": "Finite pigment and working viewpoint: arch",
+      "passed": true
+    },
+    {
+      "name": "Finite pigment and working viewpoint: pavilion",
+      "passed": true
+    },
+    {
+      "name": "Finite pigment and working viewpoint: entry",
+      "passed": true
+    },
+    {
+      "name": "Finite pigment and working viewpoint: gallery",
+      "passed": true
+    },
+    {
+      "name": "Finite pigment and working viewpoint: left",
+      "passed": true
+    },
+    {
+      "name": "Finite pigment and working viewpoint: right",
+      "passed": true
+    },
+    {
+      "name": "Finite pigment and working viewpoint: mountains",
+      "passed": true
+    },
+    {
+      "name": "Finite pigment and working viewpoint: mist",
+      "passed": true
+    },
+    {
+      "name": "Finite pigment and working viewpoint: lake",
+      "passed": true
+    },
+    {
+      "name": "Original scene materials are restored after the ink pass",
+      "passed": true
+    },
+    {
+      "name": "wind changes the fixed-camera render over time",
+      "passed": true
+    },
+    {
+      "name": "water changes the fixed-camera render over time",
+      "passed": true
+    },
+    {
+      "name": "atmosphere changes the fixed-camera render over time",
+      "passed": true
+    },
+    {
+      "name": "Pigment remains attached across camera translation and zoom",
+      "passed": true,
+      "samples": [
+        {
+          "view": "painting",
+          "translation": [
+            0.65,
+            0,
+            0.25
+          ],
+          "candidatePoints": 37047,
+          "acceptedSurfaceCorrespondences": 32727,
+          "coverage": 0.8833913677220827,
+          "ink": {
+            "maeLinear": 0.0036005052035472536,
+            "rmseLinear": 0.008619471149103886,
+            "signalStd": 0.08010387669911692
+          },
+          "baseline": {
+            "maeLinear": 0.0028245276111949873,
+            "rmseLinear": 0.008819487064684111
+          }
+        },
+        {
+          "view": "bridge",
+          "translation": [
+            0.12,
+            0,
+            0.06
+          ],
+          "candidatePoints": 38903,
+          "acceptedSurfaceCorrespondences": 31081,
+          "coverage": 0.7989358147186593,
+          "ink": {
+            "maeLinear": 0.0030669051079410922,
+            "rmseLinear": 0.00958657219195168,
+            "signalStd": 0.06546682081029737
+          },
+          "baseline": {
+            "maeLinear": 0.004274138668126719,
+            "rmseLinear": 0.015414406781415016
+          }
+        },
+        {
+          "view": "gallery",
+          "translation": [
+            0.12,
+            0,
+            0.06
+          ],
+          "candidatePoints": 57228,
+          "acceptedSurfaceCorrespondences": 48811,
+          "coverage": 0.852921646746348,
+          "ink": {
+            "maeLinear": 0.0021356838354662433,
+            "rmseLinear": 0.008497160431824512,
+            "signalStd": 0.09144757449227549
+          },
+          "baseline": {
+            "maeLinear": 0.0019021695832667493,
+            "rmseLinear": 0.010013114724001983
+          }
+        },
+        {
+          "view": "mountains",
+          "translation": [
+            0.12,
+            0,
+            0.06
+          ],
+          "candidatePoints": 42229,
+          "acceptedSurfaceCorrespondences": 37255,
+          "coverage": 0.8822136446517795,
+          "ink": {
+            "maeLinear": 0.002894506697915666,
+            "rmseLinear": 0.006883556129126169,
+            "signalStd": 0.07566058464758099
+          },
+          "baseline": {
+            "maeLinear": 0.0018469438623104069,
+            "rmseLinear": 0.006573039549029378
+          }
+        },
+        {
+          "view": "painting",
+          "zoomDistanceFactor": 0.78,
+          "candidatePoints": 37047,
+          "acceptedSurfaceCorrespondences": 13382,
+          "coverage": 0.3612168326720112,
+          "ink": {
+            "maeLinear": 0.009694398351419864,
+            "rmseLinear": 0.02108483839651482,
+            "signalStd": 0.09496172469488148
+          },
+          "baseline": {
+            "maeLinear": 0.034521273754550545,
+            "rmseLinear": 0.04169359171454555
+          }
+        },
+        {
+          "view": "mountains",
+          "zoomDistanceFactor": 0.78,
+          "candidatePoints": 42229,
+          "acceptedSurfaceCorrespondences": 23525,
+          "coverage": 0.5570816263705037,
+          "ink": {
+            "maeLinear": 0.005058860385570109,
+            "rmseLinear": 0.010123924516714311,
+            "signalStd": 0.0799727298316713
+          },
+          "baseline": {
+            "maeLinear": 0.0095907389116168,
+            "rmseLinear": 0.014617891118327911
+          }
+        },
+        {
+          "view": "pavilion",
+          "zoomDistanceFactor": 0.78,
+          "candidatePoints": 41113,
+          "acceptedSurfaceCorrespondences": 18709,
+          "coverage": 0.4550628754895045,
+          "ink": {
+            "maeLinear": 0.005444838620313519,
+            "rmseLinear": 0.015301167353566505,
+            "signalStd": 0.08132367940497506
+          },
+          "baseline": {
+            "maeLinear": 0.00797054069759998,
+            "rmseLinear": 0.0250031797851659
+          }
+        }
+      ]
+    },
+    {
+      "name": "Supplied painting opens for comparison",
+      "passed": true
+    },
+    {
+      "name": "3D mode disables paint-only controls",
+      "passed": true
+    },
+    {
+      "name": "Guided camera journey advances",
+      "passed": true,
+      "progress": [
+        "510",
+        "528"
+      ]
+    },
+    {
+      "name": "Free flight moves the camera",
+      "passed": true
+    },
+    {
+      "name": "Painting canvas and ink buffers follow viewport size",
+      "passed": true,
+      "canvasCss": [
+        760,
+        540
+      ],
+      "inkBuffer": [
+        760,
+        540
+      ]
+    },
+    {
+      "name": "No graphics errors",
+      "passed": true
+    },
+    {
+      "name": "Environmental clock advances and pauses",
+      "passed": true
+    }
+  ],
+  "quick": true,
+  "limitations": "Pixel and geometry tests establish replay, attachment and basic structure. They do not certify exact source fidelity or every camera angle."
+}

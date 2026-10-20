@@ -1,0 +1,40 @@
+{
+  "passed": true,
+  "errors": [],
+  "finite": true,
+  "totalCandidates": 40957,
+  "movingSurfaceMatches": 3509,
+  "maximumMatchedShiftPixels": 14.142135623730951,
+  "maeLinear": 0.003723318470139285,
+  "rmseLinear": 0.00818849601067647,
+  "samples": [
+    {
+      "view": "trees-broadleaf",
+      "finite": true,
+      "totalCandidates": 13685,
+      "movingSurfaceMatches": 950,
+      "maximumMatchedShiftPixels": 14.142135623730951,
+      "maeLinear": 0.0032617508737664475,
+      "rmseLinear": 0.006906254070744787
+    },
+    {
+      "view": "trees-willow",
+      "finite": true,
+      "totalCandidates": 13570,
+      "movingSurfaceMatches": 833,
+      "maximumMatchedShiftPixels": 14.142135623730951,
+      "maeLinear": 0.0032606853776666915,
+      "rmseLinear": 0.0073309433378967925
+    },
+    {
+      "view": "trees-bare",
+      "finite": true,
+      "totalCandidates": 13702,
+      "movingSurfaceMatches": 1726,
+      "maximumMatchedShiftPixels": 12.727922061357857,
+      "maeLinear": 0.004200643257267828,
+      "rmseLinear": 0.009172114242077735
+    }
+  ],
+  "method": "At three close grove views, match actual rasterized undeformed 3D positions between wind phases; reject matches beyond 5 cm and stationary pixels; compare the pigment layer before paper, contours and atmosphere."
+}

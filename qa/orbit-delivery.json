@@ -1,0 +1,106 @@
+{
+  "passed": true,
+  "createdUtc": "2026-10-16T07:14:26.119519+00:00",
+  "file": "renders/pavilion-orbit.mp4",
+  "bytes": 37378986,
+  "sha256": "d2798bd1a003ea6e4b3d4fa28bd20f70b228b1e39f731c0a663567a3f7959b80",
+  "fullDecodePassed": true,
+  "samples": [
+    {
+      "frame": 0,
+      "seconds": 0.0,
+      "rmseSRGB": 2.0472976486180596
+    },
+    {
+      "frame": 144,
+      "seconds": 6.0,
+      "rmseSRGB": 2.7627186418420315
+    },
+    {
+      "frame": 168,
+      "seconds": 7.0,
+      "rmseSRGB": 2.537970217333937
+    },
+    {
+      "frame": 240,
+      "seconds": 10.0,
+      "rmseSRGB": 2.761179401961201
+    },
+    {
+      "frame": 300,
+      "seconds": 12.5,
+      "rmseSRGB": 2.5287153519165653
+    },
+    {
+      "frame": 432,
+      "seconds": 18.0,
+      "rmseSRGB": 2.806591788144079
+    },
+    {
+      "frame": 564,
+      "seconds": 23.5,
+      "rmseSRGB": 2.5265024064350743
+    },
+    {
+      "frame": 696,
+      "seconds": 29.0,
+      "rmseSRGB": 2.5592889773224994
+    },
+    {
+      "frame": 768,
+      "seconds": 32.0,
+      "rmseSRGB": 2.692141985895659
+    },
+    {
+      "frame": 840,
+      "seconds": 35.0,
+      "rmseSRGB": 2.4879754221834447
+    },
+    {
+      "frame": 912,
+      "seconds": 38.0,
+      "rmseSRGB": 2.0866976307828633
+    },
+    {
+      "frame": 959,
+      "seconds": 39.958333333333336,
+      "rmseSRGB": 2.1613349195021256
+    }
+  ],
+  "sourceHashes": {
+    "src/architecture.js": "54b626d994bffb1a861a37a7a2f11fb0c4b5620bd77c89d52b43cb467e76614f",
+    "src/effects.js": "ff2cae2e228678d53fca2971f6899528833512146443148914c621f1245b70dc",
+    "src/forest.js": "dcbb70d9cae2cbd458206e8e2c0bfec011df35aa4b2bd70d4b56680ab7abafac",
+    "src/geometry.js": "4d32aa80fdef14826aacc1b7f14dac32683c5770ac0f9e8cfbd2b959a438c601",
+    "src/glazes.js": "8a29295e16bd85521e276013c8de9f8477a596db8bcbf8144542570bea13b6bd",
+    "src/ink-flow.js": "bad2605a6c2f118578033230b7447001e32c22f24c9e30cb7e708e5beb9199a8",
+    "src/ink.js": "5e97edd85ec5add07c893c368a6e0bcff9031424bc3d2ed29204db26fdf00aa3",
+    "src/lowlands.js": "f0d37d585e724fa5f40b1a4eb3082fd0b748e250830ef8156a5b9e5406051853",
+    "src/main.js": "e2ff0a22fa73251b10019a4524ea3cb977e14a6529ba227367513163fd4174e1",
+    "src/materials.js": "7ade7738f8663d7d0cab3de15a36e8b2974d7709165f48d45ce5c09ea116300a",
+    "src/mountain-shapes.js": "c70da62b5bb66d079f80430ed355a6f219ff71d5bbbd03221d27e96c3a10e3a1",
+    "src/pavilion-flight.js": "5726646eb7a7adc9b54f25df19e10aa1f7c2979149989914097805390ee684b3",
+    "src/pavilion-orbit.js": "a415ecb91b73c085d71dd7e0be423fb052e0f24a4466d4f035c8e30d2ada8072",
+    "src/roads.js": "2c1d157de26da8a371ee25d80ce2f8fb286b157f735413aef4033ff69a1b465b",
+    "src/rock-form.js": "1f7c569d498158c058eebdd3652d477a7ff88d012cbe6e6e3216ba156cc36f41",
+    "src/scene.js": "9e15b685e42a11e4c43e3714a4ec0e5c7b5df90281b0cab5c9566288441aad3d",
+    "src/terrain.js": "199f613426f20fc6f559549ec43941c9768cd2941cd0f261fd7ea79e23d52156",
+    "src/wash.js": "c88ef2bc1b6d16149bc4ae4c25b8dd79056973a5f6cef36447d1a7a3ec6a6e49"
+  },
+  "renderChunks": [
+    [
+      0,
+      480
+    ],
+    [
+      480,
+      960
+    ]
+  ],
+  "width": 1600,
+  "height": 720,
+  "r_frame_rate": "24/1",
+  "duration": "40.000000",
+  "nb_read_frames": "960",
+  "boundary": "Full decoding and encoded/source frame comparison validate the delivered film. They do not certify exact painting fidelity."
+}

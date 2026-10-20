@@ -1,0 +1,85 @@
+{
+  "passed": true,
+  "createdUtc": "2026-10-16T01:03:28.151724+00:00",
+  "style": "ink",
+  "file": "renders/pavilion-flyby.mp4",
+  "bytes": 28857165,
+  "sha256": "59a4dafdbe0e5383fb858b79f7d08f1c929b656dfb748b775c33392a672f772e",
+  "fullDecodePassed": true,
+  "samples": [
+    {
+      "frame": 0,
+      "seconds": 0.0,
+      "rmseSRGB": 2.120543092997466
+    },
+    {
+      "frame": 96,
+      "seconds": 4.0,
+      "rmseSRGB": 2.2982051672426334
+    },
+    {
+      "frame": 192,
+      "seconds": 8.0,
+      "rmseSRGB": 2.5359949924737335
+    },
+    {
+      "frame": 264,
+      "seconds": 11.0,
+      "rmseSRGB": 2.875515734740594
+    },
+    {
+      "frame": 336,
+      "seconds": 14.0,
+      "rmseSRGB": 2.818108194568884
+    },
+    {
+      "frame": 408,
+      "seconds": 17.0,
+      "rmseSRGB": 2.6664176098972887
+    },
+    {
+      "frame": 480,
+      "seconds": 20.0,
+      "rmseSRGB": 2.384612758763833
+    },
+    {
+      "frame": 576,
+      "seconds": 24.0,
+      "rmseSRGB": 2.248870858650823
+    },
+    {
+      "frame": 684,
+      "seconds": 28.5,
+      "rmseSRGB": 1.9290764317749645
+    },
+    {
+      "frame": 719,
+      "seconds": 29.958333333333332,
+      "rmseSRGB": 1.962970691371928
+    }
+  ],
+  "renderChunks": [
+    [
+      0,
+      180
+    ],
+    [
+      180,
+      360
+    ],
+    [
+      360,
+      540
+    ],
+    [
+      540,
+      720
+    ]
+  ],
+  "width": 1600,
+  "height": 900,
+  "r_frame_rate": "24/1",
+  "duration": "30.000000",
+  "nb_read_frames": "720",
+  "boundary": "Full decoding, encoded-frame inspection and source comparisons validate the delivered film; they do not certify exact painting fidelity."
+}

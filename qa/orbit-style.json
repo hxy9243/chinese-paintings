@@ -1,0 +1,62 @@
+{
+  "passed": true,
+  "foliage": {
+    "passed": true,
+    "pixels": 170388,
+    "meanPigmentChangeLinear": 0.014697973638496143,
+    "redGreenRatioStd": [
+      0.11671875173198568,
+      0.0857621797614597
+    ]
+  },
+  "shore": {
+    "passed": true,
+    "changedPixels": 18642,
+    "changedPureTreeBarkOrArchitecturePixels": 0,
+    "scope": "Classified foliage, bark and architecture pixels must be identical when only shore diffusion changes."
+  },
+  "water": {
+    "passed": true,
+    "pixels": 149233,
+    "movingMeanPigmentDifference": 0.0027529560407861223,
+    "frozenMeanPigmentDifference": 0
+  },
+  "absoluteTimeReplayIdentical": true,
+  "finitePigment": true,
+  "unchanged": [
+    {
+      "file": "src/terrain.js",
+      "unchanged": true
+    },
+    {
+      "file": "src/forest.js",
+      "unchanged": true
+    },
+    {
+      "file": "src/lowlands.js",
+      "unchanged": true
+    },
+    {
+      "file": "src/mountain-shapes.js",
+      "unchanged": true
+    },
+    {
+      "file": "src/rock-form.js",
+      "unchanged": true
+    },
+    {
+      "file": "src/architecture.js",
+      "unchanged": true
+    },
+    {
+      "file": "src/materials.js",
+      "unchanged": true
+    },
+    {
+      "file": "src/wash.js",
+      "unchanged": true
+    }
+  ],
+  "errors": [],
+  "boundary": "Feature isolation and visible-surface checks; artistic acceptance also uses matched images and encoded film frames."
+}

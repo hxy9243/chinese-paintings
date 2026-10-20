@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "revision": "blue-green-08",
+  "movingMatchedSurfaces": 5882,
+  "maximumMatchedShiftPixels": 12.041594578792296,
+  "pigmentRMSELinear": 0.005187388032112111,
+  "method": "Match undeformed surface coordinates in the new left grove between two wind phases; exclude stationary pixels and matches beyond 5 cm.",
+  "errors": []
+}
