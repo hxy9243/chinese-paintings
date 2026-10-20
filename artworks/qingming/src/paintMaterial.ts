@@ -8,6 +8,7 @@ import {
   PALETTES,
 } from "./scenePalette";
 import { roadUniforms, roadShader } from "./roadSurface";
+import { riverShader } from "./riverSurface";
 
 // Geometry-space pigment stays attached while subjects and camera move.
 // No screen-space noise animation or extra postprocessing framebuffer is needed.
@@ -18,6 +19,7 @@ export function paintMaterial(
   ground = false,
   bank = false,
   water = false,
+  foliage = false,
 ) {
   return new THREE.ShaderMaterial({
     clipping: true,
@@ -36,14 +38,21 @@ export function paintMaterial(
       ground: { value: ground ? 1 : 0 },
       water: { value: water ? 1 : 0 },
       waterTime,
+      foliage: { value: foliage ? 1 : 0 },
     },
     transparent: ground,
+    depthWrite: !ground,
     side: THREE.DoubleSide,
     vertexShader: `
       #include <clipping_planes_pars_vertex>
       varying vec3 point; varying vec3 facing; varying vec3 brushPoint;
+      uniform float water;uniform float waterTime;uniform float foliage;
+      ${riverShader}
       void main(){vec4 world=modelMatrix*vec4(position,1.);point=world.xyz;brushPoint=position;
         facing=normalize(mat3(modelMatrix)*normal);
+        if(water>.5){world.y=waterHeight(riverPoint(world.xyz),waterTime);}
+        if(foliage>.5){world.x+=sin(waterTime*.85+world.z*2.1+world.y)*.018;world.z+=cos(waterTime*.7+world.x*1.6)*.012;}
+        point=world.xyz;
         vec4 mvPosition=viewMatrix*world;gl_Position=projectionMatrix*mvPosition;
         #include <clipping_planes_vertex>
       }`,
@@ -58,6 +67,7 @@ export function paintMaterial(
         return mix(mix(mix(hash(i),hash(i+vec3(1,0,0)),f.x),mix(hash(i+vec3(0,1,0)),hash(i+vec3(1,1,0)),f.x),f.y),
           mix(mix(hash(i+vec3(0,0,1)),hash(i+vec3(1,0,1)),f.x),mix(hash(i+vec3(0,1,1)),hash(i+vec3(1,1,1)),f.x),f.y),f.z);}
       ${roadShader}
+      ${riverShader}
       void main(){
         #include <clipping_planes_fragment>
         vec3 stroke=brushPoint;
@@ -81,23 +91,47 @@ export function paintMaterial(
         painted=mix(painted,paper,.025+wash*.08+dry);
         painted*=.94+glaze*.16-rim*.07-sediment*.11;
         painted*=.91+.09*max(0.,dot(normalize(facing),normalize(vec3(-.6,1.,.8))));
+        vec2 river=riverPoint(point);
+        float shore=shoreDistance(river);
         if(water>.5){
-          vec2 river=vec2(point.x*.64278761+point.z*.76604444,-point.x*.76604444+point.z*.64278761);
-          // Flow advects broad glazes rather than flashing specular highlights.
-          float flow=noise(vec3((river.x-waterTime*.045)*.8,river.y*1.8,4.));
-          float underwash=noise(vec3((river.x-waterTime*.024)*.35,river.y*.8,19.));
-          float ripple=sin(river.y*37.+sin(river.x*2.3-waterTime*.6)*1.7+waterTime*.45);
-          float broken=smoothstep(.51,.73,flow);
-          painted=mix(localPigment,paper,.08+underwash*.15);
-          painted*=.84+underwash*.19+flow*.12;
-          painted=mix(painted,paper,smoothstep(.91,1.,ripple)*broken*.12);
-          painted*=1.-smoothstep(.015,.055,abs(flow-.52))*.045;
+          float flow=noise(vec3((river.x-waterTime*.06)*.8,river.y*1.8,4.));
+          float underwash=noise(vec3(river*.65,19.));
+          vec2 slope=vec2(waterHeight(river+vec2(.025,0),waterTime)-waterHeight(river-vec2(.025,0),waterTime),
+            waterHeight(river+vec2(0,.025),waterTime)-waterHeight(river-vec2(0,.025),waterTime))/.05;
+          vec3 normal=normalize(vec3(-slope.x*.64278761+slope.y*.76604444,1.,-slope.x*.76604444-slope.y*.64278761));
+          vec3 eye=normalize(cameraPosition-point);
+          float fresnel=pow(1.-max(0.,dot(normal,eye)),3.);
+          vec3 bed=mix(localPigment,vec3(.48,.58,.45),.22+underwash*.16);
+          vec3 sky=mix(paper,vec3(.69,.80,.75),.35);
+          float shallows=1.-smoothstep(.1,1.5,-shore);
+          painted=mix(bed,sky,.18+fresnel*.42+flow*.10);
+          painted=mix(painted,paper,shallows*(.12+underwash*.18));
+          float light=pow(max(0.,dot(reflect(-normalize(vec3(-.4,1.,.6)),normal),eye)),55.);
+          float caustic=pow(.5+.5*sin(river.x*15.+sin(river.y*9.-waterTime*.7)*1.8-waterTime),16.);
+          painted+=vec3(.16,.18,.15)*light*.8;
+          painted=mix(painted,paper,caustic*(.035+shallows*.08));
+          float ripple=sin(river.y*35.+sin(river.x*2.3-waterTime*.6)*1.7+waterTime*.45);
+          painted=mix(painted,paper,smoothstep(.94,1.,ripple)*smoothstep(.50,.73,flow)*.19);
+        }
+        if(bank>.5){
+          float wet=1.-smoothstep(-.15,.65,shore);
+          painted*=1.-wet*(.08+noise(vec3(river*9.,2.))*.12);
+          painted=mix(painted,paper,wet*noise(vec3(river*4.,9.))*.15);
         }
         vec3 result=mix(localPigment*shade,painted,painting);
         float scroll=point.x*.64278761+point.z*.76604444;
         float depth=-point.x*.76604444+point.z*.64278761;
-        float edge=min((22.-abs(scroll))/2.,(14.-abs(depth))/1.3);
-        float alpha=ground>.5 ? smoothstep(0.,1.,edge+(wash-.5)*.3) : 1.;
+        vec2 q=abs(vec2(scroll,depth))-vec2(16.,8.);
+        float boundary=length(max(q,0.))+min(max(q.x,q.y),0.)-6.;
+        float ragged=(noise(vec3(river*.9,7.))-.5)*.8+(noise(vec3(river*6.,3.))-.5)*.22;
+        // A long, irregular absorption band replaces the cut-out perimeter.
+        float alpha=ground>.5 ? 1.-smoothstep(-3.6,.1,boundary+ragged) : 1.;
+        if(bank>.5)alpha*=smoothstep(-.30,.24,shore+(noise(vec3(river*12.,5.))-.5)*.15);
+        if(ground<.5 && painting>.5){
+          float soak=1.-smoothstep(-2.8,.05,boundary+ragged);
+          if(noise(point*95.)>soak)discard;
+          result=mix(paper,result,smoothstep(0.,.6,soak));
+        }
         gl_FragColor=vec4(result,alpha);
         #include <tonemapping_fragment>
         #include <colorspace_fragment>
@@ -127,7 +161,10 @@ export function createDryInk(fade = 1) {
         float flow=.5+.5*sin(strokePoint.x*41.+strokePoint.y*29.+strokePoint.z*37.);
         float opacity=mix(.65,.28+flow*.40+grain*.18,painting);
         if(painting>.5 && grain>.92)opacity*=.22;
-        gl_FragColor=vec4(paletteInk,opacity*fade);
+        vec2 p=abs(vec2(point.x*.64278761+point.z*.76604444,-point.x*.76604444+point.z*.64278761))-vec2(16.,8.);
+        float boundary=length(max(p,0.))+min(max(p.x,p.y),0.)-6.;
+        float soak=1.-smoothstep(-2.8,.05,boundary);
+        gl_FragColor=vec4(paletteInk,opacity*fade*mix(1.,soak,painting));
         #include <tonemapping_fragment>
         #include <colorspace_fragment>
       }`,

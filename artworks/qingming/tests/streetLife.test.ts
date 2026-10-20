@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { MAIN_STREET_WALKERS, pedestrianPoses } from "../src/pedestrians";
 import { BRIDGE, shoreDepth } from "../src/passageLayout";
 import { createBoatWakes } from "../src/boatWakes";
+import { waterHeight } from "../src/riverSurface";
 import { REFERENCE_AZIMUTH } from "../src/scrollLayout";
 
 describe("irregular street journeys and painted wakes", () => {
@@ -54,9 +55,10 @@ describe("irregular street journeys and painted wakes", () => {
       opacity = geometry.getAttribute("opacity");
     for (let i = 0; i < positions.count; i++) {
       expect(Number.isFinite(positions.getX(i))).toBe(true);
-      expect(positions.getY(i)).toBeCloseTo(-0.012);
+      expect(positions.getY(i)).toBeGreaterThan(-.065);
+      expect(positions.getY(i)).toBeLessThan(-.008);
       expect(opacity.getX(i)).toBeGreaterThanOrEqual(0);
-      expect(opacity.getX(i)).toBeLessThanOrEqual(0.43);
+      expect(opacity.getX(i)).toBeLessThanOrEqual(0.55);
       if (opacity.getX(i) === 0) continue;
       const x = positions.getX(i),
         z = positions.getZ(i);
@@ -64,10 +66,11 @@ describe("irregular street journeys and painted wakes", () => {
         x * Math.cos(REFERENCE_AZIMUTH) - z * Math.sin(REFERENCE_AZIMUTH);
       const d =
         x * Math.sin(REFERENCE_AZIMUTH) + z * Math.cos(REFERENCE_AZIMUTH);
+      expect(positions.getY(i)-waterHeight(s,d,32)).toBeCloseTo(.010,1);
       expect(d).toBeGreaterThan(shoreDepth("far", s));
       expect(d).toBeLessThan(shoreDepth("near", s));
     }
-    expect(opacity.getX(0)).toBeGreaterThan(opacity.getX(23 * 6));
+    expect(opacity.getX(0)).toBeGreaterThan(opacity.getX(39 * 6));
     const at32 = Array.from(positions.array),
       alpha32 = Array.from(opacity.array);
     wakes.update(32);

@@ -13,7 +13,7 @@ const timber = paintMaterial(0x917344),
   recess = paintMaterial(0x655b45),
   reed = paintMaterial(0xb4a178),
   leaf = paintMaterial(0x858167);
-const leafGlazes = [leaf, paintMaterial(0x7a9c53), paintMaterial(0x4c7955), paintMaterial(0xa1ad63)];
+const leafGlazes = [leaf, paintMaterial(0x7a9c53, false, false, false, true), paintMaterial(0x4c7955, false, false, false, true), paintMaterial(0xa1ad63, false, false, false, true)];
 const ink = createDryInk(0.7);
 type P = [number, number, number];
 const v = (p: P) => new THREE.Vector3(...p);
@@ -343,15 +343,16 @@ export function buildReferenceTree(
             0.02,
           );
         }
-      if (leafy && k % 2 === 0)
-        for (let q = 0; q < (detail === 0 ? 3 : 11); q++) {
-          // Sparse spring foliage consists of small leaves, leaving branches visible.
+      if (leafy)
+        for (let q = 0; q < (detail === 0 ? 9 : detail === 1 ? 24 : 38); q++) {
+          // Overlapping leaf sprays retain gaps for the fine branch structure.
           const m = solid(g, new THREE.IcosahedronGeometry(0.065, 0), leafGlazes[(q + k) % leafGlazes.length], [
-            end[0] + Math.sin(q * 2.4) * 0.12,
-            end[1] + Math.cos(q * 1.8) * 0.11,
-            end[2] + Math.cos(q * 2.4) * 0.1,
+            end[0] + Math.sin(q * 2.4 + seed) * (0.12 + (q % 5) * .035),
+            end[1] + Math.cos(q * 1.8) * 0.18,
+            end[2] + Math.cos(q * 2.4 + seed) * (0.1 + (q % 4) * .04),
           ]);
-          m.scale.set(0.8 + (q % 3) * 0.25, 0.38, 0.6 + (q % 2) * 0.2);
+          m.scale.set(1.05 + (q % 3) * 0.25, 0.32, .8 + (q % 2) * 0.3);
+          m.rotation.set(Math.sin(q)*.4,q*2.4,Math.cos(q)*.5);
         }
     }
   });

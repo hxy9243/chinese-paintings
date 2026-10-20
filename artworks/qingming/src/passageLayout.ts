@@ -3,7 +3,7 @@
 export type BankSide = "far" | "near";
 export type PassagePoint = { s: number; d: number };
 export const GROUND_Y = 0.015;
-export const PERSON_SCALE = 0.65; // about 0.44 units tall in the painted passage
+export const PERSON_SCALE = 1.05; // about 0.71 units: bridge width ≈ 4.5 adult heights
 export const SHORELINES: Record<BankSide, PassagePoint[]> = {
   far: [
     [-22, -5.8],

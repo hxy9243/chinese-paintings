@@ -14,7 +14,8 @@ import {
 import {
   createBridgeStudy,
   ELEVATION,
-  TILT_LIMIT,
+  CAMERA_LIMITS,
+  DEFAULT_VIEW_ANGLE,
   VIEW_ANGLE,
 } from "./bridgeStudy";
 import "./mock3d.css";
@@ -45,7 +46,7 @@ export default function Mock3D() {
   pausedRef.current = paused;
   const [originalOpen, setOriginalOpen] = useState(false);
   const [lang, setLang] = useState<"en" | "zh">("en"),
-    [angle, setAngle] = useState(TILT_LIMIT),
+    [angle, setAngle] = useState(DEFAULT_VIEW_ANGLE),
     [pitch, setPitch] = useState(0),
     [roll, setRoll] = useState(0),
     [painted, setPainted] = useState(true),
@@ -69,8 +70,8 @@ export default function Mock3D() {
     // Hulls enter through the two side edges, with recycling beyond the frame.
     const along = scrollPoint(1, 0).normalize();
     renderer.clippingPlanes = [
-      new THREE.Plane(along, 22),
-      new THREE.Plane(along.clone().negate(), 22),
+      new THREE.Plane(along, 25),
+      new THREE.Plane(along.clone().negate(), 25),
     ];
     const finish = createInkFinish(renderer);
     let paintingEnabled = true,
@@ -96,11 +97,11 @@ export default function Mock3D() {
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableRotate = true;
     controls.minAzimuthAngle =
-      VIEW_ANGLE - THREE.MathUtils.degToRad(TILT_LIMIT);
+      VIEW_ANGLE - THREE.MathUtils.degToRad(CAMERA_LIMITS.yaw);
     controls.maxAzimuthAngle =
-      VIEW_ANGLE + THREE.MathUtils.degToRad(TILT_LIMIT);
-    controls.minPolarAngle = ELEVATION - THREE.MathUtils.degToRad(TILT_LIMIT);
-    controls.maxPolarAngle = ELEVATION + THREE.MathUtils.degToRad(TILT_LIMIT);
+      VIEW_ANGLE + THREE.MathUtils.degToRad(CAMERA_LIMITS.yaw);
+    controls.minPolarAngle = ELEVATION - THREE.MathUtils.degToRad(CAMERA_LIMITS.pitchMax);
+    controls.maxPolarAngle = ELEVATION - THREE.MathUtils.degToRad(CAMERA_LIMITS.pitchMin);
     controls.rotateSpeed = 0.45;
     controls.addEventListener("change", () => {
       needsRender=true;
@@ -134,13 +135,13 @@ export default function Mock3D() {
       const azimuth =
         VIEW_ANGLE +
         THREE.MathUtils.degToRad(
-          Math.max(-TILT_LIMIT, Math.min(TILT_LIMIT, degrees)),
+          THREE.MathUtils.clamp(degrees, -CAMERA_LIMITS.yaw, CAMERA_LIMITS.yaw),
         );
       const offset = new THREE.Vector3().setFromSphericalCoords(
         110,
         ELEVATION -
           THREE.MathUtils.degToRad(
-            THREE.MathUtils.clamp(pitch, -TILT_LIMIT, TILT_LIMIT),
+            THREE.MathUtils.clamp(pitch, CAMERA_LIMITS.pitchMin, CAMERA_LIMITS.pitchMax),
           ),
         azimuth,
       );
@@ -148,7 +149,7 @@ export default function Mock3D() {
       camera.lookAt(controls.target);
       controls.update();
     };
-    const defaultAngle = TILT_LIMIT;
+    const defaultAngle = DEFAULT_VIEW_ANGLE;
     const defaultZoom = 1.25;
     camera.zoom = defaultZoom;
     camera.updateProjectionMatrix();
@@ -176,7 +177,7 @@ export default function Mock3D() {
       roll(degrees) {
         needsRender=true;
         rollAngle = THREE.MathUtils.degToRad(
-          THREE.MathUtils.clamp(degrees, -TILT_LIMIT, TILT_LIMIT),
+          THREE.MathUtils.clamp(degrees, -CAMERA_LIMITS.roll, CAMERA_LIMITS.roll),
         );
       },
       travel(s, overview = false, depth = 0) {
@@ -349,7 +350,7 @@ export default function Mock3D() {
           </div>
           <div className="study-badge">
             <Rotate3D size={13} />
-            {t("THREE AXES · ±30°", "三轴旋转 · ±30°")}
+            {t("TURN ±85° · TILT 8–80°", "转向 ±85° · 俯视 8–80°")}
           </div>
           {!ready && !error && (
             <div className="study-loading">
@@ -396,7 +397,7 @@ export default function Mock3D() {
               disabled={!ready}
               onClick={() => {
                 api.current?.reset();
-                setAngle(TILT_LIMIT);
+                setAngle(DEFAULT_VIEW_ANGLE);
               }}
             >
               <RotateCcw size={16} />
@@ -424,7 +425,7 @@ export default function Mock3D() {
             </p>
           </div>
           <div className="study-views">
-            {[-TILT_LIMIT, 0, TILT_LIMIT].map((a) => (
+            {[-75, 0, 75].map((a) => (
               <button
                 key={a}
                 aria-pressed={angle === a}
@@ -437,8 +438,8 @@ export default function Mock3D() {
                 {a === 0
                   ? t("Scroll view", "画卷视角")
                   : a < 0
-                    ? t("Left −30°", "左侧 −30°")
-                    : t("Right +30°", "右侧 +30°")}
+                    ? t("Left −75°", "左侧 −75°")
+                    : t("Right +75°", "右侧 +75°")}
               </button>
             ))}
           </div>
@@ -448,10 +449,10 @@ export default function Mock3D() {
           aria-label={t("Three-axis rotation", "三轴旋转")}
         >
           {[
-            { key: "yaw", label: t("Turn · Y", "转向 · Y"), value: angle },
-            { key: "pitch", label: t("Tilt · X", "俯仰 · X"), value: pitch },
-            { key: "roll", label: t("Roll · Z", "倾转 · Z"), value: roll },
-          ].map(({ key, label, value }) => (
+            { key: "yaw", label: t("Turn · Y", "转向 · Y"), value: angle, min: -CAMERA_LIMITS.yaw, max: CAMERA_LIMITS.yaw },
+            { key: "pitch", label: t("Tilt · X", "俯仰 · X"), value: pitch, min: CAMERA_LIMITS.pitchMin, max: CAMERA_LIMITS.pitchMax },
+            { key: "roll", label: t("Roll · Z", "倾转 · Z"), value: roll, min: -CAMERA_LIMITS.roll, max: CAMERA_LIMITS.roll },
+          ].map(({ key, label, value, min, max }) => (
             <label className="angle-control" key={key}>
               <span>
                 {label}
@@ -462,8 +463,8 @@ export default function Mock3D() {
               </span>
               <input
                 type="range"
-                min={-TILT_LIMIT}
-                max={TILT_LIMIT}
+                min={min}
+                max={max}
                 step="1"
                 value={value}
                 disabled={!ready}
@@ -478,8 +479,8 @@ export default function Mock3D() {
                 }}
               />
               <span className="angle-extents">
-                <span>−30°</span>
-                <span>+30°</span>
+                <span>{min}°</span>
+                <span>+{max}°</span>
               </span>
             </label>
           ))}
@@ -547,8 +548,8 @@ export default function Mock3D() {
               {t("Explore from three angles.", "从三轴细看画卷。")}
             </strong>{" "}
             {t(
-              "Turn, tilt, and roll up to 30° each way. Right-drag to pan; reset to return to the original composition.",
-              "转向、俯仰、倾转各可调至正负30°。右键拖动平移，重置可返回初始构图。",
+              "Turn up to 85° each way, view from 8° to 80° above the river, and roll up to 45°. Right-drag to pan; reset to return to the original composition.",
+              "转向可调至正负85°，俯视高度8°至80°，倾转正负45°。右键拖动平移，重置可返回初始构图。",
             )}
           </p>
           <p>

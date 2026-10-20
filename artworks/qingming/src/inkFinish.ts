@@ -33,6 +33,19 @@ export function createInkFinish(renderer: THREE.WebGLRenderer) {
         wash/=12.;
         vec3 color=mix(core,wash,strength*.40);
         color=mix(color,bleed,strength*.13);
+        // Broad capillary bleed is confined to the translucent outer wash.
+        // Fine figures and architecture retain their small-radius treatment.
+        vec3 halo=vec3(0.);
+        for(int i=0;i<8;i++){
+          float a=float(i)*.785398;
+          vec2 direction=vec2(cos(a),sin(a));
+          float radius=7.+float(i%3)*7.;
+          vec4 neighbor=texture2D(source,p+direction*texel*radius*(.6+strength));
+          halo+=neighbor.rgb+paper*(1.-neighbor.a);
+        }
+        halo/=8.;
+        float outer=(1.-smoothstep(.25,.94,texture2D(source,p).a));
+        color=mix(color,min(paper,halo),outer*strength*.62);
         float pooled=smoothstep(.06,.32,edge/8.);
         color*=1.-pooled*strength*.055;
         float grain=hash(pixel)*.6+hash(floor(pixel*.4))*.4;
@@ -49,7 +62,9 @@ export function createInkFinish(renderer: THREE.WebGLRenderer) {
   const quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material);
   scene.add(quad);
   return {
-    setPaper(color:number){material.uniforms.paper.value.set(color);},
+    setPaper(color: number) {
+      material.uniforms.paper.value.set(color);
+    },
     resize(width: number, height: number) {
       // Cap the offscreen pass independently of high-DPI phone screens.
       const ratio = Math.min(renderer.getPixelRatio(), 1.5);

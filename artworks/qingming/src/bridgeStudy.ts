@@ -11,7 +11,7 @@ import {
 } from "./paintMaterial";
 import {
   bankOutline,
-  passageOutline,
+  SHORELINES,
   shoreDepth,
   HALLS,
   BOATS,
@@ -55,12 +55,14 @@ import { idleMotion } from "./peopleMotion";
 import { bridgeActivity, bridgeRole, bridgeVariant } from "./bridgeActivity";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 import { createBoatWakes } from "./boatWakes";
+import { riverGeometry, waterHeight } from "./riverSurface";
 
 // A shallow, camera-constrained diorama. Hidden façades are intentionally plain.
 // The original passage runs from the near lower-left approach to the far upper-right.
 export const VIEW_ANGLE = REFERENCE_AZIMUTH;
-export const TILT_LIMIT = 30;
-// 35 degrees above ground leaves the full ±30° pitch range above the banks.
+export const DEFAULT_VIEW_ANGLE = 30;
+export const CAMERA_LIMITS = { yaw: 85, pitchMin: -27, pitchMax: 45, roll: 45 } as const;
+// Elevation ranges from 8° to 80° above ground.
 export const ELEVATION = THREE.MathUtils.degToRad(55);
 const ink = createDryInk();
 const riverInk = createDryInk(0.38);
@@ -124,7 +126,7 @@ function beam(
 let geometryDetail: DetailLevel = 2;
 // Curved, asymmetric forks replace radial branch sprays and billboard crowns.
 function characterTree(parent: THREE.Object3D,x:number,z:number,form:TreeForm,seed:number){
-  const tree=buildReferenceTree(form,seed,geometryDetail,Math.abs(seed-REFERENCE_TREE.s)<.001);
+  const tree=buildReferenceTree(form,seed,geometryDetail,Math.abs(seed-REFERENCE_TREE.s)<.001,true);
   tree.position.set(x,GROUND_Y,z);parent.add(tree);return tree;
 }
 function tree(parent:THREE.Object3D,x:number,z:number,leafy:boolean){
@@ -185,7 +187,7 @@ function riversideNature(parent: THREE.Group) {
           x = Math.cos(a) * 0.65,
           z = Math.sin(a) * 0.65;
         beam(g, [0.12, 1.05, 0], [x, 1.5 + (j % 3) * 0.12, z], 0.02);
-        for (let strand = 0; strand < (geometryDetail===0?1:3); strand++) {
+        for (let strand = 0; strand < (geometryDetail===0?2:5); strand++) {
           const pts = [];
           for (let k = 0; k <= 9; k++) {
             const t = k / 9;
@@ -203,13 +205,13 @@ function riversideNature(parent: THREE.Group) {
               riverInk,
             ),
           );
-          for (let k = 2; k < 9; k += 2) {
+          for (let k = 1; k < 10; k++) {
             const v = pts[k];
             beam(
               g,
               v.toArray(),
               [v.x + 0.03, v.y - 0.085, v.z + 0.025],
-              0.008,
+              0.013,
               green,
             );
           }
@@ -408,12 +410,12 @@ function batchStatic(group: THREE.Group) {
   batches.forEach(({ geometries, lines }, material) => {
     const merged = mergeGeometries(geometries);
     geometries.forEach((g) => g.dispose());
-    if (merged)
-      group.add(
-        lines
-          ? new THREE.LineSegments(merged, material)
-          : new THREE.Mesh(merged, material),
-      );
+    if (merged) {
+      const drawable = lines ? new THREE.LineSegments(merged, material) : new THREE.Mesh(merged, material);
+      const uniforms=(material as THREE.ShaderMaterial).uniforms;
+      if(uniforms?.ground?.value)drawable.renderOrder=uniforms.water?.value ? -3 : -2;
+      group.add(drawable);
+    }
   });
 }
 export function person(parent: THREE.Object3D, variant: number, walking = false, detail: DetailLevel = 2) {
@@ -443,10 +445,16 @@ function parasol(parent: THREE.Object3D, x: number, z: number) {
 // Authored in the horizontal/depth basis of the supplied crop, not repeated districts.
 function bank(parent: THREE.Group, outline: number[][]) {
   const shape = new THREE.Shape();
-  outline.forEach(([x, z], i) => {
-    const p = scrollPoint(x, z);
-    if (i === 0) shape.moveTo(p.x, -p.z);
-    else shape.lineTo(p.x, -p.z);
+  const side = outline[0][1] < -1 ? "far" : "near";
+  const edgeCount = SHORELINES[side].length;
+  const direction = side === "far" ? 1 : -1;
+  const coast: number[][] = [];
+  for(let s=-22;s<=22.001;s+=.2)
+    coast.push([s,shoreDepth(side,s)+direction*(.25+Math.sin(s*3.7)*.045+Math.sin(s*11.)*.025)]);
+  const expanded = [...coast,...outline.slice(edgeCount)];
+  expanded.forEach(([x,z],i)=>{
+    const p=scrollPoint(x,z);
+    if(i===0)shape.moveTo(p.x,-p.z);else shape.lineTo(p.x,-p.z);
   });
   shape.closePath();
   const ground = mesh(
@@ -459,29 +467,17 @@ function bank(parent: THREE.Group, outline: number[][]) {
     false,
   );
   ground.rotation.x = -Math.PI / 2;
-  for (let i = 0; i < outline.length; i++) {
-    const a = outline[i],
-      b = outline[(i + 1) % outline.length];
-    if (
-      (Math.abs(a[0]) >= 21 && Math.abs(b[0]) >= 21) ||
-      Math.abs(a[1]) >= 12 ||
-      Math.abs(b[1]) >= 12
-    )
-      continue;
-    const pts = [];
-    for (let j = 0; j <= 16; j++) {
-      const t = j / 16,
-        p = scrollPoint(
-          a[0] + (b[0] - a[0]) * t,
-          a[1] + (b[1] - a[1]) * t + Math.sin(j * 2.4) * 0.035,
-        );
-      p.y = 0.032;
-      pts.push(p);
+  const marks: THREE.Vector3[] = [];
+  for(let s=-21.8;s<21.8;s+=.16){
+    if(Math.sin(s*5.1)+Math.sin(s*13.)<-.3)continue;
+    for(const t of [0,.10]){
+      const d=shoreDepth(side,s+t)+direction*(Math.sin((s+t)*9.)*.045-.04);
+      const p=scrollPoint(s+t,d);p.y=GROUND_Y+.006;marks.push(p);
     }
-    parent.add(
-      new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), ink),
-    );
   }
+  const contour = new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(marks),createDryInk(.30));
+  parent.add(contour);
+
 }
 export function hall(
   parent: THREE.Group,
@@ -857,23 +853,8 @@ function workingBoat(
 }
 export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
   const group = new THREE.Group();
-  const waterShape = new THREE.Shape();
-  passageOutline().forEach(([s, d], i) => {
-    const p = scrollPoint(s, d);
-    if (i === 0) waterShape.moveTo(p.x, -p.z);
-    else waterShape.lineTo(p.x, -p.z);
-  });
-  waterShape.closePath();
-  const river = mesh(
-    group,
-    new THREE.ShapeGeometry(waterShape),
-    mat(0xcfbd8e, true, false, true),
-    0,
-    -0.04,
-    0,
-    false,
-  );
-  river.rotation.x = -Math.PI / 2;
+  const river = mesh(group, riverGeometry(), mat(0xcfbd8e, true, false, true), 0, 0, 0, false);
+  river.name = "river-surface";
   bank(group, bankOutline("far"));
   bank(group, bankOutline("near"));
   const bridge = new THREE.Group();
@@ -1388,13 +1369,9 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
               s = ripple.s + t * ripple.length;
             const far = shoreDepth("far", s),
               near = shoreDepth("near", s);
-            const p = scrollPoint(
-              s,
-              far +
-                (near - far) * ripple.fraction +
-                Math.sin(t * Math.PI * 2 + i) * 0.025,
-            );
-            ripplePositions.setXYZ(i * 8 + segment * 2 + end, p.x, -0.019, p.z);
+            const d=far+(near-far)*ripple.fraction+Math.sin(t*Math.PI*2+i)*.025;
+            const p=scrollPoint(s,d);
+            ripplePositions.setXYZ(i * 8 + segment * 2 + end, p.x, waterHeight(s,d,time)+.008, p.z);
           }
       }
       ripplePositions.needsUpdate = true;

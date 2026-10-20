@@ -330,6 +330,8 @@ export function bridgeMarket(
       kind = layout.kind;
     const g = new THREE.Group();
     g.position.set(x, height(x), side * (width / 2 + 0.04));
+    // Counters at waist height and shelters above the revised adult figures.
+    g.scale.y = 1.35;
     g.rotation.z=Math.atan2(height(x+.4)-height(x-.4),.8);
     parent.add(g);
     box(g, [layout.width, 0.035, layout.depth], [0, 0.24, 0]);
