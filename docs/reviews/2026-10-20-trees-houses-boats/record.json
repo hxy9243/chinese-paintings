@@ -1,0 +1,39 @@
+{
+  "sceneRevision": "f9e067e05c77308ea61a13f55f55456537a12dc2",
+  "validation": {
+    "fullSuite": 53,
+    "focusedAfterTreeRefinement": 8,
+    "desktopMobileInteractions": 6,
+    "combinedBuild": "passed",
+    "motionDecode": "passed"
+  },
+  "motionProbe": {
+    "programs": [],
+    "streams": [
+      {
+        "width": 1232,
+        "height": 744,
+        "r_frame_rate": "12/1",
+        "duration": "2.000000",
+        "nb_read_frames": "24"
+      }
+    ]
+  },
+  "artifactSha256": {
+    "freight-low-isolated.jpg": "75f772438ef8b57e6a6e0cba5400c2d4da5eba2d7be7b1d40be083338843e9cf",
+    "scene-review.json": "a802d24919121171be46cfba413a129b0d6b0e6a343eac88c009398def786ac4",
+    "motion.mp4": "20cada8a439916414a0f2f5e851be6b3f44ab87a959b31875b14e490545d5b1e",
+    "overview-comparison.jpg": "5987032553792b346b2336619bc928abde63f20b9e4d006f21949bf889897442",
+    "overview.jpg": "8542f8aa5551bbd911022ed8ca3701dc87a23326002ffe7435a888bc6c5d20a1",
+    "boats.jpg": "45886838711431349e08bb2c31108d170e9b13fe8cfc6c515c7f066ccc7f6401",
+    "assets-review.json": "20ca62e825de08b74f3640220f641ca4a0553e161aa4349b17e42535deb1ba0e",
+    "reference-comparison.jpg": "a7913c415c4690723f212cde3b7269d9d75d5409c09f54529666ccb616d7c716",
+    "tree-isolated.jpg": "383cacced75ccac03c1025ef09d7f1dfdf0ca457c716dadabeb020f1bcc5cbcc",
+    "cabin-isolated.jpg": "e521e91c7c72cb15dc0ead599ce84c3eae52b2d2635cc9d766c8cd97a36968af",
+    "motion-contact.jpg": "731b44dbd547c773c6c0a05c582078c919c04536713f577bc86f9d41bf7dff49",
+    "tree.jpg": "d169b541b865dfa4a4310bc8cd70d3c54f7060ed25986c68a410da7ed786c3ec",
+    "freight-isolated.jpg": "6d727824aa543688cafead8897907b5fad3479fb9b6fa42cfbcbd57f4df76bf5",
+    "house-isolated.jpg": "bdb90771a0990c71e14fc5937f685a8088520330af410716aa3c9147ca33750b",
+    "houses.jpg": "58a55661524af1d9e91bee44da5871bde85eefa82b0444a49fbdc06d267b7cf5"
+  }
+}
