@@ -1,0 +1,30 @@
+{
+  "sceneRevision": "2a801b918b5040e02af26fc6fb0a638e8026a0ab",
+  "paletteSource": {
+    "thread": "01a15840-7415-72a2-b2d8-a97c46b3bf45",
+    "title": "Explore vibrant Qingming palettes",
+    "originalSha256": "e5a11e8d5fce8d6b8a5bd3bcf4ef080082906aa1dd653f0b3c1e476c593d17bb",
+    "note": "Generated concept used for pigment direction; production scene remains procedural Three.js geometry."
+  },
+  "validation": {
+    "unitTests": 56,
+    "desktopMobileTests": 8,
+    "build": "passed",
+    "decodedFrames": 32,
+    "fps": 8
+  },
+  "artifactSha256": {
+    "motion.mp4": "5afd65eb06b30aef0f53786b0300618a48b157f7dc6cc403c8beb9a8297d74e2",
+    "indigo-amber-bridge.jpg": "d458d95048713048410dc0b558105f3217f5ac4e4c19b6ec99724ce6545c71f5",
+    "silk-overview.jpg": "2b254a3e6226c263ac86a59e8a5c5f12706f3d4a794fc5ec451a5229e1f9b2fb",
+    "silk-bridge.jpg": "f724a8ac56ce1857cea15b7f864d06ae1685556438f9d5579759ca44ef44e370",
+    "indigo-amber-concept.png": "e5a11e8d5fce8d6b8a5bd3bcf4ef080082906aa1dd653f0b3c1e476c593d17bb",
+    "indigo-amber-road.jpg": "434b7d1beaa97e47929d59a3524ae47b0a35cebed3dcb5be812c7f14360adacd",
+    "crowd-comparison.jpg": "1e210ead78363e96552d7f0c1c7f2eb75dc370078ae935b8456e095a98e89d61",
+    "silk-road.jpg": "f1284e444e532d501e5a3499ab40eb1bdb264c6f789c51f8b59444b0d0d6c5ab",
+    "review.json": "2f6c5dbee6422b4ed0af2cc9789815abcd9db6f75c0bb0303c1c321a35d0d91e",
+    "mobile-controls.jpg": "1b4d1abf110aa0950ec9acb8f55b9b027a70bb3ae5c4b97a8e8ca54979af7f81",
+    "motion-contact.jpg": "49a64757f00df7736c082c703bdffb641d1f02a4c3e77d3a115477feeebd6d0e",
+    "indigo-amber-overview.jpg": "0784ec71129a7ba23bfe1a0fc61f06481f037f37d4520783805d2916b7e15a63"
+  }
+}
