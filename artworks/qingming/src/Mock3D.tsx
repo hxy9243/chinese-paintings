@@ -116,7 +116,7 @@ export default function Mock3D() {
     controls.dampingFactor = 0.12;
     controls.screenSpacePanning = true;
     controls.minZoom = 0.5;
-    controls.maxZoom = 2.5;
+    controls.maxZoom = 4.5;
     controls.mouseButtons.LEFT = THREE.MOUSE.ROTATE;
     controls.mouseButtons.RIGHT = THREE.MOUSE.PAN;
     controls.touches.ONE = THREE.TOUCH.ROTATE;
@@ -194,7 +194,7 @@ export default function Mock3D() {
         inkSoftness = Math.max(0, Math.min(1, amount));
       },
       zoom(factor) {
-        camera.zoom = THREE.MathUtils.clamp(camera.zoom * factor, 0.5, 2.5);
+        camera.zoom = THREE.MathUtils.clamp(camera.zoom * factor, 0.5, 4.5);
         camera.updateProjectionMatrix();
       },
       reset() {

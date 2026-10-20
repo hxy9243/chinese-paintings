@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { buildReferenceTree, buildReferenceBoat, addReferenceArchitecture, type TreeForm } from "./referenceAssets";
 import { REFERENCE_AZIMUTH, scrollPoint } from "./scrollLayout";
 import {
   paintMaterial,
@@ -118,130 +119,14 @@ function beam(
   return obj;
 }
 let geometryDetail: DetailLevel = 2;
-type TreeForm = "upright" | "spreading" | "pollard" | "sapling";
-// Bare crowns in the supplied crop range from fine upright sprays to old,
-// low-forking riverbank trees. Forms are deterministic across visits.
-function characterTree(
-  parent: THREE.Object3D, x: number, z: number, form: TreeForm, seed: number,
-) {
-  const g=new THREE.Group();g.position.set(x,GROUND_Y,z);parent.add(g);
-  const old=form==='spreading',pollard=form==='pollard',landmark=Math.abs(seed-REFERENCE_TREE.s)<.001;
-  if(landmark)g.name='great-riverbank-tree';
-  const height=old?(landmark?2.05:1.6):pollard?1.5:2.0;
-  const thick=old?(landmark?.21:.12):pollard?.085:.042;
-  const lean=Math.sin(seed*1.7)*.16;
-  // Taper around a curved centreline. Forks grow out of the trunk, rather than
-  // straight cylinders meeting at sharp elbows or dark spheres stuck on bark.
-  const limb=(points:number[][],radius:number,end=.07)=>{
-    const curve=new THREE.CatmullRomCurve3(points.map(p=>new THREE.Vector3(...p)));
-    const rings=geometryDetail===2?12:geometryDetail===1?7:4,radial=geometryDetail===2?7:5;
-    const vertices:number[]=[],indices:number[]=[];
-    for(let j=0;j<=rings;j++){
-      const t=j/rings,p=curve.getPoint(t),tangent=curve.getTangent(t),
-        normal=new THREE.Vector3(0,0,1).cross(tangent).normalize(),binormal=tangent.clone().cross(normal).normalize();
-      for(let i=0;i<radial;i++){
-        const angle=i/radial*Math.PI*2,r=radius*(1-(1-end)*t)*(1+.08*Math.sin(i*2.7+j*.6));
-        const v=p.clone().addScaledVector(normal,Math.cos(angle)*r).addScaledVector(binormal,Math.sin(angle)*r);vertices.push(...v.toArray());
-        if(j<rings){const a=j*radial+i,b=j*radial+(i+1)%radial;indices.push(a,a+radial,b,b,a+radial,b+radial);}
-      }
-    }
-    const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));geo.setIndex(indices);geo.computeVertexNormals();mesh(g,geo,wood,0,0,0,false);
-    if(geometryDetail>0&&radius>.035)for(let k=0;k<(geometryDetail===2?4:2);k++){
-      const marks=[];for(let j=0;j<=10;j++){
-        const t=j/10,p=curve.getPoint(t),a=k*1.7+.1*Math.sin(j*.8),r=radius*(1-(1-end)*t)*1.015;
-        p.x+=Math.cos(a)*r;p.z+=Math.sin(a)*r;marks.push(p);
-      }
-      g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(marks),ink));
-    }
-  };
-  const trunk=[[0,0,0],[-thick*.3,height*.17,0],[lean,height*.42,.035],[-.07,height*.72,.04],[lean*.8,height,0]];
-  limb(trunk,thick,.19);
-  if(old||pollard)for(let j=0;j<5;j++){
-    const a=j*1.256+seed;limb([[Math.cos(a)*thick*1.9,.018,Math.sin(a)*thick*1.9],[Math.cos(a)*thick*.8,.15,Math.sin(a)*thick*.8],[lean*.2,.42,.01]],thick*.3,.35);
-  }
-  const count=old?11:pollard?9:6;
-  for(let j=0;j<count;j++){
-    const angle=j*2.399+seed,origin=height*(pollard?.77:.32+(j%5)*.12),reach=old?(landmark?1.6:1.1)+(j%3)*.15:pollard?.43+(j%3)*.14:.4+(j%3)*.12;
-    const start=[lean*.6,origin,.025],mid=[Math.cos(angle)*reach*.5,origin+(height-origin)*.32,Math.sin(angle)*reach*.32],
-      tip=[Math.cos(angle)*reach,height+(j%4)*.13,Math.sin(angle)*reach*.7];
-    limb([start,mid,[tip[0]*.84,tip[1]-.2,tip[2]*.86],tip],old?.055:.027,.13);
-    const twigs=geometryDetail===2?8:geometryDetail===1?4:1;
-    for(let k=0;k<twigs;k++){
-      const t=.35+k/twigs*.6,a=angle+(k%2?1:-1)*(.35+(k%3)*.2),base=[mid[0]+(tip[0]-mid[0])*t,mid[1]+(tip[1]-mid[1])*t,mid[2]+(tip[2]-mid[2])*t],
-        end=[base[0]+Math.cos(a)*(.22+k*.025),base[1]+.18+(k%3)*.12,base[2]+Math.sin(a)*.3];
-      limb([base,[base[0]*.4+end[0]*.6,base[1]+.12,base[2]*.4+end[2]*.6],end],geometryDetail===0?.008:.011,.08);
-      if(geometryDetail===2)for(let q=0;q<3;q++){
-        const twig=[end[0]+Math.cos(a+q*.7)*.18,end[1]+.11+q*.045,end[2]+Math.sin(a+q*.7)*.14];
-        limb([end,[(end[0]+twig[0])*.5,end[1]+.07,(end[2]+twig[2])*.5],twig],.0035,.04);
-      }
-    }
-  }
-  return g;
+// Curved, asymmetric forks replace radial branch sprays and billboard crowns.
+function characterTree(parent: THREE.Object3D,x:number,z:number,form:TreeForm,seed:number){
+  const tree=buildReferenceTree(form,seed,geometryDetail,Math.abs(seed-REFERENCE_TREE.s)<.001);
+  tree.position.set(x,GROUND_Y,z);parent.add(tree);return tree;
 }
-
-function tree(parent: THREE.Object3D, x: number, z: number, leafy: boolean) {
-  const g = new THREE.Group();
-  parent.add(g);
-  g.position.set(x, GROUND_Y, z);
-  beam(g, [0, 0, 0], [0.12, 1.3, 0], 0.1);
-  beam(g, [0.12, 1.3, 0], [-0.18, 2.4, 0.03], 0.057);
-  for (let i = 0; i < 7; i++) {
-    const a = i * 2.4,
-      y = 1 + i * 0.19,
-      end = [Math.cos(a) * (0.55 + i * 0.035), y + 0.55, Math.sin(a) * 0.53];
-    beam(g, [0.06, y, 0], end, 0.04);
-    beam(g, end, [end[0] * 1.4, end[1] + 0.32, end[2] * 1.3], 0.018);
-    for (let twig = 0; twig < (geometryDetail===2?7:geometryDetail===1?3:1); twig++) {
-      const tip = [
-        end[0] * 1.35 + Math.sin(twig * 2.4) * 0.27,
-        end[1] + 0.18 + twig * 0.075,
-        end[2] * 1.35 + Math.cos(twig * 2.4) * 0.27,
-      ];
-      beam(g, end, tip, 0.008, dark);
-    }
-    if (leafy) {
-      const cloud = new THREE.Shape();
-      const radius = 0.44 + (i % 3) * 0.1;
-      for (let j = 0; j <= (geometryDetail===2?64:16); j++) {
-        const angle = (j / (geometryDetail===2?64:16)) * Math.PI * 2;
-        const r =
-          radius * (1 + 0.13 * Math.sin(j * 1.8) + 0.07 * Math.sin(j * 3.1));
-        const px = Math.cos(angle) * r,
-          py = Math.sin(angle) * r * 0.8;
-        if (j === 0) cloud.moveTo(px, py);
-        else cloud.lineTo(px, py);
-      }
-      const canopy = mesh(
-        g,
-        new THREE.ShapeGeometry(cloud),
-        i % 2 ? green : pale,
-        ...(end as [number, number, number]),
-        false,
-      );
-      canopy.rotation.y = VIEW_ANGLE;
-      // Individually drawn leaf dabs break the geometric silhouette.
-      for (let j = 0; j < (geometryDetail===2?28:geometryDetail===1?10:0); j++) {
-        const a = j * 2.399,
-          r = Math.sqrt(j / 28) * radius;
-        const leaf = new THREE.Shape();
-        leaf.moveTo(-0.035, 0);
-        leaf.quadraticCurveTo(0, 0.065, 0.045, 0);
-        leaf.quadraticCurveTo(0, -0.035, -0.035, 0);
-        const dab = mesh(
-          g,
-          new THREE.ShapeGeometry(leaf),
-          j % 3 ? green : dark,
-          end[0] + Math.cos(a) * r,
-          end[1] + Math.sin(a) * r * 0.75,
-          end[2] + 0.035 + j * 0.001,
-          false,
-        );
-        dab.rotation.y = VIEW_ANGLE;
-        dab.rotation.z = a;
-      }
-    }
-  }
-  return g;
+function tree(parent:THREE.Object3D,x:number,z:number,leafy:boolean){
+  const tree=buildReferenceTree('sapling',x+z*.37,geometryDetail,false,leafy);
+  tree.position.set(x,GROUND_Y,z);parent.add(tree);return tree;
 }
 function riversideNature(parent: THREE.Group) {
   for (const n of NATURE) {
@@ -329,52 +214,6 @@ function riversideNature(parent: THREE.Group) {
       }
     }
   }
-}
-function boat(parent: THREE.Object3D, x: number, z: number, cargo: boolean) {
-  const g = new THREE.Group();
-  parent.add(g);
-  g.position.set(x, 0.09, z);
-  g.rotation.y = 0;
-  const shape = new THREE.Shape();
-  shape.moveTo(-0.48, -1.3);
-  shape.quadraticCurveTo(-0.72, 0, -0.43, 1.22);
-  shape.lineTo(0, 1.55);
-  shape.lineTo(0.43, 1.22);
-  shape.quadraticCurveTo(0.72, 0, 0.48, -1.3);
-  shape.lineTo(0, -1.55);
-  shape.closePath();
-  const hull = mesh(
-    g,
-    new THREE.ExtrudeGeometry(shape, { depth: 0.25, bevelEnabled: false }),
-    wood,
-  );
-  hull.rotation.x = -Math.PI / 2;
-  for (let i = 0; i < 9; i++)
-    box(g, 0.92, 0.025, 0.035, 0, 0.27, -1 + i * 0.25, dark);
-  if (cargo) {
-    const canopy = mesh(
-      g,
-      new THREE.CylinderGeometry(0.49, 0.49, 1.45, 12, 1, true, 0, Math.PI),
-      linen,
-      0,
-      0.28,
-      0,
-    );
-    canopy.rotation.x = Math.PI / 2;
-    for (let i = 0; i < 7; i++) {
-      const pts = [];
-      for (let j = 0; j <= 18; j++)
-        pts.push(
-          new THREE.Vector3(
-            Math.cos((j * Math.PI) / 18) * 0.5,
-            0.28 + Math.sin((j * Math.PI) / 18) * 0.5,
-            -0.7 + i * 0.23,
-          ),
-        );
-      g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), ink));
-    }
-  }
-  beam(g, [0.3, 0.32, -0.7], [0.68, 0.1, -1.55], 0.022, dark);
 }
 function horseCart(parent: THREE.Group, index: number) {
   const layout = CARTS[index],kind=CART_KINDS[index];
@@ -641,7 +480,7 @@ function bank(parent: THREE.Group, outline: number[][]) {
     );
   }
 }
-function hall(
+export function hall(
   parent: THREE.Group,
   s: number,
   d: number,
@@ -725,17 +564,33 @@ function hall(
         dark,
       );
     }
-  } else
-    box(
-      g,
-      w,
-      h,
-      depth,
-      0,
-      h / 2,
-      0,
-      kind === "warehouse" || kind === "shed" ? wood : plaster,
-    );
+  } else if(kind==='shed') {
+    box(g,w,h,depth,0,h/2,0,wood);
+  } else {
+    // Front/rear bays are recessed between posts. A complete solid box here
+    // erased the open screens, doorways and porch depth visible in the crop.
+    box(g,w,.08,depth,0,.04,0,plaster);
+    for(const side of [-1,1]){
+      if(gableRoof||kind==='warehouse'||kind==='shop'){
+        // Leave the gable entrance open; its dark back panel is recessed.
+        for(const end of [-1,1])box(g,.055,h,depth*.36,side*w/2,h/2,end*depth*.32,plaster);
+        box(g,.055,h*.25,depth*.28,side*w/2,h*.875,0,plaster);
+      }else box(g,.055,h,depth,side*w/2,h/2,0,plaster);
+      const bays=Math.max(2,Math.ceil(w/.7)),bay=w/bays,z=side*depth/2;
+      for(let i=0;i<=bays;i++){
+        const x=-w/2+i*bay;box(g,.04,h,.045,x,h/2,z,dark);
+        if(i<bays){
+          const cx=x+bay/2;
+          if(i!==Math.floor(bays/2))box(g,bay-.045,h*.25,.04,cx,h*.125,z,kind==='warehouse'?wood:plaster);
+          box(g,bay-.045,h*.25,.04,cx,h*.875,z,plaster);
+          const doorway=i===Math.floor(bays/2);
+          box(g,bay-.07,h*(doorway?.85:.5),.025,cx,h*(doorway?.425:.5),z-side*.15,dark);
+          if(i!==Math.floor(bays/2))box(g,bay*.72,h*.22,.026,cx,h*.37,z-side*.035,wood);
+        }
+      }
+      box(g,w,.045,.05,0,h*.75,z,dark);
+    }
+  }
   // Low shop/warehouse gables contrast with broad hipped dwelling roofs.
   // Restrained concave eaves follow the crop rather than pagoda silhouettes.
   const gabled = gableRoof || kind === "warehouse" || kind === "shop" || kind === "shed";
@@ -832,6 +687,8 @@ function hall(
   geo.computeVertexNormals();
   mesh(g, geo, kind === "shed" ? linen : roof);
   beam(g, [-r, top + 0.025, 0], [r, top + 0.025, 0], 0.028, dark);
+  const close=new THREE.Group();close.name='close-only-joinery';g.add(close);
+  if(kind!=='shed')addReferenceArchitecture(close,w,depth,h,gabled);
   if (kind === "openhall") {
     beam(
       g,
@@ -870,21 +727,11 @@ function hall(
   for (let i = 0; i <= Math.ceil(w / 0.6); i++) {
     const x = -w / 2 + (i * w) / Math.ceil(w / 0.6);
     box(g, 0.037, h, 0.035, x, h / 2, depth / 2 + 0.018, dark);
-    if (i < Math.ceil(w / 0.6))
-      box(
-        g,
-        0.32,
-        h * 0.45,
-        0.035,
-        x + 0.22,
-        h * 0.54,
-        depth / 2 + 0.022,
-        wood,
-      );
+
   }
   for (const side of [-1, 1])
     for (let z = -depth / 2; z <= depth / 2; z += 0.5)
-      box(g, 0.035, h, 0.032, (side * w) / 2, h / 2, z, dark);
+      if(!gabled||Math.abs(z)>depth*.14)box(g, 0.035, h, 0.032, (side * w) / 2, h / 2, z, dark);
   box(g, w, 0.032, 0.035, 0, h * 0.28, depth / 2 + 0.04, dark);
   if (kind === "shop") {
     // Hanging shop board and small wares remain within the roof overhang.
@@ -997,23 +844,11 @@ function workingBoat(
   g.position.copy(scrollPoint(s, d));
   g.rotation.y = turn;
   parent.add(g);
-  boat(g, 0, 0, !cabin);
-  const hull = g.children[0];
-  hull.scale.set(width / 1.1, 0.85, length / 3.1);
-  if (cabin) {
-    box(g, width * 0.8, 0.45, length * 0.47, 0, 0.5, 0, plaster);
-    box(g, width * 0.98, 0.07, length * 0.57, 0, 0.77, 0, roof);
-    for (let z = -length * 0.22; z < length * 0.23; z += 0.32)
-      for (const side of [-1, 1])
-        box(g, 0.02, 0.24, 0.18, side * width * 0.405, 0.53, z, dark);
-    beam(g, [0, 0.34, -length * 0.31], [0, 1.1, -length * 0.31], 0.025, dark);
-    beam(
-      g,
-      [-width * 0.45, 0.85, -length * 0.31],
-      [width * 0.45, 0.85, -length * 0.31],
-      0.02,
-      dark,
-    );
+  const style=cabin?'cabin':length>5?'freight':length<3.8?'skiff':'canopy';
+  g.userData.boatStyle=style;
+  for(const detail of [0,2] as const){
+    const model=buildReferenceBoat(length,width,style,detail);model.name='boat-detail-'+detail;
+    batchStatic(model);g.add(model);
   }
   return g;
 }
@@ -1176,8 +1011,13 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
     root.position.copy(scrollPoint(h.s,h.d));root.position.y=GROUND_Y;
     root.rotation.y=REFERENCE_AZIMUTH-h.angle+(h.side==="near"?Math.PI:0);
     const base=hall(new THREE.Group(),0,0,h.width,h.depth,h.height,0,BUILDING_KINDS[index],h.gable);
-    base.position.set(0,0,0);batchStatic(base);root.add(base);
+    base.position.set(0,0,0);
     const fine=new THREE.Group();fine.name="close-architecture";root.add(fine);
+    base.updateMatrixWorld(true);
+    const closeParts:THREE.Object3D[]=[];
+    base.traverse(n=>{if(n.name==='close-only-joinery')closeParts.push(n);});
+    for(const part of closeParts){const matrix=part.matrixWorld.clone();part.removeFromParent();part.applyMatrix4(matrix);fine.add(part);}
+    batchStatic(base);root.add(base);
     // Recessed lattice screens, brackets and stacked wares add real depth.
     for(let x=-h.width*.4;x<h.width*.45;x+=.55){
       for(const side of [-1,1]){
@@ -1242,7 +1082,7 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
       REFERENCE_AZIMUTH + Math.PI / 2 - b.angle,
     );
     vessel.name = "working-boat";
-    batchStatic(vessel);
+
     return vessel;
   });
   const moored = MOORED_BOATS.map((b) => {
@@ -1256,7 +1096,7 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
       REFERENCE_AZIMUTH + Math.PI / 2 - b.angle,
     );
     vessel.name = "moored-boat";
-    batchStatic(vessel);
+
     return vessel;
   });
   const mooringPosts = new THREE.Group();
@@ -1484,6 +1324,9 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
           idle.lean,
         );
       });
+      for(const vessel of [...boats,...moored])for(const child of vessel.children){
+        if(child.name.startsWith('boat-detail-'))child.visible=child.name==='boat-detail-'+(plantDetail===0?0:2);
+      }
       boats.forEach((vessel, i) => {
         const pose = boatPose(i, time);
         vessel.visible = Math.abs(pose.s) < 22 + BOATS[i].length * 0.62 + 0.2;
