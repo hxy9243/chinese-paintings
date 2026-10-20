@@ -1,0 +1,340 @@
+{
+  "passed": true,
+  "measurements": {
+    "homepageLoadsSceneCode": false,
+    "overview": {
+      "crowd": {
+        "variants": 12,
+        "levels": [
+          {
+            "level": 0,
+            "actors": 0,
+            "triangles": 0
+          },
+          {
+            "level": 1,
+            "actors": 194,
+            "triangles": 58862
+          },
+          {
+            "level": 2,
+            "actors": 0,
+            "triangles": 0
+          }
+        ]
+      },
+      "seed": 9243,
+      "vegetationLevel": 1,
+      "buildings": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "traffic": [
+        "horse-cart",
+        "covered-cart",
+        "horse-cart",
+        "covered-cart",
+        "ox-cart",
+        "covered-cart",
+        "pack-horse",
+        "handcart"
+      ],
+      "triangles": 200390,
+      "calls": 519
+    },
+    "bridge": {
+      "crowd": {
+        "variants": 12,
+        "levels": [
+          {
+            "level": 0,
+            "actors": 0,
+            "triangles": 0
+          },
+          {
+            "level": 1,
+            "actors": 15,
+            "triangles": 4200
+          },
+          {
+            "level": 2,
+            "actors": 179,
+            "triangles": 121536
+          }
+        ]
+      },
+      "seed": 9243,
+      "vegetationLevel": 2,
+      "buildings": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        1
+      ],
+      "traffic": [
+        "horse-cart",
+        "covered-cart",
+        "horse-cart",
+        "covered-cart",
+        "ox-cart",
+        "covered-cart",
+        "pack-horse",
+        "handcart"
+      ],
+      "triangles": 310036,
+      "calls": 470
+    },
+    "landmark-tree": {
+      "crowd": {
+        "variants": 12,
+        "levels": [
+          {
+            "level": 0,
+            "actors": 0,
+            "triangles": 0
+          },
+          {
+            "level": 1,
+            "actors": 15,
+            "triangles": 4200
+          },
+          {
+            "level": 2,
+            "actors": 179,
+            "triangles": 121536
+          }
+        ]
+      },
+      "seed": 9243,
+      "vegetationLevel": 2,
+      "buildings": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        1
+      ],
+      "traffic": [
+        "horse-cart",
+        "covered-cart",
+        "horse-cart",
+        "covered-cart",
+        "ox-cart",
+        "covered-cart",
+        "pack-horse",
+        "handcart"
+      ],
+      "triangles": 281722,
+      "calls": 323
+    },
+    "near": {
+      "crowd": {
+        "variants": 12,
+        "levels": [
+          {
+            "level": 0,
+            "actors": 0,
+            "triangles": 0
+          },
+          {
+            "level": 1,
+            "actors": 15,
+            "triangles": 4200
+          },
+          {
+            "level": 2,
+            "actors": 179,
+            "triangles": 121536
+          }
+        ]
+      },
+      "seed": 9243,
+      "vegetationLevel": 2,
+      "buildings": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        1
+      ],
+      "traffic": [
+        "horse-cart",
+        "covered-cart",
+        "horse-cart",
+        "covered-cart",
+        "ox-cart",
+        "covered-cart",
+        "pack-horse",
+        "handcart"
+      ],
+      "triangles": 297030,
+      "calls": 424
+    },
+    "far": {
+      "crowd": {
+        "variants": 12,
+        "levels": [
+          {
+            "level": 0,
+            "actors": 194,
+            "triangles": 23040
+          },
+          {
+            "level": 1,
+            "actors": 0,
+            "triangles": 0
+          },
+          {
+            "level": 2,
+            "actors": 0,
+            "triangles": 0
+          }
+        ]
+      },
+      "seed": 9243,
+      "vegetationLevel": 0,
+      "buildings": [
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0
+      ],
+      "traffic": [
+        "horse-cart",
+        "covered-cart",
+        "horse-cart",
+        "covered-cart",
+        "ox-cart",
+        "covered-cart",
+        "pack-horse",
+        "handcart"
+      ],
+      "triangles": 105894,
+      "calls": 441
+    },
+    "sameTimeReplay": true,
+    "mobileOverflow": false,
+    "thousandMiles": {
+      "ready": true,
+      "graphicsError": 0
+    }
+  },
+  "errors": [],
+  "failedResponses": [],
+  "sourceHashes": {
+    "bridgeStudy.ts": "6a1f46d2ac53c0e4cc82ef82e5ede7a7a8ff72a457435222a7aa9608f9baf0f0",
+    "crowd.ts": "cd9621b1549abcb433e8e83746bd3fc32a425876ea788ccf075987a7b04f4e71",
+    "passageLayout.ts": "c652f95634e5ae038c324949655690c93eadc2bbab3939dbc3cde623287d041b",
+    "passageLife.ts": "b11af00013ec0f9bab254c24fd398b2f927024b2d3f726482db12fccfcc03337",
+    "passageSpace.ts": "bfdd37aec812ba27df41e78277b7c90add581a160b19e51d7afd3851616e9dd3",
+    "figureTypes.ts": "43a4148b13052bf1906b7b8ee8b425f6f71d39c72216fb526d240c2441de149d",
+    "Mock3D.tsx": "9a25604377e57f63c4d06c0b7dd0deb6ea6de3a0cd58367f3cdce05335079765",
+    "paintMaterial.ts": "b36c6f8997e8891794cca54e31f5992984f9a1fc8b63c36756d5483ee54bf16f",
+    "inkFinish.ts": "16c17bfb6a805045636d257dc32b7877de443069bd53ef951ea95159887de380"
+  },
+  "motion": {
+    "fps": 12,
+    "frames": 96,
+    "durationSeconds": 8,
+    "width": 1232,
+    "kind": "offline scene-time sample; no realtime performance claim"
+  },
+  "encodedMotion": {
+    "programs": [],
+    "streams": [
+      {
+        "width": 1232,
+        "height": 744,
+        "r_frame_rate": "12/1",
+        "nb_read_frames": "96"
+      }
+    ],
+    "format": {
+      "duration": "8.000000"
+    }
+  },
+  "sourceCommit": "748afcb",
+  "artifacts": {
+    "landmark-tree.png": "507c9559654bd8d291ba66115a2615c46b974529fea90e95519b1eca112f4f1d",
+    "motion.mp4": "4f4c414d9cc65666591265f43f22d8b4412b59db5049bfc2dc4cfb13b73c3018",
+    "overview.png": "a7ca2b18ffd8721e555124a60e90e4a5608add295a27658b892fc607043ce279",
+    "layout-comparison.jpg": "37aac446acc6d9f9bf97a36ac9e3b5ac4e67c72aa66f951396d1fd2449eac382",
+    "figures.png": "8d7313f3c6904d70d17ef65d88353ccac3123fd3e82f0b840739ee0d52a5dbae",
+    "motion-contact.jpg": "e4bdaebbf7c9dd663c86c96878536e9f44535e0a0dece3eaad9ac5850191a751"
+  }
+}

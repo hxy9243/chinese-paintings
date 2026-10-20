@@ -9,7 +9,7 @@ Editable, code-driven interpretations of Chinese paintings, with shared modeling
 | 清明上河图 · Rainbow Bridge | `artworks/qingming/` | `/qingming/` |
 | 千里江山图 · A Thousand Miles of Rivers and Mountains | `artworks/thousand-miles/` | `/thousand-miles/` |
 
-**Status:** repository scaffold and implementation plan. The existing artwork projects have not been imported, and this repository does not yet contain a runnable gallery or viewer.
+**Status:** both artwork projects are imported. The local gallery and viewers run from this repository; Qingming geometry, people, traffic, and screen-space detail are being refined before any shader changes.
 
 The canonical directory and route name for 千里江山图 is **`thousand-miles`**.
 
@@ -26,6 +26,22 @@ assets/                 Shared models and textures with provenance
 scripts/                Development, build, capture, and validation tools
 docs/                   Architecture, migration, and production workflows
 ```
+
+## Run locally
+
+Requires Node.js 22.12+ and Python 3 for the original landscape utilities.
+
+```sh
+npm run setup
+npm run dev
+# http://127.0.0.1:5180/
+npm test
+npm run build
+```
+
+Qingming also runs independently with `npm run dev --prefix artworks/qingming`.
+Its existing Chromium suite runs with `npm run test:e2e` after installing the Playwright browser.
+The original Thousand Miles study/capture commands remain in its own README.
 
 See [the implementation plan](docs/PLAN.md) for migration, sharing, visual direction, and validation.
 

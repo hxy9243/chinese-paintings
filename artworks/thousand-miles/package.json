@@ -1,0 +1,1 @@
+{"name":"blue-green-waterways","version":"1.0.0","private":true,"type":"module","description":"A separate reference-inspired, editable 3D blue-green landscape","scripts":{"start":"python3 scripts/serve.py","capture":"node scripts/capture.cjs stills","film":"node scripts/capture.cjs motion","check":"node scripts/check.cjs"},"devDependencies":{"playwright":"1.63.0"}}

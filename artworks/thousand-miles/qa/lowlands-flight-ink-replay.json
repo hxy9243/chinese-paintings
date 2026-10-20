@@ -1,0 +1,47 @@
+{
+  "passed": true,
+  "style": "ink",
+  "samples": [
+    {
+      "frame": 0,
+      "identical": true,
+      "sha256": "8f09bc10d1fdec7014c1444c4d53744033ac3c45876584a27b3c3c54401b7c9c"
+    },
+    {
+      "frame": 179,
+      "identical": true,
+      "sha256": "11e2d68b0e4d3788ac82444777487896b7b9b0df194109f952a9b460edaf8a28"
+    },
+    {
+      "frame": 180,
+      "identical": true,
+      "sha256": "3787586ad602993a89f415420edb2eb2bd3dba1e595e2d6707fdf22294784bad"
+    },
+    {
+      "frame": 359,
+      "identical": true,
+      "sha256": "c01dc3c52582f72d62620c31f1adc95faf5c9f7c23f1f1ad2d6e73f887a4fbb9"
+    },
+    {
+      "frame": 360,
+      "identical": true,
+      "sha256": "8b82ebfe212741e296a74179082046d414e8df76230f75e8ffffbfc758a086ff"
+    },
+    {
+      "frame": 539,
+      "identical": true,
+      "sha256": "7945f740546b0d8b1e2282fe261a25d0de689f15ac6b5874eff37eff61324951"
+    },
+    {
+      "frame": 540,
+      "identical": true,
+      "sha256": "b5f358c6aa19682c50c09d8563851ee6f198af7a57e292b26515075a8981daff"
+    },
+    {
+      "frame": 719,
+      "identical": true,
+      "sha256": "552ea9c84849243c974d632eacdc16c650f7e1ce36b84cc21859dd0e11c75e8c"
+    }
+  ],
+  "errors": []
+}

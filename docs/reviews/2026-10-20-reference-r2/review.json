@@ -1,0 +1,711 @@
+{
+  "passed": true,
+  "measurements": {
+    "homepageLoadsSceneCode": false,
+    "overview": {
+      "crowd": {
+        "variants": 12,
+        "levels": [
+          {
+            "level": 0,
+            "actors": 0,
+            "triangles": 0
+          },
+          {
+            "level": 1,
+            "actors": 225,
+            "triangles": 346784
+          },
+          {
+            "level": 2,
+            "actors": 0,
+            "triangles": 0
+          }
+        ]
+      },
+      "seed": 9243,
+      "vegetationLevel": 1,
+      "buildings": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "traffic": [
+        "horse-cart",
+        "covered-cart",
+        "horse-cart",
+        "covered-cart",
+        "ox-cart",
+        "covered-cart",
+        "pack-horse",
+        "handcart"
+      ],
+      "bridgeCounters": [
+        {
+          "x": -2.5,
+          "lateral": -1.6400000000000001,
+          "width": 0.72,
+          "depth": 0.22
+        },
+        {
+          "x": -0.5,
+          "lateral": -1.6400000000000001,
+          "width": 0.72,
+          "depth": 0.22
+        },
+        {
+          "x": 1.7,
+          "lateral": 1.6400000000000001,
+          "width": 0.72,
+          "depth": 0.22
+        },
+        {
+          "x": 3.4,
+          "lateral": 1.6400000000000001,
+          "width": 0.72,
+          "depth": 0.22
+        }
+      ],
+      "marketTypes": [
+        "tea-and-bowls",
+        "woven-baskets",
+        "food-and-skewers",
+        "cloth-and-scrolls",
+        "grain-and-jars",
+        "fishmonger"
+      ],
+      "referenceTrees": [
+        "near-quay-old-tree",
+        "west-near-fork",
+        "near-landing-pollard",
+        "far-landing-bare",
+        "foreground-pollard-west",
+        "foreground-pollard-east",
+        "east-yard-bare",
+        "far-east-bare"
+      ],
+      "triangles": 657141,
+      "calls": 588
+    },
+    "layout-reference-view": {
+      "crowd": {
+        "variants": 12,
+        "levels": [
+          {
+            "level": 0,
+            "actors": 0,
+            "triangles": 0
+          },
+          {
+            "level": 1,
+            "actors": 225,
+            "triangles": 346784
+          },
+          {
+            "level": 2,
+            "actors": 0,
+            "triangles": 0
+          }
+        ]
+      },
+      "seed": 9243,
+      "vegetationLevel": 1,
+      "buildings": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "traffic": [
+        "horse-cart",
+        "covered-cart",
+        "horse-cart",
+        "covered-cart",
+        "ox-cart",
+        "covered-cart",
+        "pack-horse",
+        "handcart"
+      ],
+      "bridgeCounters": [
+        {
+          "x": -2.5,
+          "lateral": -1.6400000000000001,
+          "width": 0.72,
+          "depth": 0.22
+        },
+        {
+          "x": -0.5,
+          "lateral": -1.6400000000000001,
+          "width": 0.72,
+          "depth": 0.22
+        },
+        {
+          "x": 1.7,
+          "lateral": 1.6400000000000001,
+          "width": 0.72,
+          "depth": 0.22
+        },
+        {
+          "x": 3.4,
+          "lateral": 1.6400000000000001,
+          "width": 0.72,
+          "depth": 0.22
+        }
+      ],
+      "marketTypes": [
+        "tea-and-bowls",
+        "woven-baskets",
+        "food-and-skewers",
+        "cloth-and-scrolls",
+        "grain-and-jars",
+        "fishmonger"
+      ],
+      "referenceTrees": [
+        "near-quay-old-tree",
+        "west-near-fork",
+        "near-landing-pollard",
+        "far-landing-bare",
+        "foreground-pollard-west",
+        "foreground-pollard-east",
+        "east-yard-bare",
+        "far-east-bare"
+      ],
+      "triangles": 655789,
+      "calls": 569
+    },
+    "bridge": {
+      "crowd": {
+        "variants": 12,
+        "levels": [
+          {
+            "level": 0,
+            "actors": 0,
+            "triangles": 0
+          },
+          {
+            "level": 1,
+            "actors": 0,
+            "triangles": 0
+          },
+          {
+            "level": 2,
+            "actors": 225,
+            "triangles": 1309300
+          }
+        ]
+      },
+      "seed": 9243,
+      "vegetationLevel": 2,
+      "buildings": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        1,
+        2,
+        2,
+        1,
+        1,
+        1,
+        2,
+        2
+      ],
+      "traffic": [
+        "horse-cart",
+        "covered-cart",
+        "horse-cart",
+        "covered-cart",
+        "ox-cart",
+        "covered-cart",
+        "pack-horse",
+        "handcart"
+      ],
+      "bridgeCounters": [
+        {
+          "x": -2.5,
+          "lateral": -1.6400000000000001,
+          "width": 0.72,
+          "depth": 0.22
+        },
+        {
+          "x": -0.5,
+          "lateral": -1.6400000000000001,
+          "width": 0.72,
+          "depth": 0.22
+        },
+        {
+          "x": 1.7,
+          "lateral": 1.6400000000000001,
+          "width": 0.72,
+          "depth": 0.22
+        },
+        {
+          "x": 3.4,
+          "lateral": 1.6400000000000001,
+          "width": 0.72,
+          "depth": 0.22
+        }
+      ],
+      "marketTypes": [
+        "tea-and-bowls",
+        "woven-baskets",
+        "food-and-skewers",
+        "cloth-and-scrolls",
+        "grain-and-jars",
+        "fishmonger"
+      ],
+      "referenceTrees": [
+        "near-quay-old-tree",
+        "west-near-fork",
+        "near-landing-pollard",
+        "far-landing-bare",
+        "foreground-pollard-west",
+        "foreground-pollard-east",
+        "east-yard-bare",
+        "far-east-bare"
+      ],
+      "triangles": 2305769,
+      "calls": 594
+    },
+    "landmark-tree": {
+      "crowd": {
+        "variants": 12,
+        "levels": [
+          {
+            "level": 0,
+            "actors": 0,
+            "triangles": 0
+          },
+          {
+            "level": 1,
+            "actors": 0,
+            "triangles": 0
+          },
+          {
+            "level": 2,
+            "actors": 225,
+            "triangles": 1309300
+          }
+        ]
+      },
+      "seed": 9243,
+      "vegetationLevel": 2,
+      "buildings": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        1,
+        2,
+        2,
+        1,
+        1,
+        1,
+        2,
+        2
+      ],
+      "traffic": [
+        "horse-cart",
+        "covered-cart",
+        "horse-cart",
+        "covered-cart",
+        "ox-cart",
+        "covered-cart",
+        "pack-horse",
+        "handcart"
+      ],
+      "bridgeCounters": [
+        {
+          "x": -2.5,
+          "lateral": -1.6400000000000001,
+          "width": 0.72,
+          "depth": 0.22
+        },
+        {
+          "x": -0.5,
+          "lateral": -1.6400000000000001,
+          "width": 0.72,
+          "depth": 0.22
+        },
+        {
+          "x": 1.7,
+          "lateral": 1.6400000000000001,
+          "width": 0.72,
+          "depth": 0.22
+        },
+        {
+          "x": 3.4,
+          "lateral": 1.6400000000000001,
+          "width": 0.72,
+          "depth": 0.22
+        }
+      ],
+      "marketTypes": [
+        "tea-and-bowls",
+        "woven-baskets",
+        "food-and-skewers",
+        "cloth-and-scrolls",
+        "grain-and-jars",
+        "fishmonger"
+      ],
+      "referenceTrees": [
+        "near-quay-old-tree",
+        "west-near-fork",
+        "near-landing-pollard",
+        "far-landing-bare",
+        "foreground-pollard-west",
+        "foreground-pollard-east",
+        "east-yard-bare",
+        "far-east-bare"
+      ],
+      "triangles": 2287291,
+      "calls": 467
+    },
+    "near": {
+      "crowd": {
+        "variants": 12,
+        "levels": [
+          {
+            "level": 0,
+            "actors": 0,
+            "triangles": 0
+          },
+          {
+            "level": 1,
+            "actors": 0,
+            "triangles": 0
+          },
+          {
+            "level": 2,
+            "actors": 225,
+            "triangles": 1309300
+          }
+        ]
+      },
+      "seed": 9243,
+      "vegetationLevel": 2,
+      "buildings": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        1,
+        2,
+        2,
+        1,
+        1,
+        1,
+        2,
+        2
+      ],
+      "traffic": [
+        "horse-cart",
+        "covered-cart",
+        "horse-cart",
+        "covered-cart",
+        "ox-cart",
+        "covered-cart",
+        "pack-horse",
+        "handcart"
+      ],
+      "bridgeCounters": [
+        {
+          "x": -2.5,
+          "lateral": -1.6400000000000001,
+          "width": 0.72,
+          "depth": 0.22
+        },
+        {
+          "x": -0.5,
+          "lateral": -1.6400000000000001,
+          "width": 0.72,
+          "depth": 0.22
+        },
+        {
+          "x": 1.7,
+          "lateral": 1.6400000000000001,
+          "width": 0.72,
+          "depth": 0.22
+        },
+        {
+          "x": 3.4,
+          "lateral": 1.6400000000000001,
+          "width": 0.72,
+          "depth": 0.22
+        }
+      ],
+      "marketTypes": [
+        "tea-and-bowls",
+        "woven-baskets",
+        "food-and-skewers",
+        "cloth-and-scrolls",
+        "grain-and-jars",
+        "fishmonger"
+      ],
+      "referenceTrees": [
+        "near-quay-old-tree",
+        "west-near-fork",
+        "near-landing-pollard",
+        "far-landing-bare",
+        "foreground-pollard-west",
+        "foreground-pollard-east",
+        "east-yard-bare",
+        "far-east-bare"
+      ],
+      "triangles": 2291381,
+      "calls": 506
+    },
+    "far": {
+      "crowd": {
+        "variants": 12,
+        "levels": [
+          {
+            "level": 0,
+            "actors": 225,
+            "triangles": 40916
+          },
+          {
+            "level": 1,
+            "actors": 0,
+            "triangles": 0
+          },
+          {
+            "level": 2,
+            "actors": 0,
+            "triangles": 0
+          }
+        ]
+      },
+      "seed": 9243,
+      "vegetationLevel": 0,
+      "buildings": [
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "traffic": [
+        "horse-cart",
+        "covered-cart",
+        "horse-cart",
+        "covered-cart",
+        "ox-cart",
+        "covered-cart",
+        "pack-horse",
+        "handcart"
+      ],
+      "bridgeCounters": [
+        {
+          "x": -2.5,
+          "lateral": -1.6400000000000001,
+          "width": 0.72,
+          "depth": 0.22
+        },
+        {
+          "x": -0.5,
+          "lateral": -1.6400000000000001,
+          "width": 0.72,
+          "depth": 0.22
+        },
+        {
+          "x": 1.7,
+          "lateral": 1.6400000000000001,
+          "width": 0.72,
+          "depth": 0.22
+        },
+        {
+          "x": 3.4,
+          "lateral": 1.6400000000000001,
+          "width": 0.72,
+          "depth": 0.22
+        }
+      ],
+      "marketTypes": [
+        "tea-and-bowls",
+        "woven-baskets",
+        "food-and-skewers",
+        "cloth-and-scrolls",
+        "grain-and-jars",
+        "fishmonger"
+      ],
+      "referenceTrees": [
+        "near-quay-old-tree",
+        "west-near-fork",
+        "near-landing-pollard",
+        "far-landing-bare",
+        "foreground-pollard-west",
+        "foreground-pollard-east",
+        "east-yard-bare",
+        "far-east-bare"
+      ],
+      "triangles": 251633,
+      "calls": 434
+    },
+    "sameTimeReplay": true,
+    "figureBackView": true,
+    "figureGalleryRestored": true,
+    "mobileOverflow": false,
+    "thousandMiles": {
+      "ready": true,
+      "graphicsError": 0
+    }
+  },
+  "errors": [],
+  "failedResponses": [],
+  "sourceHashes": {
+    "bridgeStudy.ts": "ffce5e40a9d005004da332f82e2c5131c24909f4d9579819e07c374638fb9ed2",
+    "crowd.ts": "84b0b74fb6bae456dcb7cc19a9c16d7d95b2bca3a7f65d5fdac698e4ab5dc1ff",
+    "passageLayout.ts": "3e56d3e4e64ea8bce820473885c8247b443601390aadafe126d8f5fd196ca82f",
+    "passageLife.ts": "0fe38cc1a4fdd36cfeec8304d8c4596af8e104f73533b6482411bd967aa6834c",
+    "passageSpace.ts": "bfdd37aec812ba27df41e78277b7c90add581a160b19e51d7afd3851616e9dd3",
+    "figureTypes.ts": "43a4148b13052bf1906b7b8ee8b425f6f71d39c72216fb526d240c2441de149d",
+    "figures.ts": "3618faa83e052a8799868388a1317badfaf17e4fb9f9a43f3928e094b2976240",
+    "marketModels.ts": "e2c7de2e12710256cad4416a81cdc3237159f62c301576f61c3778e061ac11a0",
+    "figureStudy.ts": "33e8da5b2cc30d3a0e07550237211cd20373d6d65193541959d9884d4ba5ef7b",
+    "Mock3D.tsx": "7fd9a84e35c5e24aa09da0c1c4245a7e9921738bb131b5614f6067541992d430",
+    "paintMaterial.ts": "b36c6f8997e8891794cca54e31f5992984f9a1fc8b63c36756d5483ee54bf16f",
+    "inkFinish.ts": "16c17bfb6a805045636d257dc32b7877de443069bd53ef951ea95159887de380"
+  },
+  "motion": {
+    "fps": 12,
+    "frames": 48,
+    "durationSeconds": 4,
+    "width": 1232,
+    "kind": "offline scene-time sample; no realtime performance claim"
+  },
+  "sourceCommit": "a1671d737d4aea523f290b100cae797b5ff4c209",
+  "supplementalChecks": {
+    "fullSuite": "43 passed at dc9fa2e",
+    "afterGripCorrection": "8 activity and geometry-detail checks passed",
+    "desktopMobileInteractions": "6 passed",
+    "combinedBuild": "passed",
+    "figureViewerAt390Pixels": {
+      "overflow": false,
+      "backViewSelection": true,
+      "pageErrors": []
+    },
+    "motionFullDecode": "passed",
+    "reviewKind": "self-review of stills and decoded motion contact sheet"
+  },
+  "artifactHashes": {
+    "bridge.png": "93a68626f3f1800fd386fbb33a7b8f50f860c94e6907dae175277115029d7fe0",
+    "figure-comparison.jpg": "4fe6dcd1ef41651fac1f7e28e78b46b17101b79ba60e1793288020b429ff5fe2",
+    "figures.png": "6fde95553e1284b987176feae19de0019ff6fb7ad87dbcce4fd033d0bae6bfc5",
+    "landmark-tree.png": "1cb31cccb2e12bd5cdf6b6da48d69ace7254fd037afacc4759c820f72c372144",
+    "layout-comparison.jpg": "0ad9ddb9cffa582007d3ea0d32cdeb84228a0cda83b42a9fa62b3b0acc776ee4",
+    "layout-reference-view.png": "03f32e0681cb7d281a32d07542172355d8ffb49df014956c272d7ee0256f974e",
+    "motion-contact.jpg": "771a8c7c8ff2004f6168d19130ebd159a31a112c56529cbdd709ab99ae52d9a9",
+    "motion.mp4": "fbf9a622926d5d6a67f99abb680e0d483f20e6036af4c67b2bebcbd16ac8f9ba",
+    "overview.png": "052c7dea406c7fb269ebfba7b451c52621ff642983cb9f0803600153c0823c5a",
+    "porter-close.png": "d5a38a00bc5a37ed32988080b966d96f5baf64d582cb0c7c2df7b82aa94f7224"
+  }
+}

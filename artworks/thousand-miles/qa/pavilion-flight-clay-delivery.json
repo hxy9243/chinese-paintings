@@ -1,0 +1,77 @@
+{
+  "passed": true,
+  "createdUtc": "2026-10-16T01:00:13.705360+00:00",
+  "style": "clay",
+  "file": "renders/pavilion-flyby-clay.mp4",
+  "bytes": 30717316,
+  "sha256": "efdc6852efc0c1beadaab9d4a4629d0384576ddac83d53a73e5abcbe52c9e7ff",
+  "fullDecodePassed": true,
+  "samples": [
+    {
+      "frame": 0,
+      "seconds": 0.0,
+      "rmseSRGB": 1.1240318879752411
+    },
+    {
+      "frame": 96,
+      "seconds": 4.0,
+      "rmseSRGB": 1.2509995078010696
+    },
+    {
+      "frame": 192,
+      "seconds": 8.0,
+      "rmseSRGB": 1.4117896443875766
+    },
+    {
+      "frame": 264,
+      "seconds": 11.0,
+      "rmseSRGB": 1.7860578875774933
+    },
+    {
+      "frame": 336,
+      "seconds": 14.0,
+      "rmseSRGB": 1.6703363073434132
+    },
+    {
+      "frame": 408,
+      "seconds": 17.0,
+      "rmseSRGB": 1.7644872563375962
+    },
+    {
+      "frame": 480,
+      "seconds": 20.0,
+      "rmseSRGB": 1.4439637287688358
+    },
+    {
+      "frame": 576,
+      "seconds": 24.0,
+      "rmseSRGB": 1.616887513552344
+    },
+    {
+      "frame": 684,
+      "seconds": 28.5,
+      "rmseSRGB": 1.0007511068081703
+    },
+    {
+      "frame": 719,
+      "seconds": 29.958333333333332,
+      "rmseSRGB": 0.9986486239283936
+    }
+  ],
+  "renderChunks": [
+    [
+      0,
+      360
+    ],
+    [
+      360,
+      720
+    ]
+  ],
+  "width": 1600,
+  "height": 900,
+  "r_frame_rate": "24/1",
+  "duration": "30.000000",
+  "nb_read_frames": "720",
+  "boundary": "Full decoding, encoded-frame inspection and source comparisons validate the delivered film; they do not certify exact painting fidelity."
+}

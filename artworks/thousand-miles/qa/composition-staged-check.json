@@ -1,0 +1,64 @@
+{
+  "sourceToggle": true,
+  "sceneToggle": true,
+  "overlaySlider": true,
+  "responsive": true,
+  "passed": true,
+  "samples": [
+    {
+      "viewName": "painting",
+      "sha256": "a4670655c6438c8c69b1f2fa7d64ab69571a1adb90bc6b016806f51b01b5517c",
+      "identicalToReviewedWorkingTree": true
+    },
+    {
+      "viewName": "mountains",
+      "sha256": "f2d169381f0b7c45dd9d5499cb4cbbd1ade4ea735adc2115700f8ef315b166e4",
+      "identicalToReviewedWorkingTree": true
+    }
+  ],
+  "threePasses": true,
+  "separateExperimentExcluded": true,
+  "galleryImages": [
+    {
+      "source": "./renders/composition-study/after-painting.png",
+      "width": 1779,
+      "alt": true
+    },
+    {
+      "source": "./reference/source.png",
+      "width": 1779,
+      "alt": true
+    },
+    {
+      "source": "./renders/natural-study/after-painting.png",
+      "width": 1779,
+      "alt": true
+    },
+    {
+      "source": "./renders/composition-study/after-painting.png",
+      "width": 1779,
+      "alt": true
+    },
+    {
+      "source": "./renders/composition-study/after-clay.png",
+      "width": 1779,
+      "alt": true
+    },
+    {
+      "source": "./renders/composition-study/tree-detail.png",
+      "width": 1779,
+      "alt": true
+    },
+    {
+      "source": "./renders/composition-study/after-entry.png",
+      "width": 1779,
+      "alt": true
+    },
+    {
+      "source": "./renders/composition-study/after-back.png",
+      "width": 1779,
+      "alt": true
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,77 @@
+{
+  "passed": true,
+  "createdUtc": "2026-10-16T01:34:20.568094+00:00",
+  "style": "ink",
+  "file": "renders/lowlands-flyby.mp4",
+  "bytes": 31570518,
+  "sha256": "fd38fe4c18b925912cd681027bf562b1f2a7f1ddd6048cc6d73b3657713a7adf",
+  "fullDecodePassed": true,
+  "samples": [
+    {
+      "frame": 0,
+      "seconds": 0.0,
+      "rmseSRGB": 2.200170816180046
+    },
+    {
+      "frame": 96,
+      "seconds": 4.0,
+      "rmseSRGB": 2.33010520744832
+    },
+    {
+      "frame": 192,
+      "seconds": 8.0,
+      "rmseSRGB": 2.5479662369121856
+    },
+    {
+      "frame": 264,
+      "seconds": 11.0,
+      "rmseSRGB": 2.876053108251216
+    },
+    {
+      "frame": 336,
+      "seconds": 14.0,
+      "rmseSRGB": 2.8296090719390903
+    },
+    {
+      "frame": 408,
+      "seconds": 17.0,
+      "rmseSRGB": 2.6734564168811437
+    },
+    {
+      "frame": 480,
+      "seconds": 20.0,
+      "rmseSRGB": 2.471180882433276
+    },
+    {
+      "frame": 576,
+      "seconds": 24.0,
+      "rmseSRGB": 2.3087793391827285
+    },
+    {
+      "frame": 684,
+      "seconds": 28.5,
+      "rmseSRGB": 2.012027607313725
+    },
+    {
+      "frame": 719,
+      "seconds": 29.958333333333332,
+      "rmseSRGB": 2.100613336358905
+    }
+  ],
+  "renderChunks": [
+    [
+      0,
+      360
+    ],
+    [
+      360,
+      720
+    ]
+  ],
+  "width": 1600,
+  "height": 900,
+  "r_frame_rate": "24/1",
+  "duration": "30.000000",
+  "nb_read_frames": "720",
+  "boundary": "Full decoding, encoded-frame inspection and source comparisons validate the delivered film; they do not certify exact painting fidelity."
+}

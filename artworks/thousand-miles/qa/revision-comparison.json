@@ -1,0 +1,133 @@
+{
+  "passed": true,
+  "previousCommit": "1371ddf282363e466eeaa0b676fc631b49261be4",
+  "method": "Fresh rendering of previous committed source and current source at identical camera poses, viewport and fixed environmental time. Visual comparison is separate from structural acceptance.",
+  "pairs": [
+    {
+      "name": "painting",
+      "pose": {
+        "position": [
+          0,
+          58,
+          220
+        ],
+        "target": [
+          0,
+          29,
+          -105
+        ],
+        "fov": 32,
+        "fit": true
+      },
+      "width": 1280,
+      "height": 576,
+      "seconds": 2,
+      "before": {
+        "file": "qa/revision-before-painting.png",
+        "sha256": "151616352089ef6058dc68ae36c93a122ad0fe7be5c95ae6117ed60c6954141b"
+      },
+      "beforeClay": {
+        "file": "qa/revision-before-painting-clay.png",
+        "sha256": "8eef1ec0936a19e8f39e23fad1668612b7e6a248626f4bb92b87005666873bab"
+      },
+      "after": {
+        "file": "qa/revision-after-painting.png",
+        "sha256": "1ea035bf1780454c8268dff72ba015b31d53145b9cebe186ae25848b50db55aa"
+      },
+      "afterClay": {
+        "file": "qa/revision-after-painting-clay.png",
+        "sha256": "5465ef1759c8296e60f890ab7215763466940274b2bb4bc382caed5d0ab55d93"
+      }
+    },
+    {
+      "name": "arch",
+      "pose": {
+        "position": [
+          16.620970511817475,
+          10.785,
+          154.42000000000002
+        ],
+        "target": [
+          16.620970511817475,
+          5,
+          45.42
+        ],
+        "fov": 33
+      },
+      "width": 1280,
+      "height": 576,
+      "seconds": 2,
+      "before": {
+        "file": "qa/revision-before-arch.png",
+        "sha256": "fc2184e44c6697848aeb920b3d5bd7a125aaa39096fe18947676be75af4bf686"
+      },
+      "after": {
+        "file": "qa/revision-after-arch.png",
+        "sha256": "160b8a0bf8309ac7c6d9ddb9d4145ce82dcc860896fd3794c02712aba7ccce75"
+      }
+    },
+    {
+      "name": "mountains",
+      "pose": {
+        "position": [
+          -5,
+          42,
+          86
+        ],
+        "target": [
+          -72,
+          24,
+          0
+        ],
+        "fov": 45
+      },
+      "width": 1280,
+      "height": 576,
+      "seconds": 2,
+      "before": {
+        "file": "qa/revision-before-mountains.png",
+        "sha256": "6412fad0c5e14672c4f6578bebe1f4e76daefd38b9131917934361b2c0ab1c5e"
+      },
+      "beforeClay": {
+        "file": "qa/revision-before-mountains-clay.png",
+        "sha256": "a4cfd32e4e5db1ee4a7913d32c60b192198124b1214788ad1608571f393c2013"
+      },
+      "after": {
+        "file": "qa/revision-after-mountains.png",
+        "sha256": "aa53e3526345a9efc1b484db3f0ed6593595805ccea48432168a40133bd8a349"
+      },
+      "afterClay": {
+        "file": "qa/revision-after-mountains-clay.png",
+        "sha256": "da85c43a52b11ee2aa6c0202a6c52a5121cc46cf43c94938d11d388b5b8bcb6e"
+      }
+    },
+    {
+      "name": "pavilion",
+      "pose": {
+        "position": [
+          16.620970511817475,
+          12.585,
+          69.42
+        ],
+        "target": [
+          16.620970511817475,
+          10.185,
+          45.42
+        ],
+        "fov": 46
+      },
+      "width": 1280,
+      "height": 576,
+      "seconds": 2,
+      "before": {
+        "file": "qa/revision-before-pavilion.png",
+        "sha256": "8d4b27bb883efd938c8adf2e62507a493d947f2f4c74c4ff789caa016757988e"
+      },
+      "after": {
+        "file": "qa/revision-after-pavilion.png",
+        "sha256": "9d760a44a6c3c2c09108bb6f47e0c94080a079d3590dd272150b1b51a82b458f"
+      }
+    }
+  ],
+  "errors": []
+}

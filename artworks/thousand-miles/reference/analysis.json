@@ -1,0 +1,83 @@
+{
+  "source": "User-supplied screenshot; no historical attribution inferred",
+  "dimensions": [
+    1779,
+    801
+  ],
+  "sha256": "b1593a9260c87cd2512a460b373f0825441746e9829b267b5c93326550bbe614",
+  "regions": [
+    {
+      "name": "left-mineral-mountains",
+      "bbox": [
+        0,
+        290,
+        735,
+        799
+      ]
+    },
+    {
+      "name": "bridge-and-central-pavilion",
+      "bbox": [
+        680,
+        595,
+        1300,
+        760
+      ]
+    },
+    {
+      "name": "left-shore-architecture",
+      "bbox": [
+        0,
+        388,
+        295,
+        560
+      ]
+    },
+    {
+      "name": "right-shore-settlement",
+      "bbox": [
+        1510,
+        490,
+        1779,
+        720
+      ]
+    },
+    {
+      "name": "olive-lake-and-jade-shallows",
+      "bbox": [
+        635,
+        270,
+        1330,
+        600
+      ]
+    },
+    {
+      "name": "right-mineral-peaks",
+      "bbox": [
+        1250,
+        290,
+        1779,
+        799
+      ]
+    },
+    {
+      "name": "distant-tower-peaks",
+      "bbox": [
+        1600,
+        110,
+        1779,
+        380
+      ]
+    }
+  ],
+  "palette": {
+    "azurite blue": "#298ac4",
+    "malachite green": "#82bfa0",
+    "jade shallows": "#7ead8a",
+    "olive lake": "#707344",
+    "ochre silk": "#a58e4f",
+    "umber architecture": "#413d28"
+  },
+  "interpretation": "True 3D reinterpretation. Depth, hidden sides and close architecture are inferred. Source image is used for comparison only, not projected onto the scene.",
+  "sourceFilename": "Screenshot from 2026-10-15 12-49-45.png"
+}

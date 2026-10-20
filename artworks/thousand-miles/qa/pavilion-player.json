@@ -1,0 +1,50 @@
+{
+  "passed": true,
+  "ink": {
+    "style": "ink",
+    "width": 1600,
+    "height": 900,
+    "duration": 30,
+    "time": 12.236451,
+    "meanChroma": 24.163125,
+    "error": null,
+    "seekable": [
+      [
+        0,
+        30
+      ]
+    ]
+  },
+  "clay": {
+    "style": "clay",
+    "width": 1600,
+    "height": 900,
+    "duration": 30,
+    "time": 12.236451,
+    "meanChroma": 0.0005208333333333333,
+    "error": null,
+    "seekable": [
+      [
+        0,
+        30
+      ]
+    ]
+  },
+  "end": {
+    "style": "ink",
+    "width": 1600,
+    "height": 900,
+    "duration": 30,
+    "time": 23.227891,
+    "meanChroma": 25.819027777777777,
+    "error": null,
+    "seekable": [
+      [
+        0,
+        30
+      ]
+    ]
+  },
+  "errors": [],
+  "failedResponses": []
+}

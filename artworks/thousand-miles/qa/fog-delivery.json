@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "file": "distant-mist.mp4",
+  "bytes": 281965,
+  "sha256": "466d6be01ef7a15c343d1ac7cf242a9b22df79a38aec2b3aa16815b53a2627d8",
+  "fullDecodePassed": true,
+  "sampledEncodedFrames": 5,
+  "fixedCamera": true,
+  "wind": 0,
+  "waterMotion": 0,
+  "width": 1280,
+  "height": 576,
+  "r_frame_rate": "12/1",
+  "duration": "12.000000",
+  "nb_read_frames": "144"
+}

@@ -1,0 +1,70 @@
+{
+  "source": "reference/source.png",
+  "basis": "Manual close inspection of the supplied screenshot and its unmodified mountain and bridge crops. No historical attribution inferred.",
+  "observedCues": [
+    {
+      "part": "bridge",
+      "observation": "The deck rises toward the roofed hall; the two visible approaches have unequal lengths. The pavilion must sit on the highest portion, with a level floor and symmetric roof wings.",
+      "response": "Narrower bank crossing, 5.6-unit rise, level crown at fraction 0.42, flush hall floor and foundation pilings to water."
+    },
+    {
+      "part": "mountain forms",
+      "observation": "Small foreground hills overlap taller oblique ridges. Uneven broad crowns, side knuckles and rounded flutes interrupt continuous smooth mountain walls.",
+      "response": "31 individually hand-read crest profiles registered to the painting view, swept 3D ridges, asymmetric front/back slopes, carved channels, exposed feet and four distant shore layers."
+    },
+    {
+      "part": "pigment and shadow",
+      "observation": "Azurite blue gathers at crests and shaded shoulders; green facets, warm ochre breaks and dark ink clefts establish much stronger local contrast than a uniform wash.",
+      "response": "Separate face-oriented mineral fields, cleft pooling, warm breaks, granulated deposits and non-radial downhill strokes."
+    },
+    {
+      "part": "distance",
+      "observation": "Low far shores overlap with muted warm haze. Tall far-right towers have low saturation and faint green-grey crests.",
+      "response": "Four shore depths and world-space mist, reduced saturation on remote towers, stronger near-range contrast."
+    },
+    {
+      "part": "color as ink",
+      "observation": "The supplied photograph has muted blue crests, green facets and warm olive-ochre ground. Face shadows are broken into painted shapes, rather than a single smooth light gradient.",
+      "response": "Curated 11-pixel median samples; softened painted shadow bands; cumulative tonal brush maps, dry lifts and depth-gated edge pooling."
+    },
+    {
+      "part": "mountain vegetation",
+      "observation": "Sparse dark trees and clustered grass separate ledges and lower slopes; they should not turn blue crests into a continuous forest.",
+      "response": "190 smaller rooted mountain trees and short grass on gentle shelves; darker irregular foliage deposits. Exact root contact and road clearance checked against the terrain."
+    },
+    {
+      "part": "open right shore",
+      "observation": "The source has broad green shore shelves between the bridge bank and taller right-side mountains; earlier reconstruction crowded this region with high ridges.",
+      "response": "Individually traced leaning ridges with separate foreground hills; source-derived crest placement and inferred depth."
+    }
+  ],
+  "boundary": "These are observed form and color cues. The 3D scene interprets unseen depth and is not an exact reconstruction.",
+  "revision": "blue-green-06",
+  "visualReview": {
+    "views": [
+      "renders/shape-clay-painting.png",
+      "renders/shape-clay-mountains.png",
+      "renders/shape-clay-right.png",
+      "renders/shape-clay-top.png"
+    ],
+    "improvements": [
+      "Individual sloping crest shapes replace repeated generic heads",
+      "Small foreground hills overlap taller rear ridges",
+      "Front hill feet remain visible",
+      "Road and building grades no longer carve the main left shoulder"
+    ],
+    "remainingDifferences": [
+      "Depth and unseen slopes are inferred",
+      "Some broad faces remain more uniform than the painted rock contours",
+      "Trees and painting colors are held for this geometry pass"
+    ],
+    "acceptance": "Shape-focused iteration reviewed in neutral clay. Exact source fidelity is not claimed."
+  },
+  "shapeFirstRevision": {
+    "colorSettingsHeldAt": "blue-green-05",
+    "geometry": "31 individually hand-read crest profiles with inferred swept depth, asymmetric slopes, carved channels and flared toes",
+    "roadCorrection": "Left bank path and two settlements moved away from the main ridge; ground flattening reduced from a 13.5-unit radius to 6.5.",
+    "review": "Neutral clay panorama and oblique views; same-camera neutral-light comparison with revision 5.",
+    "limits": "Unseen faces and depths are interpretations. Trace registration is not independent silhouette or artistic acceptance."
+  }
+}

@@ -1,0 +1,25 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"><title>Around the bridge pavilion</title><style>
+*{box-sizing:border-box}body{margin:0;background:#e6ddbd;color:#303a28;font:15px/1.6 system-ui,sans-serif}main{max-width:1300px;margin:auto;padding:30px 24px 60px}h1{font:42px/1.12 Georgia,serif;margin:15px 0 12px}p{max-width:800px;color:#596045}.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:20px 0 12px}button,a.download{font:inherit;padding:8px 15px;border:1px solid #939d7c;border-radius:5px;background:#f0e8cd;color:#303a28;cursor:pointer;text-decoration:none}button[aria-pressed=true]{background:#365b49;color:white;border-color:#365b49}button:hover,a.download:hover{filter:brightness(.96)}button:focus-visible,a:focus-visible{outline:3px solid #278fac;outline-offset:3px}video{display:block;width:100%;aspect-ratio:16/9;background:#484e37;border-radius:6px}.chapters{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}.chapters button{font-size:13px;background:transparent;padding:6px 11px}.small{font-size:12px;color:#667052;margin-top:20px}a{color:#315e53}.top{font-size:13px}@media(max-width:600px){main{padding:20px 14px}h1{font-size:32px}}
+</style></head><body><main><a class="top" href="./?revision=6">Explore the landscape</a> · <a class="top" href="./shape-study.html">Mountain shape study</a><h1>Around the bridge pavilion</h1><p>A flight over the lake, a close pass around the pavilion, then a rising pullback into the mountain landscape. The current painting colors are preserved.</p><div class="bar"><button data-style="ink" aria-pressed="true">Ink painting</button><button data-style="clay" aria-pressed="false">Clay shapes</button><a class="download" id="download" href="./renders/pavilion-flyby.mp4" download>Download video</a><span id="loading" role="status" aria-live="polite">Preparing video…</span></div><video id="film" controls playsinline preload="auto" muted poster="./renders/pavilion-flight-ink-14.png" aria-label="Pavilion fly-by video"></video><div class="chapters" aria-label="Jump to a flight stage"><button data-time="0">0:00 · Landscape</button><button data-time="6">0:06 · Approach</button><button data-time="12">0:12 · Pavilion pass</button><button data-time="23">0:23 · Pull back</button></div><p class="small">30 seconds · 1600 × 900 · 24 fps · Silent. Both versions share the same camera journey. The ink version retains drifting mist, water strokes and wind.</p><p class="small"><a href="./renders/pavilion-flight-ink-contact.jpg">Frames from the finished ink film</a> · <a href="./renders/pavilion-flight-clay-contact.jpg">Clay film frames</a></p></main><script>
+const film=document.querySelector('#film'),loading=document.querySelector('#loading'),cache=new Map();let style='ink';
+const fileFor=choice=>`./renders/pavilion-flyby${choice==='clay'?'-clay':''}.mp4`;
+// The simple workspace server has no byte-range support. A local media blob
+// provides reliable seeking and exact position preservation in either film.
+async function showFilm(next,initial=false){
+ if(!initial&&next===style)return;
+ const time=initial?0:film.currentTime||0,playing=!film.paused;style=next;
+ for(const b of document.querySelectorAll('[data-style],[data-time]'))b.disabled=true;
+ for(const b of document.querySelectorAll('[data-style]'))b.setAttribute('aria-pressed',String(b.dataset.style===style));
+ loading.hidden=false;loading.textContent='Preparing video…';film.poster=`./renders/pavilion-flight-${style}-14.png`;document.querySelector('#download').href=fileFor(style);
+ try{
+  if(!cache.has(style))cache.set(style,fetch(fileFor(style)).then(r=>{if(!r.ok)throw Error('Video unavailable');return r.blob();}).then(blob=>URL.createObjectURL(blob)));
+  const url=await cache.get(style);
+  await new Promise((resolve,reject)=>{const ready=()=>{film.removeEventListener('error',failed);resolve();},failed=()=>{film.removeEventListener('loadedmetadata',ready);reject(Error('Playback unavailable'));};film.addEventListener('loadedmetadata',ready,{once:true});film.addEventListener('error',failed,{once:true});film.src=url;film.load();});
+  film.dataset.renderStyle=style;film.currentTime=Math.min(time,film.duration);if(playing)await film.play();loading.hidden=true;
+ }catch(e){loading.textContent='Use Download video to open the film.';}
+ for(const b of document.querySelectorAll('[data-style],[data-time]'))b.disabled=false;
+}
+for(const button of document.querySelectorAll('[data-style]'))button.onclick=()=>showFilm(button.dataset.style);
+for(const button of document.querySelectorAll('[data-time]'))button.onclick=()=>{film.currentTime=+button.dataset.time;film.play().catch(()=>{});};
+showFilm('ink',true);
+</script></body></html>

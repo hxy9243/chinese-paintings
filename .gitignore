@@ -15,3 +15,8 @@ playwright-report/
 **/renders/frames/
 **/renders/fog-frames/
 **/qa/runtime/
+qa/current/
+
+qa/reference-r2/
+
+qa/assets-current/

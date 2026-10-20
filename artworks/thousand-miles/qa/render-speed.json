@@ -1,0 +1,259 @@
+{
+  "passed": true,
+  "referenceCommit": "163aedb",
+  "method": "Twelve EXT_disjoint_timer_query_webgl2 samples after four fence-drained warm-up frames, 1600x720, fixed environment time 9.25. These are GPU elapsed timings on one local GPU, not interactive FPS. PNG and disk I/O are excluded.",
+  "measurements": [
+    {
+      "view": "painting",
+      "gpuMs": [
+        77.643643,
+        76.378435,
+        75.883279,
+        76.726612,
+        76.290466,
+        76.860206,
+        76.695102,
+        75.893591,
+        76.003852,
+        76.792914,
+        75.846404,
+        76.013643
+      ],
+      "submitted": {
+        "frame": 77,
+        "calls": 269,
+        "triangles": 26800202,
+        "points": 0,
+        "lines": 0
+      },
+      "passes": 4,
+      "triangles": 8866968,
+      "renderer": "ANGLE (Intel, Vulkan 1.4.318 (Intel(R) Iris(R) Xe Graphics (RPL-P) (0x0000A7A0)), Intel open-source Mesa driver)",
+      "baseline": true,
+      "sha256": "8b6d6047e095802428f33a70589a6425f1c4b1dac675a774da4f8a3ef232ce98",
+      "medianGpuMs": 76.3344505
+    },
+    {
+      "view": "pavilion",
+      "gpuMs": [
+        66.994946,
+        66.727446,
+        67.997967,
+        66.557654,
+        67.905779,
+        66.678904,
+        67.430206,
+        67.030883,
+        66.893904,
+        67.097862,
+        67.744165,
+        67.548227
+      ],
+      "submitted": {
+        "frame": 145,
+        "calls": 149,
+        "triangles": 26617850,
+        "points": 0,
+        "lines": 0
+      },
+      "passes": 4,
+      "triangles": 8866968,
+      "renderer": "ANGLE (Intel, Vulkan 1.4.318 (Intel(R) Iris(R) Xe Graphics (RPL-P) (0x0000A7A0)), Intel open-source Mesa driver)",
+      "baseline": true,
+      "sha256": "b16c3fe641163a2a70df76bebc38e739351b5d6203ccb9589d6b7a21320423e9",
+      "medianGpuMs": 67.0643725
+    },
+    {
+      "view": "painting",
+      "gpuMs": [
+        56.456248,
+        56.370519,
+        57.610623,
+        57.422446,
+        56.734634,
+        56.640623,
+        56.325571,
+        56.474217,
+        56.610311,
+        56.447342,
+        56.192498,
+        56.287915
+      ],
+      "submitted": {
+        "frame": 58,
+        "calls": 180,
+        "triangles": 17931578,
+        "points": 0,
+        "lines": 0
+      },
+      "passes": 3,
+      "triangles": 8866968,
+      "renderer": "ANGLE (Intel, Vulkan 1.4.318 (Intel(R) Iris(R) Xe Graphics (RPL-P) (0x0000A7A0)), Intel open-source Mesa driver)",
+      "baseline": false,
+      "sha256": "8b6d6047e095802428f33a70589a6425f1c4b1dac675a774da4f8a3ef232ce98",
+      "medianGpuMs": 56.4652325
+    },
+    {
+      "view": "pavilion",
+      "gpuMs": [
+        48.595311,
+        48.316457,
+        48.299113,
+        48.160207,
+        48.425415,
+        48.556248,
+        53.337707,
+        52.316352,
+        52.345936,
+        51.507238,
+        51.276457,
+        51.902446
+      ],
+      "submitted": {
+        "frame": 109,
+        "calls": 100,
+        "triangles": 17810010,
+        "points": 0,
+        "lines": 0
+      },
+      "passes": 3,
+      "triangles": 8866968,
+      "renderer": "ANGLE (Intel, Vulkan 1.4.318 (Intel(R) Iris(R) Xe Graphics (RPL-P) (0x0000A7A0)), Intel open-source Mesa driver)",
+      "baseline": false,
+      "sha256": "b16c3fe641163a2a70df76bebc38e739351b5d6203ccb9589d6b7a21320423e9",
+      "medianGpuMs": 49.935884
+    }
+  ],
+  "matched": [
+    {
+      "view": "painting",
+      "passed": true,
+      "identicalPng": true,
+      "beforeGpuMs": 76.3344505,
+      "afterGpuMs": 56.4652325,
+      "gpuReductionPercent": 26.029162284989525,
+      "beforeSubmittedTriangles": 26800202,
+      "afterSubmittedTriangles": 17931578
+    },
+    {
+      "view": "pavilion",
+      "passed": true,
+      "identicalPng": true,
+      "beforeGpuMs": 67.0643725,
+      "afterGpuMs": 49.935884,
+      "gpuReductionPercent": 25.540369441315512,
+      "beforeSubmittedTriangles": 26617850,
+      "afterSubmittedTriangles": 17810010
+    }
+  ],
+  "checks": [
+    {
+      "name": "Fast and Detail retain the same camera with different pixel counts",
+      "passed": true,
+      "fast": {
+        "mode": "fast",
+        "moving": false,
+        "exact": false,
+        "logicalWidth": 1280,
+        "logicalHeight": 720,
+        "width": 960,
+        "height": 540,
+        "ratio": 0.75,
+        "preview": true,
+        "referenceWidth": 1280,
+        "referenceHeight": 720
+      },
+      "detail": {
+        "mode": "detail",
+        "moving": false,
+        "exact": false,
+        "logicalWidth": 1280,
+        "logicalHeight": 720,
+        "width": 1280,
+        "height": 720,
+        "ratio": 1,
+        "preview": false,
+        "referenceWidth": 1280,
+        "referenceHeight": 720
+      }
+    },
+    {
+      "name": "Auto refines after camera motion without moving the camera or rescaling silk",
+      "passed": true,
+      "during": {
+        "mode": "auto",
+        "moving": true,
+        "exact": false,
+        "logicalWidth": 1280,
+        "logicalHeight": 720,
+        "width": 960,
+        "height": 540,
+        "ratio": 0.75,
+        "preview": true,
+        "referenceWidth": 1280,
+        "referenceHeight": 720
+      },
+      "after": {
+        "mode": "auto",
+        "moving": false,
+        "exact": false,
+        "logicalWidth": 1280,
+        "logicalHeight": 720,
+        "width": 1280,
+        "height": 720,
+        "ratio": 1,
+        "preview": false,
+        "referenceWidth": 1280,
+        "referenceHeight": 720
+      }
+    },
+    {
+      "name": "Detailed PNG exports at 2x and restores Fast preview",
+      "passed": true,
+      "dimensions": [
+        2560,
+        1440
+      ],
+      "restored": {
+        "mode": "fast",
+        "moving": false,
+        "exact": false,
+        "logicalWidth": 1280,
+        "logicalHeight": 720,
+        "width": 960,
+        "height": 540,
+        "ratio": 0.75,
+        "preview": true,
+        "referenceWidth": 1280,
+        "referenceHeight": 720
+      }
+    },
+    {
+      "name": "Explicit captures ignore preview quality and replay at exact requested dimensions",
+      "passed": true,
+      "identical": true,
+      "width": 643,
+      "height": 367
+    },
+    {
+      "name": "Preview canvas continues to fill the resized viewport",
+      "passed": true,
+      "width": 760,
+      "height": 540,
+      "quality": {
+        "mode": "fast",
+        "moving": false,
+        "exact": false,
+        "logicalWidth": 760,
+        "logicalHeight": 540,
+        "width": 570,
+        "height": 405,
+        "ratio": 0.75,
+        "preview": true,
+        "referenceWidth": 760,
+        "referenceHeight": 540
+      }
+    }
+  ],
+  "errors": []
+}

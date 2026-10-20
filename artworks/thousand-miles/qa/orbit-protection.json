@@ -1,0 +1,7 @@
+{
+  "passed": true,
+  "actualPavilionArchitecturePixels": 54044,
+  "changedArchitecturePixels": 0,
+  "method": "At a close pavilion view, compare actual classified architecture pixels while toggling only shoreline diffusion.",
+  "errors": []
+}
