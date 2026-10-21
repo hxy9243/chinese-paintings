@@ -164,7 +164,7 @@ describe("shared space and continuous traffic", () => {
     }
   });
   it("gives full hulls and lowered masts clearance through bends and beneath the arch", () => {
-    let bankGap = Infinity,
+    let closest="",bankGap = Infinity,
       boatGap = Infinity,
       archGap = Infinity;
     for (let t = 0; t < 1400; t += 1.37) {
@@ -172,20 +172,20 @@ describe("shared space and continuous traffic", () => {
       for (let i = 0; i < BOATS.length; i++) {
         const p = poses[i],
           b = BOATS[i];
-        for (let j = i + 1; j < BOATS.length; j++)
-          boatGap = Math.min(
-            boatGap,
-            Math.max(
-              Math.abs(p.s - poses[j].s) - 0.62 * (b.length + BOATS[j].length),
-              Math.abs(p.d - poses[j].d) -
-                0.7 * (b.width + BOATS[j].width) -
-                0.08,
-            ),
-          );
+        for (let j = i + 1; j < BOATS.length; j++) {
+          const q=poses[j],c=BOATS[j];
+          const axes=[p.angle,p.angle+Math.PI/2,q.angle,q.angle+Math.PI/2];
+          const gap=Math.max(...axes.map(a=>{
+            const extent=(length:number,width:number,angle:number)=>.62*length*Math.abs(Math.cos(a-angle))+(.7*width+.04)*Math.abs(Math.sin(a-angle));
+            return Math.abs((p.s-q.s)*Math.cos(a)+(p.d-q.d)*Math.sin(a))-extent(b.length,b.width,p.angle)-extent(c.length,c.width,q.angle);
+          }));
+          if(gap<boatGap){boatGap=gap;closest=`boats ${i}/${j} at ${t}: ${JSON.stringify([p,q])}`;}
+        }
         for (let x = -1; x <= 1.001; x += 0.1)
           for (const side of [-1, 1]) {
-            const s = p.s + x * b.length * 0.62,
-              d = p.d + side * (b.width * 0.7 + 0.04);
+            const uHull=x*b.length*.62,vHull=side*(b.width*.7+.04),
+              s=p.s+uHull*Math.cos(p.angle)-vHull*Math.sin(p.angle),
+              d=p.d+uHull*Math.sin(p.angle)+vHull*Math.cos(p.angle);
             bankGap = Math.min(
               bankGap,
               d - shoreDepth("far", s),
@@ -203,7 +203,7 @@ describe("shared space and continuous traffic", () => {
       }
     }
     expect(bankGap).toBeGreaterThan(0.02);
-    expect(boatGap).toBeGreaterThan(0.05);
+    expect(boatGap,closest).toBeGreaterThan(0.05);
     expect(archGap).toBeGreaterThan(0.05);
   });
   it("animates the actual horse legs and wheels, preserves their footprints, and freezes on pause", () => {

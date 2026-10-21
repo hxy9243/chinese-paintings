@@ -123,6 +123,9 @@ export function paintMaterial(
         float depth=-point.x*.76604444+point.z*.64278761;
         vec2 q=abs(vec2(scroll,depth))-vec2(16.,8.);
         float boundary=length(max(q,0.))+min(max(q.x,q.y),0.)-6.;
+        vec2 bendQ=abs(vec2(scroll+40.,depth+10.))-vec2(17.,22.);
+        float bendBoundary=length(max(bendQ,0.))+min(max(bendQ.x,bendQ.y),0.)-6.;
+        boundary=min(boundary,bendBoundary);
         // Preserve the complete painted footprint. Only the added exterior
         // land/water apron dissolves into paper; structures keep their color.
         float outward=max(boundary,0.);

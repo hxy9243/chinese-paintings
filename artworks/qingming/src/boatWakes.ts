@@ -83,8 +83,7 @@ export function createBoatWakes() {
     update(time: number) {
       let vertex = 0;
       BOATS.forEach((boat, index) => {
-        const current = boatPose(index, time),
-          direction = index % 2 ? -1 : 1;
+        const current = boatPose(index, time);
         const history = Array.from({ length: SEGMENTS + 1 }, (_, j) =>
           boatPose(index, time - (j / SEGMENTS) * LIFETIME),
         );
@@ -96,21 +95,12 @@ export function createBoatWakes() {
                 const bow = layer === 3;
                 const sample = bow ? current : history[j + offset];
                 const fraction = age / LIFETIME;
-                const s = bow
-                  ? sample.s + direction * (boat.length * 0.51 - fraction * 1.7)
-                  : sample.s - direction * (boat.length * 0.5 + layer * 0.1);
-                const spread = bow
-                  ? Math.sin(fraction * Math.PI * 0.5) * boat.width * 0.72
-                  : boat.width * (0.32 + layer * 0.15) +
-                    age * (0.018 + layer * 0.014);
-                const width = bow
-                  ? 0.035 + fraction * 0.025
-                  : 0.035 + age * 0.0025 + layer * 0.007;
-                const d =
-                  sample.d +
-                  side * spread +
-                  edge * width +
-                  Math.sin(age * 0.8 - time * 0.45 + index) * 0.018;
+                const along = bow ? boat.length*.51-fraction*1.7 : -(boat.length*.5+layer*.1);
+                const spread=bow?Math.sin(fraction*Math.PI*.5)*boat.width*.72:boat.width*(.32+layer*.15)+age*(.018+layer*.014);
+                const width=bow?.035+fraction*.025:.035+age*.0025+layer*.007;
+                const across=side*spread+edge*width+Math.sin(age*.8-time*.45+index)*.018;
+                const s=sample.s+along*Math.cos(sample.angle)-across*Math.sin(sample.angle),
+                  d=sample.d+along*Math.sin(sample.angle)+across*Math.cos(sample.angle);
                 const point = scrollPoint(s, d);
                 const onWater =
                   d > shoreDepth("far", s) + 0.08 &&

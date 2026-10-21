@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { SHORELINES } from "./passageLayout";
+import { SHORELINES, shoreDepth } from "./passageLayout";
 import { scrollPoint } from "./scrollLayout";
 
 // The same analytic surface supports GPU water and CPU wake ribbons. Its
@@ -13,6 +13,10 @@ export function waterHeight(s: number, d: number, time: number) {
     Math.sin(s * 0.55 + d * 1.4 - time * 0.55) * 0.008
   );
 }
+const shaderShore=(side:"near"|"far")=>[
+  ...Array.from({length:84},(_,i)=>{const s=-64+i*.5;return {s,d:shoreDepth(side,s)};}),
+  ...SHORELINES[side].filter(p=>p.s>=-22),
+];
 export const riverShader = `
   vec2 riverPoint(vec3 p){return vec2(p.x*.64278761+p.z*.76604444,-p.x*.76604444+p.z*.64278761);}
   float waterHeight(vec2 p,float t){return -.045+sin(p.x*1.8+p.y*3.1-t*1.1)*.009
@@ -20,12 +24,10 @@ export const riverShader = `
   ${(["far", "near"] as const)
     .map(
       (side) =>
-        `float ${side}Shore(float s){float d=${SHORELINES[side][0].d.toFixed(4)};${SHORELINES[
-          side
-        ]
+        `float ${side}Shore(float s){float d=${shaderShore(side)[0].d.toFixed(4)};${shaderShore(side)
           .slice(1)
           .map(({ s, d }, i) => {
-            const previous = SHORELINES[side][i];
+            const previous = shaderShore(side)[i];
             return `d=mix(d,${d.toFixed(4)},clamp((s-(${previous.s.toFixed(4)}))/${(s - previous.s).toFixed(4)},0.,1.));`;
           })
           .join("")}return d;}`,
@@ -36,11 +38,11 @@ export const riverShader = `
 
 /** Tessellation makes the highlights follow a real, shallow 3D surface. */
 export function riverGeometry() {
-  const g = new THREE.PlaneGeometry(60, 44, 300, 220);
+  const g = new THREE.PlaneGeometry(102, 74, 340, 246);
   g.rotateX(-Math.PI / 2);
   const p = g.getAttribute("position");
   for (let i = 0; i < p.count; i++) {
-    const q = scrollPoint(p.getX(i), p.getZ(i));
+    const q = scrollPoint(p.getX(i)-20, p.getZ(i)-11);
     p.setXYZ(i, q.x, WATER_LEVEL, q.z);
   }
   g.computeVertexNormals();

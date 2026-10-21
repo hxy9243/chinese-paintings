@@ -2,6 +2,7 @@ import {expect,it,vi} from "vitest";
 import * as THREE from "three";
 import * as assets from "../src/referenceAssets";
 import {createBridgeStudy} from "../src/bridgeStudy";
+import {BEND_TREES} from "../src/riverBendLayout";
 import {FEATURE_TREES,NATURE} from "../src/passageLife";
 
 it("gives every planted pine a needle crown at every level of scene detail",()=>{
@@ -20,10 +21,13 @@ it("gives every planted pine a needle crown at every level of scene detail",()=>
   let study:ReturnType<typeof createBridgeStudy>|undefined;
   try{
     study=createBridgeStudy(9243);
+    const camera=new THREE.OrthographicCamera(-120,120,120,-120,.1,500);
+    camera.position.set(0,150,0);camera.lookAt(0,0,0);
+    study.update(0,camera,800,false,true);
     const planted=FEATURE_TREES.length+NATURE.filter(n=>!["willow","reed","rock"].includes(n.kind)).length;
     for(const detail of [0,1,2]){
       const level=crowns.filter(c=>c.detail===detail);
-      expect(level).toHaveLength(planted);
+      expect(level).toHaveLength(planted+(detail===1?0:BEND_TREES.length));
       expect(level.filter(c=>c.vertices===0),`Bare crowns at detail ${detail}`).toEqual([]);
     }
   }finally{

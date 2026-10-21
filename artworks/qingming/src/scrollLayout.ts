@@ -5,7 +5,9 @@ export const REFERENCE_AZIMUTH = THREE.MathUtils.degToRad(-50);
 export const SCROLL_STOPS = [
   { id: "bridge", s: -6, depth: -3, en: "Bridge approach", zh: "虹桥市集" },
   { id: "bank", s: 0, depth: -7, en: "Far-bank shops", zh: "对岸屋舍" },
-  { id: "bend", s: 12, depth: 1, en: "River bend", zh: "河湾舟楫" },
+  { id: "bend", s: -42, depth: -10, en: "River bend", zh: "河湾舟楫" },
+  { id: "wharf", s: -33, depth: 1, en: "Cargo landings", zh: "码头货栈" },
+  { id: "reach", s: 12, depth: 1, en: "Eastern reach", zh: "东岸" },
 ] as const;
 export function scrollPoint(s: number, depth = 0) {
   return new THREE.Vector3(

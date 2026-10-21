@@ -72,7 +72,7 @@ export function createCrowd(parent: THREE.Group,
         material.fragmentShader=material.fragmentShader.replace("void main(){",`void main(){
           float edgeS=point.x*.64278761+point.z*.76604444;
           float edgeD=-point.x*.76604444+point.z*.64278761;
-          if(length(vec2(max(0.,abs(edgeS)-16.),max(0.,abs(edgeD)-8.)))>6.)discard;
+          if(length(vec2(max(0.,abs(edgeS)-16.),max(0.,abs(edgeD)-8.)))>6. && length(vec2(max(0.,abs(edgeS+40.)-17.),max(0.,abs(edgeD+10.)-22.)))>6.)discard;
         `);
         const drawable=pool.source instanceof THREE.Line ? new THREE.LineSegments(geo,material) : new THREE.Mesh(geo,material);
         drawable.name="animated-crowd"; drawable.userData.level=pool.level;
@@ -81,23 +81,27 @@ export function createCrowd(parent: THREE.Group,
       templates.flat().forEach(t=>t.traverse(n=>{if(n instanceof THREE.Mesh||n instanceof THREE.Line)n.geometry.dispose();}));
       pools.forEach(p=>p.source.geometry.dispose());
     },
-    update(camera?: THREE.Camera, viewportHeight=800) {
+    update(camera?: THREE.Camera, viewportHeight=800, preview=false) {
       parent.updateMatrixWorld(true);
       const inverse=parent.matrixWorld.clone().invert(), matrix=new THREE.Matrix4(), center=new THREE.Vector3(),scale=new THREE.Vector3();
+      const frustum=new THREE.Frustum(),sphere=new THREE.Sphere();
+      if(camera){camera.updateMatrixWorld();frustum.setFromProjectionMatrix(new THREE.Matrix4().multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse));}
       for(const actor of actors) {
-        if(!camera) continue;
+        if(!camera){actor.userData.inView=true;continue;}
         actor.getWorldPosition(center);actor.getWorldScale(scale);
         const ortho=camera as THREE.OrthographicCamera,perspective=camera as THREE.PerspectiveCamera;
         const pixels=projectedHeightPixels({height:FIGURE_HEIGHT*scale.y,viewportHeight,zoom:ortho.zoom??1,
           orthographicSpan:ortho.isOrthographicCamera?ortho.top-ortho.bottom:undefined,
           distance:center.distanceTo(camera.position),verticalFov:perspective.fov});
-        actor.userData.detail=figureDetail(pixels,actor.userData.detail);
+        actor.userData.detail=preview?0:figureDetail(pixels,actor.userData.detail);
+        sphere.center.copy(center);sphere.center.y+=FIGURE_HEIGHT*scale.y*.5;sphere.radius=FIGURE_HEIGHT*scale.y*.85;
+        actor.userData.inView=frustum.intersectsSphere(sphere);
       }
       for(const pool of pools) {
         if(!pool.attribute||!pool.geometry||!pool.drawable)continue;
         let count=0;
         for(const actor of pool.actors??[]) {
-          if(actor.userData.detail!==pool.level)continue;
+          if(actor.userData.detail!==pool.level||actor.userData.inView===false)continue;
           let visible=true;
           for(let n:THREE.Object3D|null=actor;n;n=n.parent)visible&&=n.visible;
           if(!visible)continue;
@@ -110,7 +114,7 @@ export function createCrowd(parent: THREE.Group,
       }
     },
     metadata() {
-      return {variants:templates.length,levels:[0,1,2].map(level=>({level,actors:actors.filter(a=>a.userData.detail===level).length,
+      return {variants:templates.length,levels:[0,1,2].map(level=>({level,actors:actors.filter(a=>a.userData.detail===level).length,visibleActors:actors.filter(a=>a.userData.detail===level&&a.userData.inView!==false).length,
         triangles:pools.filter(p=>p.level===level&&p.source instanceof THREE.Mesh&&p.geometry).reduce((n,p)=>n+(p.geometry!.index?.count??p.geometry!.attributes.position.count)/3*p.geometry!.instanceCount,0)}))};
     },
     actors,

@@ -2,8 +2,8 @@ import { shoreDepth } from "./passageLayout";
 
 // Small clusters beside the far-bank buildings, on either side of the bridge.
 export const MOORED_BOATS = [
-  { s: -17.2, length: 4.2, width: 0.82, cabin: true },
-  { s: -11.8, length: 3.7, width: 0.75, cabin: false },
+  { s: -15.7, length: 4.2, width: 0.82, cabin: true },
+  { s: -10.3, length: 3.7, width: 0.75, cabin: false },
   { s: 1, length: 4.5, width: 0.9, cabin: true },
   { s: 6, length: 3.2, width: 0.68, cabin: false },
 ].map((boat) => {

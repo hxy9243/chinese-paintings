@@ -9,6 +9,8 @@ export const BRIDGE_RAIL_HEIGHT = 0.42;
 export const MIN_EAVE_HEIGHT = 1.12;
 export const SHORELINES: Record<BankSide, PassagePoint[]> = {
   far: [
+    [-64, -39.5], [-58, -35], [-52, -33], [-46, -29],
+    [-40, -24], [-34, -18], [-28, -12],
     [-22, -5.8],
     [-13, -6.8],
     [-7, -6.8],
@@ -19,6 +21,8 @@ export const SHORELINES: Record<BankSide, PassagePoint[]> = {
     [22, -3.4],
   ].map(([s, d]) => ({ s, d })),
   near: [
+    [-64, -22.5], [-58, -21], [-52, -17], [-46, -11],
+    [-40, -4.5], [-34, -.8], [-28, -.4],
     [-22, -0.1],
     [-16, 0.7],
     [-11, 1.8],
@@ -35,17 +39,25 @@ export const SHORELINES: Record<BankSide, PassagePoint[]> = {
 };
 export function shoreDepth(side: BankSide, s: number): number {
   const shore = SHORELINES[side];
-  s = Math.max(-22, Math.min(22, s));
+  s = Math.max(shore[0].s, Math.min(shore.at(-1)!.s, s));
   for (let i = 1; i < shore.length; i++) {
     const a = shore[i - 1],
       b = shore[i];
-    if (s <= b.s) return a.d + ((b.d - a.d) * (s - a.s)) / (b.s - a.s);
+    if (s <= b.s) {
+      const t=(s-a.s)/(b.s-a.s);
+      if(b.s>-22)return a.d+(b.d-a.d)*t;
+      const slope=(p:PassagePoint,q:PassagePoint)=>(q.d-p.d)/(q.s-p.s);
+      const middle=(x:number,y:number)=>x*y<=0?0:2*x*y/(x+y);
+      const sec=slope(a,b),m0=i>1?middle(slope(shore[i-2],a),sec):sec,
+        m1=i<shore.length-1?middle(sec,slope(b,shore[i+1])):sec,span=b.s-a.s;
+      return (2*t*t*t-3*t*t+1)*a.d+(t*t*t-2*t*t+t)*span*m0+(-2*t*t*t+3*t*t)*b.d+(t*t*t-t*t)*span*m1;
+    }
   }
   return shore.at(-1)!.d;
 }
-// Shared rounded perimeter: straight river entrances, generous curved corners.
+// Original bridge-district placement perimeter. The bend is an adjacent district.
 export function bankOutline(side: BankSide): number[][] {
-  const edge = SHORELINES[side].map(({ s, d }) => [s, d]);
+  const edge = SHORELINES[side].filter(p=>p.s>=-22).map(({ s, d }) => [s, d]);
   const sign = side === "far" ? -1 : 1;
   const arc = (cx: number, start: number) =>
     Array.from({ length: 17 }, (_, i) => {
@@ -56,8 +68,8 @@ export function bankOutline(side: BankSide): number[][] {
 }
 export function passageOutline(): number[][] {
   return [
-    ...bankOutline("near").slice(SHORELINES.near.length),
-    ...bankOutline("far").slice(SHORELINES.far.length).reverse(),
+    ...bankOutline("near").slice(SHORELINES.near.filter(p=>p.s>=-22).length),
+    ...bankOutline("far").slice(SHORELINES.far.filter(p=>p.s>=-22).length).reverse(),
   ];
 }
 export function onBank(side: BankSide, p: PassagePoint, margin = 0): boolean {

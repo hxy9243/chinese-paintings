@@ -30,20 +30,23 @@ describe("reference landmarks and geometry detail", () => {
   });
   it("renders fewer actual crowd triangles when zoomed out and restores close detail", () => {
     const study=createBridgeStudy(9243), camera=new THREE.OrthographicCamera(-26,26,13,-13,.1,250);
-    camera.position.set(0,80,80);
-    camera.zoom=2.5;study.update(8,camera,760);
+    camera.position.set(0,80,80);camera.lookAt(0,0,0);
+    camera.zoom=2.5;camera.updateProjectionMatrix();study.update(8,camera,760);
     const close=study.metadata();
-    camera.zoom=.3;study.update(8,camera,760);
+    camera.zoom=.3;camera.updateProjectionMatrix();study.update(8,camera,760);
     const far=study.metadata();
     const triangles=(m:typeof close)=>m.crowd.levels.reduce((n,l)=>n+l.triangles,0);
     expect(close.crowd.variants).toBe(16);
     expect(new Set(FIGURE_TYPES.map(f=>f.name)).size).toBe(16);
     expect(far.crowd.levels[0].actors).toBeGreaterThan(100);
-    expect(triangles(far)).toBeLessThan(triangles(close)*.35);
+    const visible=(m:typeof close)=>m.crowd.levels.reduce((n,l)=>n+l.visibleActors,0);
+    // The close camera culls most actors; compare geometry per visible person.
+    expect(visible(close)).toBeGreaterThan(0);expect(visible(far)).toBeGreaterThan(visible(close));
+    expect(triangles(far)/visible(far)).toBeLessThan(triangles(close)/visible(close)*.35);
     expect(far.vegetationLevel).toBeLessThan(close.vegetationLevel);
     const counts=study.group.children.filter(o=>o.name==="horse-cart");
     expect(new Set(counts.map(o=>o.userData.trafficKind))).toEqual(new Set(["horse-cart","covered-cart","ox-cart","donkey-cart","pack-horse","handcart"]));
-    camera.zoom=2.5;study.update(8,camera,760);expect(study.metadata().crowd).toEqual(close.crowd);
+    camera.zoom=2.5;camera.updateProjectionMatrix();study.update(8,camera,760);expect(study.metadata().crowd).toEqual(close.crowd);
     study.group.traverse(n=>{if(n instanceof THREE.Mesh||n instanceof THREE.Line)n.geometry.dispose();});
   });
 });

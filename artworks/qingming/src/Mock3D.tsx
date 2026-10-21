@@ -19,6 +19,7 @@ import {
   VIEW_ANGLE,
 } from "./bridgeStudy";
 import "./mock3d.css";
+import { RenderDemand } from "./renderDemand";
 import { createInkFinish } from "./inkFinish";
 import { advanceSceneTime } from "./peopleMotion";
 import { PALETTES,type ScenePalette } from "./scenePalette";
@@ -27,6 +28,7 @@ import { BOATS } from "./passageLayout";
 import { REFERENCE_AZIMUTH, SCROLL_STOPS, scrollPoint } from "./scrollLayout";
 
 type StudyApi = {
+  invalidate:()=>void;
   view: (angle: number, pitch?: number) => void;
   roll: (angle: number) => void;
   travel: (s: number, overview?: boolean, depth?: number) => void;
@@ -47,6 +49,7 @@ export default function Mock3D() {
   const pausedRef = useRef(paused);
   pausedRef.current = paused;
   const [originalOpen, setOriginalOpen] = useState(false);
+  const [referenceArea,setReferenceArea]=useState<"bridge"|"bend">("bridge");
   const [lang, setLang] = useState<"en" | "zh">("en"),
     [angle, setAngle] = useState(DEFAULT_VIEW_ANGLE),
     [pitch, setPitch] = useState(0),
@@ -72,7 +75,7 @@ export default function Mock3D() {
     // Hulls enter through the two side edges, with recycling beyond the frame.
     const along = scrollPoint(1, 0).normalize();
     renderer.clippingPlanes = [
-      new THREE.Plane(along, 32),
+      new THREE.Plane(along, 72),
       new THREE.Plane(along.clone().negate(), 32),
     ];
     const finish = createInkFinish(renderer);
@@ -95,7 +98,20 @@ export default function Mock3D() {
     study.setPainting(true);
     study.setPalette(palette);finish.setPaper(PALETTES[palette].paper);
     const camera = new THREE.OrthographicCamera(-12, 12, 9, -9, 0.1, 250);
-    let needsRender=true;
+    const demand=new RenderDemand();
+    let frame=0,timer:ReturnType<typeof setTimeout>|null=null,last=performance.now(),pending=false,previewResolution=false,draws=0;
+    const fullRatio=Math.min(window.devicePixelRatio,2);
+    function schedule(delay=0){
+      if(capture||frame||timer!==null||document.hidden)return;
+      if(delay>0)timer=setTimeout(()=>{timer=null;schedule();},delay);
+      else frame=requestAnimationFrame(animate);
+    }
+    function invalidate(preview=false){
+      demand.invalidate(performance.now(),preview);
+      if(timer!==null){clearTimeout(timer);timer=null;}
+      schedule();
+    }
+    demand.invalidate(performance.now(),true);
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableRotate = true;
     controls.minAzimuthAngle =
@@ -106,7 +122,7 @@ export default function Mock3D() {
     controls.maxPolarAngle = ELEVATION - THREE.MathUtils.degToRad(CAMERA_LIMITS.pitchMin);
     controls.rotateSpeed = 0.45;
     controls.addEventListener("change", () => {
-      needsRender=true;
+      invalidate(true);
       setAngle(
         Math.round(
           THREE.MathUtils.radToDeg(controls.getAzimuthalAngle() - VIEW_ANGLE),
@@ -118,17 +134,19 @@ export default function Mock3D() {
         ),
       );
     });
+    controls.addEventListener("start",()=>{demand.interaction(true,performance.now());invalidate();});
+    controls.addEventListener("end",()=>{demand.interaction(false,performance.now());invalidate();});
     let rollAngle = 0;
     controls.enableDamping = false;
     controls.dampingFactor = 0.12;
     controls.screenSpacePanning = true;
-    controls.minZoom = 0.5;
+    controls.minZoom = 0.3;
     controls.maxZoom = 4.5;
     controls.mouseButtons.LEFT = THREE.MOUSE.ROTATE;
     controls.mouseButtons.RIGHT = THREE.MOUSE.PAN;
     controls.touches.ONE = THREE.TOUCH.ROTATE;
     controls.touches.TWO = THREE.TOUCH.DOLLY_PAN;
-    controls.target.copy(scrollPoint(0, 0));
+    controls.target.copy(scrollPoint(-20, -13));
     controls.target.y = 1.1;
     const position = (
       degrees: number,
@@ -151,8 +169,8 @@ export default function Mock3D() {
       camera.lookAt(controls.target);
       controls.update();
     };
-    const defaultAngle = DEFAULT_VIEW_ANGLE;
-    const defaultZoom = 1.25;
+    const defaultAngle = 0;
+    const defaultZoom = .46;
     camera.zoom = defaultZoom;
     camera.updateProjectionMatrix();
     position(defaultAngle, 0);
@@ -160,7 +178,7 @@ export default function Mock3D() {
       const w = el.clientWidth,
         h = el.clientHeight;
       if (!w || !h) return;
-      needsRender=true;
+      invalidate();
       renderer.setSize(w, h);
       finish.resize(w, h);
       const aspect = w / h;
@@ -175,38 +193,40 @@ export default function Mock3D() {
     observer.observe(el);
     resize();
     api.current = {
+      invalidate:()=>{last=performance.now();invalidate();},
       view: position,
       roll(degrees) {
-        needsRender=true;
+        invalidate();
         rollAngle = THREE.MathUtils.degToRad(
           THREE.MathUtils.clamp(degrees, -CAMERA_LIMITS.roll, CAMERA_LIMITS.roll),
         );
       },
       travel(s, overview = false, depth = 0) {
-        controls.target.copy(scrollPoint(s, depth));
+        controls.target.copy(scrollPoint(overview?-20:s, overview?-13:depth));
         controls.target.y = 1.1;
-        camera.zoom = overview ? 1 : 1.8;
+        camera.zoom = overview ? defaultZoom : 1.8;
         camera.updateProjectionMatrix();
         rollAngle = 0;
         setRoll(0);
         position(0, 0);
       },
       painting(enabled) {
-        needsRender=true;
+        invalidate();
         paintingEnabled = enabled;
         study.setPainting(enabled);
       },
-      palette(value){needsRender=true;study.setPalette(value);finish.setPaper(PALETTES[value].paper);},
+      palette(value){invalidate();study.setPalette(value);finish.setPaper(PALETTES[value].paper);},
       softness(amount) {
-        needsRender=true;
+        invalidate();
         inkSoftness = Math.max(0, Math.min(1, amount));
       },
       zoom(factor) {
-        camera.zoom = THREE.MathUtils.clamp(camera.zoom * factor, 0.5, 4.5);
+        invalidate(true);
+        camera.zoom = THREE.MathUtils.clamp(camera.zoom * factor, 0.3, 4.5);
         camera.updateProjectionMatrix();
       },
       reset() {
-        controls.target.copy(scrollPoint(0, 0));
+        controls.target.copy(scrollPoint(-20, -13));
         controls.target.y = 1.1;
         camera.zoom = defaultZoom;
         camera.updateProjectionMatrix();
@@ -217,31 +237,33 @@ export default function Mock3D() {
     };
     let animationTime = 0;
     study.update(0);
-    let frame = 0,
-      last = performance.now();
-    const resetFrameClock=()=>{last=performance.now();};
+    const resetFrameClock=()=>{last=performance.now();if(!document.hidden)invalidate();};
     document.addEventListener('visibilitychange',resetFrameClock);
-    const animate = (now: number) => {
-      frame = requestAnimationFrame(animate);
-      if (capture) return;
-      if (document.hidden) {
-        last = now;
-        return;
-      }
-      if (now - last < 32) return;
-      const delta = (now - last) / 1000;
-      last = now;
-      const nextTime=advanceSceneTime(animationTime,delta,pausedRef.current);
-      if(nextTime!==animationTime)needsRender=true;
-      animationTime=nextTime;
+    function animate(now:number){
+      frame=0;
+      if(capture||document.hidden)return;
+      const delta=(now-last)/1000;last=now;
+      animationTime=advanceSceneTime(animationTime,delta,pausedRef.current);
       controls.update();
-      if(!needsRender)return;
-      needsRender=false;
-      camera.rotateZ(rollAngle);
-      study.update(animationTime, camera, el.clientHeight);
-      finish.render(scene, camera, paintingEnabled ? inkSoftness : 0);
-    };
-    frame = requestAnimationFrame(animate);
+      const plan=demand.takeFrame(now,!pausedRef.current,pending);
+      if(plan.draw){
+        if(previewResolution!==plan.preview){
+          previewResolution=plan.preview;
+          renderer.setPixelRatio(plan.preview?.65:fullRatio);
+          renderer.setSize(el.clientWidth,el.clientHeight);
+          finish.resize(el.clientWidth,el.clientHeight);
+        }
+        camera.rotateZ(rollAngle);
+        study.update(animationTime,camera,el.clientHeight,plan.preview);
+        pending=study.metadata().riverBend.pending>0;
+        finish.render(scene,camera,paintingEnabled?inkSoftness:0);
+        renderer.domElement.dataset.quality=plan.preview?"preview":"refined";
+        renderer.domElement.dataset.frames=String(++draws);
+      }
+      const delay=demand.nextDelay(now,!pausedRef.current,pending);
+      if(delay!==null)schedule(delay);
+    }
+    schedule();
     const reviewApi={
       frame(seconds:number,options:{zoom?:number;angle?:number;pitch?:number;target?:[number,number];palette?:ScenePalette;eye?:[number,number,number];look?:[number,number,number];fov?:number;aboard?:number}={}){
         if(options.palette){study.setPalette(options.palette);finish.setPaper(PALETTES[options.palette].paper);setPalette(options.palette);}
@@ -264,7 +286,8 @@ export default function Mock3D() {
           const aim=scrollPoint(ts,td);aim.y=ty;immersive.lookAt(aim);
           immersive.updateMatrixWorld();view=immersive;
         }
-        study.update(seconds,view,el.clientHeight);renderer.info.autoReset=false;renderer.info.reset();
+        renderer.setPixelRatio(fullRatio);renderer.setSize(el.clientWidth,el.clientHeight);finish.resize(el.clientWidth,el.clientHeight);
+        study.update(seconds,view,el.clientHeight,false,true);renderer.info.autoReset=false;renderer.info.reset();
         finish.render(scene,view,paintingEnabled?inkSoftness:0);
         const stats={...study.metadata(),triangles:renderer.info.render.triangles,calls:renderer.info.render.calls};renderer.info.autoReset=true;return stats;
       },
@@ -274,6 +297,7 @@ export default function Mock3D() {
     setReady(true);
     return () => {
       cancelAnimationFrame(frame);
+      if(timer!==null)clearTimeout(timer);
       document.removeEventListener("visibilitychange",resetFrameClock);
       observer.disconnect();
       controls.dispose();
@@ -293,6 +317,7 @@ export default function Mock3D() {
       if(capture)delete (window as unknown as {qingmingStudy?:unknown}).qingmingStudy;
     };
   }, []);
+  useEffect(()=>{api.current?.invalidate();},[paused]);
   return (
     <div
       className="study-shell"
@@ -332,7 +357,7 @@ export default function Mock3D() {
               <button
                 key={stop.id}
                 disabled={!ready}
-                onClick={() => api.current?.travel(stop.s, false, stop.depth)}
+                onClick={() => {api.current?.travel(stop.s, false, stop.depth);setReferenceArea(stop.id==="bend"||stop.id==="wharf"?"bend":"bridge");}}
               >
                 {lang === "en" ? stop.en : stop.zh}
               </button>
@@ -597,12 +622,18 @@ export default function Mock3D() {
               "此复制图保留原作自身的绘画视角。横向滑动或使用箭头游览。",
             )}
           </p>
+          <label>{t("Reference passage", "对照画段")} {" "}
+            <select aria-label={t("Reference passage", "对照画段")} value={referenceArea} onChange={e=>setReferenceArea(e.target.value as "bridge"|"bend")}>
+              <option value="bridge">{t("Rainbow Bridge", "虹桥")}</option>
+              <option value="bend">{t("River bend and landings", "河湾与码头")}</option>
+            </select>
+          </label>
           <div ref={originalStrip} className="original-strip">
             {originalOpen && (
               <img
-                src={`${import.meta.env.BASE_URL}reference/chicago-rainbow-bridge.png`}
+                src={`${import.meta.env.BASE_URL}reference/${referenceArea==="bend"?"chicago-river-bend.png":"chicago-rainbow-bridge.png"}`}
                 alt={t(
-                  "Selected Rainbow Bridge and riverbank passage",
+                  referenceArea==="bend"?"Selected river bend and cargo landings":"Selected Rainbow Bridge and riverbank passage",
                   "所选虹桥与河岸画段",
                 )}
               />

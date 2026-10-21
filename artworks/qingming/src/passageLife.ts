@@ -111,7 +111,20 @@ export function boatPose(index: number, time: number) {
   const circuit = 72,
     speed = 0.18;
   const slot = Math.floor(index / 2);
-  const s = direction * (-36 + ((time * speed + slot * 18 + (direction === 1 ? 12 : 38)) % circuit));
+  const route = direction * (-36 + ((time * speed + slot * 18 + (direction === 1 ? 12 : 38)) % circuit));
+  const s = route < -22 ? -22+(route+22)*3.5 : route;
+  const bendCenter=(x:number)=>{
+    const points=[[-72,-31],[-64,-31],[-58,-28],[-52,-25],[-46,-20],[-40,-14.25],[-34,-9.4],[-28,-6.2],[-22,-3.3],[-18,-2.25],[-14,-2]];
+    if(x>=-14)return -2;if(x<=-72)return -31;
+    for(let k=1;k<points.length;k++){
+      const a=points[k-1],b=points[k];if(x>b[0])continue;
+      const sec=(b[1]-a[1])/(b[0]-a[0]),prev=points[Math.max(0,k-2)],next=points[Math.min(points.length-1,k+1)],
+        m0=k===1?0:(b[1]-prev[1])/(b[0]-prev[0]),m1=k===points.length-1?0:(next[1]-a[1])/(next[0]-a[0]),
+        t=(x-a[0])/(b[0]-a[0]),span=b[0]-a[0];
+      return (2*t*t*t-3*t*t+1)*a[1]+(t*t*t-2*t*t+t)*span*(sec===0?0:m0)+(-2*t*t*t+3*t*t)*b[1]+(t*t*t-t*t)*span*(sec===0?0:m1);
+    }
+    return -2;
+  };
   let minCenter = Infinity,
     maxCenter = -Infinity;
   for (let j = 0; j <= 32; j++) {
@@ -121,13 +134,27 @@ export function boatPose(index: number, time: number) {
     maxCenter = Math.max(maxCenter, center);
   }
   const margin = b.width * 0.7 + 0.1;
-  const d = direction === 1 ? minCenter - margin : maxCenter + margin;
+  const slope=s < -14?(bendCenter(s+.05)-bendCenter(s-.05))/.1:0;
+  const tangent=Math.atan(slope),turning=Math.min(1,Math.max(0,(-s-18)/8));
+  const approach=Math.min(1,Math.max(0,(-s-14)/4));
+  const laneOffset=(margin+.4*approach*approach*(3-2*approach)+turning*.35)*Math.sqrt(1+slope*slope);
+  let d = s < -14 ? bendCenter(s)-direction*laneOffset : direction === 1 ? minCenter - margin : maxCenter + margin;
+  const angle=tangent+(direction === 1 ? 0 : Math.PI);
+  // Fit the rotated full hull envelope, especially at the bend-to-straight join.
+  let low=-Infinity,high=Infinity;
+  for(let j=0;j<=24;j++)for(const side of [-1,1]){
+    const u=(j/24-.5)*b.length*1.24,v=side*(b.width*.7+.05),
+      ds=u*Math.cos(angle)-v*Math.sin(angle),dd=u*Math.sin(angle)+v*Math.cos(angle);
+    low=Math.max(low,shoreDepth("far",s+ds)-dd+.06);
+    high=Math.min(high,shoreDepth("near",s+ds)-dd-.06);
+  }
+  d=Math.max(low,Math.min(high,d));
   const phase = time * 0.34 + index * 1.71;
   return {
     s,
     d,
     y: Math.sin(phase) * 0.012,
-    angle: direction === 1 ? 0 : Math.PI,
+    angle,
     roll: Math.sin(phase + 0.8) * 0.006,
     pitch: Math.cos(phase * 0.8) * 0.004,
   };

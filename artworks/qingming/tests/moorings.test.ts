@@ -35,7 +35,7 @@ function gap(a: Hull, b: Hull) {
 describe("far-bank moorings", () => {
   it("keeps four fixed berths afloat, outside the arch and separated from passing hulls", () => {
     expect(MOORED_BOATS).toHaveLength(4);
-    let trafficGap = Infinity;
+    let trafficGap = Infinity,closest="";
     MOORED_BOATS.forEach((b, i) => {
       expect(bridgeClear(b, b.length * 0.62)).toBe(true);
       expect(b.d - shoreDepth("far", b.s)).toBeLessThan(0.9);
@@ -44,11 +44,10 @@ describe("far-bank moorings", () => {
       for (let t = 0; t < 1200; t += 0.73) {
         const p = mooredBoatPose(i, t);
         expect([p.s, p.d, p.angle]).toEqual([b.s, b.d, b.angle]);
-        for (let k = 0; k < BOATS.length; k++)
-          trafficGap = Math.min(
-            trafficGap,
-            gap(p, { ...BOATS[k], ...boatPose(k, t) }),
-          );
+        for (let k = 0; k < BOATS.length; k++) {
+          const moving=boatPose(k,t),g=gap(p,{...BOATS[k],...moving});
+          if(g<trafficGap){trafficGap=g;closest=`berth ${i}, boat ${k}, time ${t}: ${JSON.stringify(moving)}`;}
+        }
       }
       for (let j = 0; j <= 32; j++)
         for (const side of [-1, 1]) {
@@ -60,7 +59,7 @@ describe("far-bank moorings", () => {
           expect(shoreDepth("near", s) - d).toBeGreaterThan(0.08);
         }
     });
-    expect(trafficGap).toBeGreaterThan(0.08);
+    expect(trafficGap,closest).toBeGreaterThan(0.08);
   });
   it("bobs rendered moored boats and their crews, follows the ropes, and freezes on pause", () => {
     const study = createBridgeStudy(0),

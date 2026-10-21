@@ -1,0 +1,20 @@
+{
+  "errors": [],
+  "before": {
+    "frames": 5,
+    "width": 1452
+  },
+  "idle": 5,
+  "dragging": {
+    "quality": "preview",
+    "width": 943
+  },
+  "refined": {
+    "quality": "refined",
+    "width": 1452,
+    "frames": 15
+  },
+  "traveled": 17,
+  "runningStart": 17,
+  "runningEnd": 24
+}

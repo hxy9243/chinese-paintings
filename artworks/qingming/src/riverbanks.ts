@@ -58,11 +58,11 @@ export function buildBankFace(side: BankSide) {
   group.name = `${side}-raised-bank`;
   const positions: number[] = [],
     indices: number[] = [];
-  const count = 440,
+  const start = SHORELINES[side][0].s, count = Math.round((22-start)*10),
     rows = 17;
   for (let i = 0; i <= count; i++)
     for (let j = 0; j < rows; j++) {
-      const p = bankSection(side, -22 + i * 0.1, j / (rows - 1)),
+      const p = bankSection(side, start + i * 0.1, j / (rows - 1)),
         world = scrollPoint(p.s, p.d);
       positions.push(world.x, p.y, world.z);
     }
@@ -81,8 +81,8 @@ export function buildBankFace(side: BankSide) {
   geometry.computeVertexNormals();
   group.add(new THREE.Mesh(geometry, earth));
   // Broken patches of riprap, rather than a continuous modern concrete wall.
-  for (let i = 0; i < 215; i++) {
-    const s = -21.8 + i * 0.203;
+  for (let i = 0; i < Math.floor((22-start)/.203); i++) {
+    const s = start+.2 + i * 0.203;
     if (Math.sin(s * 1.7) + Math.sin(s * 0.67) < 0.6) continue;
     const p = bankSection(side, s, 0.48 + (i % 3) * 0.17),
       world = scrollPoint(p.s, p.d);

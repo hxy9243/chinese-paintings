@@ -20,6 +20,11 @@ try{
  await page.waitForFunction(()=>window.qingmingStudy,undefined,{timeout:120000});
  await page.evaluate(async()=>{await document.fonts.ready;});
  const views=[
+  ["whole-extended-scene",0,{zoom:.46,angle:0,pitch:3,target:[-20,-13]}],
+  ["river-bend",0,{zoom:1.8,angle:30,pitch:-8,target:[-43,-10]}],
+  ["cargo-landings",0,{zoom:3,angle:30,pitch:-10,target:[-34,-1]}],
+  ["upstream-boats",0,{zoom:2.7,angle:30,pitch:-10,target:[-51,-22]}],
+  ["bend-bank-level",0,{eye:[-36,1.2,-5],look:[-44,1.1,-10],fov:64}],
   ["overview",0,{zoom:.96,angle:30,pitch:3,target:[0,0]}],
   ["bridge-crowd",0,{zoom:3.3,angle:-50,pitch:-8,target:[-6.6,-1.5]}],
   ["construction-and-balcony",0,{zoom:3.7,angle:30,pitch:-15,target:[-12.9,8.2]}],
