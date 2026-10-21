@@ -25,7 +25,10 @@ try{
   ["construction-and-balcony",0,{zoom:3.7,angle:30,pitch:-15,target:[-12.9,8.2]}],
   ["old-trees-and-bank",0,{zoom:2.5,angle:30,pitch:-8,target:[6.1,6]}],
   ["boat-crew",0,{zoom:3.8,angle:30,pitch:-15,target:[-3,-1.1]}],
-  ["pointed-leaves",0,{zoom:4.5,angle:30,pitch:-10,target:[6.1,6.5]}],
+  ["sail-raised",95,{zoom:4.5,angle:30,pitch:-8,target:[-19.1,-1.1]}],
+  ["mast-folding",62,{zoom:4.5,angle:30,pitch:-8,target:[-13.16,-1.1]}],
+  ["mast-lowered",12,{zoom:4.5,angle:30,pitch:-8,target:[-4.16,-1.1]}],
+  ["old-pine-needles",0,{eye:[1,4.2,.7],look:[6.1,3.6,6.5],fov:58}],
   ["rocky-bank",0,{eye:[1,1.2,1.4],look:[7,1,6.3],fov:58}],
   ["reverse",12,{zoom:1.08,angle:-40,pitch:-8,target:[-2,0]}],
  ];

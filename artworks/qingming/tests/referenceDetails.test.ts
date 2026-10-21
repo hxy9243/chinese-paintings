@@ -3,21 +3,21 @@ import * as THREE from "three";
 import {BOATS,BRIDGE,bridgeHeight,PERSON_SCALE} from "../src/passageLayout";
 import {boatPose} from "../src/passageLife";
 import {FIGURE_HEIGHT} from "../src/figures";
-import {boatCrewStations,buildLoweringRig,loweringRigAngle} from "../src/referenceDetails";
-it("keeps roof workers and the lowering freight rig below the bridge throughout a full navigation cycle",()=>{
-  const b=BOATS[1],rig=buildLoweringRig(b.length,b.width);
-  const vertices:THREE.Vector3[]=[];
-  rig.updateMatrixWorld(true);
-  rig.traverse(n=>{if(n instanceof THREE.Mesh || n instanceof THREE.Line){
-    const pos=n.geometry.getAttribute("position");
-    for(let j=0;j<pos.count;j++)vertices.push(new THREE.Vector3().fromBufferAttribute(pos,j).applyMatrix4(n.matrixWorld));
-  }});
-  let crossings=0;
+import {boatCrewStations,buildLoweringRig,updateLoweringRig} from "../src/referenceDetails";
+it("keeps roof workers and the articulated boat rigs below the bridge throughout a full navigation cycle",()=>{
+  let crossings=0,clearance=Infinity,closest="";
+  for(const index of [0,1,2,5]){
+  const b=BOATS[index],rig=buildLoweringRig(b.length,b.width);
   for(let time=0;time<400;time+=.75){
-    const pose=boatPose(1,time),angle=loweringRigAngle(Math.abs(pose.s-BRIDGE.center.s));
-    const pivot=new THREE.Vector3(b.width*.22,.36,-b.length*.26);
-    const points=vertices.map(v=>v.clone().sub(pivot).applyAxisAngle(new THREE.Vector3(1,0,0),angle).add(pivot));
-    for(const crew of boatCrewStations(b.length,b.width,"freight"))
+    const pose=boatPose(index,time),distance=Math.abs(pose.s-BRIDGE.center.s);
+    if(distance>12)continue;
+    updateLoweringRig(rig,distance);rig.updateMatrixWorld(true);
+    const points:THREE.Vector3[]=[];
+    rig.traverse(n=>{if(n instanceof THREE.Mesh || n instanceof THREE.Line){
+      const pos=n.geometry.getAttribute("position");
+      for(let j=0;j<pos.count;j++)points.push(new THREE.Vector3().fromBufferAttribute(pos,j).applyMatrix4(n.matrixWorld));
+    }});
+    for(const crew of boatCrewStations(b.length,b.width,index===1?"freight":"cabin"))
       points.push(new THREE.Vector3(crew.x,crew.y+FIGURE_HEIGHT*PERSON_SCALE+.04,crew.z));
     for(const v of points){
       const s=pose.s+v.x*Math.sin(pose.angle)+v.z*Math.cos(pose.angle),
@@ -26,10 +26,25 @@ it("keeps roof workers and the lowering freight rig below the bridge throughout 
         lateral=-(s-BRIDGE.center.s)*Math.sin(BRIDGE.angle)+(d-BRIDGE.center.d)*Math.cos(BRIDGE.angle);
       if(Math.abs(lateral)<BRIDGE.width/2+.12 && Math.abs(u)<BRIDGE.length/2){
         crossings++;
-        expect(v.y+pose.y+.02,`time ${time}, u ${u}`).toBeLessThan(bridgeHeight(u)-.42);
+        const gap=bridgeHeight(u)-.42-(v.y+pose.y+.02);
+        if(gap<clearance){clearance=gap;closest=`boat ${index}, time ${time}, u ${u}`;}
       }
     }
   }
-  expect(crossings).toBeGreaterThan(100);
+  rig.traverse(n=>{if(n instanceof THREE.Mesh || n instanceof THREE.Line)n.geometry.dispose();});
+  }
+  expect(crossings).toBeGreaterThan(100);expect(clearance,closest).toBeGreaterThan(0);
+});
+
+it("gathers the sail before folding the mast while the deck socket stays fixed",()=>{
+  const rig=buildLoweringRig(5.4,1.1),base=rig.getObjectByName("mast-tabernacle")!,
+    mast=rig.getObjectByName("mast-hinge")!,sail=rig.getObjectByName("battened-sail")!;
+  updateLoweringRig(rig,12);rig.updateMatrixWorld(true);
+  const fixed=base.matrixWorld.clone(),full=new THREE.Box3().setFromObject(sail).getSize(new THREE.Vector3());
+  expect(full.y).toBeGreaterThan(2);expect(full.x).toBeGreaterThan(1.5);
+  updateLoweringRig(rig,8);
+  expect(sail.scale.y).toBeLessThan(.1);expect(mast.rotation.x).toBeLessThan(.05);
+  updateLoweringRig(rig,0);rig.updateMatrixWorld(true);
+  expect(mast.rotation.x).toBeGreaterThan(1.5);expect(base.matrixWorld.equals(fixed)).toBe(true);
   rig.traverse(n=>{if(n instanceof THREE.Mesh || n instanceof THREE.Line)n.geometry.dispose();});
 });

@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import {buildConstruction, boatCrewStations, addCrewEquipment, buildLoweringRig, loweringRigAngle} from "./referenceDetails";
+import {buildConstruction, boatCrewStations, addCrewEquipment, buildLoweringRig, updateLoweringRig} from "./referenceDetails";
 import {setScenePalette,getScenePalette,type ScenePalette} from "./scenePalette";
 import { buildReferenceTree, buildReferenceBoat, addReferenceArchitecture, type TreeForm } from "./referenceAssets";
 import { REFERENCE_AZIMUTH, scrollPoint } from "./scrollLayout";
@@ -901,8 +901,12 @@ function workingBoat(
     addCrewEquipment(model,length,width,style);
     batchStatic(model);g.add(model);
   }
-  if(style==="freight"){
-    const rig=buildLoweringRig(length,width);batchStatic(rig);g.add(rig);
+  if(style==="freight" || style==="cabin"){
+    const rig=buildLoweringRig(length,width);
+    // Batch each rigid part separately so the hinge and sail remain articulated.
+    for(const name of ["mast-tabernacle","folding-mast-spar","battened-sail"])
+      batchStatic(rig.getObjectByName(name) as THREE.Group);
+    g.add(rig);
   }
   return g;
 }
@@ -1398,7 +1402,7 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
       boats.forEach((vessel, i) => {
         const pose = boatPose(i, time);
         const rig=vessel.getObjectByName("lowering-sail-rig");
-        if(rig)rig.rotation.x=loweringRigAngle(Math.abs(pose.s-BRIDGE.center.s));
+        if(rig)updateLoweringRig(rig,Math.abs(pose.s-BRIDGE.center.s));
         vessel.visible = Math.abs(pose.s) < 22 + BOATS[i].length * 0.62 + 0.2;
         vessel.position.copy(scrollPoint(pose.s, pose.d));
         vessel.position.y = pose.y;

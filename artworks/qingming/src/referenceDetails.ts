@@ -97,31 +97,66 @@ export function addCrewEquipment(g:THREE.Object3D,length:number,width:number,sty
   line(g,[[-width*.2,.82,-length*.31],[width*.61,1.08,length*.3],[width*.22,.84,length*.45]]);
 }
 
-/** Pivoting, partly furled rig for the crowded freight vessel. */
+/** Hinged mast with a battened sail: gather the cloth, then lower the spar. */
 export function buildLoweringRig(length:number,width:number){
   const g=new THREE.Group();g.name="lowering-sail-rig";
-  g.position.set(width*.22,.36,-length*.26);
-  const tip:P=[0,2.05,length*.43];
-  rod(g,[0,0,0],tip,.035,dark);
-  // Slack cloth is folded into uneven hanging panels, not a rigid triangular flag.
-  const vertices:number[]=[];
-  const point=(u:number,t:number):P => [
-    width*(-.48+u*.72),
-    .3+t*1.55-.23*Math.sin(u*Math.PI)+.06*Math.cos(u*Math.PI*10),
-    length*(.04+t*.37)+.055*Math.sin(u*Math.PI*6),
+  g.position.set(width*.37,.34,-length*.29);
+  const height=Math.min(3.2,length*.55), hinge=.72;
+  const base=new THREE.Group();base.name="mast-tabernacle";g.add(base);
+  // Two fixed timber cheeks, cross pin and a heel socket make the pivot visible.
+  box(base,[.25,.09,.25],[0,.045,0],dark);
+  for(const x of [-.085,.085])box(base,[.065,hinge+.12,.13],[x,(hinge+.12)/2,0]);
+  rod(base,[-.16,hinge,0],[.16,hinge,0],.033,dark);
+  for(const y of [.19,.46])box(base,[.25,.035,.16],[0,y,0],dark);
+  const mast=new THREE.Group();mast.name="mast-hinge";mast.position.y=hinge;g.add(mast);
+  const spar=new THREE.Group();spar.name="folding-mast-spar";mast.add(spar);
+  rod(spar,[0,-.1,0],[0,height,0],.038,dark);
+  for(const y of [.1,height-.12])box(spar,[.1,.045,.095],[0,y,0],light);
+  const sail=new THREE.Group();sail.name="battened-sail";sail.position.set(0,.28,.055);mast.add(sail);
+  const sailHeight=height-.5, breadth=width*1.75;
+  // An irregular quadrilateral of stitched cloth, visibly bowed between battens.
+  // Furling compresses vertical spacing only; wooden battens retain their length.
+  const point=(u:number,t:number):P=>[
+    (u-.43)*breadth*(1-.2*t),
+    t*sailHeight + u*.11,
+    .12*Math.sin(u*Math.PI)*Math.sin(t*Math.PI*5)+.025*Math.sin(u*Math.PI*12),
   ];
-  for(let j=0;j<16;j++)for(let k=0;k<12;k++){
-    const a=point(j/16,k/12),b=point((j+1)/16,k/12),c=point((j+1)/16,(k+1)/12),d=point(j/16,(k+1)/12);
-    vertices.push(...a,...b,...c,...a,...c,...d);
+  const positions:number[]=[];
+  for(let j=0;j<18;j++)for(let k=0;k<25;k++){
+    const a=point(j/18,k/25),b=point((j+1)/18,k/25),c=point((j+1)/18,(k+1)/25),d=point(j/18,(k+1)/25);
+    positions.push(...a,...b,...c,...a,...c,...d);
   }
-  const geo=new THREE.BufferGeometry();geo.setAttribute("position",new THREE.Float32BufferAttribute(vertices,3));geo.computeVertexNormals();
-  const fabric=new THREE.Mesh(geo,cloth);fabric.name="hanging-folded-sail";g.add(fabric);
-  for(let j=0;j<7;j++)line(g,Array.from({length:13},(_,k)=>point(j/6,k/12)));
-  for(const t of [.15,.5,.82])rod(g,point(0,t),point(1,t),.011,timber);
-  for(const side of [-1,1])line(g,[[side*width*.3,0,length*.1],tip,[side*width*.3,.08,length*.67]]);
+  const geo=new THREE.BufferGeometry().setAttribute("position",new THREE.Float32BufferAttribute(positions,3));geo.computeVertexNormals();
+  const canvas=new THREE.Mesh(geo,cloth);canvas.name="pleated-canvas";sail.add(canvas);
+  for(let j=0;j<=6;j++)line(sail,Array.from({length:26},(_,k)=>point(j/6,k/25)));
+  for(let k=0;k<=5;k++){
+    rod(sail,point(0,k/5),point(1,k/5),k===5?.022:.012,k===5?dark:timber);
+    line(sail,Array.from({length:19},(_,j)=>point(j/18,k/5)));
+  }
+  const ropes=new THREE.LineSegments(new THREE.BufferGeometry().setAttribute("position",new THREE.Float32BufferAttribute(new Float32Array(24),3)),ink);
+  ropes.name="mast-hauling-ropes";ropes.frustumCulled=false;g.add(ropes);
+  g.userData.mastHeight=height;g.userData.boatLength=length;g.userData.boatWidth=width;
+  updateLoweringRig(g,0);
   return g;
 }
+const ease=(x:number)=>{const t=THREE.MathUtils.clamp(x,0,1);return t*t*(3-2*t);};
 export function loweringRigAngle(distanceFromBridge:number){
-  const t=THREE.MathUtils.clamp((distanceFromBridge-3.5)/3,0,1);
-  return .55-.5*t*t*(3-2*t);
+  return Math.PI/2-.035-(Math.PI/2-.065)*ease((distanceFromBridge-4.8)/3.2);
+}
+export function updateLoweringRig(g:THREE.Object3D,distanceFromBridge:number){
+  const mast=g.getObjectByName("mast-hinge")!,sail=g.getObjectByName("battened-sail")!;
+  mast.rotation.x=loweringRigAngle(distanceFromBridge);
+  sail.scale.y=.075+.925*ease((distanceFromBridge-8)/2.5);
+  // Ropes stay anchored to the deck, rather than rotating with the mast.
+  const {mastHeight:height,boatLength:length,boatWidth:width}=g.userData;
+  const top=new THREE.Vector3(0,height,0).applyEuler(mast.rotation).add(mast.position);
+  const head=new THREE.Vector3(0,.28+(height-.5)*sail.scale.y,.055).applyEuler(mast.rotation).add(mast.position);
+  const positions:number[]=[];
+  for(const [end,anchor] of [[top,[-width*.65,.08,length*.66]],[top,[0,.08,-length*.12]],
+    [head,[-width*.65,.08,length*.66]],[head,[width*.12,.08,0]]] as [THREE.Vector3,P][]){
+    positions.push(...anchor,...end.toArray());
+  }
+  const ropes=g.getObjectByName("mast-hauling-ropes") as THREE.LineSegments;
+  const attr=ropes.geometry.getAttribute("position") as THREE.BufferAttribute;
+  attr.set(positions);attr.needsUpdate=true;
 }

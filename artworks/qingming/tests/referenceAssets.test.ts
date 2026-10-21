@@ -23,7 +23,7 @@ const dispose = (g: THREE.Object3D) =>
       o.geometry.dispose();
   });
 describe("reference-led asset geometry", () => {
-  it("keeps every actual hull, oar, rudder and lowered rig inside the navigation envelope", () => {
+  it("keeps every actual hull, oar and rudder inside the navigation envelope", () => {
     for (const style of ["cabin", "freight", "canopy", "skiff"] as BoatStyle[])
       for (const level of [0, 2] as const) {
         const g = buildReferenceBoat(5.4, 1.1, style, level),

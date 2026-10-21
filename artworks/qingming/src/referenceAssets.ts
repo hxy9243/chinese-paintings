@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { paintMaterial, createDryInk } from "./paintMaterial";
 import type { DetailLevel } from "../../../packages/scene-kit/lod";
 
-// Observed forms: public/reference/rainbow-bridge.jpg. These remain editable
+// Observed forms: public/reference/chicago-rainbow-bridge.png. These remain editable
 // approximations: the crop does not reveal the concealed sides of buildings/boats.
 const timber = paintMaterial(0x917344),
   edge = paintMaterial(0x5e513a),
@@ -11,9 +11,10 @@ const timber = paintMaterial(0x917344),
   tile = paintMaterial(0x786746),
   tileLight = paintMaterial(0x8b7854),
   recess = paintMaterial(0x655b45),
-  reed = paintMaterial(0xb4a178),
-  leaf = paintMaterial(0x858167);
-const leafGlazes = [leaf, paintMaterial(0x7a9c53, false, false, false, true), paintMaterial(0x4c7955, false, false, false, true), paintMaterial(0xa1ad63, false, false, false, true)];
+  reed = paintMaterial(0xb4a178);
+// Muted ink-green needles, as in the old pines around the foreground house.
+const pineGlazes = [0x4b5140, 0x60634a, 0x737257].map(c => paintMaterial(c));
+const pineInk = createDryInk(.48);
 const ink = createDryInk(0.7);
 type P = [number, number, number];
 const v = (p: P) => new THREE.Vector3(...p);
@@ -88,6 +89,32 @@ export function buildReferenceTree(
     pollard = form === "pollard",
     h = old ? (landmark ? 1.75 : 1.65) : pollard ? 1.35 : 1.9;
   const radius = old ? (landmark ? 0.25 : 0.135) : pollard ? 0.11 : 0.05;
+  const needles: number[][] = [[], [], []], needleInk: number[] = [];
+  // Short shoots carry several paired, round-section needles. The tapered
+  // three-sided geometry stays needle-thin from every viewing direction.
+  const pineSpray = (at: P, phase: number, extent = 1) => {
+    if (!leafy) return;
+    const shoots = detail === 2 ? 11 : detail === 1 ? 7 : 5;
+    for (let f = 0; f < shoots; f++) {
+      const az = phase + f * 2.39996,
+        spread = (.035 + .055 * (f % 3) / 2) * extent,
+        base = v(at).add(new THREE.Vector3(Math.cos(az)*spread, .018*(f%3), Math.sin(az)*spread));
+      for (let n = 0; n < 3; n++) {
+        const a = az + (n-1)*.16, length = (.105 + .012*((f+n)%6))*extent,
+          direction = new THREE.Vector3(Math.cos(a), .3 + .13*(f%4), Math.sin(a)).normalize(),
+          tip = base.clone().addScaledVector(direction,length),
+          normal = new THREE.Vector3(-Math.sin(a),0,Math.cos(a)),
+          cross = direction.clone().cross(normal), radius = detail === 0 ? .002 : .0015,
+          out = needles[(f+n)%3];
+        for(let side=0;side<3;side++) {
+          const ring = (j:number) => base.clone().addScaledVector(normal,Math.cos(j*Math.PI*2/3)*radius)
+            .addScaledVector(cross,Math.sin(j*Math.PI*2/3)*radius).toArray();
+          out.push(...ring(side),...ring(side+1),...tip.toArray());
+        }
+        needleInk.push(...base.toArray(),...tip.toArray());
+      }
+    }
+  };
   const curves: { curve: THREE.CatmullRomCurve3; radius: number }[] = [];
   const limb = (points: P[], r: number, end = 0.03) => {
     const curve = new THREE.CatmullRomCurve3(points.map(v)),
@@ -288,6 +315,7 @@ export function buildReferenceTree(
             b.y + 0.14 + (q % 2) * 0.09,
             b.z + Math.sin(angle) * 0.15,
           ];
+          pineSpray(tip, angle, .85);
           const twig = limb(
             [
               b.toArray() as P,
@@ -344,6 +372,7 @@ export function buildReferenceTree(
               b.y + 0.12 + q * 0.02,
               b.z + Math.cos(a + q * 2) * 0.085,
             ];
+          pineSpray(e, a + q * 2, .85);
           limb(
             [
               b.toArray() as P,
@@ -354,35 +383,17 @@ export function buildReferenceTree(
             0.02,
           );
         }
-      if (leafy)
-        for (let q = 0; q < (detail === 0 ? 8 : detail === 1 ? 16 : 26); q++) {
-          // Tapered blades replace the blunt faceted leaf pellets. Old trees
-          // carry narrow, needle-like fans; younger trees have lanceolate leaves.
-          const length = old ? .23 : .19,
-            halfWidth = old ? .012 : .027,
-            blade = new THREE.BufferGeometry();
-          blade.setAttribute("position",new THREE.Float32BufferAttribute([
-            0,0,0, -halfWidth,length*.34,0, 0,length*.43,.009,
-            -halfWidth,length*.34,0, 0,length,0, 0,length*.43,.009,
-            0,length,0, halfWidth,length*.34,0, 0,length*.43,.009,
-            halfWidth,length*.34,0, 0,0,0, 0,length*.43,.009,
-          ],3));
-          blade.computeVertexNormals();
-          const spread = old ? .085 : .12,
-            angle = a + (q % 7 - 3) * .24,
-            m = solid(g, blade, leafGlazes[(q + k) % leafGlazes.length], [
-              end[0] + Math.sin(q * 2.4 + seed) * spread,
-              end[1] + Math.cos(q * 1.8) * spread * .45,
-              end[2] + Math.cos(q * 2.4 + seed) * spread,
-            ]);
-          m.name = old ? "pointed-needle" : "pointed-leaf";
-          m.scale.setScalar(.9 + (q % 5) * .12);
-          m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),
-            new THREE.Vector3(Math.cos(angle),.25 + (q % 3) * .12,Math.sin(angle)).normalize());
-          m.rotateY(q * 2.4);
-        }
+      pineSpray(end, a);
     }
   });
+  needles.forEach((positions, i) => {
+    if (positions.length) surface(g, positions, pineGlazes[i]).name = "pine-needle-fascicles";
+  });
+  if (needleInk.length) {
+    const strokes = new THREE.LineSegments(new THREE.BufferGeometry().setAttribute(
+      "position", new THREE.Float32BufferAttribute(needleInk, 3)), pineInk);
+    strokes.name = "fine-pine-needle-strokes"; g.add(strokes);
+  }
   surface(g, vertices, timber);
   if (marks.length)
     g.add(
@@ -632,40 +643,7 @@ export function buildReferenceBoat(
         ]);
       }
   }
-  // Cabin boats carry stowed spars. The main freight rig pivots independently
-  // in referenceDetails.ts as it approaches the bridge.
-  if (style === "cabin") {
-    const foot: P = [width * 0.59, 0.35, -length * 0.28],
-      tip: P = [width * 0.61, 1.08, length * 0.3];
-    rod(g, foot, tip, 0.023, edge);
-    block(g, width * 0.22, 0.22, 0.09, [width * 0.5, 0.44, -length * 0.28]);
-    const sail:number[]=[];
-    const fold=(u:number,t:number):P => [width*(.39+u*.23),
-      .49+t*.34 + .043*Math.cos(u*Math.PI*10) - .055*Math.sin(t*Math.PI),
-      length*(-.24+t*.48)];
-    for(let j=0;j<12;j++)for(let k=0;k<8;k++)
-      quad(sail,fold(j/12,k/8),fold((j+1)/12,k/8),fold((j+1)/12,(k+1)/8),fold(j/12,(k+1)/8));
-    surface(g,sail,reed).name="collapsed-pleated-sail";
-    for(let j=0;j<6;j++)line(g,Array.from({length:9},(_,k)=>fold(j/5,k/8)));
-    for(let k=1;k<5;k++){
-      const z=length*(-.24+k*.096),y=.49+k*.068;
-      line(g,[[width*.36,y+.06,z],[width*.64,y+.03,z],[width*.61,y-.05,z]]);
-    }
-    for (const side of [1])
-      line(g, [
-        [side * width * 0.49, 0.34, -length * 0.32],
-        tip,
-        [side * width * 0.49, 0.34, length * 0.37],
-      ]);
-    if (detail > 0)
-      for (let k = 0; k < 3; k++)
-        rod(
-          g,
-          [width * 0.48, 0.48 + k * 0.023, -length * 0.3],
-          [width * 0.55, 0.58 + k * 0.023, length * 0.19],
-          0.009,
-        );
-  }
+  // Articulated mast and sail are assembled separately in workingBoat.
   const rudder = block(
     g,
     width * 0.19,
