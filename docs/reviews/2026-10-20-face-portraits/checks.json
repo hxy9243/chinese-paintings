@@ -1,0 +1,14 @@
+{
+  "build": "passed",
+  "targeted_tests": {
+    "passed": 10,
+    "failed": 0,
+    "files": [
+      "faceModels.test.ts",
+      "riverbankFigures.test.ts",
+      "detail.test.ts"
+    ]
+  },
+  "profile_count": 12,
+  "close_only": true
+}

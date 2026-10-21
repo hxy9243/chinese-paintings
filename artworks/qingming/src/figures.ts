@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { buildCloseFace } from "./faceModels";
 import { FIGURE_TYPES } from "./figureTypes";
 import { paintMaterial, createDryInk } from "./paintMaterial";
 import type { DetailLevel } from "../../../packages/scene-kit/lod";
@@ -325,116 +326,38 @@ export function buildFigure(
         ]);
       }
   }
-  solid(g, new THREE.CylinderGeometry(0.019, 0.022, 0.042, n), skin, [
-    0,
-    0.533,
-    forward,
-  ]);
+  solid(
+    g,
+    new THREE.CylinderGeometry(
+      detail === 2 ? 0.014 : 0.019,
+      detail === 2 ? 0.016 : 0.022,
+      0.042,
+      n,
+    ),
+    skin,
+    [0, 0.533, forward],
+  );
   batch(g);
   const head = new THREE.Group();
   head.name = "head";
   head.position.set(0, 0.588, forward);
   g.add(head);
-  oval(head, [0, 0.004, -0.003], [0.036, 0.047, 0.032], skin, n);
-  if (detail > 0) {
-    oval(head, [0, -0.025, 0.006], [0.024, 0.02, 0.023], skin, n);
-    for (const side of [-1, 1])
-      oval(
-        head,
-        [side * 0.036, -0.002, -0.001],
-        [0.008, 0.014, 0.006],
-        skin,
-        n,
-      );
-    // Hair covers the occiput, leaving the forehead and ears visible.
-    oval(head, [0, 0.029, -0.012], [0.0365, 0.027, 0.03], hair, n);
-    oval(head, [0, -0.006, 0.031], [0.006, 0.013, 0.009], skinLight, n);
-    if (detail === 2) {
-      const nose = new THREE.BufferGeometry();
-      nose.setAttribute(
-        "position",
-        new THREE.Float32BufferAttribute(
-          [
-            -0.005, 0.014, 0.03, 0.005, 0.014, 0.03, 0, -0.009, 0.045, 0.005,
-            0.014, 0.03, 0.006, -0.014, 0.032, 0, -0.009, 0.045, 0.006, -0.014,
-            0.032, -0.006, -0.014, 0.032, 0, -0.009, 0.045, -0.006, -0.014,
-            0.032, -0.005, 0.014, 0.03, 0, -0.009, 0.045,
-          ],
-          3,
-        ),
-      );
-      nose.computeVertexNormals();
-      solid(head, nose, skinLight).name = "shaped-nose";
-      for (const side of [-1, 1]) {
+  if (detail === 2) {
+    buildCloseFace(head, variant, { skin, skinLight, hair, cloth });
+  } else {
+    oval(head, [0, 0.004, -0.003], [0.036, 0.047, 0.032], skin, n);
+    if (detail > 0) {
+      oval(head, [0, -0.025, 0.006], [0.024, 0.02, 0.023], skin, n);
+      for (const side of [-1, 1])
         oval(
           head,
-          [side * 0.038, -0.002, 0.002],
-          [0.0025, 0.007, 0.003],
-          skinLight,
-          10,
+          [side * 0.036, -0.002, -0.001],
+          [0.006, 0.012, 0.005],
+          skin,
+          n,
         );
-
-        oval(
-          head,
-          [side * 0.014, 0.008, 0.027],
-          [0.01, 0.004, 0.004],
-          skinLight,
-          8,
-        );
-        line(head, [
-          [side * 0.006, 0.01, 0.032],
-          [side * 0.014, 0.011, 0.032],
-          [side * 0.022, 0.009, 0.029],
-        ]);
-        oval(
-          head,
-          [side * 0.013, 0.009, 0.0315],
-          [0.0025, 0.0028, 0.0018],
-          hair,
-          6,
-        );
-        stroke(
-          head,
-          [
-            [side * 0.006, 0.021, 0.031],
-            [side * 0.015, 0.022, 0.029],
-            [side * 0.024, 0.018, 0.026],
-          ],
-          0.0015,
-          hair,
-          4,
-        );
-        line(head, [
-          [side * 0.005, -0.015, 0.037],
-          [side * 0.009, -0.014, 0.031],
-        ]);
-      }
-      line(head, [
-        [-0.011, -0.025, 0.027],
-        [0, -0.027, 0.03],
-        [0.01, -0.025, 0.028],
-      ]);
-      line(head, [
-        [-0.009, -0.03, 0.026],
-        [0, -0.032, 0.028],
-        [0.008, -0.03, 0.026],
-      ]);
-      if (["elder", "scholar", "merchant"].includes(profile.name)) {
-        for (let j = 0; j < 7; j++) {
-          const x = (j - 3) * 0.0034;
-          stroke(
-            head,
-            [
-              [x, -0.027, 0.028],
-              [x * 0.7, -0.046, 0.029],
-              [x * 0.25, -0.065 + Math.abs(x), 0.023],
-            ],
-            0.0016,
-            elder ? cloth : hair,
-            5,
-          );
-        }
-      }
+      oval(head, [0, 0.029, -0.012], [0.0365, 0.027, 0.03], hair, n);
+      oval(head, [0, -0.006, 0.031], [0.005, 0.011, 0.008], skinLight, n);
     }
   }
   if (profile.hat === "straw") {

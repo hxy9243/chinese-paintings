@@ -22,6 +22,7 @@ const names = [
   "侍从",
   "提篮人",
 ];
+let portrait = false;
 let focus = -1,
   turn = 0.75,
   lastTime = 0;
@@ -96,16 +97,30 @@ document.querySelectorAll<HTMLButtonElement>("[data-turn]").forEach((button) =>
     render(lastTime);
   }),
 );
+const portraitChoice =
+  document.querySelector<HTMLInputElement>("#portrait-choice")!;
+portraitChoice.addEventListener("change", () => {
+  portrait = portraitChoice.checked;
+  if (portrait && focus < 0) choose(0);
+  layout();
+  render(lastTime);
+});
 function layout() {
   const single = focus >= 0,
     aspect = host.clientWidth / host.clientHeight;
-  camera.left = single ? -0.43 * aspect : -3.6;
+  const span = portrait && single ? 0.12 : 0.43;
+  camera.left = single ? -span * aspect : -3.6;
   camera.right = -camera.left;
-  camera.top = single ? 0.43 : 1.05;
+  camera.top = single ? span : 1.05;
   camera.bottom = -camera.top;
   camera.updateProjectionMatrix();
   camera.position.set(0, single ? 0.65 : 1.6, 8);
   camera.lookAt(0, single ? 0.05 : 0.1, 0);
+  if (portrait && single) {
+    const headY = 0.588 * FIGURE_TYPES[focus].height - 0.28;
+    camera.position.set(0, headY + 0.03, 8);
+    camera.lookAt(0, headY - 0.006, 0);
+  }
   figures.forEach((p, i) => {
     p.visible = !single || i === focus;
     p.position.set(
@@ -119,10 +134,15 @@ function render(
   seconds: number,
   options: {
     focus?: number;
+    portrait?: boolean;
     turn?: number;
     activity?: BridgeRole | "walking";
   } = {},
 ) {
+  if (options.portrait !== undefined) {
+    portrait = options.portrait;
+    portraitChoice.checked = portrait;
+  }
   if (options.focus !== undefined) {
     focus = options.focus;
     labels.hidden = focus >= 0;
