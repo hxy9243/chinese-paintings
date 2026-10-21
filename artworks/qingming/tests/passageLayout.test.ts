@@ -103,8 +103,9 @@ describe("reference passage geometry", () => {
   it("preserves the reference's broad bridge and low roofs relative to people", () => {
     const figureHeight = FIGURE_HEIGHT * PERSON_SCALE;
     expect(BRIDGE.width / BRIDGE.length).toBeGreaterThan(0.2);
-    expect(BRIDGE.width / figureHeight).toBeGreaterThan(4);
-    expect(BRIDGE.width / figureHeight).toBeLessThan(5);
+    expect(BRIDGE.width / figureHeight).toBeGreaterThan(3.5);
+    expect(BRIDGE.width / figureHeight).toBeLessThan(4.1);
+    expect(Math.min(...HALLS.map(h=>h.height))*.875).toBeGreaterThan(figureHeight*1.08);
     expect(Math.max(...HALLS.map((h) => h.height)) / figureHeight).toBeLessThan(
       3,
     );

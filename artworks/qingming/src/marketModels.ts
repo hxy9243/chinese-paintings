@@ -3,12 +3,16 @@ import { paintMaterial, createDryInk } from "./paintMaterial";
 import { BRIDGE_SHOPS } from "./passageLayout";
 const timber = paintMaterial(0x9f895f),
   inkWood = paintMaterial(0x625943),
-  linen = paintMaterial(0xc8bb94),
+  linen = paintMaterial(0xcfbf98),
   ceramic = paintMaterial(0xb8ad8c),
   food = paintMaterial(0x918866),
-  cloth = paintMaterial(0x8d8e80);
+  cloth = paintMaterial(0x8d8e80),
+  fishGlaze = paintMaterial(0x77958a),
+  produce = paintMaterial(0x789353);
 // Varied dyed cloths and glazes, shared across batches instead of one red canopy.
-const fabrics = [0xb86c50, 0xc59b4d, 0x6d8d81, 0x72839a, 0xc6ae7a, 0x906b6b].map(c => paintMaterial(c));
+const fabrics = [
+  0xb86c50, 0xc59b4d, 0x6d8d81, 0x72839a, 0xc6ae7a, 0x906b6b,
+].map((c) => paintMaterial(c));
 const ink = createDryInk(0.55);
 type P = [number, number, number];
 function put(
@@ -137,16 +141,102 @@ function jar(p: THREE.Object3D, x: number, y: number, z: number, r = 0.085) {
     z,
   ]);
 }
+// The aged crop shows flax/paper and oiled brown umbrellas. Muted mineral
+// reds and greens are restrained color interpretations, not recovered dyes.
+export const PARASOL_COLORS = [
+  0xd6c49b, 0xc5a16a, 0x967354, 0xa46551, 0x748978, 0xe1d2ad, 0x7d8a87,
+  0xb39a68,
+] as const;
+const parasolPigments = PARASOL_COLORS.map((c) => paintMaterial(c));
+export function parasolStyle(index: number, compact = false) {
+  return {
+    color: PARASOL_COLORS[index % PARASOL_COLORS.length],
+    form: ["round", "oval", "scalloped", "patched"][index % 4],
+    radius: compact ? 0.96 : 1.22 + (index % 3) * 0.09,
+    rimHeight: 1.43 + (index % 3) * 0.025,
+    rise: 0.22 + (index % 2) * 0.07,
+  };
+}
+export function marketParasol(
+  parent: THREE.Object3D,
+  index: number,
+  compact = false,
+) {
+  const spec = parasolStyle(index, compact),
+    g = new THREE.Group();
+  g.name = "paper-parasol";
+  g.userData = { ...spec };
+  parent.add(g);
+  g.rotation.y = index * 0.73;
+  const ribs = 20 + (index % 3) * 4,
+    lean = 0.035 * Math.sin(index * 1.7);
+  const point = (a: number, t: number): P => {
+    const r = spec.radius * t * (1 + 0.025 * Math.sin(a * 3 + index));
+    const scallop =
+      spec.form === "scalloped" ? 0.035 * Math.cos((a * ribs) / 2) * t ** 8 : 0;
+    return [
+      lean + r * Math.cos(a),
+      spec.rimHeight + spec.rise * (1 - t ** 1.3) + scallop,
+      r * Math.sin(a) * (spec.form === "oval" ? 0.76 : 1),
+    ];
+  };
+  rod(g, [0, 0, 0], [lean, spec.rimHeight + spec.rise, 0], 0.018, inkWood);
+  for (let j = 0; j < ribs; j++) {
+    const vertices: number[] = [],
+      ids: number[] = [];
+    for (let k = 0; k <= 4; k++)
+      for (const a of [
+        (j / ribs) * Math.PI * 2,
+        ((j + 1) / ribs) * Math.PI * 2,
+      ])
+        vertices.push(...point(a, k / 4));
+    for (let k = 0; k < 4; k++) {
+      const n = k * 2;
+      ids.push(n, n + 2, n + 1, n + 1, n + 2, n + 3);
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute("position", new THREE.Float32BufferAttribute(vertices, 3));
+    geo.setIndex(ids);
+    geo.computeVertexNormals();
+    const pigment =
+      spec.form === "patched" && j === 3
+        ? parasolPigments[(index + 2) % 8]
+        : parasolPigments[index % 8];
+    put(g, geo, pigment);
+    const a = (j / ribs) * Math.PI * 2;
+    mark(
+      g,
+      Array.from({ length: 5 }, (_, k) => {
+        const p = point(a, k / 4);
+        p[1] += 0.004;
+        return p;
+      }),
+    );
+    if (j % 4 === 0)
+      rod(g, [lean, spec.rimHeight - 0.24, 0], point(a, 0.78), 0.006, timber);
+  }
+  const finial = put(g, new THREE.SphereGeometry(0.036, 6, 4), inkWood, [
+    lean,
+    spec.rimHeight + spec.rise + 0.025,
+    0,
+  ]);
+  finial.scale.y = 0.7;
+  return g;
+}
 export function marketStall(
   parent: THREE.Object3D,
   index: number,
   covered: boolean,
 ) {
-  const g = new THREE.Group();
-  g.name = MARKET_TYPES[index % 6];
+  const root = new THREE.Group();
+  root.name = MARKET_TYPES[index % 6];
+  root.userData.display =
+    index % 6 === 1 || index % 6 === 4 ? "low-trestle" : "counter";
+  let g = new THREE.Group();
+  root.add(g);
   const fabric = fabrics[(index * 5 + Math.floor(index / 6)) % fabrics.length];
-  parent.add(g);
-  box(g, [1.3, 0.07, 0.66], [0, 0.61, 0]);
+  parent.add(root);
+  box(g, [1.3, 0.07, 0.66], [0, 0.61, 0]).name = "display-counter";
   for (const x of [-0.55, 0.55])
     for (const z of [-0.25, 0.25]) box(g, [0.045, 0.58, 0.045], [x, 0.29, z]);
   rod(g, [-0.55, 0.2, -0.25], [0.55, 0.2, -0.25]);
@@ -231,13 +321,13 @@ export function marketStall(
     for (let i = 0; i < 8; i++) {
       const x = -0.45 + (i % 4) * 0.29,
         z = -0.13 + Math.floor(i / 4) * 0.23;
-      const fish = put(g, new THREE.SphereGeometry(1, 8, 5), cloth, [
+      const fish = put(g, new THREE.SphereGeometry(1, 8, 5), fishGlaze, [
         x,
         0.7,
         z,
       ]);
       fish.scale.set(0.106, 0.024, 0.037);
-      const tail = put(g, new THREE.ConeGeometry(0.04, 0.07, 3), cloth, [
+      const tail = put(g, new THREE.ConeGeometry(0.04, 0.07, 3), fishGlaze, [
         x - 0.12,
         0.7,
         z,
@@ -252,6 +342,36 @@ export function marketStall(
     wovenBasket(g, -0.4, 0.13, -0.46, 0.15, 0.24);
     wovenBasket(g, 0.4, 0.13, -0.46, 0.15, 0.24);
   }
+  if (kind === 1 || kind === 4) {
+    g.scale.y = 0.58;
+    // Low woven displays and stacked baskets appear throughout the approach.
+    box(root, [1.38, 0.018, 0.85], [0, 0.012, -0.08], linen);
+  }
+  if (kind === 4)
+    for (let i = 0; i < 7; i++) {
+      const leaf = put(g, new THREE.SphereGeometry(0.06, 5, 3), produce, [
+        0.44 + Math.sin(i * 2.4) * 0.09,
+        0.35,
+        -0.48 + Math.cos(i * 2.4) * 0.08,
+      ]);
+      leaf.scale.set(0.55, 1.4, 0.6);
+    }
+  if (kind === 3)
+    for (const x of [-0.44, 0.36]) {
+      rod(root, [x, 0, -0.31], [x, 1.45, -0.31], 0.012);
+      box(
+        root,
+        [0.26, 0.56, 0.018],
+        [x, 1.1, -0.31],
+        fabrics[(index + 2) % fabrics.length],
+      );
+      for (let j = 0; j < 4; j++)
+        mark(root, [
+          [x - 0.08 + j * 0.045, 0.89, -0.297],
+          [x - 0.08 + j * 0.045, 0.96, -0.297],
+        ]);
+    }
+  g = root;
   if (covered) {
     for (const x of [-0.65, 0.65])
       for (const z of [-0.35, 0.35])
@@ -261,12 +381,12 @@ export function marketStall(
       ids: number[] = [];
     for (let i = 0; i <= 12; i++)
       for (let j = 0; j <= 8; j++) {
-        const x = -0.78 + (i / 12) * 1.56,
+        const x = -0.9 + (i / 12) * 1.8,
           z = -0.5 + j / 8;
         vertices.push(
           x,
           1.48 +
-            0.15 * (1 - Math.abs(z) * 2) -
+            (index % 2 ? 0.12 * z : 0.15 * (1 - Math.abs(z) * 2)) -
             0.055 * Math.sin((i / 12) * Math.PI) +
             0.012 * Math.sin(i * 1.7 + j),
           z,
@@ -304,7 +424,7 @@ export function marketStall(
   }
   // Hanging shop board, short stool and low baskets break the uniform table row.
   const sign = box(g, [0.15, 0.29, 0.025], [0.6, 1.04, -0.3], linen);
-  sign.rotation.z = 0.08;
+  sign.rotation.z = ((index % 3) - 1) * 0.12;
   for (let i = 0; i < 3; i++)
     mark(g, [
       [0.565, 1.12 - i * 0.067, -0.281],
@@ -314,7 +434,7 @@ export function marketStall(
   box(g, [0.3, 0.035, 0.18], [-0.43, 0.23, -0.63]);
   for (const x of [-0.54, -0.32])
     rod(g, [x, 0, -0.63], [x, 0.23, -0.63], 0.014);
-  return g;
+  return root;
 }
 export function bridgeMarket(
   parent: THREE.Object3D,
@@ -331,8 +451,8 @@ export function bridgeMarket(
     const g = new THREE.Group();
     g.position.set(x, height(x), side * (width / 2 + 0.04));
     // Counters at waist height and shelters above the revised adult figures.
-    g.scale.y = 1.35;
-    g.rotation.z=Math.atan2(height(x+.4)-height(x-.4),.8);
+    g.scale.y = 1.6;
+    g.rotation.z = Math.atan2(height(x + 0.4) - height(x - 0.4), 0.8);
     parent.add(g);
     box(g, [layout.width, 0.035, layout.depth], [0, 0.24, 0]);
     for (const u of [-0.28, 0.28]) rod(g, [u, 0, 0], [u, 0.24, 0], 0.012);
@@ -359,7 +479,12 @@ export function bridgeMarket(
     if (layout.canopy) {
       for (const x of [-0.4, 0.4])
         rod(g, [x, 0, side * 0.1], [x, 0.67, side * 0.1], 0.01);
-      const roof = box(g, [0.96, 0.025, 0.42], [0, 0.68, side * 0.07], fabrics[i % fabrics.length]);
+      const roof = box(
+        g,
+        [0.96, 0.025, 0.42],
+        [0, 0.68, side * 0.07],
+        fabrics[i % fabrics.length],
+      );
       roof.rotation.x = side * 0.12;
       for (let j = 0; j < 10; j++)
         rod(

@@ -19,6 +19,9 @@ import {
   bridgePoint,
   GROUND_Y,
   PERSON_SCALE,
+  PERSON_WIDTH_SCALE,
+  BRIDGE_RAIL_HEIGHT,
+  MIN_EAVE_HEIGHT,
   REFERENCE_TREE,
 } from "./passageLayout";
 import {
@@ -48,7 +51,7 @@ import { MAIN_STREET, segmentDistance } from "./passageSpace";
 import { createCrowd } from "./crowd";
 import { FIGURE_TYPES } from "./figureTypes";
 import { buildFigure, FIGURE_HEIGHT } from "./figures";
-import { marketStall, bridgeMarket, MARKET_TYPES } from "./marketModels";
+import { marketStall, bridgeMarket, marketParasol, MARKET_TYPES } from "./marketModels";
 import { chooseDetail, projectedHeightPixels, type DetailLevel } from "../../../packages/scene-kit/lod";
 import { idleMotion } from "./peopleMotion";
 import { bridgeActivity, bridgeRole, bridgeVariant } from "./bridgeActivity";
@@ -327,6 +330,8 @@ function horseCart(parent: THREE.Group, index: number) {
     // Handles reach the porter's hands; no invisible horse is rendered.
     for(const side of [-1,1])beam(g,[-.4,.43,side*.24],[.58,.54,side*.24],.024,wood);
   }
+  animal.scale.y=1.6;headGroup.scale.y=1.6;
+  legs.forEach(leg=>{leg.position.y*=1.6;leg.scale.y=1.6;});
   const animated = [...legs, ...wheels, headGroup];
   animated.forEach((part) => g.remove(part));
   batchStatic(g);
@@ -421,26 +426,6 @@ export function person(parent: THREE.Object3D, variant: number, walking = false,
   return buildFigure(parent, variant, walking, detail, batchStatic);
 }
 
-function parasol(parent: THREE.Object3D, x: number, z: number) {
-  const g = new THREE.Group();
-  parent.add(g);
-  g.position.set(x, GROUND_Y, z);
-  g.scale.setScalar(0.7);
-  parent = g;
-  x = z = 0;
-  beam(parent, [x, 0.08, z], [x, 1.15, z], 0.024, dark);
-  mesh(parent, new THREE.ConeGeometry(0.62, 0.19, 16), linen, x, 1.18, z);
-  for (let j = 0; j < 12; j++) {
-    const a = (j * Math.PI) / 6;
-    beam(
-      parent,
-      [x, 1.28, z],
-      [x + Math.cos(a) * 0.61, 1.09, z + Math.sin(a) * 0.61],
-      0.007,
-      dark,
-    );
-  }
-}
 // Authored in the horizontal/depth basis of the supplied crop, not repeated districts.
 function bank(parent: THREE.Group, outline: number[][]) {
   const shape = new THREE.Shape();
@@ -495,6 +480,7 @@ export function hall(
   kind: BuildingKind = "dwelling",
   gableRoof = false,
 ) {
+  h = Math.max(h, MIN_EAVE_HEIGHT);
   const g = new THREE.Group();
   parent.add(g);
   g.position.copy(scrollPoint(s, d));
@@ -516,8 +502,10 @@ export function hall(
       depth * 0.42,
       plaster,
     );
-    box(g, 0.38, h * 0.42, 0.06, w * 0.16, h * 0.21, depth * 0.43, dark);
-    box(g, 0.53, 0.065, 0.28, w * 0.16, h * 0.43, depth * 0.42, roof);
+    const gateH=MIN_EAVE_HEIGHT*.94;
+    box(g, 0.38, gateH, 0.06, w * 0.16, gateH/2, depth * 0.43, dark);
+    box(g, 0.53, 0.065, 0.28, w * 0.16, gateH+.035, depth * 0.42, roof).name="entry-lintel";
+    for(const side of [-1,1])beam(g,[w*.16+side*.23,0,depth*.42],[w*.16+side*.23,gateH,depth*.42],.02,dark);
     for (let i = 0; i < 3; i++)
       mesh(
         g,
@@ -540,14 +528,14 @@ export function hall(
       box(
         g,
         w * 0.1,
-        h * 0.36,
+        MIN_EAVE_HEIGHT*.94,
         0.1,
         side * w * 0.18,
-        h * 0.18,
+        MIN_EAVE_HEIGHT*.47,
         depth / 2,
         plaster,
       );
-    box(g, w * 0.24, 0.07, 0.34, 0, h * 0.44, depth / 2, roof);
+    box(g, w * 0.24, 0.07, 0.34, 0, MIN_EAVE_HEIGHT*.94+.035, depth / 2, roof).name="entry-lintel";
     return g;
   }
   if (kind === "openhall") {
@@ -578,7 +566,7 @@ export function hall(
       if(gableRoof||kind==='warehouse'||kind==='shop'){
         // Leave the gable entrance open; its dark back panel is recessed.
         for(const end of [-1,1])box(g,.055,h,depth*.36,side*w/2,h/2,end*depth*.32,plaster);
-        box(g,.055,h*.25,depth*.28,side*w/2,h*.875,0,plaster);
+        box(g,.055,h*.12,depth*.28,side*w/2,h*.94,0,plaster);
       }else box(g,.055,h,depth,side*w/2,h/2,0,plaster);
       const bays=Math.max(2,Math.ceil(w/.7)),bay=w/bays,z=side*depth/2;
       for(let i=0;i<=bays;i++){
@@ -586,13 +574,13 @@ export function hall(
         if(i<bays){
           const cx=x+bay/2;
           if(i!==Math.floor(bays/2))box(g,bay-.045,h*.25,.04,cx,h*.125,z,kind==='warehouse'?wood:plaster);
-          box(g,bay-.045,h*.25,.04,cx,h*.875,z,plaster);
+          box(g,bay-.045,h*.12,.04,cx,h*.94,z,plaster);
           const doorway=i===Math.floor(bays/2);
-          box(g,bay-.07,h*(doorway?.85:.5),.025,cx,h*(doorway?.425:.5),z-side*.15,dark);
+          box(g,bay-.07,h*(doorway?.88:.5),.025,cx,h*(doorway?.44:.5),z-side*.15,dark);
           if(i!==Math.floor(bays/2))box(g,bay*.72,h*.22,.026,cx,h*.37,z-side*.035,wood);
         }
       }
-      box(g,w,.045,.05,0,h*.75,z,dark);
+      box(g,w,.045,.05,0,h*.88,z,dark);
     }
   }
   // Low shop/warehouse gables contrast with broad hipped dwelling roofs.
@@ -710,10 +698,10 @@ export function hall(
     box(
       g,
       w * 0.24,
-      h * 0.76,
+      h * 0.90,
       0.028,
       -w * 0.12,
-      h * 0.38,
+      h * 0.45,
       depth / 2 + 0.04,
       dark,
     );
@@ -728,15 +716,19 @@ export function hall(
         );
     return g;
   }
-  for (let i = 0; i <= Math.ceil(w / 0.6); i++) {
-    const x = -w / 2 + (i * w) / Math.ceil(w / 0.6);
+  const frontBays=Math.max(2,Math.ceil(w/.7));
+  for (let i = 0; i <= frontBays; i++) {
+    const x = -w / 2 + (i * w) / frontBays;
     box(g, 0.037, h, 0.035, x, h / 2, depth / 2 + 0.018, dark);
 
   }
   for (const side of [-1, 1])
     for (let z = -depth / 2; z <= depth / 2; z += 0.5)
       if(!gabled||Math.abs(z)>depth*.14)box(g, 0.035, h, 0.032, (side * w) / 2, h / 2, z, dark);
-  box(g, w, 0.032, 0.035, 0, h * 0.28, depth / 2 + 0.04, dark);
+  for(let i=0;i<frontBays;i++)if(i!==Math.floor(frontBays/2)){
+    const bay=w/frontBays;
+    box(g,bay,.032,.035,-w/2+(i+.5)*bay,h*.28,depth/2+.04,dark);
+  }
   if (kind === "shop") {
     // Hanging shop board and small wares remain within the roof overhang.
     beam(
@@ -763,9 +755,9 @@ export function hall(
       box(g, w * 0.25, h * 0.7, 0.025, x, h * 0.42, depth / 2 + 0.05, dark);
       box(g, w * 0.25, h * 0.23, 0.16, x, h * 0.12, depth / 2 + 0.07, wood);
     }
-    const awning = box(g, w * 0.94, 0.035, 0.38, 0, h * 0.83, depth / 2, linen);
+    const awning = box(g, w * 0.94, 0.035, 0.38, 0, h * 0.96, depth / 2, linen);
     awning.rotation.x = 0.12;
-    box(g, w * 0.94, 0.09, 0.025, 0, h * 0.75, depth / 2 + 0.18, linen);
+    box(g, w * 0.94, 0.09, 0.025, 0, h * 0.90, depth / 2 + 0.18, linen);
     box(g, 0.14, h * 0.57, 0.035, -w * 0.41, h * 0.65, depth / 2 + 0.09, linen);
   } else if (kind === "gallery") {
     // Balcony corner posts and hanging lanterns distinguish larger tea halls.
@@ -773,19 +765,16 @@ export function hall(
       beam(g, [x, 0, depth / 2 + 0.12], [x, h, depth / 2 + 0.12], 0.032);
       box(g, 0.14, 0.19, 0.12, x, h * 0.76, depth / 2 + 0.13, linen);
     }
-    // Recessed upper gallery and a second shallow eave distinguish larger halls.
-    box(g, w * 0.88, h * 0.3, 0.025, 0, h * 0.68, depth / 2 + 0.05, dark);
-    box(g, w + 0.25, 0.055, depth + 0.28, 0, h * 0.48, 0, roof);
-    for (let x = -w * 0.43; x <= w * 0.44; x += 0.22)
-      box(g, 0.025, h * 0.22, 0.025, x, h * 0.59, depth / 2 + 0.08, wood);
-    for (const y of [h * 0.5, h * 0.69])
-      beam(
-        g,
-        [-w * 0.45, y, depth / 2 + 0.1],
-        [w * 0.45, y, depth / 2 + 0.1],
-        0.015,
-        wood,
-      );
+    // Screened single-storey veranda: the canopy and central doorway
+    // have the same adult clearance as the adjoining shop bays.
+    const bay=w/frontBays;
+    for(let i=0;i<frontBays;i++)if(i!==Math.floor(frontBays/2)){
+      const cx=-w/2+(i+.5)*bay;
+      box(g,bay-.06,h*.3,.025,cx,h*.5,depth/2+.05,dark);
+      for(let j=0;j<4;j++)box(g,.025,h*.3,.03,cx+(j-1.5)*bay*.2,h*.5,depth/2+.08,wood);
+      for(const y of [.36,.64])beam(g,[cx-bay*.43,h*y,depth/2+.08],[cx+bay*.43,h*y,depth/2+.08],.012,wood);
+    }
+    box(g,w+.25,.055,depth+.28,0,h*.98,0,roof);
   } else if (kind === "warehouse") {
     for (const side of [-1, 1]) {
       box(
@@ -941,10 +930,10 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
       0.045,
     );
     for (const z of [-BRIDGE.width / 2, BRIDGE.width / 2]) {
-      beam(bridge, [x, height(x), z], [x, height(x) + 0.27, z], 0.021);
+      beam(bridge, [x, height(x), z], [x, height(x) + BRIDGE_RAIL_HEIGHT, z], 0.021);
       if (i < 16) {
         const next = x + BRIDGE.length / 16;
-        for (const rail of [0.14, 0.27])
+        for (const rail of [BRIDGE_RAIL_HEIGHT / 2, BRIDGE_RAIL_HEIGHT])
           beam(
             bridge,
             [x, height(x) + rail, z],
@@ -1049,11 +1038,12 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
       segmentDistance({ s, d }, MAIN_STREET) < 5.5
         ? REFERENCE_AZIMUTH - BRIDGE.angle + (lateral > 0 ? Math.PI : 0)
         : REFERENCE_AZIMUTH + (d > 0 ? Math.PI : 0);
-    const shopRoot=new THREE.Group();shopRoot.position.set(p.x,GROUND_Y,p.z);shopRoot.rotation.y=turn;shopRoot.scale.setScalar(.55*size);group.add(shopRoot);
-    marketStall(shopRoot,i,i%3===0);
+    const shopRoot=new THREE.Group();shopRoot.position.set(p.x,GROUND_Y,p.z);shopRoot.rotation.y=turn;shopRoot.scale.set(.55*size,.72,.55*size);group.add(shopRoot);
+    const shaded=covered || (size<1 && i%4===1);
+    marketStall(shopRoot,i,!shaded && i%3===0);
     shopRoot.updateMatrixWorld(true);
     vendorSites.push({position:shopRoot.localToWorld(new THREE.Vector3(-.22,0,-.58)),turn,shop:i});
-    if (covered) parasol(group, p.x + 0.4, p.z + 0.3);
+    if (shaded) marketParasol(shopRoot, i+(size<1?Math.floor(i/4):0), size < 1);
   });
   batchStatic(group);
   detailedBuildings.forEach(b=>group.add(b.root));
@@ -1133,7 +1123,7 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
   const crowd = createCrowd(group, (i, level) => person(new THREE.Group(), i, true, level));
   const addPerson = (parent: THREE.Object3D, i: number, name: string) => {
     const p = crowd.add(parent, i, name);
-    p.scale.multiplyScalar(PERSON_SCALE);
+    p.scale.multiply(new THREE.Vector3(PERSON_WIDTH_SCALE,PERSON_SCALE,PERSON_WIDTH_SCALE));
     return {
       group: p,
       left: p.getObjectByName("left-leg")!,
@@ -1289,8 +1279,8 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
         animatePerson(p, i + 300, time, shopperPose(i, time, seed)),
       );
       vendors.forEach((p,i)=>{
-        const site=vendorSites[i],idle=idleMotion(i+700,time,seed),seated=i%3===0;
-        p.group.position.copy(site.position);p.group.position.y+=idle.breath-(seated?.04:0);
+        const site=vendorSites[i],idle=idleMotion(i+700,time,seed),seated=i%6===1 || i%6===4;
+        p.group.position.copy(site.position);p.group.position.y+=idle.breath-(seated?.10:0);
         p.group.rotation.set(.04,site.turn+idle.look,0);
         p.head.rotation.set(.17,idle.look,0);
         p.leftArm.rotation.x=-.75+Math.sin(time*.6+i)*.08;
@@ -1300,8 +1290,12 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
       drivers.forEach((p, i) => {
         const idle = idleMotion(i + 400, time, seed);
         const kind=CART_KINDS[i];
-        p.group.position.set(kind==="handcart"?.5:kind==="pack-horse"?.65:-.42,
-          (kind==="handcart"?0:kind==="pack-horse"?.6:.48)+idle.breath,0);
+        // Seat the hips at the cart/saddle height instead of putting the feet
+        // on the seat, which made the taller drivers float above the vehicle.
+        const parentScale=carts[i].group.scale.y;
+        const seatHeight=(kind==="pack-horse"?.9*1.6:.52)*parentScale;
+        const localHeight=kind==="handcart"?0:(seatHeight-.22*PERSON_SCALE)/parentScale;
+        p.group.position.set(kind==="handcart"?.5:kind==="pack-horse"?.65:-.42,localHeight+idle.breath,0);
         const walking=kind==="handcart",stride=walking?Math.sin(time*3+i)*.32:0;
         p.left.rotation.x=walking?stride:-.8;p.right.rotation.x=walking?-stride:-.8;
         p.leftArm.rotation.x=walking?-.5:-.35;p.rightArm.rotation.x=walking?-.5:-.35;

@@ -806,13 +806,13 @@ export function addReferenceArchitecture(
       block(
         g,
         0.025,
-        h * 0.72,
+        h * 0.88,
         depth * 0.23,
-        [x - side * 0.15, h * 0.36, 0],
+        [x - side * 0.15, h * 0.44, 0],
         recess,
       );
       for (const z of [-depth * 0.12, depth * 0.12])
-        rod(g, [x * 1.005, 0.04, z], [x * 1.005, h * 0.74, z], 0.018, edge);
+        rod(g, [x * 1.005, 0.04, z], [x * 1.005, h * 0.90, z], 0.018, edge);
       for (const z of [-depth * 0.31, depth * 0.31]) {
         block(g, 0.025, h * 0.28, depth * 0.19, [x, h * 0.58, z], recess);
         for (let j = -2; j <= 2; j++)

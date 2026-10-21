@@ -3,7 +3,10 @@
 export type BankSide = "far" | "near";
 export type PassagePoint = { s: number; d: number };
 export const GROUND_Y = 0.015;
-export const PERSON_SCALE = 1.05; // about 0.71 units: bridge width ≈ 4.5 adult heights
+export const PERSON_SCALE = 1.25; // nominal adult height 0.85: bridge width ≈ 3.8 adult heights
+export const PERSON_WIDTH_SCALE = 1.05; // retain the existing walking clearance
+export const BRIDGE_RAIL_HEIGHT = 0.42;
+export const MIN_EAVE_HEIGHT = 1.12;
 export const SHORELINES: Record<BankSide, PassagePoint[]> = {
   far: [
     [-22, -5.8],
@@ -244,6 +247,9 @@ HALLS.push(
     angle: 0,
   },
 );
+// Small shop roofs formerly had eaves below adult head height. Keep their
+// authored footprints, but provide headroom for the tallest standing profile.
+HALLS.forEach(h => { h.height = Math.max(h.height, MIN_EAVE_HEIGHT); });
 // The old bare tree's trunk stands beside the near quay, behind the foreground
 // roof line, with the crown reaching into the water silhouette.
 export const REFERENCE_TREE = {

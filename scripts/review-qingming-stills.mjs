@@ -76,31 +76,46 @@ try {
     await document.fonts.ready;
   });
   const views =
-    process.env.REVIEW_WIDE_EDGES === "1"
+    process.env.REVIEW_MARKET === "1"
       ? [
           [
-            "wide-edge-front",
-            { zoom: 0.72, angle: 30, pitch: 3, target: [0, 0] },
+            "market-variety",
+            { zoom: 3.2, angle: -10, pitch: 5, target: [1.6, 6.3] },
           ],
           [
-            "wide-edge-reverse",
-            { zoom: 0.72, angle: -40, pitch: 6, target: [0, 0] },
+            "bridge-proportions",
+            { zoom: 2.4, angle: -50, pitch: 0, target: [-6, 0.5] },
+          ],
+          [
+            "market-overview",
+            { zoom: 0.96, angle: 30, pitch: 3, target: [0, 0] },
           ],
         ]
-      : [
-          [
-            "river-overview",
-            { zoom: 1.08, angle: 30, pitch: 3, target: [0, 0] },
-          ],
-          [
-            "bridge-and-streets",
-            { zoom: 2.6, angle: -50, pitch: 6, target: [-6, 1] },
-          ],
-          [
-            "water-and-banks",
-            { zoom: 2.4, angle: 70, pitch: -10, target: [6, -1] },
-          ],
-        ];
+      : process.env.REVIEW_WIDE_EDGES === "1"
+        ? [
+            [
+              "wide-edge-front",
+              { zoom: 0.72, angle: 30, pitch: 3, target: [0, 0] },
+            ],
+            [
+              "wide-edge-reverse",
+              { zoom: 0.72, angle: -40, pitch: 6, target: [0, 0] },
+            ],
+          ]
+        : [
+            [
+              "river-overview",
+              { zoom: 1.08, angle: 30, pitch: 3, target: [0, 0] },
+            ],
+            [
+              "bridge-and-streets",
+              { zoom: 2.6, angle: -50, pitch: 6, target: [-6, 1] },
+            ],
+            [
+              "water-and-banks",
+              { zoom: 2.4, angle: 70, pitch: -10, target: [6, -1] },
+            ],
+          ];
   for (const [view, options] of views) {
     measurements[view] = await page.evaluate(
       (o) => window.qingmingStudy.frame(24, o),
