@@ -23,7 +23,9 @@ export type BuildingKind =
   | "gallery"
   | "shed"
   | "openhall"
-  | "compound";
+  | "compound"
+  | "upper-storey"
+  | "construction";
 export const BUILDING_KINDS: BuildingKind[] = [
   "warehouse",
   "compound",
@@ -52,6 +54,8 @@ export const BUILDING_KINDS: BuildingKind[] = [
   "compound",
   "courtyard",
 ];
+BUILDING_KINDS[8] = "upper-storey";
+BUILDING_KINDS.push("construction");
 // Keep the historic export for callers; these people now use the whole street.
 export { MAIN_STREET_WALKERS as BRIDGE_WALKERS } from "./pedestrians";
 export const BRIDGE_OBSERVERS = BRIDGE_PEOPLE_PER_SIDE * 2;
@@ -75,11 +79,11 @@ export const CARTS = CART_ROUTES;
 export const CART_KINDS = [
   "horse-cart",
   "covered-cart",
-  "horse-cart",
-  "covered-cart",
+  "pack-horse",
+  "donkey-cart",
   "ox-cart",
   "covered-cart",
-  "pack-horse",
+  "horse-cart",
   "handcart",
 ] as const;
 export function cartPose(index: number, time: number) {
@@ -107,7 +111,7 @@ export function boatPose(index: number, time: number) {
   const circuit = 72,
     speed = 0.18;
   const slot = Math.floor(index / 2);
-  const s = direction * (-36 + ((time * speed + slot * 18 + 12) % circuit));
+  const s = direction * (-36 + ((time * speed + slot * 18 + (direction === 1 ? 12 : 38)) % circuit));
   let minCenter = Infinity,
     maxCenter = -Infinity;
   for (let j = 0; j <= 32; j++) {
@@ -216,8 +220,8 @@ export const SHOPPER_WANDER = 0.18;
 export const SHOP_VISITORS: (PassagePoint & { shop: number })[] = [];
 MARKET.forEach((shop, index) => {
   let placed = 0;
-  for (let j = 0; j < 48 && placed < 5; j++) {
-    const angle = (j * Math.PI) / 24,
+  for (let j = 0; j < 96 && placed < 6; j++) {
+    const angle = (j * Math.PI) / 48,
       offset =
         (shop.size < 1 ? 0.5 : shop.parasol ? 0.97 : 0.7) + SHOPPER_SPACE + 0.1;
     const p = {

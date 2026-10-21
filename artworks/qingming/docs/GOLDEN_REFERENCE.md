@@ -14,7 +14,7 @@ Selected by the user on 20 October 2026.
 
 Use the Chicago viewer as the canonical source for examining details and the user-selected crop as the framing guide. This is the Song original, not the Qing court reinterpretation considered earlier in the conversation. The current scene already follows this version; refine the existing scene rather than switching to the Qing court composition.
 
-This decision supersedes older reproduction-specific palette and framing guidance in ART_DIRECTION.md where they differ. Existing bundled reference images remain historical comparison assets until deliberately replaced; this documentation change does not replace the in-app comparison image.
+This decision supersedes older reproduction-specific palette and framing guidance in ART_DIRECTION.md where they differ. The clearer follow-up crop `Screenshot from 2026-10-20 23-03-23(1).png` is bundled as `public/reference/chicago-rainbow-bridge.png` and is now the in-app comparison image. Older bundled reproductions remain historical assets. See `docs/reviews/2026-10-20-reference-details/` at the repository root for the implemented detail pass and rendered views.
 
 ## What the reference governs
 

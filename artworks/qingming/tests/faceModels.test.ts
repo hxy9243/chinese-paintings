@@ -18,7 +18,7 @@ it("sculpts the nose continuously and differentiates child, adult and elder prof
 });
 it("creates finite smooth head geometry with eyes lying on their sockets and stable articulation", () => {
   const material = paintMaterial(0xbfa17e);
-  for (const variant of [0, 6, 7, 8]) {
+  for (const variant of [0, 6, 7, 8, 12, 13, 14, 15]) {
     const parent = new THREE.Group(),
       face = buildCloseFace(parent, variant, {
         skin: material,

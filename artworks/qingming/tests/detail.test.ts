@@ -12,7 +12,7 @@ describe("reference landmarks and geometry detail", () => {
     expect(hall.gable).toBe(true);
     expect(hall.angle).toBeCloseTo(Math.PI/2);
     HALLS.forEach(h=>expect(Math.sin(h.angle*2)).toBeCloseTo(0));
-    expect(HALLS).toHaveLength(26);
+    expect(HALLS).toHaveLength(27);
     expect(FEATURE_TREES).toContainEqual({...REFERENCE_TREE,id:"near-quay-old-tree"});
     expect(FEATURE_TREES.map(t=>t.id)).toContain("foreground-pollard-west");
     expect(FEATURE_TREES.map(t=>t.id)).toContain("far-landing-bare");
@@ -36,13 +36,13 @@ describe("reference landmarks and geometry detail", () => {
     camera.zoom=.3;study.update(8,camera,760);
     const far=study.metadata();
     const triangles=(m:typeof close)=>m.crowd.levels.reduce((n,l)=>n+l.triangles,0);
-    expect(close.crowd.variants).toBe(12);
-    expect(new Set(FIGURE_TYPES.map(f=>f.name)).size).toBe(12);
+    expect(close.crowd.variants).toBe(16);
+    expect(new Set(FIGURE_TYPES.map(f=>f.name)).size).toBe(16);
     expect(far.crowd.levels[0].actors).toBeGreaterThan(100);
     expect(triangles(far)).toBeLessThan(triangles(close)*.35);
     expect(far.vegetationLevel).toBeLessThan(close.vegetationLevel);
     const counts=study.group.children.filter(o=>o.name==="horse-cart");
-    expect(new Set(counts.map(o=>o.userData.trafficKind))).toEqual(new Set(["horse-cart","covered-cart","ox-cart","pack-horse","handcart"]));
+    expect(new Set(counts.map(o=>o.userData.trafficKind))).toEqual(new Set(["horse-cart","covered-cart","ox-cart","donkey-cart","pack-horse","handcart"]));
     camera.zoom=2.5;study.update(8,camera,760);expect(study.metadata().crowd).toEqual(close.crowd);
     study.group.traverse(n=>{if(n instanceof THREE.Mesh||n instanceof THREE.Line)n.geometry.dispose();});
   });

@@ -17,8 +17,8 @@ export function faceProfile(variant: number) {
   const index = variant % FIGURE_TYPES.length,
     role = FIGURE_TYPES[index].name;
   return {
-    width: widths[index],
-    jaw: jaws[index],
+    width: widths[index % widths.length],
+    jaw: jaws[index % jaws.length],
     age: role === "elder" ? 70 : role === "child" ? 9 : 26 + ((index * 7) % 23),
     nose:
       role === "child"

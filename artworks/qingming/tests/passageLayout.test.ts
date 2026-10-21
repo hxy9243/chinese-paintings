@@ -1,3 +1,4 @@
+import {BUILDING_KINDS} from "../src/passageLife";
 import { FIGURE_HEIGHT } from "../src/figures";
 import { describe, expect, it } from "vitest";
 import {
@@ -106,7 +107,7 @@ describe("reference passage geometry", () => {
     expect(BRIDGE.width / figureHeight).toBeGreaterThan(3.5);
     expect(BRIDGE.width / figureHeight).toBeLessThan(4.1);
     expect(Math.min(...HALLS.map(h=>h.height))*.875).toBeGreaterThan(figureHeight*1.08);
-    expect(Math.max(...HALLS.map((h) => h.height)) / figureHeight).toBeLessThan(
+    expect(Math.max(...HALLS.filter((_,i)=>BUILDING_KINDS[i]!=="construction").map((h) => h.height)) / figureHeight).toBeLessThan(
       3,
     );
     expect(bridgeHeight(0)).toBeCloseTo(GROUND_Y + BRIDGE.rise);

@@ -87,7 +87,7 @@ export function buildReferenceTree(
   const old = form === "spreading",
     pollard = form === "pollard",
     h = old ? (landmark ? 1.75 : 1.65) : pollard ? 1.35 : 1.9;
-  const radius = old ? (landmark ? 0.19 : 0.105) : pollard ? 0.075 : 0.045;
+  const radius = old ? (landmark ? 0.25 : 0.135) : pollard ? 0.11 : 0.05;
   const curves: { curve: THREE.CatmullRomCurve3; radius: number }[] = [];
   const limb = (points: P[], r: number, end = 0.03) => {
     const curve = new THREE.CatmullRomCurve3(points.map(v)),
@@ -195,6 +195,17 @@ export function buildReferenceTree(
           );
         }
     }
+  if (old && detail > 0) {
+    // Broken bark plates and scar hollows follow the trunk instead of a smooth cone.
+    for(let j=0;j<(detail===2?44:15);j++) {
+      const t=.06+(j%13)*.052, center=trunk.getPoint(t), a=j*2.399+seed;
+      const rr=radius*(.16+.84*Math.pow(1-t,1.35));
+      const scar=solid(g,new THREE.IcosahedronGeometry(1,0),j%3===0?edge:board,
+        [center.x+Math.cos(a)*rr,center.y,center.z+Math.sin(a)*rr]);
+      scar.scale.set(.018+(j%3)*.008,.04+(j%4)*.012,.014);
+      scar.rotation.y=-a;
+    }
+  }
   if (old || pollard)
     for (let j = 0; j < 5; j++) {
       const a = j * 1.256 + seed;
@@ -605,13 +616,25 @@ export function buildReferenceBoat(
         ]);
       }
   }
-  // The main junk in the crop is lowering its mast to pass the bridge. Keep the
-  // rig below 1.10, including rigging, rather than adding an upright tall mast.
-  if (style === "freight" || style === "cabin") {
+  // Cabin boats carry stowed spars. The main freight rig pivots independently
+  // in referenceDetails.ts as it approaches the bridge.
+  if (style === "cabin") {
     const foot: P = [width * 0.59, 0.35, -length * 0.28],
       tip: P = [width * 0.61, 1.08, length * 0.3];
     rod(g, foot, tip, 0.023, edge);
     block(g, width * 0.22, 0.22, 0.09, [width * 0.5, 0.44, -length * 0.28]);
+    const sail:number[]=[];
+    const fold=(u:number,t:number):P => [width*(.39+u*.23),
+      .49+t*.34 + .043*Math.cos(u*Math.PI*10) - .055*Math.sin(t*Math.PI),
+      length*(-.24+t*.48)];
+    for(let j=0;j<12;j++)for(let k=0;k<8;k++)
+      quad(sail,fold(j/12,k/8),fold((j+1)/12,k/8),fold((j+1)/12,(k+1)/8),fold(j/12,(k+1)/8));
+    surface(g,sail,reed).name="collapsed-pleated-sail";
+    for(let j=0;j<6;j++)line(g,Array.from({length:9},(_,k)=>fold(j/5,k/8)));
+    for(let k=1;k<5;k++){
+      const z=length*(-.24+k*.096),y=.49+k*.068;
+      line(g,[[width*.36,y+.06,z],[width*.64,y+.03,z],[width*.61,y-.05,z]]);
+    }
     for (const side of [1])
       line(g, [
         [side * width * 0.49, 0.34, -length * 0.32],

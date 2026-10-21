@@ -24,10 +24,10 @@ describe("busy bridge market", () => {
       {} as Record<string, number>,
     );
     expect(counts).toEqual({
-      vendor: 8,
-      customer: 8,
-      "river-watcher": 8,
-      conversation: 8,
+      vendor: 10,
+      customer: 10,
+      "river-watcher": 10,
+      conversation: 10,
     });
     for (const shop of BRIDGE_SHOPS) {
       expect(Math.abs(shop.lateral) - shop.depth / 2).toBeGreaterThan(1.5);

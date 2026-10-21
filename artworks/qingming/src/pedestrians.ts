@@ -10,7 +10,7 @@ import { activityClock, randomUnit } from "./peopleMotion";
 
 // One population spans both streets and the bridge. The bank paths have their
 // own population, so the streets no longer empty out at the bridge landings.
-export const MAIN_STREET_WALKERS = 132;
+export const MAIN_STREET_WALKERS = 156;
 export const WALKER_COUNT = MAIN_STREET_WALKERS + 48;
 const STEP = 0.2,
   // Include interpolation clearance between fixed steps, including bank bends.

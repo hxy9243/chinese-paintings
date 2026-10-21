@@ -124,7 +124,7 @@ export function buildFigure(
   const long = ["scholar", "woman", "elder", "attendant"].includes(
       profile.name,
     ),
-    porter = profile.name === "porter",
+    porter = profile.load === "baskets",
     elder = profile.name === "elder";
   const forward = porter ? 0.026 : elder ? 0.04 : 0;
   const allRings = [
@@ -658,7 +658,7 @@ export function buildFigure(
     }
     batch(leg);
   }
-  if (detail > 0) {
+  if (detail > 0 || profile.load === "baskets" || profile.load === "bundle" || profile.load === "staff") {
     const gear = new THREE.Group();
     g.add(gear);
     const basket = (x: number, y: number, z: number, r = 0.05, h = 0.085) => {
@@ -718,7 +718,14 @@ export function buildFigure(
             shoe,
             3,
           );
-        basket(side * 0.235, 0.18, 0, 0.063, 0.095);
+        if (profile.name === "water-carrier") {
+          solid(gear, new THREE.CylinderGeometry(.065,.048,.12,n), bamboo, [side*.235,.18,0]);
+          for(const y of [.135,.22])solid(gear,new THREE.TorusGeometry(.058,.003,3,n),shoe,[side*.235,y,0]).rotation.x=Math.PI/2;
+        } else {
+          basket(side * 0.235, 0.18, 0, 0.073, 0.105);
+          if(profile.name === "produce-porter")for(let j=0;j<4;j++)
+            oval(gear,[side*.235+(j%2-.5)*.047,.237,Math.floor(j/2)*.044-.022],[.028,.024,.027],sage,n);
+        }
       }
     } else if (profile.load === "basket") {
       basket(0.134, 0.254, 0.038, 0.05);

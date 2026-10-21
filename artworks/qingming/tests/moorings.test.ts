@@ -84,7 +84,7 @@ describe("far-bank moorings", () => {
     ).not.toEqual(lines);
     expect(
       boats.every(
-        (b) => b.children.filter((n) => n.name === "boat-crew").length === 2,
+        (b) => b.children.filter((n) => n.name === "boat-crew").length === (b.userData.boatStyle === "cabin" ? 6 : b.userData.boatStyle === "skiff" ? 2 : 3),
       ),
     ).toBe(true);
     const paused = boats.map((b) => [

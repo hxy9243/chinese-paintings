@@ -26,9 +26,9 @@ export const SHORELINES: Record<BankSide, PassagePoint[]> = {
     [-6.5, 2.25],
     [-3, 4],
     [0, 4],
-    [4, 1.5],
-    [7, 0.7],
-    [10, 4.2],
+    [4, 4.25],
+    [7, 4.55],
+    [10, 4.9],
     [16, 6.1],
     [22, 6.4],
   ].map(([s, d]) => ({ s, d })),
@@ -247,6 +247,11 @@ HALLS.push(
     angle: 0,
   },
 );
+// Crop landmarks: the west foreground balcony and the tall open worksite beside
+// the approach are separate silhouettes, not another row of completed roofs.
+Object.assign(HALLS[8], { s: -14.7, d: 9.8, width: 3.8, depth: 3.1 });
+HALLS.push({ side: "near", s: -11.35, d: 7.25, width: 1.6, depth: 2.0,
+  height: 2.8, angle: 0 });
 // Small shop roofs formerly had eaves below adult head height. Keep their
 // authored footprints, but provide headroom for the tallest standing profile.
 HALLS.forEach(h => { h.height = Math.max(h.height, MIN_EAVE_HEIGHT); });
@@ -254,7 +259,7 @@ HALLS.forEach(h => { h.height = Math.max(h.height, MIN_EAVE_HEIGHT); });
 // roof line, with the crown reaching into the water silhouette.
 export const REFERENCE_TREE = {
   s: 6.1,
-  d: 4.4,
+  d: 6.5,
   size: 1.45,
   form: "spreading" as const,
 };
@@ -283,7 +288,7 @@ export function bridgePoint(x: number, lateral = 0): PassagePoint {
   };
 }
 // Looser browsing groups leave gaps between counters and river watchers.
-export const BRIDGE_PEOPLE_PER_SIDE = 16;
+export const BRIDGE_PEOPLE_PER_SIDE = 20;
 export const BRIDGE_SHOPS = [-1, 1].flatMap((side) =>
   Array.from({ length: 8 }, (_, i) => {
     const station = 1 + i * 4;

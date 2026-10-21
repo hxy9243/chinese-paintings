@@ -143,7 +143,7 @@ describe("independent activity and browsing", () => {
         BRIDGE_OBSERVERS +
         MARKET.length +
         SHOP_VISITORS.length +
-        (BOATS.length + MOORED_BOATS.length) * 2 +
+        study.metadata().boatCrews.reduce((n,b)=>n+b.count,0) +
         CARTS.length,
     );
     const snapshots = () =>

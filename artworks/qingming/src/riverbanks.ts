@@ -83,7 +83,7 @@ export function buildBankFace(side: BankSide) {
   // Broken patches of riprap, rather than a continuous modern concrete wall.
   for (let i = 0; i < 215; i++) {
     const s = -21.8 + i * 0.203;
-    if (Math.sin(s * 1.7) + Math.sin(s * 0.67) < 1.12) continue;
+    if (Math.sin(s * 1.7) + Math.sin(s * 0.67) < 0.6) continue;
     const p = bankSection(side, s, 0.48 + (i % 3) * 0.17),
       world = scrollPoint(p.s, p.d);
     const rock = new THREE.Mesh(
@@ -91,7 +91,7 @@ export function buildBankFace(side: BankSide) {
       stone[i % 2],
     );
     rock.position.set(world.x, p.y, world.z);
-    rock.scale.set(0.055 + (i % 4) * 0.012, 0.028 + (i % 3) * 0.007, 0.022);
+    rock.scale.set(0.12 + (i % 4) * 0.045, 0.065 + (i % 3) * 0.032, 0.045);
     // Local depth points across the river; constrain the riverward envelope.
     rock.rotation.y = THREE.MathUtils.degToRad(-50);
     rock.rotation.z = Math.sin(i * 3.1) * 0.22;

@@ -600,7 +600,7 @@ export default function Mock3D() {
           <div ref={originalStrip} className="original-strip">
             {originalOpen && (
               <img
-                src={`${import.meta.env.BASE_URL}reference/selected-passage.webp`}
+                src={`${import.meta.env.BASE_URL}reference/chicago-rainbow-bridge.png`}
                 alt={t(
                   "Selected Rainbow Bridge and riverbank passage",
                   "所选虹桥与河岸画段",

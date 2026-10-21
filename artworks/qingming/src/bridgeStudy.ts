@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import {buildConstruction, boatCrewStations, addCrewEquipment, buildLoweringRig, loweringRigAngle} from "./referenceDetails";
 import {setScenePalette,getScenePalette,type ScenePalette} from "./scenePalette";
 import { buildReferenceTree, buildReferenceBoat, addReferenceArchitecture, type TreeForm } from "./referenceAssets";
 import { REFERENCE_AZIMUTH, scrollPoint } from "./scrollLayout";
@@ -129,7 +130,7 @@ function beam(
 let geometryDetail: DetailLevel = 2;
 // Curved, asymmetric forks replace radial branch sprays and billboard crowns.
 function characterTree(parent: THREE.Object3D,x:number,z:number,form:TreeForm,seed:number){
-  const tree=buildReferenceTree(form,seed,geometryDetail,Math.abs(seed-REFERENCE_TREE.s)<.001,true);
+  const tree=buildReferenceTree(form,seed,geometryDetail,Math.abs(seed-REFERENCE_TREE.s)<.001,false);
   tree.position.set(x,GROUND_Y,z);parent.add(tree);return tree;
 }
 function tree(parent:THREE.Object3D,x:number,z:number,leafy:boolean){
@@ -233,7 +234,8 @@ function horseCart(parent: THREE.Group, index: number) {
   parent.add(g);
   g.userData.trafficKind=kind;
   const animal=new THREE.Group();animal.name="draught-animal";g.add(animal);
-  const coat = index % 2 ? dark : wood;
+  const donkey=kind==="donkey-cart" || kind==="pack-horse";
+  const coat = donkey ? pale : index % 2 ? dark : wood;
   // Horse faces local +x: rounded barrel, sloping neck, muzzle and alert ears.
   const body = mesh(animal, new THREE.SphereGeometry(1, 10, 7), coat, 0.65, 0.65, 0);
   body.scale.set(0.48, 0.22, 0.2);
@@ -250,7 +252,12 @@ function horseCart(parent: THREE.Group, index: number) {
   );
   head.scale.set(0.24, 0.12, 0.105);
   for (const z of [-0.075, 0.075])
-    beam(headGroup, [1.12, 1.1, z], [1.1, 1.26, z], 0.025, coat);
+    beam(headGroup, [1.12, 1.1, z], [1.07, donkey ? 1.43 : 1.26, z], donkey ? 0.035 : 0.025, coat);
+  for(const side of [-1,1]){
+    mesh(headGroup,new THREE.SphereGeometry(.016,6,4),dark,1.28,1.065,side*.102,false);
+    beam(headGroup,[1.36,.99,side*.08],[1.06,1.07,side*.086],.009,dark);
+  }
+  beam(headGroup,[1.12,.95,-.11],[1.12,.95,.11],.012,linen);
   const legs: THREE.Group[] = [];
   for (const x of [0.35, 0.94])
     for (const z of [-0.14, 0.14]) {
@@ -319,9 +326,15 @@ function horseCart(parent: THREE.Group, index: number) {
       sack.scale.set(0.8, 0.8, 1.25);
     }
   } else {
-    // Independent laden pack horse: saddlebags replace the cart, not just its color.
+    // Independent laden pack donkey: saddlebags replace the cart, not just its color.
     for(const side of [-1,1]){
-      box(animal,.37,.28,.19,.6,.62,side*.23,linen);
+      const bag=mesh(animal,new THREE.SphereGeometry(1,10,7),linen,.6,.64,side*.23);
+      bag.scale.set(.26,.19,.14);
+      for(const x of [.4,.6,.8])beam(animal,[x,.82,side*.2],[x,.49,side*.29],.008,dark);
+      if(side===1){
+        const bundle=mesh(animal,new THREE.CylinderGeometry(.12,.12,.52,8),linen,.6,.92,0);
+        bundle.rotation.z=Math.PI/2;
+      }
       beam(animal,[.39,.78,side*.19],[.79,.51,side*.33],.014,dark);
     }
   }
@@ -331,6 +344,7 @@ function horseCart(parent: THREE.Group, index: number) {
     // Handles reach the porter's hands; no invisible horse is rendered.
     for(const side of [-1,1])beam(g,[-.4,.43,side*.24],[.58,.54,side*.24],.024,wood);
   }
+  if(kind==="pack-horse")beam(g,[1.3,1.02,0],[1.9,.78,.13],.008,dark);
   animal.scale.y=1.6;headGroup.scale.y=1.6;
   legs.forEach(leg=>{leg.position.y*=1.6;leg.scale.y=1.6;});
   const animated = [...legs, ...wheels, headGroup];
@@ -488,6 +502,47 @@ export function hall(
   g.position.copy(scrollPoint(s, d));
   g.position.y = GROUND_Y;
   g.rotation.y = turn;
+  if (kind === "construction") {
+    g.add(buildConstruction(w,depth,h));return g;
+  }
+  if (kind === "upper-storey") {
+    g.name="two-storey-balcony-house";
+    const floor=h+.12;
+    // Open ground-floor shop and visible floor beams; the upper hall is narrower
+    // than the balcony envelope so screens and railing have genuine depth.
+    box(g,w,.09,depth,0,.045,0,plaster);
+    for(let x=-w/2;x<=w/2+.001;x+=w/4)for(const z of [-depth*.43,depth*.43])
+      beam(g,[x,0,z],[x,floor,z],.047,dark);
+    box(g,w,.10,depth,0,floor,0,wood);
+    box(g,w,h*.6,.06,0,h*.3,-depth*.43,plaster);
+    for(const x of [-w*.25,w*.25])box(g,w*.35,.08,.55,x,.51,0,wood);
+    for(const side of [-1,1]){
+      box(g,.055,h*.62,depth*.84,side*w*.5,h*.31,0,plaster);
+      for(let bay=0;bay<3;bay++){
+        const x=(bay-1)*w*.29;
+        if(bay===1)continue;
+        box(g,w*.22,h*.3,.035,x,h*.15,depth*.43,wood);
+        for(let slat=0;slat<5;slat++)beam(g,[x-w*.1+slat*w*.05,h*.3,depth*.43],[x-w*.1+slat*w*.05,h*.8,depth*.43],.008,dark);
+      }
+    }
+    const upper=hall(new THREE.Group(),0,0,w*.88,depth*.69,h*.89,0,"gallery",true);
+    upper.position.set(0,floor+.05,-depth*.055);g.add(upper);
+    for(const side of [-1,1]){
+      for(let j=0;j<=16;j++){
+        const x=-w*.49+j*w*.98/16;
+        beam(g,[x,floor,side*depth*.48],[x,floor+.39,side*depth*.48],.012,dark);
+      }
+      for(const y of [.16,.4])beam(g,[-w*.49,floor+y,side*depth*.48],[w*.49,floor+y,side*depth*.48],.018);
+      for(const x of [-w*.49,w*.49])for(const y of [.16,.4])
+        beam(g,[x,floor+y,-depth*.48],[x,floor+y,depth*.48],.018);
+    }
+    // Open shutters and a hanging sign identify the occupied upper storey.
+    for(const x of [-w*.27,w*.27]){
+      const shutter=box(g,.29,.5,.035,x,floor+.68,depth*.31,wood);shutter.rotation.y=.4;
+    }
+    box(g,.22,.47,.025,w*.36,.92,depth*.48,linen);
+    return g;
+  }
   if (kind === "compound") {
     const rear = hall(g, 0, 0, w * 0.9, depth * 0.35, h, 0, "dwelling");
     rear.position.set(0, 0, -depth * 0.28);
@@ -843,7 +898,11 @@ function workingBoat(
   g.userData.boatStyle=style;
   for(const detail of [0,2] as const){
     const model=buildReferenceBoat(length,width,style,detail);model.name='boat-detail-'+detail;
+    addCrewEquipment(model,length,width,style);
     batchStatic(model);g.add(model);
+  }
+  if(style==="freight"){
+    const rig=buildLoweringRig(length,width);batchStatic(rig);g.add(rig);
   }
   return g;
 }
@@ -1020,8 +1079,12 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
     const roofGeo=new THREE.BufferGeometry();roofGeo.setAttribute("position",new THREE.Float32BufferAttribute(vertices,3));
     roofGeo.setIndex([0,4,5,0,5,1,3,2,5,3,5,4,0,3,4,1,5,2]);roofGeo.computeVertexNormals();mesh(coarse,roofGeo,roof);
     box(coarse,h.width*.55,h.height*.5,.025,0,h.height*.38,h.depth/2+.02,dark);batchStatic(coarse);
+    if(BUILDING_KINDS[index]==="construction" || BUILDING_KINDS[index]==="upper-storey"){
+      coarse.traverse(n=>{if(n instanceof THREE.Mesh || n instanceof THREE.Line)n.geometry.dispose();});coarse.clear();
+      coarse.add(base.clone());
+    }
     fine.visible=false;coarse.visible=false;
-    detailedBuildings.push({root,base,fine,coarse,height:top,detail:1});
+    detailedBuildings.push({root,base,fine,coarse,height:BUILDING_KINDS[index]==="upper-storey"?top+h.height+.17:BUILDING_KINDS[index]==="construction"?h.height+1.15:top,detail:1});
   }
   const vegetationLevels=[0,1,2].map(level=>{
     geometryDetail=level as DetailLevel;const plants=new THREE.Group();plants.name="vegetation-detail-"+level;
@@ -1156,12 +1219,17 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
     const driver=addPerson(c.group,CART_KINDS[i]==="pack-horse"?4:3,"cart-driver");driver.group.scale.multiplyScalar(1/c.group.scale.x);return driver;
   });
   const crew = [...boats, ...moored].flatMap((b, i) =>
-    [-1, 1].map((side) => ({
-      rig: addPerson(b, 3, "boat-crew"),
-      side,
-      boat: i,
+    boatCrewStations(boatLayouts[i].length,boatLayouts[i].width,b.userData.boatStyle).map((station,j) => ({
+      rig: addPerson(b, station.role==="passenger"?[0,6,4][j%3]:3, "boat-crew"),
+      station, boat: i,
     })),
   );
+  const buildingPeople=[
+    {building:8,x:-.8,y:HALLS[8].height+.17,z:HALLS[8].depth*.39,variant:6},
+    {building:8,x:.7,y:HALLS[8].height+.17,z:HALLS[8].depth*.39,variant:0},
+    {building:HALLS.length-1,x:-.2,y:1.273,z:-HALLS.at(-1)!.depth*.41,variant:9},
+    {building:HALLS.length-1,x:.25,y:2.073,z:HALLS.at(-1)!.depth*.41,variant:9},
+  ].map(site=>({...site,rig:addPerson(detailedBuildings[site.building].root,site.variant,"building-occupant")}));
   crowd.finish();
   function animatePerson(
     p: (typeof people)[number],
@@ -1219,7 +1287,7 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
       const roles=observers.reduce((counts,p)=>{
         const role=p.group.userData.activity as string;counts[role]=(counts[role]??0)+1;return counts;
       },{} as Record<string,number>);
-      return {crowd:crowd.metadata(),seed,palette:getScenePalette(),vegetationLevel:plantDetail,
+      return {boatCrews:[...boats,...moored].map((b,i)=>({style:b.userData.boatStyle,count:crew.filter(c=>c.boat===i).length,roof:crew.filter(c=>c.boat===i&&c.station.role==="roof").length})),landmarks:["two-storey-balcony-house","open-timber-construction"],crowd:crowd.metadata(),seed,palette:getScenePalette(),vegetationLevel:plantDetail,
         buildings:detailedBuildings.map(b=>b.detail),traffic:CART_KINDS,bridgeCounters,
         marketTypes:MARKET_TYPES,referenceTrees:FEATURE_TREES.map(t=>t.id),
         streetLife:{walkers:people.length,mainStreetWalkers:BRIDGE_WALKERS,approachPeople,
@@ -1297,9 +1365,9 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
         // on the seat, which made the taller drivers float above the vehicle.
         const parentScale=carts[i].group.scale.y;
         const seatHeight=(kind==="pack-horse"?.9*1.6:.52)*parentScale;
-        const localHeight=kind==="handcart"?0:(seatHeight-.22*PERSON_SCALE)/parentScale;
-        p.group.position.set(kind==="handcart"?.5:kind==="pack-horse"?.65:-.42,localHeight+idle.breath,0);
-        const walking=kind==="handcart",stride=walking?Math.sin(time*3+i)*.32:0;
+        const localHeight=kind==="handcart"||kind==="pack-horse"?0:(seatHeight-.22*PERSON_SCALE)/parentScale;
+        p.group.position.set(kind==="handcart"?.5:kind==="pack-horse"?1.9:-.42,localHeight+idle.breath,0);
+        const walking=kind==="handcart"||kind==="pack-horse",stride=walking?Math.sin(time*3+i)*.32:0;
         p.left.rotation.x=walking?stride:-.8;p.right.rotation.x=walking?-stride:-.8;
         p.leftArm.rotation.x=walking?-.5:-.35;p.rightArm.rotation.x=walking?-.5:-.35;
         p.group.rotation.set(
@@ -1308,24 +1376,29 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
           idle.lean * 0.5,
         );
       });
-      crew.forEach(({ rig: p, side, boat }, i) => {
-        const idle = idleMotion(i + 500, time, seed);
-        p.group.position.set(
-          Math.sin(time * 0.33 + i) * 0.025,
-          0.34 + idle.breath,
-          side * boatLayouts[boat].length * 0.36,
-        );
-        p.group.rotation.set(
-          idle.lean,
-          idle.look + (side === 1 ? 0 : Math.PI),
-          idle.lean,
-        );
+      crew.forEach(({ rig: p, station }, i) => {
+        const idle = idleMotion(i + 500, time, seed),pull=Math.sin(time*.9+i)*.12;
+        p.group.position.set(station.x,station.y+idle.breath,station.z);
+        p.group.rotation.set(station.role==="haul"?.14+pull:idle.lean,station.facing+idle.look,idle.lean);
+        p.leftArm.rotation.x=station.role==="passenger"?-.18:-.85-pull;
+        p.rightArm.rotation.x=station.role==="roof"?-1.35:-.72+pull;
+        p.leftElbow.rotation.x=-.35;p.rightElbow.rotation.x=-.45;
+        p.head.rotation.y=idle.look;
+      });
+      buildingPeople.forEach(({rig:p,...site},i)=>{
+        const idle=idleMotion(i+900,time,seed);
+        p.group.position.set(site.x,site.y+idle.breath,site.z);
+        p.group.rotation.y=i>1?Math.PI/2:0;
+        p.rightArm.rotation.x=i>1?-1.3+Math.sin(time*1.5+i)*.28:-.6;
+        p.leftArm.rotation.x=-.65;p.head.rotation.y=idle.look;
       });
       for(const vessel of [...boats,...moored])for(const child of vessel.children){
         if(child.name.startsWith('boat-detail-'))child.visible=child.name==='boat-detail-'+(plantDetail===0?0:2);
       }
       boats.forEach((vessel, i) => {
         const pose = boatPose(i, time);
+        const rig=vessel.getObjectByName("lowering-sail-rig");
+        if(rig)rig.rotation.x=loweringRigAngle(Math.abs(pose.s-BRIDGE.center.s));
         vessel.visible = Math.abs(pose.s) < 22 + BOATS[i].length * 0.62 + 0.2;
         vessel.position.copy(scrollPoint(pose.s, pose.d));
         vessel.position.y = pose.y;

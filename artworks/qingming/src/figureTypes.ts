@@ -11,6 +11,10 @@ export const FIGURE_TYPES = [
   { name: "craftsman", robe: 2, hat: "wrap", height: 1.01, width: 1.04, load: "tools" },
   { name: "attendant", robe: 0, hat: "tall", height: 1.04, width: .92, load: "none" },
   { name: "basket-seller", robe: 1, hat: "cap", height: .97, width: 1.08, load: "basket" },
+  { name: "water-carrier", robe: 0, hat: "wrap", height: 1.01, width: 1.06, load: "baskets" },
+  { name: "produce-porter", robe: 1, hat: "cap", height: .97, width: 1.1, load: "baskets" },
+  { name: "pilgrim", robe: 2, hat: "straw", height: 1.02, width: .95, load: "staff" },
+  { name: "bundle-carrier", robe: 0, hat: "wrap", height: .96, width: 1.12, load: "bundle" },
 ] as const;
 
 // Figures need a different budget from roofs: subpixel eyes and fingers add

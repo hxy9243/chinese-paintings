@@ -25,7 +25,7 @@ import { createBridgeStudy } from "../src/bridgeStudy";
 describe("life in the reference passage", () => {
   it("varies architecture and nature while keeping planting clear of roofs", () => {
     expect(BUILDING_KINDS).toHaveLength(HALLS.length);
-    expect(new Set(BUILDING_KINDS).size).toBe(8);
+    expect(new Set(BUILDING_KINDS).size).toBe(10);
     expect(new Set(NATURE.map((n) => n.kind)).size).toBe(5);
     for (const n of NATURE) {
       expect(onBank("near", n) || onBank("far", n)).toBe(true);
@@ -33,7 +33,7 @@ describe("life in the reference passage", () => {
     }
   });
   it("keeps all walkers on the bridge or dry, unobstructed bank lanes", () => {
-    expect(WALKER_COUNT).toBe(180);
+    expect(WALKER_COUNT).toBe(204);
     for (let t = 0; t <= 400; t += 2.5)
       for (let i = 0; i < WALKER_COUNT; i++) {
         const p = walkPose(i, t);
@@ -188,6 +188,8 @@ describe("life in the reference passage", () => {
         n.geometry.dispose();
       }
     });
-    expect(draws).toBeLessThan(650);
+    // Sixteen articulated occupation variants (formerly twelve), plus the
+    // independent lowering rig. Keep a bounded no-camera medium-detail budget.
+    expect(draws).toBeLessThan(850);
   });
 });

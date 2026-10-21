@@ -496,6 +496,17 @@ export function bridgeMarket(
         );
       box(g, [0.11, 0.23, 0.018], [0.4, 0.45, side * 0.12], linen);
     }
+    if (i % 3 === 1) {
+      const umbrella=marketParasol(g,i+2,true);
+      umbrella.position.set(.05,0,side*.12);
+      umbrella.scale.set(.49+(i%2)*.08,.51,.42+(i%3)*.04);
+      umbrella.rotation.z=side*.045;
+    }
+    if(i%5===2){
+      rod(g,[.3,0,side*.08],[.32,1.03,side*.08],.012);
+      box(g,[.14,.31,.015],[.32,.84,side*.08],linen);
+      for(let j=0;j<4;j++)mark(g,[[.28,.93-j*.055,side*.08+.01],[.35,.92-j*.055,side*.08+.01]]);
+    }
     if (kind === 2) wovenBasket(g, 0, 0.095, side * 0.13, 0.09, 0.16);
     if (kind === 3)
       for (let j = 0; j < 3; j++)
