@@ -2,7 +2,7 @@
 // architecture and pedestrian routes share this basis before world rotation.
 export type BankSide = "far" | "near";
 export type PassagePoint = { s: number; d: number };
-export const GROUND_Y = 0.015;
+export const GROUND_Y = 0.42; // about 0.93 m / three feet above the mean waterline
 export const PERSON_SCALE = 1.25; // nominal adult height 0.85: bridge width ≈ 3.8 adult heights
 export const PERSON_WIDTH_SCALE = 1.05; // retain the existing walking clearance
 export const BRIDGE_RAIL_HEIGHT = 0.42;

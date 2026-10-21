@@ -17,7 +17,10 @@ const skin = paintMaterial(0xbfa17e),
   shoe = paintMaterial(0x5b5548),
   bamboo = paintMaterial(0xa08a5c),
   basketMat = paintMaterial(0xb09b70);
-const seam = createDryInk(0.8);
+const seam = createDryInk(0.6);
+const skinTones = [0xbfa17e, 0xc8aa86, 0xb79773, 0xc5a580].map((c) =>
+  paintMaterial(c),
+);
 type P = [number, number, number];
 function solid(
   p: THREE.Object3D,
@@ -107,12 +110,16 @@ export function buildFigure(
   batch: (g: THREE.Group) => void,
 ) {
   const profile = FIGURE_TYPES[variant % FIGURE_TYPES.length],
-    n = detail === 2 ? 16 : detail === 1 ? 8 : 4;
+    n = detail === 2 ? 32 : detail === 1 ? 10 : 5;
   const g = new THREE.Group();
   g.userData.figureType = profile.name;
   g.scale.set(profile.width, profile.height, profile.width);
   parent.add(g);
+  const skin = skinTones[variant % skinTones.length];
   const robe = [blue, cloth, russet, sage][variant % 4];
+  const woman = profile.name === "woman";
+  const roundCollar =
+    profile.name === "scholar" || profile.name === "attendant";
   const long = ["scholar", "woman", "elder", "attendant"].includes(
       profile.name,
     ),
@@ -135,8 +142,8 @@ export function buildFigure(
       ? [allRings[0], allRings[3], allRings[5], allRings[7]]
       : allRings,
     n,
-    robe,
-    detail === 2 ? 0.07 : 0.025,
+    woman ? cloth : robe,
+    detail === 2 ? 0.045 : 0.018,
   );
   if (long && detail > 0) {
     for (let i = 0; i < (detail === 2 ? 9 : 4); i++) {
@@ -149,27 +156,45 @@ export function buildFigure(
     }
   }
   if (detail > 0) {
-    // Overlapping right-hand collar, folded lapels and soft sash.
-    stroke(
-      g,
-      [
-        [-0.026, 0.518, 0.026],
-        [-0.04, 0.485, 0.049],
-        [0.025, 0.411, 0.055],
-      ],
-      0.008,
-      cloth,
-    );
-    stroke(
-      g,
-      [
-        [0.027, 0.516, 0.025],
-        [0.039, 0.485, 0.048],
-        [0.017, 0.457, 0.058],
-      ],
-      0.006,
-      cloth,
-    );
+    // Right-closing work jackets, round-neck robes and open-front women's coats.
+    if (!woman && !roundCollar) {
+      stroke(
+        g,
+        [
+          [-0.026, 0.518, 0.026],
+          [-0.04, 0.485, 0.049],
+          [0.025, 0.411, 0.055],
+        ],
+        0.008,
+        cloth,
+      );
+      stroke(
+        g,
+        [
+          [0.027, 0.516, 0.025],
+          [0.039, 0.485, 0.048],
+          [0.017, 0.457, 0.058],
+        ],
+        0.006,
+        cloth,
+      );
+    }
+    if (roundCollar) {
+      stroke(
+        g,
+        Array.from({ length: 17 }, (_, i) => {
+          const a = (i / 16) * Math.PI * 2;
+          return [
+            Math.cos(a) * 0.027,
+            0.515,
+            forward + Math.sin(a) * 0.027,
+          ] as P;
+        }),
+        0.0045,
+        cloth,
+        16,
+      );
+    }
     garment(
       g,
       [
@@ -192,16 +217,18 @@ export function buildFigure(
       cloth,
     );
     if (detail === 2) {
-      line(g, [
-        [-0.019, 0.518, forward + 0.035],
-        [-0.038, 0.484, forward + 0.055],
-        [0.025, 0.416, forward * 0.5 + 0.061],
-      ]);
-      line(g, [
-        [0.023, 0.517, forward + 0.034],
-        [0.037, 0.485, forward + 0.053],
-        [0.017, 0.457, forward * 0.7 + 0.062],
-      ]);
+      if (!woman && !roundCollar) {
+        line(g, [
+          [-0.019, 0.518, forward + 0.035],
+          [-0.038, 0.484, forward + 0.055],
+          [0.025, 0.416, forward * 0.5 + 0.061],
+        ]);
+        line(g, [
+          [0.023, 0.517, forward + 0.034],
+          [0.037, 0.485, forward + 0.053],
+          [0.017, 0.457, forward * 0.7 + 0.062],
+        ]);
+      }
       line(g, [
         [-0.055, 0.47, forward + 0.047],
         [-0.035, 0.43, forward * 0.5 + 0.06],
@@ -241,6 +268,63 @@ export function buildFigure(
       ]);
     }
   }
+  if (woman && detail > 0) {
+    const rings = [
+      [0.17, 0.104, 0.066],
+      [0.32, 0.077, 0.062],
+      [0.43, 0.094, 0.068],
+      [0.49, 0.093, 0.064],
+      [0.519, 0.041, 0.042],
+    ];
+    const vertices: number[] = [],
+      indices: number[] = [];
+    const segments = detail === 2 ? 30 : 12;
+    rings.forEach(([y, rx, rz], j) => {
+      for (let i = 0; i <= segments; i++) {
+        const a = Math.PI / 2 + 0.42 + (i / segments) * (Math.PI * 2 - 0.84);
+        const fold = 1 + 0.025 * Math.sin(a * 9 + j * 0.2);
+        vertices.push(
+          Math.cos(a) * rx * fold,
+          y,
+          Math.sin(a) * rz * fold + 0.004,
+        );
+      }
+    });
+    for (let j = 0; j < rings.length - 1; j++)
+      for (let i = 0; i < segments; i++) {
+        const a = j * (segments + 1) + i,
+          b = a + segments + 1;
+        indices.push(a, b, a + 1, a + 1, b, b + 1);
+      }
+    const coat = new THREE.BufferGeometry();
+    coat.setAttribute(
+      "position",
+      new THREE.Float32BufferAttribute(vertices, 3),
+    );
+    coat.setIndex(indices);
+    coat.computeVertexNormals();
+    solid(g, coat, robe).name = "open-front-beizi";
+    for (const side of [-1, 1]) {
+      const lapel = rings.map(
+        ([y, rx, rz]) =>
+          [side * Math.sin(0.42) * rx, y, Math.cos(0.42) * rz + 0.006] as P,
+      );
+      stroke(g, lapel, 0.0035, cloth, detail === 2 ? 14 : 6);
+      line(
+        g,
+        lapel.map(([x, y, z]) => [x + side * 0.004, y, z + 0.001] as P),
+      );
+    }
+    if (detail === 2)
+      for (let i = 0; i < 9; i++) {
+        const x = (i - 4) * 0.009;
+        line(g, [
+          [x, 0.315, 0.057],
+          [x * 1.1, 0.21, 0.058],
+          [x * 1.6, 0.098, 0.059 - Math.abs(x) * 0.1],
+        ]);
+      }
+  }
   solid(g, new THREE.CylinderGeometry(0.019, 0.022, 0.042, n), skin, [
     0,
     0.533,
@@ -253,7 +337,7 @@ export function buildFigure(
   g.add(head);
   oval(head, [0, 0.004, -0.003], [0.036, 0.047, 0.032], skin, n);
   if (detail > 0) {
-    oval(head, [0, -0.025, 0.006], [0.026, 0.024, 0.025], skin, n);
+    oval(head, [0, -0.025, 0.006], [0.024, 0.02, 0.023], skin, n);
     for (const side of [-1, 1])
       oval(
         head,
@@ -266,7 +350,30 @@ export function buildFigure(
     oval(head, [0, 0.029, -0.012], [0.0365, 0.027, 0.03], hair, n);
     oval(head, [0, -0.006, 0.031], [0.006, 0.013, 0.009], skinLight, n);
     if (detail === 2) {
+      const nose = new THREE.BufferGeometry();
+      nose.setAttribute(
+        "position",
+        new THREE.Float32BufferAttribute(
+          [
+            -0.005, 0.014, 0.03, 0.005, 0.014, 0.03, 0, -0.009, 0.045, 0.005,
+            0.014, 0.03, 0.006, -0.014, 0.032, 0, -0.009, 0.045, 0.006, -0.014,
+            0.032, -0.006, -0.014, 0.032, 0, -0.009, 0.045, -0.006, -0.014,
+            0.032, -0.005, 0.014, 0.03, 0, -0.009, 0.045,
+          ],
+          3,
+        ),
+      );
+      nose.computeVertexNormals();
+      solid(head, nose, skinLight).name = "shaped-nose";
       for (const side of [-1, 1]) {
+        oval(
+          head,
+          [side * 0.038, -0.002, 0.002],
+          [0.0025, 0.007, 0.003],
+          skinLight,
+          10,
+        );
+
         oval(
           head,
           [side * 0.014, 0.008, 0.027],
@@ -356,7 +463,7 @@ export function buildFigure(
         ]);
       }
     }
-  } else if (profile.hat === "tall") {
+  } else if (profile.hat === "tall" || profile.hat === "soft") {
     garment(
       head,
       [
@@ -368,7 +475,7 @@ export function buildFigure(
       hair,
       0,
     );
-    if (detail > 0)
+    if (detail > 0 && profile.hat === "tall")
       stroke(
         head,
         [

@@ -1,0 +1,32 @@
+{
+  "build": "passed",
+  "full_suite_initial": {
+    "passed": 67,
+    "failed": 1,
+    "failure": "Static draw count 655 exceeded unchanged <650 budget; fixed by sharing bank and masonry materials."
+  },
+  "final_targeted": {
+    "passed": 17,
+    "failed": 0,
+    "files": [
+      "passageLife.test.ts",
+      "bridgeLanding.test.ts",
+      "detail.test.ts",
+      "riverbankFigures.test.ts",
+      "moorings.test.ts"
+    ],
+    "runs": [
+      {
+        "passed": 15,
+        "failed": 0
+      },
+      {
+        "passed": 6,
+        "failed": 0,
+        "repeated_tests": 4
+      }
+    ]
+  },
+  "bank_height_metres": 0.9299999999999998,
+  "water_datum_changed": false
+}

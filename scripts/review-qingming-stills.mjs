@@ -76,7 +76,14 @@ try {
     await document.fonts.ready;
   });
   const views =
-    process.env.REVIEW_PLACES === "1"
+    process.env.REVIEW_FOUNDATIONS === "1"
+      ? [
+          ["bank-foundations", {eye:[0,1.47,4.2],look:[-6.7,1.2,-2],fov:60}],
+          ["boat-and-quay", {aboard:3,look:[-6.65,1.1,-2],fov:62}],
+          ["bridge-close", {eye:[-6.65,3.32,-2],look:[5,1.32,1],fov:62}],
+          ["full-picture", {zoom:.96,angle:30,pitch:3,target:[0,0]}],
+        ]
+      : process.env.REVIEW_PLACES === "1"
       ? [
           ["from-the-bank", {eye:[0,1.05,4.2],look:[-6.7,1,-2],fov:60}],
           ["from-the-boat", {aboard:3,look:[-6.65,.75,-2],fov:62}],
@@ -142,6 +149,13 @@ try {
     measurements.aboardReplay = aboardBefore.equals(await page.locator(".study-stage").screenshot());
     if(!measurements.aboardReplay)errors.push("Boat-attached perspective replay changed at the same scene time");
   }
+  if(process.env.REVIEW_FOUNDATIONS === "1"){
+    const levels=measurements["full-picture"].crowd.levels;
+    measurements.overviewUsesCoarseFigures=levels[0].actors>levels[1].actors+levels[2].actors;
+    const close=measurements["bridge-close"].crowd.levels;
+    measurements.perspectiveUsesMixedDetail=close[0].actors>0 && close[2].actors>0;
+    if(!measurements.overviewUsesCoarseFigures || !measurements.perspectiveUsesMixedDetail)errors.push("Figure detail budget did not match the camera");
+  }
   const replay = () =>
     page.evaluate(() =>
       window.qingmingStudy.frame(24, {
@@ -179,7 +193,16 @@ try {
   measurements.sceneChanges = !moving.equals(
     await page.locator(".study-stage").screenshot(),
   );
+  if(process.env.REVIEW_FOUNDATIONS === "1"){
+    await page.goto("http://127.0.0.1:4173/figure-study.html?capture=1");
+    await page.waitForFunction(()=>window.figureStudy,undefined,{timeout:120000});
+    for(const [name,focus,turn] of [["song-clothing-sheet",-1,.35],["beizi-close",6,.25],["scholar-close",2,.35]]){
+      await page.evaluate(({focus,turn})=>window.figureStudy.frame(8,{focus,turn}),{focus,turn});
+      await page.locator("#figures").screenshot({path:path.join(out,name+".jpg"),type:"jpeg",quality:94});
+    }
+  }
   const files = [
+    "riverbanks.ts","figures.ts","figureTypes.ts","crowd.ts","moorings.ts",
     "pedestrians.ts",
     "boatWakes.ts",
     "riverSurface.ts",

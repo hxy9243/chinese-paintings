@@ -40,5 +40,5 @@ export function mooringAnchor(index: number, side: number) {
   const b = MOORED_BOATS[index],
     u = side * b.length * 0.31;
   const s = b.s + u * Math.cos(b.angle) + b.width * 0.5 * Math.sin(b.angle);
-  return { s, d: shoreDepth("far", s) + 0.035 };
+  return { s, d: shoreDepth("far", s) - 0.24 };
 }

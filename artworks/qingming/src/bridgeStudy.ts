@@ -57,6 +57,7 @@ import { idleMotion } from "./peopleMotion";
 import { bridgeActivity, bridgeRole, bridgeVariant } from "./bridgeActivity";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 import { createBoatWakes } from "./boatWakes";
+import { buildBankFace, buildBridgeFoundations } from "./riverbanks";
 import { riverGeometry, waterHeight } from "./riverSurface";
 
 // A shallow, camera-constrained diorama. Hidden façades are intentionally plain.
@@ -433,7 +434,7 @@ function bank(parent: THREE.Group, outline: number[][]) {
   const direction = side === "far" ? 1 : -1;
   const coast: number[][] = [];
   for(let s=-29;s<=29.001;s+=.2)
-    coast.push([s,shoreDepth(side,s)+direction*(.25+Math.sin(s*3.7)*.045+Math.sin(s*11.)*.025)]);
+    coast.push([s,shoreDepth(side,s)+direction*(.015+Math.sin(s*3.7)*.008+Math.sin(s*11.)*.005)]);
   // Extend the unoccupied substrate seven units beyond the original outline.
   // Navigation, architecture and tree positions retain their original layout.
   const sign=side === "far" ? -1 : 1;
@@ -457,6 +458,7 @@ function bank(parent: THREE.Group, outline: number[][]) {
     false,
   );
   ground.rotation.x = -Math.PI / 2;
+  const face=buildBankFace(side);batchStatic(face);parent.add(face);
   const marks: THREE.Vector3[] = [];
   for(let s=-21.8;s<21.8;s+=.16){
     if(Math.sin(s*5.1)+Math.sin(s*13.)<-.3)continue;
@@ -943,7 +945,8 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
       }
     }
   }
-  // Timber bearing sills on dry land at both ends; no piers in the navigable span.
+  const foundations=buildBridgeFoundations();batchStatic(foundations);bridge.add(foundations);
+  // Timber bearing sills rest on pale masonry abutments at both ends.
   for (const side of [-1, 1]) {
     box(
       bridge,
@@ -1086,8 +1089,8 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
         point = scrollPoint(anchor.s, anchor.d);
       beam(
         mooringPosts,
-        [point.x, -0.1, point.z],
-        [point.x, 0.24, point.z],
+        [point.x, GROUND_Y-0.14, point.z],
+        [point.x, GROUND_Y+0.24, point.z],
         0.028,
         dark,
       );
@@ -1349,7 +1352,7 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
         const start = vessel.localToWorld(
           new THREE.Vector3(b.width * 0.5, 0.3, side * b.length * 0.31),
         );
-        const end = new THREE.Vector3(point.x, 0.2, point.z),
+        const end = new THREE.Vector3(point.x, GROUND_Y+0.2, point.z),
           positions = rope.geometry.getAttribute("position");
         for (let i = 0; i <= 8; i++) {
           const t = i / 8,
