@@ -76,7 +76,12 @@ try {
     await document.fonts.ready;
   });
   const views =
-    process.env.REVIEW_FOUNDATIONS === "1"
+    process.env.REVIEW_SMOOTH_BANKS === "1"
+      ? [
+          ["smooth-bank-low",{eye:[0,1.47,4.2],look:[-6.7,1.2,-2],fov:60}],
+          ["smooth-bank-overview",{zoom:.96,angle:30,pitch:3,target:[0,0]}],
+        ]
+      : process.env.REVIEW_FOUNDATIONS === "1"
       ? [
           ["bank-foundations", {eye:[0,1.47,4.2],look:[-6.7,1.2,-2],fov:60}],
           ["boat-and-quay", {aboard:3,look:[-6.65,1.1,-2],fov:62}],

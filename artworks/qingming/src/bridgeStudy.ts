@@ -57,7 +57,7 @@ import { idleMotion } from "./peopleMotion";
 import { bridgeActivity, bridgeRole, bridgeVariant } from "./bridgeActivity";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 import { createBoatWakes } from "./boatWakes";
-import { buildBankFace, buildBridgeFoundations } from "./riverbanks";
+import { bankSection, buildBankFace, buildBridgeFoundations } from "./riverbanks";
 import { riverGeometry, waterHeight } from "./riverSurface";
 
 // A shallow, camera-constrained diorama. Hidden façades are intentionally plain.
@@ -434,7 +434,7 @@ function bank(parent: THREE.Group, outline: number[][]) {
   const direction = side === "far" ? 1 : -1;
   const coast: number[][] = [];
   for(let s=-29;s<=29.001;s+=.2)
-    coast.push([s,shoreDepth(side,s)+direction*(.015+Math.sin(s*3.7)*.008+Math.sin(s*11.)*.005)]);
+    coast.push([s,bankSection(side,s,0).d]);
   // Extend the unoccupied substrate seven units beyond the original outline.
   // Navigation, architecture and tree positions retain their original layout.
   const sign=side === "far" ? -1 : 1;
@@ -463,11 +463,11 @@ function bank(parent: THREE.Group, outline: number[][]) {
   for(let s=-21.8;s<21.8;s+=.16){
     if(Math.sin(s*5.1)+Math.sin(s*13.)<-.3)continue;
     for(const t of [0,.10]){
-      const d=shoreDepth(side,s+t)+direction*(Math.sin((s+t)*9.)*.045-.04);
+      const d=bankSection(side,s+t,0).d-direction*.012;
       const p=scrollPoint(s+t,d);p.y=GROUND_Y+.006;marks.push(p);
     }
   }
-  const contour = new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(marks),createDryInk(.30));
+  const contour = new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(marks),createDryInk(.12));
   parent.add(contour);
 
 }

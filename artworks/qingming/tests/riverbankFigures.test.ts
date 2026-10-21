@@ -2,6 +2,7 @@ import { expect, it } from "vitest";
 import * as THREE from "three";
 import {
   bankSection,
+  bankEdgeDepth,
   buildBankFace,
   buildBridgeFoundations,
 } from "../src/riverbanks";
@@ -22,7 +23,12 @@ it("raises occupied ground roughly three feet while leaving the water and vessel
     ((GROUND_Y - WATER_LEVEL) / (FIGURE_HEIGHT * PERSON_SCALE)) * 1.7;
   expect(metres).toBeGreaterThan(0.8);
   expect(metres).toBeLessThan(1.1);
-  MOORED_BOATS.forEach((_,i)=>{for(const side of [-1,1]){const p=mooringAnchor(i,side);expect(shoreDepth("far",p.s)-p.d).toBeGreaterThan(.2);}});
+  MOORED_BOATS.forEach((_, i) => {
+    for (const side of [-1, 1]) {
+      const p = mooringAnchor(i, side);
+      expect(shoreDepth("far", p.s) - p.d).toBeGreaterThan(0.2);
+    }
+  });
   for (const side of ["far", "near"] as const)
     for (let s = -22; s <= 22; s += 0.1) {
       const top = bankSection(side, s, 0),
@@ -95,4 +101,18 @@ it("adds real open-front outerwear and facial relief only when detail can be see
     return n;
   };
   expect(triangles(low)).toBeLessThan(triangles(close) * 0.12);
+});
+
+it("rounds shoreline bends and eases the bank lip without changing the raised datum", () => {
+  for (const side of ["near", "far"] as const) {
+    for (const s of [-13, -7, -3.6, -3, 0, 4, 7, 10, 11, 17]) {
+      const h = 0.001;
+      const left = (bankEdgeDepth(side, s) - bankEdgeDepth(side, s - h)) / h;
+      const right = (bankEdgeDepth(side, s + h) - bankEdgeDepth(side, s)) / h;
+      expect(Math.abs(left - right)).toBeLessThan(0.005);
+    }
+    const top = bankSection(side, 0, 0),
+      lip = bankSection(side, 0, 0.05);
+    expect(top.y - lip.y).toBeLessThan(0.005);
+  }
 });

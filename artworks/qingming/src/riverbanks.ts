@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import {
   BRIDGE,
+  SHORELINES,
   GROUND_Y,
   bridgeHeight,
   shoreDepth,
@@ -11,19 +12,45 @@ import { paintMaterial, createDryInk } from "./paintMaterial";
 
 // Keep the complete rock/earth toe within 0.09 of the navigation shoreline.
 // The moored hulls retain their existing 0.12 minimum envelope clearance.
-const earth = paintMaterial(0x95846c);
-const stone = [0xaaa99b, 0x92968c].map((c) => paintMaterial(c));
+const earth = paintMaterial(0xb09a6d, true);
+// A narrow damp wash loses pigment at the waterline; the upper bank remains solid.
+earth.fragmentShader = earth.fragmentShader.replace(
+  "gl_FragColor=vec4(result,alpha);",
+  `
+  result*=1.-(1.-smoothstep(-.03,.19,point.y))*.055;
+  alpha*=smoothstep(-.09,.045,point.y);
+  gl_FragColor=vec4(result,alpha);`,
+);
+const stone = [0xa49c86, 0x9c967f].map((c) => paintMaterial(c));
 const greys = [0xb8b9ae, 0xc7c5b9].map((c) => paintMaterial(c));
 
+/** Exact box convolution of the reference polyline gives continuous tangents. */
+export function bankEdgeDepth(side: BankSide, s: number) {
+  const radius = 0.26,
+    left = s - radius,
+    right = s + radius;
+  const cuts = [
+    left,
+    ...SHORELINES[side].map((p) => p.s).filter((x) => x > left && x < right),
+    right,
+  ];
+  let area = 0;
+  for (let i = 1; i < cuts.length; i++)
+    area +=
+      (shoreDepth(side, cuts[i - 1]) + shoreDepth(side, cuts[i])) *
+      (cuts[i] - cuts[i - 1]) *
+      0.5;
+  return area / (radius * 2);
+}
 export function bankSection(side: BankSide, s: number, t: number) {
   const direction = side === "far" ? 1 : -1;
-  const rough = Math.sin(s * 7.3) * 0.012 + Math.sin(s * 17.1) * 0.006;
+  const rough = Math.sin(s * 1.1) * 0.008 + Math.sin(s * 2.7) * 0.003;
+  // Ease both ends of the cross-section into a rounded lip and submerged toe.
+  const drop = 0.5 - 0.5 * Math.cos(Math.PI * t);
   return {
     s,
-    d: shoreDepth(side, s) + direction * (-0.2 + 0.27 * t + rough),
-    y:
-      THREE.MathUtils.lerp(GROUND_Y + 0.004, -0.14, t) +
-      Math.sin(t * Math.PI) * Math.sin(s * 8.1) * 0.025,
+    d: bankEdgeDepth(side, s) + direction * (-0.22 + 0.245 * t + rough),
+    y: THREE.MathUtils.lerp(GROUND_Y + 0.004, -0.14, drop),
   };
 }
 export function buildBankFace(side: BankSide) {
@@ -32,7 +59,7 @@ export function buildBankFace(side: BankSide) {
   const positions: number[] = [],
     indices: number[] = [];
   const count = 440,
-    rows = 5;
+    rows = 17;
   for (let i = 0; i <= count; i++)
     for (let j = 0; j < rows; j++) {
       const p = bankSection(side, -22 + i * 0.1, j / (rows - 1)),
@@ -56,15 +83,15 @@ export function buildBankFace(side: BankSide) {
   // Broken patches of riprap, rather than a continuous modern concrete wall.
   for (let i = 0; i < 215; i++) {
     const s = -21.8 + i * 0.203;
-    if (Math.sin(s * 1.7) + Math.sin(s * 0.67) < -0.45) continue;
+    if (Math.sin(s * 1.7) + Math.sin(s * 0.67) < 1.12) continue;
     const p = bankSection(side, s, 0.48 + (i % 3) * 0.17),
       world = scrollPoint(p.s, p.d);
     const rock = new THREE.Mesh(
-      new THREE.DodecahedronGeometry(1, 0),
+      new THREE.IcosahedronGeometry(1, 1),
       stone[i % 2],
     );
     rock.position.set(world.x, p.y, world.z);
-    rock.scale.set(0.11 + (i % 4) * 0.022, 0.07 + (i % 3) * 0.02, 0.055);
+    rock.scale.set(0.055 + (i % 4) * 0.012, 0.028 + (i % 3) * 0.007, 0.022);
     // Local depth points across the river; constrain the riverward envelope.
     rock.rotation.y = THREE.MathUtils.degToRad(-50);
     rock.rotation.z = Math.sin(i * 3.1) * 0.22;
@@ -72,7 +99,7 @@ export function buildBankFace(side: BankSide) {
   }
   return group;
 }
-const mortarInk=createDryInk(.25);
+const mortarInk = createDryInk(0.25);
 export function buildBridgeFoundations() {
   const group = new THREE.Group();
   group.name = "pale-brick-abutments";
@@ -98,8 +125,12 @@ export function buildBridgeFoundations() {
           );
           brick.position.set(x, -0.12 + row * 0.135 + 0.0625, z + length / 2);
           group.add(brick);
-          const joints=new THREE.LineSegments(new THREE.EdgesGeometry(brick.geometry),mortarInk);
-          joints.position.copy(brick.position);group.add(joints);
+          const joints = new THREE.LineSegments(
+            new THREE.EdgesGeometry(brick.geometry),
+            mortarInk,
+          );
+          joints.position.copy(brick.position);
+          group.add(joints);
           z += length;
         }
       }
