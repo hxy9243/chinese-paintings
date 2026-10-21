@@ -22,7 +22,9 @@ import "./mock3d.css";
 import { createInkFinish } from "./inkFinish";
 import { advanceSceneTime } from "./peopleMotion";
 import { PALETTES,type ScenePalette } from "./scenePalette";
-import { SCROLL_STOPS, scrollPoint } from "./scrollLayout";
+import { boatPose } from "./passageLife";
+import { BOATS } from "./passageLayout";
+import { REFERENCE_AZIMUTH, SCROLL_STOPS, scrollPoint } from "./scrollLayout";
 
 type StudyApi = {
   view: (angle: number, pitch?: number) => void;
@@ -241,13 +243,29 @@ export default function Mock3D() {
     };
     frame = requestAnimationFrame(animate);
     const reviewApi={
-      frame(seconds:number,options:{zoom?:number;angle?:number;pitch?:number;target?:[number,number];palette?:ScenePalette}={}){
+      frame(seconds:number,options:{zoom?:number;angle?:number;pitch?:number;target?:[number,number];palette?:ScenePalette;eye?:[number,number,number];look?:[number,number,number];fov?:number;aboard?:number}={}){
         if(options.palette){study.setPalette(options.palette);finish.setPaper(PALETTES[options.palette].paper);setPalette(options.palette);}
         if(options.target){controls.target.copy(scrollPoint(...options.target));controls.target.y=1.1;}
         if(options.zoom!==undefined){camera.zoom=options.zoom;camera.updateProjectionMatrix();}
         position(options.angle??0,options.pitch??0);animationTime=seconds;
-        study.update(seconds,camera,el.clientHeight);renderer.info.autoReset=false;renderer.info.reset();
-        finish.render(scene,camera,paintingEnabled?inkSoftness:0);
+        let view:THREE.Camera=camera;
+        if((options.eye || options.aboard!==undefined) && options.look){
+          const immersive=new THREE.PerspectiveCamera(options.fov??55,el.clientWidth/el.clientHeight,.035,250);
+          const [s,y,d]=options.eye??[0,0,0], [ts,ty,td]=options.look;
+          immersive.position.copy(scrollPoint(s,d));immersive.position.y=y;
+          if(options.aboard!==undefined){
+            const index=options.aboard,pose=boatPose(index,seconds);
+            // Follow the actual vessel transform, including its bob, pitch and roll.
+            const offset=new THREE.Vector3(BOATS[index].width*.25,1.12,BOATS[index].length*.28);
+            offset.applyEuler(new THREE.Euler(pose.pitch,REFERENCE_AZIMUTH+Math.PI/2-pose.angle,pose.roll));
+            immersive.position.copy(scrollPoint(pose.s,pose.d)).add(offset);
+            immersive.position.y+=pose.y;
+          }
+          const aim=scrollPoint(ts,td);aim.y=ty;immersive.lookAt(aim);
+          immersive.updateMatrixWorld();view=immersive;
+        }
+        study.update(seconds,view,el.clientHeight);renderer.info.autoReset=false;renderer.info.reset();
+        finish.render(scene,view,paintingEnabled?inkSoftness:0);
         const stats={...study.metadata(),triangles:renderer.info.render.triangles,calls:renderer.info.render.calls};renderer.info.autoReset=true;return stats;
       },
       metadata:()=>study.metadata(),

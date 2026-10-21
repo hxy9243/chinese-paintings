@@ -76,7 +76,13 @@ try {
     await document.fonts.ready;
   });
   const views =
-    process.env.REVIEW_MARKET === "1"
+    process.env.REVIEW_PLACES === "1"
+      ? [
+          ["from-the-bank", {eye:[0,1.05,4.2],look:[-6.7,1,-2],fov:60}],
+          ["from-the-boat", {aboard:3,look:[-6.65,.75,-2],fov:62}],
+          ["from-the-bridge", {eye:[-6.65,2.9,-2],look:[5,.9,1],fov:62}],
+        ]
+      : process.env.REVIEW_MARKET === "1"
       ? [
           [
             "market-variety",
@@ -126,6 +132,15 @@ try {
       type: "jpeg",
       quality: 94,
     });
+  }
+  if(process.env.REVIEW_PLACES === "1"){
+    const boatFrame = () => page.evaluate(() => window.qingmingStudy.frame(24,{aboard:3,look:[-6.65,.75,-2],fov:62}));
+    await boatFrame();
+    const aboardBefore = await page.locator(".study-stage").screenshot();
+    await page.evaluate(() => window.qingmingStudy.frame(90,{aboard:3,look:[-6.65,.75,-2],fov:62}));
+    await boatFrame();
+    measurements.aboardReplay = aboardBefore.equals(await page.locator(".study-stage").screenshot());
+    if(!measurements.aboardReplay)errors.push("Boat-attached perspective replay changed at the same scene time");
   }
   const replay = () =>
     page.evaluate(() =>
