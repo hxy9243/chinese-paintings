@@ -129,8 +129,8 @@ function beam(
 }
 let geometryDetail: DetailLevel = 2;
 // Curved, asymmetric forks replace radial branch sprays and billboard crowns.
-function characterTree(parent: THREE.Object3D,x:number,z:number,form:TreeForm,seed:number){
-  const tree=buildReferenceTree(form,seed,geometryDetail,Math.abs(seed-REFERENCE_TREE.s)<.001,false);
+function characterTree(parent: THREE.Object3D,x:number,z:number,form:TreeForm,seed:number,leafy=false){
+  const tree=buildReferenceTree(form,seed,geometryDetail,Math.abs(seed-REFERENCE_TREE.s)<.001,leafy);
   tree.position.set(x,GROUND_Y,z);parent.add(tree);return tree;
 }
 function tree(parent:THREE.Object3D,x:number,z:number,leafy:boolean){
@@ -1089,7 +1089,7 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
   const vegetationLevels=[0,1,2].map(level=>{
     geometryDetail=level as DetailLevel;const plants=new THREE.Group();plants.name="vegetation-detail-"+level;
     for (const {s,d,size,form} of FEATURE_TREES){
-      const p=scrollPoint(s,d),t=characterTree(plants,p.x,p.z,form,s);
+      const p=scrollPoint(s,d),t=characterTree(plants,p.x,p.z,form,s,true);
       t.scale.set(size*1.15,size*1.5,size*1.15);t.rotation.y=s*.31;
     }
     riversideNature(plants);batchStatic(plants);return plants;

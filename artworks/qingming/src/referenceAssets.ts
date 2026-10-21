@@ -355,15 +355,31 @@ export function buildReferenceTree(
           );
         }
       if (leafy)
-        for (let q = 0; q < (detail === 0 ? 9 : detail === 1 ? 24 : 38); q++) {
-          // Overlapping leaf sprays retain gaps for the fine branch structure.
-          const m = solid(g, new THREE.IcosahedronGeometry(0.065, 0), leafGlazes[(q + k) % leafGlazes.length], [
-            end[0] + Math.sin(q * 2.4 + seed) * (0.12 + (q % 5) * .035),
-            end[1] + Math.cos(q * 1.8) * 0.18,
-            end[2] + Math.cos(q * 2.4 + seed) * (0.1 + (q % 4) * .04),
-          ]);
-          m.scale.set(1.05 + (q % 3) * 0.25, 0.32, .8 + (q % 2) * 0.3);
-          m.rotation.set(Math.sin(q)*.4,q*2.4,Math.cos(q)*.5);
+        for (let q = 0; q < (detail === 0 ? 8 : detail === 1 ? 16 : 26); q++) {
+          // Tapered blades replace the blunt faceted leaf pellets. Old trees
+          // carry narrow, needle-like fans; younger trees have lanceolate leaves.
+          const length = old ? .23 : .19,
+            halfWidth = old ? .012 : .027,
+            blade = new THREE.BufferGeometry();
+          blade.setAttribute("position",new THREE.Float32BufferAttribute([
+            0,0,0, -halfWidth,length*.34,0, 0,length*.43,.009,
+            -halfWidth,length*.34,0, 0,length,0, 0,length*.43,.009,
+            0,length,0, halfWidth,length*.34,0, 0,length*.43,.009,
+            halfWidth,length*.34,0, 0,0,0, 0,length*.43,.009,
+          ],3));
+          blade.computeVertexNormals();
+          const spread = old ? .085 : .12,
+            angle = a + (q % 7 - 3) * .24,
+            m = solid(g, blade, leafGlazes[(q + k) % leafGlazes.length], [
+              end[0] + Math.sin(q * 2.4 + seed) * spread,
+              end[1] + Math.cos(q * 1.8) * spread * .45,
+              end[2] + Math.cos(q * 2.4 + seed) * spread,
+            ]);
+          m.name = old ? "pointed-needle" : "pointed-leaf";
+          m.scale.setScalar(.9 + (q % 5) * .12);
+          m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),
+            new THREE.Vector3(Math.cos(angle),.25 + (q % 3) * .12,Math.sin(angle)).normalize());
+          m.rotateY(q * 2.4);
         }
     }
   });
