@@ -73,7 +73,7 @@ describe("shared space and continuous traffic", () => {
     expect(CARTS).toHaveLength(8);
     expect(MARKET.length).toBeGreaterThanOrEqual(6);
     expect(
-      NATURE.filter((n) => ["bare", "spring", "willow"].includes(n.kind))
+      NATURE.filter((n) => ["pine", "young-pine", "willow"].includes(n.kind))
         .length + FEATURE_TREES.length,
     ).toBeGreaterThanOrEqual(18);
     for (let i = 0; i < CARTS.length; i++)

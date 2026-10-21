@@ -248,7 +248,7 @@ export function shopperPose(index: number, time: number, seed = 0) {
     angle: p.moving ? p.angle : Math.atan2(shop.d - d, shop.s - s),
   };
 }
-export type NatureKind = "bare" | "spring" | "willow" | "reed" | "rock";
+export type NatureKind = "pine" | "young-pine" | "willow" | "reed" | "rock";
 export const NATURE: (PassagePoint & { kind: NatureKind; size: number })[] = [
   ...willowGrove,
 ];
@@ -260,9 +260,9 @@ for (const side of ["near", "far"] as const)
       i % 6 === 0
         ? "willow"
         : i % 4 === 0
-          ? "spring"
+          ? "young-pine"
           : i % 3 === 0
-            ? "bare"
+            ? "pine"
             : i % 5 === 0
               ? "rock"
               : "reed";
@@ -301,7 +301,7 @@ for (const side of ["near", "far"] as const)
     )
       NATURE.push({
         ...p,
-        kind: i % 4 === 0 ? "spring" : "bare",
+        kind: i % 4 === 0 ? "young-pine" : "pine",
         size: 1.35 + (i % 3) * 0.2,
       });
   }
@@ -312,7 +312,7 @@ for (
   let i = 0;
   i < 4000 &&
   NATURE.filter(
-    (n) => n.kind === "bare" || n.kind === "spring" || n.kind === "willow",
+    (n) => n.kind === "pine" || n.kind === "young-pine" || n.kind === "willow",
   ).length < 30;
   i++
 ) {
@@ -320,7 +320,7 @@ for (
     d = -12.6 + ((i * 2.37) % 25.2),
     size = 1.15 + (i % 3) * 0.15;
   const kind: NatureKind =
-    i % 7 === 0 ? "willow" : i % 3 === 0 ? "spring" : "bare";
+    i % 7 === 0 ? "willow" : i % 3 === 0 ? "young-pine" : "pine";
   const radius = (kind === "willow" ? 0.95 : 0.45) * size;
   if (roofClear({ s, d }, radius) && reserve({ s, d }, radius, kind))
     NATURE.push({ s, d, size, kind });

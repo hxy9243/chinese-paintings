@@ -79,7 +79,6 @@ export function buildReferenceTree(
   seed: number,
   detail: DetailLevel = 2,
   landmark = false,
-  leafy = false,
 ) {
   const g = new THREE.Group();
   g.name = landmark ? "great-riverbank-tree" : "reference-tree";
@@ -93,7 +92,6 @@ export function buildReferenceTree(
   // Short shoots carry several paired, round-section needles. The tapered
   // three-sided geometry stays needle-thin from every viewing direction.
   const pineSpray = (at: P, phase: number, extent = 1) => {
-    if (!leafy) return;
     const shoots = detail === 2 ? 11 : detail === 1 ? 7 : 5;
     for (let f = 0; f < shoots; f++) {
       const az = phase + f * 2.39996,
