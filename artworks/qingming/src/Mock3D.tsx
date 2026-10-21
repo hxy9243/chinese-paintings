@@ -14,14 +14,17 @@ import {
 import {
   createBridgeStudy,
   ELEVATION,
-  TILT_LIMIT,
+  CAMERA_LIMITS,
+  DEFAULT_VIEW_ANGLE,
   VIEW_ANGLE,
 } from "./bridgeStudy";
 import "./mock3d.css";
 import { createInkFinish } from "./inkFinish";
 import { advanceSceneTime } from "./peopleMotion";
 import { PALETTES,type ScenePalette } from "./scenePalette";
-import { SCROLL_STOPS, scrollPoint } from "./scrollLayout";
+import { boatPose } from "./passageLife";
+import { BOATS } from "./passageLayout";
+import { REFERENCE_AZIMUTH, SCROLL_STOPS, scrollPoint } from "./scrollLayout";
 
 type StudyApi = {
   view: (angle: number, pitch?: number) => void;
@@ -45,7 +48,7 @@ export default function Mock3D() {
   pausedRef.current = paused;
   const [originalOpen, setOriginalOpen] = useState(false);
   const [lang, setLang] = useState<"en" | "zh">("en"),
-    [angle, setAngle] = useState(TILT_LIMIT),
+    [angle, setAngle] = useState(DEFAULT_VIEW_ANGLE),
     [pitch, setPitch] = useState(0),
     [roll, setRoll] = useState(0),
     [painted, setPainted] = useState(true),
@@ -69,8 +72,8 @@ export default function Mock3D() {
     // Hulls enter through the two side edges, with recycling beyond the frame.
     const along = scrollPoint(1, 0).normalize();
     renderer.clippingPlanes = [
-      new THREE.Plane(along, 22),
-      new THREE.Plane(along.clone().negate(), 22),
+      new THREE.Plane(along, 32),
+      new THREE.Plane(along.clone().negate(), 32),
     ];
     const finish = createInkFinish(renderer);
     let paintingEnabled = true,
@@ -96,11 +99,11 @@ export default function Mock3D() {
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableRotate = true;
     controls.minAzimuthAngle =
-      VIEW_ANGLE - THREE.MathUtils.degToRad(TILT_LIMIT);
+      VIEW_ANGLE - THREE.MathUtils.degToRad(CAMERA_LIMITS.yaw);
     controls.maxAzimuthAngle =
-      VIEW_ANGLE + THREE.MathUtils.degToRad(TILT_LIMIT);
-    controls.minPolarAngle = ELEVATION - THREE.MathUtils.degToRad(TILT_LIMIT);
-    controls.maxPolarAngle = ELEVATION + THREE.MathUtils.degToRad(TILT_LIMIT);
+      VIEW_ANGLE + THREE.MathUtils.degToRad(CAMERA_LIMITS.yaw);
+    controls.minPolarAngle = ELEVATION - THREE.MathUtils.degToRad(CAMERA_LIMITS.pitchMax);
+    controls.maxPolarAngle = ELEVATION - THREE.MathUtils.degToRad(CAMERA_LIMITS.pitchMin);
     controls.rotateSpeed = 0.45;
     controls.addEventListener("change", () => {
       needsRender=true;
@@ -134,13 +137,13 @@ export default function Mock3D() {
       const azimuth =
         VIEW_ANGLE +
         THREE.MathUtils.degToRad(
-          Math.max(-TILT_LIMIT, Math.min(TILT_LIMIT, degrees)),
+          THREE.MathUtils.clamp(degrees, -CAMERA_LIMITS.yaw, CAMERA_LIMITS.yaw),
         );
       const offset = new THREE.Vector3().setFromSphericalCoords(
         110,
         ELEVATION -
           THREE.MathUtils.degToRad(
-            THREE.MathUtils.clamp(pitch, -TILT_LIMIT, TILT_LIMIT),
+            THREE.MathUtils.clamp(pitch, CAMERA_LIMITS.pitchMin, CAMERA_LIMITS.pitchMax),
           ),
         azimuth,
       );
@@ -148,7 +151,7 @@ export default function Mock3D() {
       camera.lookAt(controls.target);
       controls.update();
     };
-    const defaultAngle = TILT_LIMIT;
+    const defaultAngle = DEFAULT_VIEW_ANGLE;
     const defaultZoom = 1.25;
     camera.zoom = defaultZoom;
     camera.updateProjectionMatrix();
@@ -176,7 +179,7 @@ export default function Mock3D() {
       roll(degrees) {
         needsRender=true;
         rollAngle = THREE.MathUtils.degToRad(
-          THREE.MathUtils.clamp(degrees, -TILT_LIMIT, TILT_LIMIT),
+          THREE.MathUtils.clamp(degrees, -CAMERA_LIMITS.roll, CAMERA_LIMITS.roll),
         );
       },
       travel(s, overview = false, depth = 0) {
@@ -240,13 +243,29 @@ export default function Mock3D() {
     };
     frame = requestAnimationFrame(animate);
     const reviewApi={
-      frame(seconds:number,options:{zoom?:number;angle?:number;pitch?:number;target?:[number,number];palette?:ScenePalette}={}){
+      frame(seconds:number,options:{zoom?:number;angle?:number;pitch?:number;target?:[number,number];palette?:ScenePalette;eye?:[number,number,number];look?:[number,number,number];fov?:number;aboard?:number}={}){
         if(options.palette){study.setPalette(options.palette);finish.setPaper(PALETTES[options.palette].paper);setPalette(options.palette);}
         if(options.target){controls.target.copy(scrollPoint(...options.target));controls.target.y=1.1;}
         if(options.zoom!==undefined){camera.zoom=options.zoom;camera.updateProjectionMatrix();}
         position(options.angle??0,options.pitch??0);animationTime=seconds;
-        study.update(seconds,camera,el.clientHeight);renderer.info.autoReset=false;renderer.info.reset();
-        finish.render(scene,camera,paintingEnabled?inkSoftness:0);
+        let view:THREE.Camera=camera;
+        if((options.eye || options.aboard!==undefined) && options.look){
+          const immersive=new THREE.PerspectiveCamera(options.fov??55,el.clientWidth/el.clientHeight,.035,250);
+          const [s,y,d]=options.eye??[0,0,0], [ts,ty,td]=options.look;
+          immersive.position.copy(scrollPoint(s,d));immersive.position.y=y;
+          if(options.aboard!==undefined){
+            const index=options.aboard,pose=boatPose(index,seconds);
+            // Follow the actual vessel transform, including its bob, pitch and roll.
+            const offset=new THREE.Vector3(BOATS[index].width*.25,1.12,BOATS[index].length*.28);
+            offset.applyEuler(new THREE.Euler(pose.pitch,REFERENCE_AZIMUTH+Math.PI/2-pose.angle,pose.roll));
+            immersive.position.copy(scrollPoint(pose.s,pose.d)).add(offset);
+            immersive.position.y+=pose.y;
+          }
+          const aim=scrollPoint(ts,td);aim.y=ty;immersive.lookAt(aim);
+          immersive.updateMatrixWorld();view=immersive;
+        }
+        study.update(seconds,view,el.clientHeight);renderer.info.autoReset=false;renderer.info.reset();
+        finish.render(scene,view,paintingEnabled?inkSoftness:0);
         const stats={...study.metadata(),triangles:renderer.info.render.triangles,calls:renderer.info.render.calls};renderer.info.autoReset=true;return stats;
       },
       metadata:()=>study.metadata(),
@@ -349,7 +368,7 @@ export default function Mock3D() {
           </div>
           <div className="study-badge">
             <Rotate3D size={13} />
-            {t("THREE AXES · ±30°", "三轴旋转 · ±30°")}
+            {t("TURN ±85° · TILT 8–80°", "转向 ±85° · 俯视 8–80°")}
           </div>
           {!ready && !error && (
             <div className="study-loading">
@@ -396,7 +415,7 @@ export default function Mock3D() {
               disabled={!ready}
               onClick={() => {
                 api.current?.reset();
-                setAngle(TILT_LIMIT);
+                setAngle(DEFAULT_VIEW_ANGLE);
               }}
             >
               <RotateCcw size={16} />
@@ -424,7 +443,7 @@ export default function Mock3D() {
             </p>
           </div>
           <div className="study-views">
-            {[-TILT_LIMIT, 0, TILT_LIMIT].map((a) => (
+            {[-75, 0, 75].map((a) => (
               <button
                 key={a}
                 aria-pressed={angle === a}
@@ -437,8 +456,8 @@ export default function Mock3D() {
                 {a === 0
                   ? t("Scroll view", "画卷视角")
                   : a < 0
-                    ? t("Left −30°", "左侧 −30°")
-                    : t("Right +30°", "右侧 +30°")}
+                    ? t("Left −75°", "左侧 −75°")
+                    : t("Right +75°", "右侧 +75°")}
               </button>
             ))}
           </div>
@@ -448,10 +467,10 @@ export default function Mock3D() {
           aria-label={t("Three-axis rotation", "三轴旋转")}
         >
           {[
-            { key: "yaw", label: t("Turn · Y", "转向 · Y"), value: angle },
-            { key: "pitch", label: t("Tilt · X", "俯仰 · X"), value: pitch },
-            { key: "roll", label: t("Roll · Z", "倾转 · Z"), value: roll },
-          ].map(({ key, label, value }) => (
+            { key: "yaw", label: t("Turn · Y", "转向 · Y"), value: angle, min: -CAMERA_LIMITS.yaw, max: CAMERA_LIMITS.yaw },
+            { key: "pitch", label: t("Tilt · X", "俯仰 · X"), value: pitch, min: CAMERA_LIMITS.pitchMin, max: CAMERA_LIMITS.pitchMax },
+            { key: "roll", label: t("Roll · Z", "倾转 · Z"), value: roll, min: -CAMERA_LIMITS.roll, max: CAMERA_LIMITS.roll },
+          ].map(({ key, label, value, min, max }) => (
             <label className="angle-control" key={key}>
               <span>
                 {label}
@@ -462,8 +481,8 @@ export default function Mock3D() {
               </span>
               <input
                 type="range"
-                min={-TILT_LIMIT}
-                max={TILT_LIMIT}
+                min={min}
+                max={max}
                 step="1"
                 value={value}
                 disabled={!ready}
@@ -478,8 +497,8 @@ export default function Mock3D() {
                 }}
               />
               <span className="angle-extents">
-                <span>−30°</span>
-                <span>+30°</span>
+                <span>{min}°</span>
+                <span>+{max}°</span>
               </span>
             </label>
           ))}
@@ -493,7 +512,7 @@ export default function Mock3D() {
             <select aria-label={t('Color palette','设色')} value={palette} disabled={!ready}
               onChange={e=>{const value=e.target.value as ScenePalette;setPalette(value);api.current?.palette(value);try{localStorage.setItem('qingming.palette',value);}catch{}}}>
               <option value="silk">{t('Original silk','原作绢色')}</option>
-              <option value="indigo-amber">{t('Indigo & amber','靛蓝与琥珀')}</option>
+              <option value="indigo-amber">{t('River & ochre','碧水赭彩')}</option>
             </select>
           </label>
           <label className="angle-control softness-control">
@@ -547,8 +566,8 @@ export default function Mock3D() {
               {t("Explore from three angles.", "从三轴细看画卷。")}
             </strong>{" "}
             {t(
-              "Turn, tilt, and roll up to 30° each way. Right-drag to pan; reset to return to the original composition.",
-              "转向、俯仰、倾转各可调至正负30°。右键拖动平移，重置可返回初始构图。",
+              "Turn up to 85° each way, view from 8° to 80° above the river, and roll up to 45°. Right-drag to pan; reset to return to the original composition.",
+              "转向可调至正负85°，俯视高度8°至80°，倾转正负45°。右键拖动平移，重置可返回初始构图。",
             )}
           </p>
           <p>

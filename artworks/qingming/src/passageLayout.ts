@@ -2,8 +2,11 @@
 // architecture and pedestrian routes share this basis before world rotation.
 export type BankSide = "far" | "near";
 export type PassagePoint = { s: number; d: number };
-export const GROUND_Y = 0.015;
-export const PERSON_SCALE = 0.65; // about 0.44 units tall in the painted passage
+export const GROUND_Y = 0.42; // about 0.93 m / three feet above the mean waterline
+export const PERSON_SCALE = 1.25; // nominal adult height 0.85: bridge width ≈ 3.8 adult heights
+export const PERSON_WIDTH_SCALE = 1.05; // retain the existing walking clearance
+export const BRIDGE_RAIL_HEIGHT = 0.42;
+export const MIN_EAVE_HEIGHT = 1.12;
 export const SHORELINES: Record<BankSide, PassagePoint[]> = {
   far: [
     [-22, -5.8],
@@ -244,6 +247,9 @@ HALLS.push(
     angle: 0,
   },
 );
+// Small shop roofs formerly had eaves below adult head height. Keep their
+// authored footprints, but provide headroom for the tallest standing profile.
+HALLS.forEach(h => { h.height = Math.max(h.height, MIN_EAVE_HEIGHT); });
 // The old bare tree's trunk stands beside the near quay, behind the foreground
 // roof line, with the crown reaching into the water silhouette.
 export const REFERENCE_TREE = {
@@ -276,8 +282,8 @@ export function bridgePoint(x: number, lateral = 0): PassagePoint {
       lateral * Math.cos(BRIDGE.angle),
   };
 }
-// Two dense edge rows leave the centre available for carts and passing feet.
-export const BRIDGE_PEOPLE_PER_SIDE = 32;
+// Looser browsing groups leave gaps between counters and river watchers.
+export const BRIDGE_PEOPLE_PER_SIDE = 16;
 export const BRIDGE_SHOPS = [-1, 1].flatMap((side) =>
   Array.from({ length: 8 }, (_, i) => {
     const station = 1 + i * 4;
@@ -285,7 +291,7 @@ export const BRIDGE_SHOPS = [-1, 1].flatMap((side) =>
       x:
         -BRIDGE.length / 2 +
         0.4 +
-        (station * (BRIDGE.length - 0.8)) / (BRIDGE_PEOPLE_PER_SIDE - 1),
+        (station * (BRIDGE.length - 0.8)) / 31,
       lateral: side * (BRIDGE.width / 2 + 0.04),
       width: 0.84,
       depth: 0.24,

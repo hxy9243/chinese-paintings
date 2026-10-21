@@ -15,7 +15,7 @@ describe("busy bridge market", () => {
       t = advanceSceneTime(t, delta, false);
     expect(t).toBeCloseTo(1);
   });
-  it("places two rows of stands outside the passing lanes, each with a seller and buyer", () => {
+  it("places two rows of stands outside the passing lanes, with looser browsing and river-watching groups", () => {
     expect(BRIDGE_SHOPS).toHaveLength(16);
     const counts = Array.from({ length: BRIDGE_OBSERVERS }, (_, i) =>
       bridgeRole(i),
@@ -24,10 +24,10 @@ describe("busy bridge market", () => {
       {} as Record<string, number>,
     );
     expect(counts).toEqual({
-      vendor: 16,
-      customer: 16,
-      "river-watcher": 16,
-      conversation: 16,
+      vendor: 8,
+      customer: 8,
+      "river-watcher": 8,
+      conversation: 8,
     });
     for (const shop of BRIDGE_SHOPS) {
       expect(Math.abs(shop.lateral) - shop.depth / 2).toBeGreaterThan(1.5);
@@ -60,7 +60,7 @@ describe("busy bridge market", () => {
     study.group.traverse((o) => {
       if (o.name === "bridge-observer") actors.push(o);
     });
-    expect(actors).toHaveLength(64);
+    expect(actors).toHaveLength(BRIDGE_OBSERVERS);
     const workingArm = (actor: THREE.Object3D) =>
       actor.userData.activity === "river-watcher"
         ? "left-forearm"

@@ -1,0 +1,23 @@
+{
+  "build": {
+    "command": "npm run build",
+    "passed": true
+  },
+  "fullUnit": {
+    "command": "npm test",
+    "files": 14,
+    "passed": 62,
+    "failed": 0
+  },
+  "focusedTraffic": {
+    "command": "npx vitest run tests/traffic.test.ts",
+    "passed": 5,
+    "failed": 0
+  },
+  "finalClearance": {
+    "command": "npx vitest run tests/marketVariety.test.ts tests/referenceAssets.test.ts tests/passageLayout.test.ts",
+    "passed": 16,
+    "failed": 0
+  },
+  "note": "The full suite preceded the final architecture-header refinements; the final geometry was covered by focused clearance and reference-asset checks and the production still capture."
+}

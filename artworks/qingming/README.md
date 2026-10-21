@@ -25,7 +25,8 @@ Open the local address printed by Vite. The private Sites project is recorded in
 - Right-drag to pan; pinch or scroll to zoom. Reset restores the authored view.
 - Focus on the bridge, far-bank shops, river bend, or whole passage.
 - Horse carts travel one way along the open main street and over the bridge. Boats pass in opposite lanes and enter from both sides.
-- People walk, pause independently, and browse 44 market stands in small groups. Standing figures, boat crews, and drivers also have gentle idle motion.
+- People enter from the street edges, walk across the streets and bridge, pause, turn back, yield, and browse the market. Waterfront paths have their own walkers; standing figures, boat crews, and drivers also have gentle idle motion.
+- Layered pigment glazes, drifting water washes, fading stern wakes, varied cloth colors, and spring greens enrich the painted finish. Ordinary buildings use muted unglazed gray tiles in both palettes.
 - Pause life freezes the whole scene. Reduced-motion preference starts paused.
 - Compare the ink treatment with the plain model, and adjust ink softness.
 - Open the reference crop to compare with the original painting.
@@ -35,10 +36,13 @@ Open the local address printed by Vite. The private Sites project is recorded in
 - `src/Mock3D.tsx`: bilingual interface, camera, and animation clock.
 - `src/bridgeStudy.ts`: modeled bridge, buildings, trees, horse carts, figures, and boats.
 - `src/passageLayout.ts`: bank outlines, building footprints, bridge landings, and boat sizes.
-- `src/passageLife.ts`: walking routes, horse-cart motion, river traffic, ripples, and planting.
+- `src/pedestrians.ts`: seeded fixed-step street and waterfront crowd simulation.
+- `src/passageLife.ts`: horse-cart motion, river traffic, ripples, and planting.
+- `src/boatWakes.ts`: reusable fading stern-wake buffers.
 - `src/peopleMotion.ts` and `src/crowd.ts`: individual activity schedules and shared animated figure geometry.
 - `src/passageSpace.ts`: shared placement clearances and reserved traffic routes.
 - `src/paintMaterial.ts` and `src/inkFinish.ts`: pigment and ink rendering.
 - `docs/3D_STUDY.md`: implementation notes and historical changes.
+- `docs/STREET_LIFE_AND_WATERCOLOR.md`: roof-color research, crowd behavior, and painting techniques.
 
 This is an artistic interpretation of the supplied passage. Automated checks cover geometry, animation, and desktop/mobile Chromium interactions. Physical iOS/Android performance remains unmeasured.

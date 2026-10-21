@@ -1,0 +1,81 @@
+{
+  "passed": true,
+  "errors": [],
+  "failedRequests": [],
+  "replay": true,
+  "sceneDetail": true,
+  "crowd": {
+    "close": {
+      "variants": 12,
+      "levels": [
+        {
+          "level": 0,
+          "actors": 155,
+          "triangles": 33234
+        },
+        {
+          "level": 1,
+          "actors": 165,
+          "triangles": 382848
+        },
+        {
+          "level": 2,
+          "actors": 49,
+          "triangles": 1104964
+        }
+      ]
+    },
+    "overview": {
+      "variants": 12,
+      "levels": [
+        {
+          "level": 0,
+          "actors": 369,
+          "triangles": 79712
+        },
+        {
+          "level": 1,
+          "actors": 0,
+          "triangles": 0
+        },
+        {
+          "level": 2,
+          "actors": 0,
+          "triangles": 0
+        }
+      ]
+    }
+  },
+  "views": [
+    {
+      "name": "woman-three-quarter",
+      "focus": 6,
+      "turn": 0.38
+    },
+    {
+      "name": "merchant-front",
+      "focus": 0,
+      "turn": 0.05
+    },
+    {
+      "name": "elder-three-quarter",
+      "focus": 7,
+      "turn": -0.4
+    },
+    {
+      "name": "boatman-profile",
+      "focus": 3,
+      "turn": 1.05
+    }
+  ],
+  "sourceHashes": {
+    "src/faceModels.ts": "dd5798353462601d2eb351a65a7b1149e95496588557e46871e560559614fa29",
+    "src/crowd.ts": "882a29f1b65001dc3dfaa462759a6edbf83d415d4f04a0b4c572161123edce5b",
+    "src/paintMaterial.ts": "6c7d8e4186c1f15f01d94768fb64ed93a0f999ad0bc82729ab21f05e8259b63b",
+    "src/figures.ts": "e939b57fa937a9fa7d7d69e9391ec191ea1378b9828bca3d25169a4093eca9dc",
+    "src/figureStudy.ts": "49e0829edbe969aee21dbc919f2050d2aa423169fe3fb065d9b5df8fbb68556b",
+    "src/figureTypes.ts": "5e6d98411040372936929e81cf7c74f4fe37d4eca32d43b917396cd91cfed91b",
+    "figure-study.html": "3a70802c32962e7c61128eccc43e7d4040b66d7699ee610d306a0946a53838c1"
+  },
+  "kind": "Production Three.js geometry; four stills only, no generated imagery or video"
+}

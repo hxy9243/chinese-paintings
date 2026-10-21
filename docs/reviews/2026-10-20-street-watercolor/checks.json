@@ -1,0 +1,34 @@
+{
+  "base_commit": "f3b10f570840ef5f24211a99faf9108e19eae86c",
+  "unit": {
+    "passed": 59,
+    "files": 13,
+    "command": "npm test --prefix artworks/qingming"
+  },
+  "build": {
+    "passed": true,
+    "command": "npm run build --prefix artworks/qingming"
+  },
+  "browser": {
+    "passed": 8,
+    "projects": [
+      "desktop",
+      "mobile"
+    ],
+    "status": {
+      "status": "passed",
+      "failedTests": []
+    },
+    "command": "npm run test:e2e --prefix artworks/qingming",
+    "engine": "Chromium 153, SwiftShader",
+    "optional_font_css": "stubbed"
+  },
+  "production_visual_review": {
+    "passed": true,
+    "sourceHashesMatch": true,
+    "errors": [],
+    "motionSeconds": 8,
+    "frames": 48,
+    "fps": 6
+  }
+}

@@ -1,30 +1,58 @@
 import * as THREE from "three";
-import {paletteAmount,palettePaper,paletteInk,indigoPigment,PALETTES} from "./scenePalette";
-import {roadUniforms,roadShader} from "./roadSurface";
+import {
+  paletteAmount,
+  palettePaper,
+  paletteInk,
+  indigoPigment,
+  silkPigment,
+  PALETTES,
+} from "./scenePalette";
+import { roadUniforms, roadShader } from "./roadSurface";
+import { riverShader } from "./riverSurface";
 
-// World-space pigment stays attached to the artwork while the camera moves.
+// Geometry-space pigment stays attached while subjects and camera move.
 // No screen-space noise animation or extra postprocessing framebuffer is needed.
 export const paintingAmount = { value: 1 };
-export function paintMaterial(color: number, ground = false, bank = false) {
+export const waterTime = { value: 0 };
+export function paintMaterial(
+  color: number,
+  ground = false,
+  bank = false,
+  water = false,
+  foliage = false,
+) {
   return new THREE.ShaderMaterial({
     clipping: true,
     uniforms: {
-      pigment: { value: new THREE.Color(color) },
-      alternatePigment:{value:new THREE.Color(indigoPigment(color))},
-      paletteAmount,palettePaper,
-      bank:{value:bank?1:0},...roadUniforms,
-      roadPigment:{value:new THREE.Color(PALETTES.silk.road)},
-      alternateRoadPigment:{value:new THREE.Color(PALETTES['indigo-amber'].road)},
+      pigment: { value: new THREE.Color(silkPigment(color)) },
+      alternatePigment: { value: new THREE.Color(indigoPigment(color)) },
+      paletteAmount,
+      palettePaper,
+      bank: { value: bank ? 1 : 0 },
+      ...roadUniforms,
+      roadPigment: { value: new THREE.Color(PALETTES.silk.road) },
+      alternateRoadPigment: {
+        value: new THREE.Color(PALETTES["indigo-amber"].road),
+      },
       painting: paintingAmount,
       ground: { value: ground ? 1 : 0 },
+      water: { value: water ? 1 : 0 },
+      waterTime,
+      foliage: { value: foliage ? 1 : 0 },
     },
     transparent: ground,
+    depthWrite: !ground,
     side: THREE.DoubleSide,
     vertexShader: `
       #include <clipping_planes_pars_vertex>
-      varying vec3 point; varying vec3 facing;
-      void main(){vec4 world=modelMatrix*vec4(position,1.);point=world.xyz;
+      varying vec3 point; varying vec3 facing; varying vec3 brushPoint;
+      uniform float water;uniform float waterTime;uniform float foliage;
+      ${riverShader}
+      void main(){vec4 world=modelMatrix*vec4(position,1.);point=world.xyz;brushPoint=position;
         facing=normalize(mat3(modelMatrix)*normal);
+        if(water>.5){world.y=waterHeight(riverPoint(world.xyz),waterTime);}
+        if(foliage>.5){world.x+=sin(waterTime*.85+world.z*2.1+world.y)*.018;world.z+=cos(waterTime*.7+world.x*1.6)*.012;}
+        point=world.xyz;
         vec4 mvPosition=viewMatrix*world;gl_Position=projectionMatrix*mvPosition;
         #include <clipping_planes_vertex>
       }`,
@@ -32,31 +60,75 @@ export function paintMaterial(color: number, ground = false, bank = false) {
       #include <clipping_planes_pars_fragment>
       uniform vec3 pigment;uniform vec3 alternatePigment;uniform float paletteAmount;uniform vec3 palettePaper;
       uniform vec3 roadPigment;uniform vec3 alternateRoadPigment;uniform float bank;
-      uniform float painting;uniform float ground;
-      varying vec3 point;varying vec3 facing;
+      uniform float painting;uniform float ground;uniform float water;uniform float waterTime;
+      varying vec3 point;varying vec3 facing;varying vec3 brushPoint;
       float hash(vec3 p){return fract(sin(dot(p,vec3(127.1,311.7,74.7)))*43758.5453);}
       float noise(vec3 p){vec3 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
         return mix(mix(mix(hash(i),hash(i+vec3(1,0,0)),f.x),mix(hash(i+vec3(0,1,0)),hash(i+vec3(1,1,0)),f.x),f.y),
           mix(mix(hash(i+vec3(0,0,1)),hash(i+vec3(1,0,1)),f.x),mix(hash(i+vec3(0,1,1)),hash(i+vec3(1,1,1)),f.x),f.y),f.z);}
       ${roadShader}
+      ${riverShader}
       void main(){
         #include <clipping_planes_fragment>
-        float wash=noise(point*2.8)*.65+noise(point*10.)*.25+noise(point*90.)*.1;
+        vec3 stroke=brushPoint;
+        float wash=noise(stroke*1.8)*.55+noise(stroke*6.5)*.3+noise(stroke*31.)*.15;
         float shade=.75+.25*max(0.,dot(normalize(facing),normalize(vec3(-.6,1.,.8))));
         vec3 paper=palettePaper;
         vec3 localPigment=mix(pigment,alternatePigment,paletteAmount);
         if(bank>.5){vec2 p=vec2(point.x*.64278761+point.z*.76604444,-point.x*.76604444+point.z*.64278761);
           localPigment=mix(localPigment,mix(roadPigment,alternateRoadPigment,paletteAmount),wornRoad(p)*.55);}
-        float pool=smoothstep(.43,.75,noise(point*15.));
-        float dry=smoothstep(.62,.85,noise(point*vec3(90.,35.,65.)));
-        vec3 painted=mix(localPigment,paper,.03+wash*.12+dry*.12);
-        painted*=.86+wash*.23-pool*.12;
-        painted*=mix(.96,1.02,max(0.,facing.y));
+        // Two translucent pigment glazes over the substrate. Broad washes and
+        // finer sediment use independent scales, with darker drying rims.
+        float glaze=noise(stroke*vec3(2.1,3.8,2.6));
+        float second=noise(stroke*8.7+vec3(17.,4.,9.));
+        float rim=1.-smoothstep(.025,.09,abs(glaze-.53));
+        float grain=noise(stroke*vec3(115.,67.,92.));
+        float sediment=smoothstep(.48,.77,second)*smoothstep(.24,.72,grain);
+        float dry=smoothstep(.70,.88,grain)*.055;
+        vec3 transmission=clamp(localPigment/max(paper,vec3(.01)),vec3(.015),vec3(1.2));
+        vec3 firstGlaze=paper*pow(transmission,vec3(.48+glaze*.18));
+        vec3 painted=firstGlaze*pow(transmission,vec3(.30+second*.17));
+        painted=mix(painted,paper,.025+wash*.08+dry);
+        painted*=.94+glaze*.16-rim*.07-sediment*.11;
+        painted*=.91+.09*max(0.,dot(normalize(facing),normalize(vec3(-.6,1.,.8))));
+        vec2 river=riverPoint(point);
+        float shore=shoreDistance(river);
+        if(water>.5){
+          float flow=noise(vec3((river.x-waterTime*.06)*.8,river.y*1.8,4.));
+          float underwash=noise(vec3(river*.65,19.));
+          vec2 slope=vec2(waterHeight(river+vec2(.025,0),waterTime)-waterHeight(river-vec2(.025,0),waterTime),
+            waterHeight(river+vec2(0,.025),waterTime)-waterHeight(river-vec2(0,.025),waterTime))/.05;
+          vec3 normal=normalize(vec3(-slope.x*.64278761+slope.y*.76604444,1.,-slope.x*.76604444-slope.y*.64278761));
+          vec3 eye=normalize(cameraPosition-point);
+          float fresnel=pow(1.-max(0.,dot(normal,eye)),3.);
+          vec3 bed=mix(localPigment,vec3(.48,.58,.45),.22+underwash*.16);
+          vec3 sky=mix(paper,vec3(.69,.80,.75),.35);
+          float shallows=1.-smoothstep(.1,1.5,-shore);
+          painted=mix(bed,sky,.18+fresnel*.42+flow*.10);
+          painted=mix(painted,paper,shallows*(.12+underwash*.18));
+          float light=pow(max(0.,dot(reflect(-normalize(vec3(-.4,1.,.6)),normal),eye)),55.);
+          float caustic=pow(.5+.5*sin(river.x*15.+sin(river.y*9.-waterTime*.7)*1.8-waterTime),16.);
+          painted+=vec3(.16,.18,.15)*light*.8;
+          painted=mix(painted,paper,caustic*(.035+shallows*.08));
+          float ripple=sin(river.y*35.+sin(river.x*2.3-waterTime*.6)*1.7+waterTime*.45);
+          painted=mix(painted,paper,smoothstep(.94,1.,ripple)*smoothstep(.50,.73,flow)*.19);
+        }
+        if(bank>.5){
+          float wet=1.-smoothstep(-.15,.65,shore);
+          painted*=1.-wet*(.08+noise(vec3(river*9.,2.))*.12);
+          painted=mix(painted,paper,wet*noise(vec3(river*4.,9.))*.15);
+        }
         vec3 result=mix(localPigment*shade,painted,painting);
         float scroll=point.x*.64278761+point.z*.76604444;
         float depth=-point.x*.76604444+point.z*.64278761;
-        float edge=min((22.-abs(scroll))/2.,(14.-abs(depth))/1.3);
-        float alpha=ground>.5 ? smoothstep(0.,1.,edge+(wash-.5)*.3) : 1.;
+        vec2 q=abs(vec2(scroll,depth))-vec2(16.,8.);
+        float boundary=length(max(q,0.))+min(max(q.x,q.y),0.)-6.;
+        // Preserve the complete painted footprint. Only the added exterior
+        // land/water apron dissolves into paper; structures keep their color.
+        float outward=max(boundary,0.);
+        float absorption=.85+.3*noise(vec3(river*.65,7.));
+        float alpha=ground>.5 ? 1.-smoothstep(0.,5.5,outward*absorption) : 1.;
+        if(bank>.5)alpha*=smoothstep(-.30,.24,shore+(noise(vec3(river*12.,5.))-.5)*.15);
         gl_FragColor=vec4(result,alpha);
         #include <tonemapping_fragment>
         #include <colorspace_fragment>
@@ -69,21 +141,21 @@ export function createDryInk(fade = 1) {
     clipping: true,
     transparent: true,
     depthWrite: false,
-    uniforms: { painting: paintingAmount, fade: { value: fade },paletteInk },
+    uniforms: { painting: paintingAmount, fade: { value: fade }, paletteInk },
     vertexShader: `
       #include <clipping_planes_pars_vertex>
-      varying vec3 point;
-      void main(){vec4 world=modelMatrix*vec4(position,1.);point=world.xyz;
+      varying vec3 point;varying vec3 strokePoint;
+      void main(){vec4 world=modelMatrix*vec4(position,1.);point=world.xyz;strokePoint=position;
         vec4 mvPosition=viewMatrix*world;gl_Position=projectionMatrix*mvPosition;
         #include <clipping_planes_vertex>
       }`,
     fragmentShader: `
       #include <clipping_planes_pars_fragment>
-      uniform float painting;uniform float fade;uniform vec3 paletteInk;varying vec3 point;
+      uniform float painting;uniform float fade;uniform vec3 paletteInk;varying vec3 point;varying vec3 strokePoint;
       void main(){
         #include <clipping_planes_fragment>
-        float grain=fract(sin(dot(floor(point*95.),vec3(127.1,311.7,74.7)))*43758.5453);
-        float flow=.5+.5*sin(point.x*41.+point.y*29.+point.z*37.);
+        float grain=fract(sin(dot(floor(strokePoint*95.),vec3(127.1,311.7,74.7)))*43758.5453);
+        float flow=.5+.5*sin(strokePoint.x*41.+strokePoint.y*29.+strokePoint.z*37.);
         float opacity=mix(.65,.28+flow*.40+grain*.18,painting);
         if(painting>.5 && grain>.92)opacity*=.22;
         gl_FragColor=vec4(paletteInk,opacity*fade);

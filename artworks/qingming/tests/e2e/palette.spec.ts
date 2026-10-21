@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./fixtures";
 test("palette choice updates actual scene materials, preserves geometry and survives reload", async ({
   page,
 }) => {

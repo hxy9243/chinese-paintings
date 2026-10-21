@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./fixtures";
 
 test("the home page opens the 3D study and preserves existing local data", async ({
   page,
@@ -25,43 +25,52 @@ test("the home page opens the 3D study and preserves existing local data", async
     page.getByRole("img", { name: "Rainbow Bridge constrained 3D study" }),
   ).toBeVisible();
   // Reduced-motion users can start and stop life without opening a menu.
-  await expect(page.getByRole('button',{name:'Resume life',exact:true})).toBeVisible();
-  await page.getByRole('button',{name:'Resume life',exact:true}).click();
-  await expect(page.getByRole('button',{name:'Pause life',exact:true})).toBeVisible();
-  await page.getByRole('button',{name:'Pause life',exact:true}).click();
+  await expect(
+    page.getByRole("button", { name: "Resume life", exact: true }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Resume life", exact: true }).click();
+  await expect(
+    page.getByRole("button", { name: "Pause life", exact: true }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Pause life", exact: true }).click();
   await expect(page.locator(".study-stage")).toHaveAttribute(
     "data-angle",
     "30",
   );
-  await page.getByRole("button", { name: "Left −30°", exact: true }).click();
+  await page.getByRole("button", { name: "Left −75°", exact: true }).click();
   await expect(page.locator(".study-stage")).toHaveAttribute(
     "data-angle",
-    "-30",
+    "-75",
   );
-  await page.getByRole("button", { name: "Right +30°", exact: true }).click();
+  await page.getByRole("button", { name: "Right +75°", exact: true }).click();
   await expect(page.locator(".study-stage")).toHaveAttribute(
     "data-angle",
-    "30",
+    "75",
   );
-  for (const [name, attribute] of [
-    ["Tilt · X", "data-pitch"],
-    ["Roll · Z", "data-roll"],
+  for (const [name, attribute, minimum] of [
+    ["Turn · Y", "data-angle", "-85"],
+    ["Tilt · X", "data-pitch", "-27"],
+    ["Roll · Z", "data-roll", "-45"],
   ]) {
     const control = page.getByRole("slider", { name, exact: true });
     await control.focus();
     await control.press("End");
-    await expect(page.locator(".study-stage")).toHaveAttribute(attribute, "30");
+    await expect(page.locator(".study-stage")).toHaveAttribute(
+      attribute,
+      name === "Turn · Y" ? "85" : "45",
+    );
     await control.press("Home");
     await expect(page.locator(".study-stage")).toHaveAttribute(
       attribute,
-      "-30",
+      minimum,
     );
   }
   await page.getByRole("button", { name: "Zoom in", exact: true }).click();
   await page.getByRole("button", { name: "Reset view", exact: true }).click();
-  await expect(
-    page.getByRole("button", { name: "Right +30°", exact: true }),
-  ).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator(".study-stage")).toHaveAttribute(
+    "data-angle",
+    "30",
+  );
   await expect(page.locator(".study-stage")).toHaveAttribute("data-pitch", "0");
   await expect(page.locator(".study-stage")).toHaveAttribute("data-roll", "0");
   const bounds = await page.locator(".study-canvas").boundingBox();
@@ -125,21 +134,22 @@ test("painting render supports bounded rotation and a plain-model comparison", a
   const box = await canvas.boundingBox();
   if (!box) throw new Error("Missing canvas");
   const y = box.y + box.height / 2;
-  await page.mouse.move(box.x + box.width * 0.8, y);
-  await page.mouse.down();
-  await page.mouse.move(box.x + box.width * 0.2, y + 35, { steps: 12 });
-  await page.mouse.up();
-  await expect(page.locator(".study-stage")).toHaveAttribute(
-    "data-angle",
-    "30",
-  );
-  await page.mouse.down();
-  await page.mouse.move(box.x + box.width * 0.8, y, { steps: 12 });
-  await page.mouse.up();
-  await expect(page.locator(".study-stage")).toHaveAttribute(
-    "data-angle",
-    "-30",
-  );
+  for (const [from, to, expected] of [
+    [0.8, 0.2, "85"],
+    [0.2, 0.8, "-85"],
+  ] as const) {
+    // Repeated gestures reach the full range on narrow phone canvases too.
+    for (let i = 0; i < 4; i++) {
+      await page.mouse.move(box.x + box.width * from, y);
+      await page.mouse.down();
+      await page.mouse.move(box.x + box.width * to, y, { steps: 8 });
+      await page.mouse.up();
+    }
+    await expect(page.locator(".study-stage")).toHaveAttribute(
+      "data-angle",
+      expected,
+    );
+  }
   const softness = page.getByRole("slider", { name: "Ink softness" });
   await expect(softness).toHaveValue("70");
   await softness.focus();

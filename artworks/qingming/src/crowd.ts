@@ -1,8 +1,8 @@
 import * as THREE from "three";
 import { FIGURE_HEIGHT } from "./figures";
-import { chooseDetail, projectedHeightPixels, type DetailLevel } from "../../../packages/scene-kit/lod";
+import { projectedHeightPixels, type DetailLevel } from "../../../packages/scene-kit/lod";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
-import { FIGURE_TYPES } from "./figureTypes";
+import { FIGURE_TYPES, figureDetail } from "./figureTypes";
 
 // Logical articulated actors feed compact instance buffers. Each level owns
 // genuinely different geometry; distant detail is not just a smaller framebuffer.
@@ -91,7 +91,7 @@ export function createCrowd(parent: THREE.Group,
         const pixels=projectedHeightPixels({height:FIGURE_HEIGHT*scale.y,viewportHeight,zoom:ortho.zoom??1,
           orthographicSpan:ortho.isOrthographicCamera?ortho.top-ortho.bottom:undefined,
           distance:center.distanceTo(camera.position),verticalFov:perspective.fov});
-        actor.userData.detail=chooseDetail(pixels,actor.userData.detail);
+        actor.userData.detail=figureDetail(pixels,actor.userData.detail);
       }
       for(const pool of pools) {
         if(!pool.attribute||!pool.geometry||!pool.drawable)continue;

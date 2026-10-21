@@ -1,7 +1,7 @@
 export const FIGURE_TYPES = [
   { name: "merchant", robe: 0, hat: "cap", height: 1, width: 1.04, load: "ledger" },
   { name: "porter", robe: 1, hat: "straw", height: 1.03, width: 1.1, load: "baskets" },
-  { name: "scholar", robe: 2, hat: "tall", height: 1.08, width: .94, load: "scroll" },
+  { name: "scholar", robe: 2, hat: "soft", height: 1.08, width: .94, load: "scroll" },
   { name: "boatman", robe: 0, hat: "wrap", height: .98, width: 1.12, load: "none" },
   { name: "traveler", robe: 1, hat: "straw", height: 1.05, width: .96, load: "bundle" },
   { name: "shopkeeper", robe: 2, hat: "cap", height: .96, width: 1.18, load: "cup" },
@@ -12,3 +12,11 @@ export const FIGURE_TYPES = [
   { name: "attendant", robe: 0, hat: "tall", height: 1.04, width: .92, load: "none" },
   { name: "basket-seller", robe: 1, hat: "cap", height: .97, width: 1.08, load: "basket" },
 ] as const;
+
+// Figures need a different budget from roofs: subpixel eyes and fingers add
+// shimmer and geometry without improving a 20–30 pixel painted silhouette.
+export function figureDetail(pixels:number,previous:0|1|2=1):0|1|2 {
+  if(previous===0 && pixels<=36)return 0;
+  if(previous===2 && pixels>=72)return 2;
+  return pixels>=90?2:pixels<32?0:1;
+}

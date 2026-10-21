@@ -1,0 +1,25 @@
+{
+  "build": {
+    "command": "npm run build",
+    "passed": true
+  },
+  "unit": {
+    "command": "npm test",
+    "passed": true,
+    "files": 13,
+    "tests": 59
+  },
+  "browser": {
+    "command": "npm run test:e2e",
+    "initial": {
+      "passed": 7,
+      "failed": 1
+    },
+    "retry": {
+      "command": "npm run test:e2e -- --project=mobile --grep='selected passage'",
+      "passed": 1,
+      "failed": 0
+    },
+    "note": "One initial mobile cold-load timeout on the development server; fresh targeted retry passed without changes."
+  }
+}

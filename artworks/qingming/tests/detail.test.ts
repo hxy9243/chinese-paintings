@@ -33,7 +33,7 @@ describe("reference landmarks and geometry detail", () => {
     camera.position.set(0,80,80);
     camera.zoom=2.5;study.update(8,camera,760);
     const close=study.metadata();
-    camera.zoom=.5;study.update(8,camera,760);
+    camera.zoom=.3;study.update(8,camera,760);
     const far=study.metadata();
     const triangles=(m:typeof close)=>m.crowd.levels.reduce((n,l)=>n+l.triangles,0);
     expect(close.crowd.variants).toBe(12);
