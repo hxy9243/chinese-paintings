@@ -1,5 +1,9 @@
 # Rainbow Bridge art direction and provenance
 
+## Current golden reference — 20 October 2026
+
+The user selected the [University of Chicago viewer of Zhang Zeduan’s Song original](https://scrolls.uchicago.edu/view-scroll/52) and its supplied Rainbow Bridge crop as the golden reference. [GOLDEN_REFERENCE.md](GOLDEN_REFERENCE.md) records the source, scope and visual review priorities. It takes precedence over the older reproduction-specific palette and framing notes below. The current scene remains an interpretation of the Song painting.
+
 ## Source crop
 
 The reference is the complete **3600 × 1800, 2:1** Rainbow Bridge detail of Zhang Zeduan’s Northern Song original, downloaded without additional cropping:
@@ -54,6 +58,6 @@ This record identifies Zhang Zeduan's Northern Song original in the Palace Museu
 
 The 3D districts are interpretive, modular scenery guided by the broad progression from country roads and river transport to the bridge, gate, and city streets. They are not measured placements or traced models of the full original. The 2D reproduction retains the painting's local perspective choices; the 3D interpretation cannot claim exact likeness.
 
-## Selected passage reference, September 20
+## Historical selected passage reference, September 20 (superseded brief)
 
-`public/reference/selected-passage.webp` is a WebP packaging copy (quality 92, unchanged dimensions/composition) of the user-provided `/home/kevin/Pictures/Screenshots/Screenshot from 2026-09-20 00-49-26.png`. This selected crop supersedes the full-scroll expansion as the active scene brief. Original work attribution remains Zhang Zeduan, Palace Museum; the supplied screenshot's yellow-brown rendering is the current palette guide. The original full-scroll reference remains archived but is no longer the comparison dialog's image.
+`public/reference/selected-passage.webp` is a WebP packaging copy (quality 92, unchanged dimensions/composition) of the user-provided `/home/kevin/Pictures/Screenshots/Screenshot from 2026-09-20 00-49-26.png`. At that stage, this selected crop superseded the full-scroll expansion as the active scene brief. Original work attribution remains Zhang Zeduan, Palace Museum; the supplied screenshot's yellow-brown rendering was the palette guide at that stage. The October 20 golden-reference decision above now governs visual review. The original full-scroll reference remains archived but is no longer the comparison dialog's image.

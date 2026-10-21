@@ -2,6 +2,8 @@
 
 An interactive 3D ink study of the Rainbow Bridge passage in Zhang Zeduan’s **Along the River During the Qingming Festival**.
 
+**Golden reference:** [the Song original in the University of Chicago viewer](https://scrolls.uchicago.edu/view-scroll/52), with the user-selected Rainbow Bridge crop. See [the reference brief](docs/GOLDEN_REFERENCE.md) for composition, scale, detail and rendering priorities.
+
 The home page opens the 3D scene directly. Older `?view=3d` links still work. The former 2D painting editor has been removed; existing browser save data is not changed.
 
 ## Run
