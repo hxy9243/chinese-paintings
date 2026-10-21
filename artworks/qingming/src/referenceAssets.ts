@@ -79,6 +79,7 @@ export function buildReferenceTree(
   seed: number,
   detail: DetailLevel = 2,
   landmark = false,
+  foliage: "full" | "open" = "full",
 ) {
   const g = new THREE.Group();
   g.name = landmark ? "great-riverbank-tree" : "reference-tree";
@@ -91,7 +92,11 @@ export function buildReferenceTree(
   const needles: number[][] = [[], [], []], needleInk: number[] = [];
   // Short shoots carry several paired, round-section needles. The tapered
   // three-sided geometry stays needle-thin from every viewing direction.
+  let sprayIndex = 0;
   const pineSpray = (at: P, phase: number, extent = 1) => {
+    // Leave most branch tips bare on the bend; retain a few uneven needle tufts.
+    // Branch construction is independent of foliage, with no transparent crowns.
+    if (foliage === "open" && sprayIndex++ % 4 !== 0) return;
     const shoots = detail === 2 ? 11 : detail === 1 ? 7 : 5;
     for (let f = 0; f < shoots; f++) {
       const az = phase + f * 2.39996,
@@ -404,20 +409,29 @@ export function buildReferenceTree(
       ),
     );
   g.userData.treeForm = form;
+  if (foliage !== "full") g.userData.foliage = foliage;
   g.userData.branchBounds = curves.map((c) => c.curve.getPoint(1).toArray());
   return g;
 }
 
 export type BoatStyle = "cabin" | "canopy" | "freight" | "skiff";
+// Optional working-boat silhouettes; the standard bridge fleet remains unchanged.
+export type BoatVariant = "standard" | "open-hold" | "short-reed" | "low-service";
 export function buildReferenceBoat(
   length: number,
   width: number,
   style: BoatStyle,
   detail: DetailLevel = 2,
+  variant: BoatVariant = "standard",
 ) {
   const g = new THREE.Group();
   g.name = "reference-boat";
   g.userData.boatStyle = style;
+  if (variant !== "standard") g.userData.boatVariant = variant;
+  const openHold = variant === "open-hold";
+  // Match section boundaries so both detail meshes have a genuinely open deck.
+  const holdHalf = length * .56 * (detail === 0 ? .4 : 5 / 12);
+  const holdWidth = width * .32;
   // Cross sections give a hollow, flared hull with sheer at both ends. Local z is
   // the keel. Geometry stays inside the navigation envelope used by the routes.
   const n = detail === 0 ? 10 : 24,
@@ -467,6 +481,12 @@ export function buildReferenceBoat(
           ]);
         }
     }
+    if (openHold && a.z >= -holdHalf - 1e-8 && b.z <= holdHalf + 1e-8) {
+      for (const side of [-1, 1])
+        quad(deck,
+          [side * a.breadth * .88, .335, a.z], [side * holdWidth, .335, a.z],
+          [side * holdWidth, .335, b.z], [side * b.breadth * .88, .335, b.z]);
+    } else {
     quad(
       deck,
       [-a.breadth * 0.88, 0.335, a.z],
@@ -474,6 +494,7 @@ export function buildReferenceBoat(
       [b.breadth * 0.88, 0.335, b.z],
       [-b.breadth * 0.88, 0.335, b.z],
     );
+    }
   }
   surface(g, skin, timber).name = "hollow-planked-hull";
   surface(g, deck, board).name = "deck";
@@ -492,7 +513,7 @@ export function buildReferenceBoat(
   if (detail > 0) {
     for (let j = 0; j <= Math.ceil(length / 0.17); j++) {
       const s = section(-0.91 + (j / Math.ceil(length / 0.17)) * 1.82);
-      line(g, [
+      if (!openHold || Math.abs(s.z) >= holdHalf) line(g, [
         [-s.breadth * 0.87, 0.339, s.z],
         [s.breadth * 0.87, 0.339, s.z],
       ]);
@@ -519,25 +540,47 @@ export function buildReferenceBoat(
         rod(g, points[j - 1], points[j], 0.012);
     }
   }
-  if (style === "cabin" || style === "freight") {
+  if (openHold) {
+    const hold = new THREE.Group();
+    hold.name = "open-cargo-hold";
+    g.add(hold);
+    block(hold, holdWidth * 2, .035, holdHalf * 2, [0, .12, 0], recess).name = "hold-floor";
+    for (const side of [-1, 1]) {
+      block(hold, .035, .23, holdHalf * 2, [side * holdWidth, .235, 0], timber);
+      rod(hold, [side * holdWidth, .365, -holdHalf], [side * holdWidth, .365, holdHalf], .025, edge);
+    }
+    for (const end of [-1, 1])
+      block(hold, holdWidth * 2, .23, .035, [0, .235, end * holdHalf], timber);
+    if (detail > 0) for (let j = 0; j < 5; j++) {
+      const z = (j - 2) * holdHalf * .32;
+      block(hold, width * .24, .11, length * .055, [j % 2 ? width * .14 : -width * .12, .19, z], reed);
+      line(hold, [[-holdWidth, .143, z], [holdWidth, .143, z]]);
+    }
+  } else if (variant === "low-service" || (variant !== "short-reed" && (style === "cabin" || style === "freight"))) {
     const cabin = new THREE.Group();
     cabin.name = "timber-cabin";
     g.add(cabin);
+    const service = variant === "low-service";
+    if (service) {
+      cabin.name = "low-service-cabin";
+      cabin.scale.set(.9, .66, .64);
+      cabin.position.set(0, .36 * (1 - .66), -length * .19);
+    }
     const half = length * (style === "freight" ? 0.2 : 0.245),
       cw = width * 0.4,
       base = 0.36,
       eave = 0.87,
       ridge = 1.01;
     for (const side of [-1, 1]) {
-      block(cabin, 0.035, 0.18, half * 2, [side * cw, base + 0.09, 0], paper);
-      for (let z = -half; z < half + 0.01; z += half / 4) {
+      block(cabin, 0.035, 0.18, half * 2, [side * cw, base + 0.09, 0], service ? timber : paper);
+      for (let z = -half; z < half + 0.01; z += half / (service ? 3 : 4)) {
         rod(cabin, [side * cw, base, z], [side * cw, eave, z], 0.019, edge);
         if (detail > 0) {
           block(
             cabin,
             0.027,
-            0.29,
-            half * 0.13,
+            service ? 0.21 : 0.29,
+            half * (service ? 0.075 : 0.13),
             [side * cw, base + 0.31, z + half * 0.12],
             reed,
           );
@@ -572,7 +615,7 @@ export function buildReferenceBoat(
     }
     // Recessed openings, not dark rectangles pasted on a solid house box.
     for (const end of [-1, 1]) {
-      block(cabin, cw * 2, 0.16, 0.035, [0, base + 0.08, end * half], paper);
+      block(cabin, cw * 2, 0.16, 0.035, [0, base + 0.08, end * half], service ? timber : paper);
       rod(cabin, [-cw, eave, end * half], [0, ridge, end * half], 0.019, edge);
       rod(cabin, [0, ridge, end * half], [cw, eave, end * half], 0.019, edge);
     }
@@ -591,7 +634,7 @@ export function buildReferenceBoat(
           [side * (cw + 0.07) * a, Y(a), half + 0.09],
         );
       }
-    surface(cabin, roof, tile);
+    surface(cabin, roof, service ? reed : tile);
     if (detail > 0)
       for (let z = -half - 0.08; z <= half + 0.09; z += 0.105)
         for (const side of [-1, 1])
@@ -607,8 +650,14 @@ export function buildReferenceBoat(
       0.025,
       edge,
     );
-  } else if (style !== "skiff") {
-    const half = length * 0.26,
+  } else if (variant === "short-reed" || style !== "skiff") {
+    const canopyRoot = variant === "short-reed" ? new THREE.Group() : g;
+    if (canopyRoot !== g) {
+      canopyRoot.name = "short-reed-cover";
+      canopyRoot.position.z = -length * .14;
+      g.add(canopyRoot);
+    }
+    const half = length * (variant === "short-reed" ? .15 : .26),
       radius = width * 0.44,
       canopy: number[] = [];
     for (let j = 0; j < 12; j++) {
@@ -622,7 +671,7 @@ export function buildReferenceBoat(
         [Math.cos(a) * radius, 0.4 + Math.sin(a) * 0.38, half],
       );
     }
-    surface(g, canopy, reed).name = "woven-canopy";
+    surface(canopyRoot, canopy, reed).name = "woven-canopy";
     for (let z = -half; z <= half + 0.001; z += half / 4) {
       const points: P[] = Array.from({ length: 17 }, (_, j) => [
         Math.cos((j / 16) * Math.PI) * radius,
@@ -630,12 +679,12 @@ export function buildReferenceBoat(
         z,
       ]);
       for (let j = 1; j < points.length; j++)
-        rod(g, points[j - 1], points[j], 0.011, edge);
+        rod(canopyRoot, points[j - 1], points[j], 0.011, edge);
     }
     if (detail > 0)
       for (let j = 1; j < 12; j++) {
         const a = (j / 12) * Math.PI;
-        line(g, [
+        line(canopyRoot, [
           [Math.cos(a) * radius, 0.4 + Math.sin(a) * 0.385, -half],
           [Math.cos(a) * radius, 0.4 + Math.sin(a) * 0.385, half],
         ]);
@@ -709,7 +758,7 @@ export function buildReferenceBoat(
       );
       tub.name = "deck-tub";
     }
-    if (style === "freight" || style === "skiff")
+    if (!openHold && (style === "freight" || style === "skiff"))
       for (let k = 0; k < 3; k++) {
         const z = (k - 1) * length * 0.11;
         block(g, width * 0.42, 0.15, length * 0.085, [0, 0.415, z], reed);
