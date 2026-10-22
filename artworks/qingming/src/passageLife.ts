@@ -27,7 +27,9 @@ export type BuildingKind =
   | "compound"
   | "upper-storey"
   | "construction"
-  | "ornate-gate";
+  | "ornate-gate"
+  | "cross-shop"
+  | "cross-house";
 export const BUILDING_KINDS: BuildingKind[] = [
   "warehouse",
   "compound",
@@ -57,7 +59,10 @@ export const BUILDING_KINDS: BuildingKind[] = [
   "courtyard",
 ];
 BUILDING_KINDS[8] = "upper-storey";
-BUILDING_KINDS.push("ornate-gate");
+BUILDING_KINDS.push("construction");
+BUILDING_KINDS[10]="cross-house";BUILDING_KINDS[19]="cross-house";BUILDING_KINDS[20]="cross-house";
+BUILDING_KINDS[21]="openhall";BUILDING_KINDS[22]="cross-shop";
+BUILDING_KINDS.push("cross-shop","cross-house","openhall","cross-house","gallery","cross-house","gallery","dwelling");
 // Keep the historic export for callers; these people now use the whole street.
 export { MAIN_STREET_WALKERS as BRIDGE_WALKERS } from "./pedestrians";
 export const BRIDGE_OBSERVERS = BRIDGE_PEOPLE_PER_SIDE * 2;
@@ -145,12 +150,16 @@ export const FEATURE_TREES: (PassagePoint & {
   form: "spreading" | "pollard" | "sapling";
 })[] = [{ ...REFERENCE_TREE, id: "near-quay-old-tree" }];
 const observedTrees = [
-  {id:"west-bend-pine",s:-21,d:-7,size:1.15,form:"spreading"},
-  {id:"bend-roof-pine",s:-13.9,d:3.6,size:.8,form:"spreading"},
-  {id:"balcony-rear-pine",s:-5.7,d:4.5,size:.85,form:"spreading"},
-  {id:"foreground-pine",s:-6,d:11.2,size:.65,form:"pollard"},
-  {id:"right-bank-pine",s:15.8,d:6.5,size:.8,form:"spreading"},
-  {id:"far-east-pine",s:21.8,d:-7.3,size:.8,form:"spreading"},
+  {id:"west-bend-pollard",s:-21,d:-7,size:1.15,form:"spreading"},
+  {id:"bend-roof-pollard",s:-13.9,d:3.6,size:.8,form:"spreading"},
+  {id:"balcony-rear-pollard",s:-5.7,d:4.5,size:.85,form:"spreading"},
+  {id:"foreground-pollard",s:-6,d:11.2,size:.65,form:"pollard"},
+  {id:"right-bank-pollard",s:15.8,d:6.5,size:.8,form:"spreading"},
+  {id:"far-east-pollard",s:21.8,d:-7.3,size:.8,form:"spreading"},
+  {id:"crossroads-west-old-tree",s:-33.9,d:-.4,size:1.35,form:"spreading"},
+  {id:"crossroads-river-old-tree",s:-24.3,d:-.2,size:1.3,form:"spreading"},
+  {id:"crossroads-yard-pollard",s:-27,d:4.6,size:1.0,form:"pollard"},
+  {id:"crossroads-north-tree",s:-33.7,d:-8.7,size:1.05,form:"spreading"},
 ] as const;
 for (const t of observedTrees) {
   if (!reserve(t, 0.24, "reference-tree"))

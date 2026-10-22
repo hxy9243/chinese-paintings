@@ -12,10 +12,10 @@ describe("reference landmarks and geometry detail", () => {
     expect(hall.gable).toBe(true);
     expect(hall.angle).toBeCloseTo(Math.PI/2);
     HALLS.forEach(h=>expect(Number.isFinite(h.angle)).toBe(true));
-    expect(HALLS).toHaveLength(27);
+    expect(HALLS).toHaveLength(35);
     expect(FEATURE_TREES).toContainEqual({...REFERENCE_TREE,id:"near-quay-old-tree"});
-    expect(FEATURE_TREES.map(t=>t.id)).toContain("foreground-pine");
-    expect(FEATURE_TREES.map(t=>t.id)).toContain("west-bend-pine");
+    expect(FEATURE_TREES.map(t=>t.id)).toContain("foreground-pollard");
+    expect(FEATURE_TREES.map(t=>t.id)).toContain("west-bend-pollard");
     expect(onBank("near",REFERENCE_TREE,.7)).toBe(true);
     // The tree must be behind the foreground roof line, beside the water.
     expect(REFERENCE_TREE.d).toBeLessThan(HALLS[17].d-HALLS[17].depth/2);

@@ -57,6 +57,26 @@ export function buildConstruction(width:number,depth:number,height:number){
     rod(g,[-width*.48,y,z],[width*.48,y+1.15,z],.013,light);
   for(const y of [1.25,2.05])for(const side of [-1,1])
     box(g,[width,.045,.29],[0,y,side*depth*.41],light);
+  // Dense bamboo staging in the reference surrounds the house on every face.
+  // Unequal upright heights and lashed ledgers keep its silhouette irregular.
+  for(const side of [-1,1])for(let j=0;j<7;j++){
+    const x=-width*.48+j*width*.96/6,z=side*depth*.48,top=height+.8+(j%3)*.22;
+    rod(g,[x,.02,z],[x+.03*Math.sin(j*3),top,z+.025*side],.014,light);
+    for(let y=.25;y<height+.55;y+=.23){
+      if(j===0)rod(g,[-width*.49,y,z],[width*.49,y+.025*Math.sin(y*7),z],.012,timber);
+      line(g,[[x-.028,y-.022,z-.025],[x+.028,y+.022,z+.025],[x-.028,y+.04,z-.025]]);
+    }
+  }
+  for(const side of [-1,1])for(let j=0;j<5;j++){
+    const x=side*width*.48,z=-depth*.48+j*depth*.96/4;
+    rod(g,[x,0,z],[x,height+.88+(j%2)*.21,z],.015,light);
+    for(let y=.28;y<height+.4;y+=.27)if(j===0)rod(g,[x,y,-depth*.49],[x,y+.025,depth*.49],.011,timber);
+  }
+  for(const side of [-1,1])for(let j=0;j<3;j++){
+    const x=-width*.48+j*width*.32,z=side*depth*.49;
+    rod(g,[x,.35,z],[x+width*.32,2.8,z],.012,light);
+    rod(g,[x,2.8,z],[x+width*.32,.35,z],.012,light);
+  }
   // Ladder is inside the worksite footprint, not across the pedestrian route.
   for(const x of [-.19,.19])rod(g,[x,0,depth*.43],[x,2.07,depth*.12],.021);
   for(let j=1;j<11;j++)rod(g,[-.19,j*.19,depth*.43-j*.028],[.19,j*.19,depth*.43-j*.028],.017);

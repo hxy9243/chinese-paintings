@@ -10,9 +10,9 @@ export const MIN_EAVE_HEIGHT = 1.12;
 // Traced composition: the west reach turns through the top crop, while the
 // east reach continues beyond the right crop. These are independent banks.
 export const SHORELINES: Record<BankSide, PassagePoint[]> = {
-  far: [[-30,-60],[-9,-60],[-8,-16],[-7,-10],[-5.8,-7],[-2,-6.6],
+  far: [[-48,-60],[-9,-60],[-8,-16],[-7,-10],[-5.8,-7],[-2,-6.6],
     [3,-6.4],[8,-6.2],[12,-5.8],[17,-5.4],[22,-4.9],[30,-4.4]].map(([s,d])=>({s,d})),
-  near: [[-30,-60],[-20,-60],[-18.6,-14],[-18.3,-8],[-17.7,-4],
+  near: [[-48,-60],[-20,-60],[-18.6,-14],[-18.3,-8],[-17.7,-4],
     [-16.5,-.4],[-14,1.8],[-10,2.7],[-5,2.8],[-1,2.7],[3,1.2],
     [5,-.4],[6,1],[7.4,3.2],[11,3.6],[15,4.3],[18,5.8],[22,6.5],[30,7]].map(([s,d])=>({s,d})),
 };
@@ -25,7 +25,7 @@ export const SHORE_TANGENTS=Object.fromEntries((['near','far'] as BankSide[]).ma
 })) as Record<BankSide,number[]>;
 export function shoreDepth(side: BankSide, s: number): number {
   const shore = SHORELINES[side];
-  s = Math.max(-30, Math.min(30, s));
+  s = Math.max(-48, Math.min(30, s));
   for (let i = 1; i < shore.length; i++) {
     const a = shore[i - 1],
       b = shore[i];
@@ -40,10 +40,10 @@ export function shoreDepth(side: BankSide, s: number): number {
 export function bankOutline(side: BankSide): number[][] {
   const edge=SHORELINES[side].map(({s,d})=>[s,d]);
   const back=side==="far"?-60:24;
-  return [...edge,[30,back],[-30,back]];
+  return [...edge,[30,back],[-48,back]];
 }
 export function passageOutline(): number[][] {
-  return [[-30,-30],[30,-30],[30,24],[-30,24]];
+  return [[-48,-30],[30,-30],[30,24],[-48,24]];
 }
 export function onBank(side: BankSide, p: PassagePoint, margin = 0): boolean {
   return side === "far"
@@ -95,16 +95,25 @@ export const HALLS: HallLayout[] = [
   nearHall(-20.7,-3,2.7,3.2,1.2,1.15),
   nearHall(-8.8,5.8,4.1,2.7,1.35),
   nearHall(-3.2,10.6,4.3,2.8,1.25,Math.PI/2),
-  nearHall(-13.8,10.8,4.5,2.7), nearHall(3.2,4.1,1.5,1.1),
+  nearHall(-14,11.5,4.9,4.6,1.4), nearHall(3.2,4.1,1.5,1.1),
   farHall(5,-9.1,2.8,1.8), farHall(14.35,-8.2,3.15,1.7,1.12,.08),
   farHall(18.2,-8.25,3.5,1.7,1.12,.08), farHall(21.7,-10.1,1.4,2),
   nearHall(12.6,7.2,4.2,2.6,1.2,.12), nearHall(18.2,10.1,4.6,2.8,1.2,.15),
   farHall(7,-13.8,.7,1.6,1.12,0),
-  nearHall(-18.7,10.1,3.7,2.6,1.2,.05), nearHall(-9,11,3.8,2.7),
-  nearHall(-17.5,3.5,3.3,2.3,1.2,.5), nearHall(-13.2,5.5,3.1,2.3,1.2,.05),
+  nearHall(-20,11.5,5,4.4,1.35), nearHall(-8.8,12,4.5,3.4,1.3),
+  nearHall(-17.5,3.5,3.3,2.3,1.2,.5), nearHall(-13.2,5.7,3.1,2.6,1.2,.05),
   nearHall(-21.1,4.9,2.6,2.5,1.2,1.15), nearHall(12.2,12.1,3.8,2.4,1.2,.12),
   nearHall(22,13,1.5,1.8,1.12,.15),
-  nearHall(-2.8,5.8,2.2,1.7,2.8), // ornate street gate, not a worksite
+  nearHall(3.2,7.8,2.5,2.3,2.8), // scaffolded house immediately beside the bridge approach
+  // Western crossroads extension: frontages face the two intersecting lanes.
+  nearHall(-30.8,-3.4,5.8,4.6,1.6,Math.PI),
+  nearHall(-30.8,7.1,6.2,4.8,1.45),
+  nearHall(-40.1,-4.4,5.6,3.6,1.45,Math.PI),
+  nearHall(-40.1,7.1,5.8,4.8,1.35),
+  nearHall(-25.6,-9,3.4,5,1.35,Math.PI/2),
+  nearHall(-25.4,14.2,3.3,3.5,1.3),
+  nearHall(-40.1,-12.6,5.6,3.4,1.3,Math.PI),
+  nearHall(-31,-13.3,5.2,3.4,1.3,Math.PI),
 ];
 HALLS[9].gable=true;
 HALLS.forEach(h=>{h.height=Math.max(h.height,MIN_EAVE_HEIGHT);});

@@ -121,7 +121,7 @@ export function paintMaterial(
         vec3 result=mix(localPigment*shade,painted,painting);
         float scroll=point.x*.64278761+point.z*.76604444;
         float depth=-point.x*.76604444+point.z*.64278761;
-        vec2 q=abs(vec2(scroll,depth))-vec2(23.,15.);
+        vec2 q=abs(vec2(scroll+10.,depth))-vec2(33.,19.);
         float boundary=max(q.x,q.y);
         // Preserve the complete painted footprint. Only the added exterior
         // land/water apron dissolves into paper; structures keep their color.

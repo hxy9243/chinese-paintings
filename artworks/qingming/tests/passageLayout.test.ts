@@ -37,8 +37,8 @@ describe("reference passage geometry", () => {
           onBank(h.side, p, 0.24),
           `house at ${h.s}, roof at ${p.s},${p.d}`,
         ).toBe(true);
-        expect(Math.abs(p.s)).toBeLessThan(24);
-        expect(Math.abs(p.d)).toBeLessThan(16);
+        expect(p.s).toBeGreaterThan(-46);expect(p.s).toBeLessThan(24);
+        expect(Math.abs(p.d)).toBeLessThan(20);
       }
   });
   it("leaves space between neighboring roofs", () => {

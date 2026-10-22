@@ -1,20 +1,20 @@
 import {expect,it,vi} from "vitest";
 import * as THREE from "three";
-import * as assets from "../src/referenceAssets";
+import * as assets from "../src/referenceTrees";
 import {createBridgeStudy} from "../src/bridgeStudy";
 import {FEATURE_TREES,NATURE} from "../src/passageLife";
 
-it("gives leafy plantings needle crowns and preserves explicitly bare trees at every detail",()=>{
-  const original=assets.buildReferenceTree;
+it("retains the fine deciduous shoot canopy at every detail level",()=>{
+  const original=assets.buildScrollTree;
   const crowns:{form:string;seed:number;detail:number;vertices:number;bare:boolean}[]=[];
   // Inspect actual factory output before static batching merges individual trees.
-  const spy=vi.spyOn(assets,"buildReferenceTree").mockImplementation((...args)=>{
+  const spy=vi.spyOn(assets,"buildScrollTree").mockImplementation((...args)=>{
     const tree=original(...args);let vertices=0;
     tree.traverse(n=>{
-      if(n.name==="pine-needle-fascicles" && n instanceof THREE.Mesh)
+      if(n.name==="fine-pollard-shoots" && n instanceof THREE.LineSegments)
         vertices+=n.geometry.getAttribute("position").count;
     });
-    crowns.push({form:args[0],seed:args[1],detail:args[2]??2,vertices,bare:args[4]==="bare"});
+    crowns.push({form:args[0],seed:args[1],detail:args[2]??2,vertices,bare:!args[4]});
     return tree;
   });
   let study:ReturnType<typeof createBridgeStudy>|undefined;
@@ -27,8 +27,7 @@ it("gives leafy plantings needle crowns and preserves explicitly bare trees at e
     for(const detail of [0,1,2]){
       const level=crowns.filter(c=>c.detail===detail);
       expect(level).toHaveLength(planted);
-      expect(level.filter(c=>!c.bare && c.vertices===0),`Bare crowns at detail ${detail}`).toEqual([]);
-      expect(level.filter(c=>c.bare).every(c=>c.vertices===0)).toBe(true);
+      expect(level.filter(c=>c.vertices===0),`Bare crowns at detail ${detail}`).toEqual([]);
     }
   }finally{
     spy.mockRestore();

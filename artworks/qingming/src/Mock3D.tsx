@@ -49,7 +49,7 @@ export default function Mock3D() {
   const pausedRef = useRef(paused);
   pausedRef.current = paused;
   const [originalOpen, setOriginalOpen] = useState(false);
-  const [referenceArea,setReferenceArea]=useState<"bridge"|"bend">("bridge");
+  const [referenceArea,setReferenceArea]=useState<"bridge"|"bend"|"crossroads">("bridge");
   const [lang, setLang] = useState<"en" | "zh">("en"),
     [angle, setAngle] = useState(DEFAULT_VIEW_ANGLE),
     [pitch, setPitch] = useState(0),
@@ -75,7 +75,7 @@ export default function Mock3D() {
     // Hulls enter through the two side edges, with recycling beyond the frame.
     const along = scrollPoint(1, 0).normalize();
     renderer.clippingPlanes = [
-      new THREE.Plane(along, 32),
+      new THREE.Plane(along, 49),
       new THREE.Plane(along.clone().negate(), 32),
     ];
     const finish = createInkFinish(renderer);
@@ -146,7 +146,7 @@ export default function Mock3D() {
     controls.mouseButtons.RIGHT = THREE.MOUSE.PAN;
     controls.touches.ONE = THREE.TOUCH.ROTATE;
     controls.touches.TWO = THREE.TOUCH.DOLLY_PAN;
-    controls.target.copy(scrollPoint(0, -1));
+    controls.target.copy(scrollPoint(-10, -1));
     controls.target.y = 1.1;
     const position = (
       degrees: number,
@@ -170,7 +170,7 @@ export default function Mock3D() {
       controls.update();
     };
     const defaultAngle = DEFAULT_VIEW_ANGLE;
-    const defaultZoom = .88;
+    const defaultZoom = .63;
     camera.zoom = defaultZoom;
     camera.updateProjectionMatrix();
     position(defaultAngle, 0);
@@ -202,7 +202,7 @@ export default function Mock3D() {
         );
       },
       travel(s, overview = false, depth = 0) {
-        controls.target.copy(scrollPoint(overview?0:s, overview?-1:depth));
+        controls.target.copy(scrollPoint(overview?-10:s, overview?-1:depth));
         controls.target.y = 1.1;
         camera.zoom = overview ? defaultZoom : 1.8;
         camera.updateProjectionMatrix();
@@ -226,7 +226,7 @@ export default function Mock3D() {
         camera.updateProjectionMatrix();
       },
       reset() {
-        controls.target.copy(scrollPoint(0, -1));
+        controls.target.copy(scrollPoint(-10, -1));
         controls.target.y = 1.1;
         camera.zoom = defaultZoom;
         camera.updateProjectionMatrix();
@@ -357,7 +357,7 @@ export default function Mock3D() {
               <button
                 key={stop.id}
                 disabled={!ready}
-                onClick={() => {api.current?.travel(stop.s, false, stop.depth);setReferenceArea(stop.id==="bend"?"bend":"bridge");}}
+                onClick={() => {api.current?.travel(stop.s, false, stop.depth);setReferenceArea(stop.id==="crossroads"?"crossroads":stop.id==="bend"?"bend":"bridge");}}
               >
                 {lang === "en" ? stop.en : stop.zh}
               </button>
@@ -623,17 +623,18 @@ export default function Mock3D() {
             )}
           </p>
           <label>{t("Reference passage", "对照画段")} {" "}
-            <select aria-label={t("Reference passage", "对照画段")} value={referenceArea} onChange={e=>setReferenceArea(e.target.value as "bridge"|"bend")}>
+            <select aria-label={t("Reference passage", "对照画段")} value={referenceArea} onChange={e=>setReferenceArea(e.target.value as "bridge"|"bend"|"crossroads")}>
               <option value="bridge">{t("Rainbow Bridge", "虹桥")}</option>
               <option value="bend">{t("River bend and landings", "河湾与码头")}</option>
+              <option value="crossroads">{t("Western crossroads", "西街十字路口")}</option>
             </select>
           </label>
           <div ref={originalStrip} className="original-strip">
             {originalOpen && (
               <img
-                src={`${import.meta.env.BASE_URL}reference/${referenceArea==="bend"?"chicago-river-bend.png":"chicago-rainbow-bridge.png"}`}
+                src={`${import.meta.env.BASE_URL}reference/${referenceArea==="crossroads"?"chicago-crossroads.png":referenceArea==="bend"?"chicago-river-bend.png":"chicago-rainbow-bridge.png"}`}
                 alt={t(
-                  referenceArea==="bend"?"Selected river bend and cargo landings":"Selected Rainbow Bridge and riverbank passage",
+                  referenceArea==="crossroads"?"Supplied western crossroads and joined house wings":referenceArea==="bend"?"Selected river bend and cargo landings":"Selected Rainbow Bridge and riverbank passage",
                   "所选虹桥与河岸画段",
                 )}
               />

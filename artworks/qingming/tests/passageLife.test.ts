@@ -25,7 +25,7 @@ import { createBridgeStudy } from "../src/bridgeStudy";
 describe("life in the reference passage", () => {
   it("varies architecture and nature while keeping planting clear of roofs", () => {
     expect(BUILDING_KINDS).toHaveLength(HALLS.length);
-    expect(new Set(BUILDING_KINDS).size).toBe(10);
+    expect(new Set(BUILDING_KINDS).size).toBe(12);
     expect(new Set(NATURE.map((n) => n.kind)).size).toBe(5);
     for (const n of NATURE) {
       expect(onBank("near", n) || onBank("far", n)).toBe(true);
@@ -189,6 +189,7 @@ describe("life in the reference passage", () => {
     });
     // Sixteen articulated occupation variants (formerly twelve), plus the
     // independent lowering rig. Keep a bounded no-camera medium-detail budget.
-    expect(draws).toBeLessThan(900);
+    // Eight western buildings, the crossroads and four observed old trees add bounded detail.
+    expect(draws).toBeLessThan(1000);
   });
 });

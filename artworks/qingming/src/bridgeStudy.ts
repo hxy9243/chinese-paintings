@@ -1,7 +1,10 @@
 import * as THREE from "three";
+import {buildScrollTree} from "./referenceTrees";
+import {buildCrossroadsHouse} from "./crossroadsArchitecture";
+import {createCrossroadsGround,CROSSROADS_PEOPLE} from "./crossroads";
 import {buildConstruction, buildOrnateGate, boatCrewStations, addCrewEquipment, buildLoweringRig, updateLoweringRig} from "./referenceDetails";
 import {setScenePalette,getScenePalette,type ScenePalette} from "./scenePalette";
-import { buildReferenceTree, buildReferenceBoat, addReferenceArchitecture, type TreeForm } from "./referenceAssets";
+import { buildReferenceBoat, addReferenceArchitecture, type TreeForm } from "./referenceAssets";
 import { REFERENCE_AZIMUTH, scrollPoint } from "./scrollLayout";
 import {
   paintMaterial,
@@ -129,11 +132,11 @@ function beam(
 let geometryDetail: DetailLevel = 2;
 // Curved, asymmetric forks replace radial branch sprays and billboard crowns.
 function characterTree(parent: THREE.Object3D,x:number,z:number,form:TreeForm,seed:number,leafy=false){
-  const tree=buildReferenceTree(form,seed,geometryDetail,Math.abs(seed-REFERENCE_TREE.s)<.001,leafy?"full":"bare");
+  const tree=buildScrollTree(form,seed,geometryDetail,form==="spreading",leafy);
   tree.position.set(x,GROUND_Y,z);parent.add(tree);return tree;
 }
 function tree(parent:THREE.Object3D,x:number,z:number,leafy:boolean){
-  const tree=buildReferenceTree('sapling',x+z*.37,geometryDetail,false,leafy?"full":"bare");
+  const tree=buildScrollTree('sapling',x+z*.37,geometryDetail,false,leafy);
   tree.position.set(x,GROUND_Y,z);parent.add(tree);return tree;
 }
 function riversideNature(parent: THREE.Group) {
@@ -445,11 +448,11 @@ function bank(parent: THREE.Group, side: "near" | "far") {
   const shape = new THREE.Shape();
   const direction = side === "far" ? 1 : -1;
   const coast: number[][] = [];
-  for(let s=-29;s<=29.001;s+=.2)
+  for(let s=-47;s<=29.001;s+=.2)
     coast.push([s,bankSection(side,s,0).d]);
   // Continue dry land beyond the crop without joining the opposite bank.
   const back=side==="far"?-60:24;
-  const expanded=[...coast,[29,back],[-29,back]];
+  const expanded=[...coast,[29,back],[-47,back]];
   expanded.forEach(([x,z],i)=>{
     const p=scrollPoint(x,z);
     if(i===0)shape.moveTo(p.x,-p.z);else shape.lineTo(p.x,-p.z);
@@ -495,6 +498,7 @@ export function hall(
   g.position.copy(scrollPoint(s, d));
   g.position.y = GROUND_Y;
   g.rotation.y = turn;
+  if(kind==="cross-shop"||kind==="cross-house"){g.add(buildCrossroadsHouse(w,depth,h,kind==="cross-shop"));return g;}
   if (kind === "ornate-gate") { g.add(buildOrnateGate(w,depth,h)); return g; }
   if (kind === "construction") {
     g.add(buildConstruction(w,depth,h));return g;
@@ -1057,14 +1061,15 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
     for(const part of closeParts){const matrix=part.matrixWorld.clone();part.removeFromParent();part.applyMatrix4(matrix);fine.add(part);}
     batchStatic(base);root.add(base);
     // Recessed lattice screens, brackets and stacked wares add real depth.
-    for(let x=-h.width*.4;x<h.width*.45;x+=.55){
+    const customFront=["cross-shop","cross-house","construction"].includes(BUILDING_KINDS[index]);
+    if(!customFront)for(let x=-h.width*.4;x<h.width*.45;x+=.55){
       for(const side of [-1,1]){
         beam(fine,[x,h.height-.14,side*h.depth*.48],[x+.1,h.height-.03,side*(h.depth*.5+.1)],.012,dark);
         box(fine,.17,.035,.22,x,h.height-.06,side*h.depth*.5,wood);
       }
       if(index%3!==2)for(const dx of [-.06,0,.06])beam(fine,[x+dx,h.height*.4,h.depth*.5+.035],[x+dx+.05,h.height*.7,h.depth*.5+.035],.004,linen);
     }
-    if(index%3===0)for(let j=0;j<3;j++){
+    if(!customFront&&index%3===0)for(let j=0;j<3;j++){
       const crate=box(fine,.19,.17,.17,-h.width*.32+j*.2,.085,h.depth*.5+.12,wood);
       beam(crate,[-.095,-.085,.086],[.095,.085,.086],.009,dark);
     }
@@ -1077,7 +1082,7 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
     const roofGeo=new THREE.BufferGeometry();roofGeo.setAttribute("position",new THREE.Float32BufferAttribute(vertices,3));
     roofGeo.setIndex([0,4,5,0,5,1,3,2,5,3,5,4,0,3,4,1,5,2]);roofGeo.computeVertexNormals();mesh(coarse,roofGeo,roof);
     box(coarse,h.width*.55,h.height*.5,.025,0,h.height*.38,h.depth/2+.02,dark);batchStatic(coarse);
-    if(BUILDING_KINDS[index]==="ornate-gate" || BUILDING_KINDS[index]==="construction" || BUILDING_KINDS[index]==="upper-storey"){
+    if(BUILDING_KINDS[index]==="ornate-gate" || BUILDING_KINDS[index]==="construction" || BUILDING_KINDS[index]==="upper-storey" || BUILDING_KINDS[index]==="cross-shop" || BUILDING_KINDS[index]==="cross-house"){
       coarse.traverse(n=>{if(n instanceof THREE.Mesh || n instanceof THREE.Line)n.geometry.dispose();});coarse.clear();
       coarse.add(base.clone());
     }
@@ -1088,10 +1093,11 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
     geometryDetail=level as DetailLevel;const plants=new THREE.Group();plants.name="vegetation-detail-"+level;
     for (const {s,d,size,form} of FEATURE_TREES){
       const p=scrollPoint(s,d),t=characterTree(plants,p.x,p.z,form,s,true);
-      t.scale.set(size*1.15,size*1.5,size*1.15);t.rotation.y=s*.31;
+      t.scale.set(size*1.15,size*1.2,size*1.15);t.rotation.y=s*.31;
     }
     riversideNature(plants);batchStatic(plants);return plants;
   });geometryDetail=2;
+  const crossroadsGround=createCrossroadsGround();batchStatic(crossroadsGround);group.add(crossroadsGround);
   const vendorSites: {position:THREE.Vector3;turn:number;shop:number}[]=[];
   MARKET.forEach(({ s, d, parasol: covered, size }, i) => {
     const p = scrollPoint(s, d);
@@ -1203,6 +1209,7 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
   const people = Array.from({ length: WALKER_COUNT }, (_, i) =>
     addPerson(group, i, "walking-person"),
   );
+  const crossroadsPeople=CROSSROADS_PEOPLE.map((_,i)=>addPerson(group,i,"crossroads-resident"));
   const residents = STATIC_PEOPLE.map((_, i) =>
     addPerson(group, i, "resident-person"),
   );
@@ -1225,7 +1232,7 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
   const buildingPeople=[
     {building:8,x:-.8,y:HALLS[8].height+.17,z:HALLS[8].depth*.39,variant:6},
     {building:8,x:.7,y:HALLS[8].height+.17,z:HALLS[8].depth*.39,variant:0},
-    {building:HALLS.length-1,x:.25,y:2.073,z:HALLS.at(-1)!.depth*.41,variant:9},
+    {building:26,x:.25,y:2.073,z:HALLS[26].depth*.41,variant:9},
   ].map(site=>({...site,rig:addPerson(detailedBuildings[site.building].root,site.variant,"building-occupant")}));
   crowd.finish();
   function animatePerson(
@@ -1284,7 +1291,7 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
       const roles=observers.reduce((counts,p)=>{
         const role=p.group.userData.activity as string;counts[role]=(counts[role]??0)+1;return counts;
       },{} as Record<string,number>);
-      return {boatCrews:[...boats,...moored].map((b,i)=>({style:b.userData.boatStyle,count:crew.filter(c=>c.boat===i).length,roof:crew.filter(c=>c.boat===i&&c.station.role==="roof").length})),landmarks:["two-storey-balcony-house","ornate-street-gate"],crowd:crowd.metadata(),seed,palette:getScenePalette(),vegetationLevel:plantDetail,
+      return {boatCrews:[...boats,...moored].map((b,i)=>({style:b.userData.boatStyle,count:crew.filter(c=>c.boat===i).length,roof:crew.filter(c=>c.boat===i&&c.station.role==="roof").length})),landmarks:["two-storey-balcony-house","open-timber-construction","western-crossroads","joined-roof-houses"],crowd:crowd.metadata(),seed,palette:getScenePalette(),vegetationLevel:plantDetail,
         buildings:detailedBuildings.map(b=>b.detail),traffic:CART_KINDS,bridgeCounters,
         marketTypes:MARKET_TYPES,referenceTrees:FEATURE_TREES.map(t=>t.id),
         streetLife:{walkers:people.length,mainStreetWalkers:BRIDGE_WALKERS,approachPeople,
@@ -1433,6 +1440,7 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
         }
         positions.needsUpdate = true;
       });
+      crossroadsPeople.forEach((p,i)=>{const at=CROSSROADS_PEOPLE[i];animatePerson(p,900+i,time,{...at,y:GROUND_Y,moving:false,stride:0});});
       crowd.update(camera, viewportHeight, preview);
       for (let i = 0; i < RIPPLE_COUNT; i++) {
         const ripple = riverRipple(i, time);

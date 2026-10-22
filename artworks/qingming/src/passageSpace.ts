@@ -64,7 +64,7 @@ export function dryDisc(p: PassagePoint, radius: number) {
       d = p.d + Math.sin(a) * radius;
     // Rounded terrain, including the back corners.
     if (
-      Math.abs(s) > 23.9 || Math.abs(d) > 15.9
+      s < -46 || s > 23.9 || Math.abs(d) > 19.9
     )
       return false;
     if (
