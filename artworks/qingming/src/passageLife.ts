@@ -1,3 +1,4 @@
+import * as THREE from "three";
 import { wander } from "./peopleMotion";
 import { pedestrianPoses } from "./pedestrians";
 export { WALKER_COUNT, MAIN_STREET_WALKERS } from "./pedestrians";
@@ -25,7 +26,8 @@ export type BuildingKind =
   | "openhall"
   | "compound"
   | "upper-storey"
-  | "construction";
+  | "construction"
+  | "ornate-gate";
 export const BUILDING_KINDS: BuildingKind[] = [
   "warehouse",
   "compound",
@@ -55,7 +57,7 @@ export const BUILDING_KINDS: BuildingKind[] = [
   "courtyard",
 ];
 BUILDING_KINDS[8] = "upper-storey";
-BUILDING_KINDS.push("construction");
+BUILDING_KINDS.push("ornate-gate");
 // Keep the historic export for callers; these people now use the whole street.
 export { MAIN_STREET_WALKERS as BRIDGE_WALKERS } from "./pedestrians";
 export const BRIDGE_OBSERVERS = BRIDGE_PEOPLE_PER_SIDE * 2;
@@ -103,66 +105,27 @@ export function cartPose(index: number, time: number) {
     traveled: clock,
   };
 }
-// Recycle beyond the frame, where the complete hull is invisible. The route
-// samples the entire hull length so even the largest boats clear bank bends.
-export function boatPose(index: number, time: number) {
-  const b = BOATS[index];
-  const direction = index % 2 === 0 ? 1 : -1;
-  const circuit = 72,
-    speed = 0.18;
-  const slot = Math.floor(index / 2);
-  const route = direction * (-36 + ((time * speed + slot * 18 + (direction === 1 ? 12 : 38)) % circuit));
-  const s = route < -22 ? -22+(route+22)*3.5 : route;
-  const bendCenter=(x:number)=>{
-    const points=[[-72,-31],[-64,-31],[-58,-28],[-52,-25],[-46,-20],[-40,-14.25],[-34,-9.4],[-28,-6.2],[-22,-3.3],[-18,-2.25],[-14,-2]];
-    if(x>=-14)return -2;if(x<=-72)return -31;
-    for(let k=1;k<points.length;k++){
-      const a=points[k-1],b=points[k];if(x>b[0])continue;
-      const sec=(b[1]-a[1])/(b[0]-a[0]),prev=points[Math.max(0,k-2)],next=points[Math.min(points.length-1,k+1)],
-        m0=k===1?0:(b[1]-prev[1])/(b[0]-prev[0]),m1=k===points.length-1?0:(next[1]-a[1])/(next[0]-a[0]),
-        t=(x-a[0])/(b[0]-a[0]),span=b[0]-a[0];
-      return (2*t*t*t-3*t*t+1)*a[1]+(t*t*t-2*t*t+t)*span*(sec===0?0:m0)+(-2*t*t*t+3*t*t)*b[1]+(t*t*t-t*t)*span*(sec===0?0:m1);
-    }
-    return -2;
-  };
-  let minCenter = Infinity,
-    maxCenter = -Infinity;
-  for (let j = 0; j <= 32; j++) {
-    const x = s + (j / 32 - 0.5) * b.length * 1.24;
-    const center = -2 + 1.3 * Math.max(0, Math.min(1, (x - 8) / 14));
-    minCenter = Math.min(minCenter, center);
-    maxCenter = Math.max(maxCenter, center);
-  }
-  const margin = b.width * 0.7 + 0.1;
-  const slope=s < -14?(bendCenter(s+.05)-bendCenter(s-.05))/.1:0;
-  const tangent=Math.atan(slope),turning=Math.min(1,Math.max(0,(-s-18)/8));
-  const approach=Math.min(1,Math.max(0,(-s-14)/4));
-  const laneOffset=(margin+.4*approach*approach*(3-2*approach)+turning*.35)*Math.sqrt(1+slope*slope);
-  let d = s < -14 ? bendCenter(s)-direction*laneOffset : direction === 1 ? minCenter - margin : maxCenter + margin;
-  const angle=tangent+(direction === 1 ? 0 : Math.PI);
-  // Fit the rotated full hull envelope, especially at the bend-to-straight join.
-  let low=-Infinity,high=Infinity;
-  for(let j=0;j<=24;j++)for(const side of [-1,1]){
-    const u=(j/24-.5)*b.length*1.24,v=side*(b.width*.7+.05),
-      ds=u*Math.cos(angle)-v*Math.sin(angle),dd=u*Math.sin(angle)+v*Math.cos(angle);
-    low=Math.max(low,shoreDepth("far",s+ds)-dd+.06);
-    high=Math.min(high,shoreDepth("near",s+ds)-dd-.06);
-  }
-  d=Math.max(low,Math.min(high,d));
-  const phase = time * 0.34 + index * 1.71;
-  return {
-    s,
-    d,
-    y: Math.sin(phase) * 0.012,
-    angle,
-    roll: Math.sin(phase + 0.8) * 0.006,
-    pitch: Math.cos(phase * 0.8) * 0.004,
-  };
+// Follow the open river through the top and right crop. Tangent-aligned rigid
+// hulls use separate travel lanes; recycling happens beyond the visible banks.
+const navigationCurve=new THREE.CatmullRomCurve3([
+  [-13,-36],[-13,-16],[-12.9,-9],[-10.8,-4.7],[-5,-2.5],[-1,-2.5],[8,-2.5],[18,-1],[28,-1],[40,-1]
+].map(([s,d])=>new THREE.Vector3(s,0,d)),false,"centripetal");
+const routeLength=navigationCurve.getLength();
+const initialProgress=[.71,.60,.28,.49,.37,.91,.12];
+export function boatPose(index:number,time:number){
+  const direction=index%2===0?1:-1;
+  const u=((initialProgress[index]+direction*time*.18/routeLength)%1+1)%1;
+  const point=navigationCurve.getPointAt(u),tangent=navigationCurve.getTangentAt(u);
+  const lane=direction*(.95+.30*THREE.MathUtils.clamp((-point.x-1)/5,0,1)+.18*THREE.MathUtils.clamp((point.x-5)/3,0,1)*THREE.MathUtils.clamp((23-point.x)/5,0,1));
+  const phase=time*.34+index*1.71;
+  return {s:point.x-tangent.z*lane,d:point.z+tangent.x*lane,
+    y:Math.sin(phase)*.012,angle:Math.atan2(tangent.z,tangent.x)+(direction===1?0:Math.PI),
+    roll:Math.sin(phase+.8)*.006,pitch:Math.cos(phase*.8)*.004};
 }
 export const RIPPLE_COUNT = 120;
 export function riverRipple(index: number, time: number) {
   const phase = (index * 0.61803398875 + time * 0.025) % 1;
-  const s = -20.7 + ((index * 0.731) % 41) + phase * 0.65;
+  const s = -17 + ((index * 0.731) % 38) + phase * 0.65;
   const fraction = 0.14 + ((index * 0.417) % 0.72);
   return {
     s,
@@ -182,19 +145,12 @@ export const FEATURE_TREES: (PassagePoint & {
   form: "spreading" | "pollard" | "sapling";
 })[] = [{ ...REFERENCE_TREE, id: "near-quay-old-tree" }];
 const observedTrees = [
-  { id: "west-near-fork", s: -20, d: 2.5, size: 0.92, form: "spreading" },
-  { id: "near-landing-pollard", s: -11.5, d: 4.7, size: 0.9, form: "pollard" },
-  { id: "far-landing-bare", s: -7.8, d: -10.6, size: 1.04, form: "spreading" },
-  {
-    id: "foreground-pollard-west",
-    s: -1.1,
-    d: 5.7,
-    size: 0.92,
-    form: "pollard",
-  },
-  { id: "foreground-pollard-east", s: 0.8, d: 6.1, size: 0.8, form: "pollard" },
-  { id: "east-yard-bare", s: 13.7, d: 10, size: 1.05, form: "sapling" },
-  { id: "far-east-bare", s: 19.2, d: -8.8, size: 0.96, form: "spreading" },
+  {id:"west-bend-pine",s:-21,d:-7,size:1.15,form:"spreading"},
+  {id:"bend-roof-pine",s:-13.9,d:3.6,size:.8,form:"spreading"},
+  {id:"balcony-rear-pine",s:-5.7,d:4.5,size:.85,form:"spreading"},
+  {id:"foreground-pine",s:-6,d:11.2,size:.65,form:"pollard"},
+  {id:"right-bank-pine",s:15.8,d:6.5,size:.8,form:"spreading"},
+  {id:"far-east-pine",s:21.8,d:-7.3,size:.8,form:"spreading"},
 ] as const;
 for (const t of observedTrees) {
   if (!reserve(t, 0.24, "reference-tree"))
@@ -227,7 +183,7 @@ for (let i = 0; i < 36; i++) {
         });
   const target =
     i < 14
-      ? { s: -7.8 + (i % 2 ? -3.3 : 3.3), d: 4.7 + Math.floor(i / 2) * 1.15 }
+      ? { s: BRIDGE.near.s + (i % 2 ? -3.3 : 3.3), d: 4.7 + Math.floor(i / 2) * 1.15 }
       : { s: -19 + ((i - 14) % 7) * 6, d: i < 21 ? 5 : -8 };
   candidates.sort(
     (a, b) =>
@@ -247,10 +203,10 @@ export const SHOPPER_WANDER = 0.18;
 export const SHOP_VISITORS: (PassagePoint & { shop: number })[] = [];
 MARKET.forEach((shop, index) => {
   let placed = 0;
-  for (let j = 0; j < 96 && placed < 6; j++) {
-    const angle = (j * Math.PI) / 48,
+  for (let j = 0; j < 192 && placed < 6; j++) {
+    const angle = ((j % 96) * Math.PI) / 48,
       offset =
-        (shop.size < 1 ? 0.5 : shop.parasol ? 0.97 : 0.7) + SHOPPER_SPACE + 0.1;
+        (shop.size < 1 ? 0.5 : shop.parasol ? 0.97 : 0.7) + SHOPPER_SPACE + 0.1 + Math.floor(j/96)*.78;
     const p = {
       s: shop.s + Math.cos(angle) * offset,
       d: shop.d + Math.sin(angle) * offset,
@@ -275,7 +231,7 @@ export function shopperPose(index: number, time: number, seed = 0) {
     angle: p.moving ? p.angle : Math.atan2(shop.d - d, shop.s - s),
   };
 }
-export type NatureKind = "pine" | "young-pine" | "willow" | "reed" | "rock";
+export type NatureKind = "bare" | "spring" | "willow" | "reed" | "rock";
 export const NATURE: (PassagePoint & { kind: NatureKind; size: number })[] = [
   ...willowGrove,
 ];
@@ -287,9 +243,9 @@ for (const side of ["near", "far"] as const)
       i % 6 === 0
         ? "willow"
         : i % 4 === 0
-          ? "young-pine"
+          ? "spring"
           : i % 3 === 0
-            ? "pine"
+            ? "bare"
             : i % 5 === 0
               ? "rock"
               : "reed";
@@ -328,7 +284,7 @@ for (const side of ["near", "far"] as const)
     )
       NATURE.push({
         ...p,
-        kind: i % 4 === 0 ? "young-pine" : "pine",
+        kind: i % 4 === 0 ? "spring" : "bare",
         size: 1.35 + (i % 3) * 0.2,
       });
   }
@@ -339,7 +295,7 @@ for (
   let i = 0;
   i < 4000 &&
   NATURE.filter(
-    (n) => n.kind === "pine" || n.kind === "young-pine" || n.kind === "willow",
+    (n) => n.kind === "bare" || n.kind === "spring" || n.kind === "willow",
   ).length < 30;
   i++
 ) {
@@ -347,7 +303,7 @@ for (
     d = -12.6 + ((i * 2.37) % 25.2),
     size = 1.15 + (i % 3) * 0.15;
   const kind: NatureKind =
-    i % 7 === 0 ? "willow" : i % 3 === 0 ? "young-pine" : "pine";
+    i % 7 === 0 ? "willow" : i % 3 === 0 ? "spring" : "bare";
   const radius = (kind === "willow" ? 0.95 : 0.45) * size;
   if (roofClear({ s, d }, radius) && reserve({ s, d }, radius, kind))
     NATURE.push({ s, d, size, kind });

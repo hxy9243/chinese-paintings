@@ -1,6 +1,5 @@
 import * as THREE from "three";
-import {createRiverBend} from "./riverBend";
-import {buildConstruction, boatCrewStations, addCrewEquipment, buildLoweringRig, updateLoweringRig} from "./referenceDetails";
+import {buildConstruction, buildOrnateGate, boatCrewStations, addCrewEquipment, buildLoweringRig, updateLoweringRig} from "./referenceDetails";
 import {setScenePalette,getScenePalette,type ScenePalette} from "./scenePalette";
 import { buildReferenceTree, buildReferenceBoat, addReferenceArchitecture, type TreeForm } from "./referenceAssets";
 import { REFERENCE_AZIMUTH, scrollPoint } from "./scrollLayout";
@@ -64,7 +63,7 @@ import { riverGeometry, waterHeight } from "./riverSurface";
 // A shallow, camera-constrained diorama. Hidden façades are intentionally plain.
 // The original passage runs from the near lower-left approach to the far upper-right.
 export const VIEW_ANGLE = REFERENCE_AZIMUTH;
-export const DEFAULT_VIEW_ANGLE = 30;
+export const DEFAULT_VIEW_ANGLE = 0;
 export const CAMERA_LIMITS = { yaw: 85, pitchMin: -27, pitchMax: 45, roll: 45 } as const;
 // Elevation ranges from 8° to 80° above ground.
 export const ELEVATION = THREE.MathUtils.degToRad(55);
@@ -129,21 +128,21 @@ function beam(
 }
 let geometryDetail: DetailLevel = 2;
 // Curved, asymmetric forks replace radial branch sprays and billboard crowns.
-function characterTree(parent: THREE.Object3D,x:number,z:number,form:TreeForm,seed:number){
-  const tree=buildReferenceTree(form,seed,geometryDetail,Math.abs(seed-REFERENCE_TREE.s)<.001);
+function characterTree(parent: THREE.Object3D,x:number,z:number,form:TreeForm,seed:number,leafy=false){
+  const tree=buildReferenceTree(form,seed,geometryDetail,Math.abs(seed-REFERENCE_TREE.s)<.001,leafy?"full":"bare");
   tree.position.set(x,GROUND_Y,z);parent.add(tree);return tree;
 }
-function tree(parent:THREE.Object3D,x:number,z:number){
-  const tree=buildReferenceTree('sapling',x+z*.37,geometryDetail,false);
+function tree(parent:THREE.Object3D,x:number,z:number,leafy:boolean){
+  const tree=buildReferenceTree('sapling',x+z*.37,geometryDetail,false,leafy?"full":"bare");
   tree.position.set(x,GROUND_Y,z);parent.add(tree);return tree;
 }
 function riversideNature(parent: THREE.Group) {
   for (const n of NATURE) {
     const p = scrollPoint(n.s, n.d);
-    if (n.kind === "pine" || n.kind === "young-pine") {
+    if (n.kind === "bare" || n.kind === "spring") {
       const t =
-        n.kind === "young-pine"
-          ? tree(parent, p.x, p.z)
+        n.kind === "spring"
+          ? tree(parent, p.x, p.z, true)
           : characterTree(
               parent,
               p.x,
@@ -224,7 +223,7 @@ function riversideNature(parent: THREE.Group) {
     }
   }
 }
-function horseCart(parent: THREE.Group, index: number, clipTerrain=true) {
+function horseCart(parent: THREE.Group, index: number) {
   const layout = CARTS[index],kind=CART_KINDS[index];
   const g = new THREE.Group();
   g.position.copy(scrollPoint(layout.s, layout.d));
@@ -357,7 +356,7 @@ function horseCart(parent: THREE.Group, index: number, clipTerrain=true) {
   // Clip the traffic to the same rounded ground boundary. Each train wraps
   // only after its entire horse, cart and driver have left that boundary.
   const materials = new Map<THREE.Material, THREE.ShaderMaterial>();
-  if(clipTerrain)g.traverse((n) => {
+  g.traverse((n) => {
     if (!(n instanceof THREE.Mesh || n instanceof THREE.Line)) return;
     const original = n.material as THREE.ShaderMaterial;
     let material = materials.get(original);
@@ -442,15 +441,15 @@ export function person(parent: THREE.Object3D, variant: number, walking = false,
 }
 
 // Authored in the horizontal/depth basis of the supplied crop, not repeated districts.
-function bank(parent: THREE.Group, side: "far"|"near") {
+function bank(parent: THREE.Group, side: "near" | "far") {
   const shape = new THREE.Shape();
   const direction = side === "far" ? 1 : -1;
   const coast: number[][] = [];
-  for(let s=-70;s<=29.001;s+=.2)
+  for(let s=-29;s<=29.001;s+=.2)
     coast.push([s,bankSection(side,s,0).d]);
-  const sign=side === "far" ? -1 : 1;
-  const outer=coast.slice().reverse().map(([s,d])=>[s,side==="near"?Math.max(30,d+40):Math.min(-48,d-25)]);
-  const expanded=[...coast,...outer];
+  // Continue dry land beyond the crop without joining the opposite bank.
+  const back=side==="far"?-60:24;
+  const expanded=[...coast,[29,back],[-29,back]];
   expanded.forEach(([x,z],i)=>{
     const p=scrollPoint(x,z);
     if(i===0)shape.moveTo(p.x,-p.z);else shape.lineTo(p.x,-p.z);
@@ -468,7 +467,7 @@ function bank(parent: THREE.Group, side: "far"|"near") {
   ground.rotation.x = -Math.PI / 2;
   const face=buildBankFace(side);batchStatic(face);parent.add(face);
   const marks: THREE.Vector3[] = [];
-  for(let s=-63.8;s<21.8;s+=.16){
+  for(let s=-21.8;s<21.8;s+=.16){
     if(Math.sin(s*5.1)+Math.sin(s*13.)<-.3)continue;
     for(const t of [0,.10]){
       const d=bankSection(side,s+t,0).d-direction*.012;
@@ -496,6 +495,7 @@ export function hall(
   g.position.copy(scrollPoint(s, d));
   g.position.y = GROUND_Y;
   g.rotation.y = turn;
+  if (kind === "ornate-gate") { g.add(buildOrnateGate(w,depth,h)); return g; }
   if (kind === "construction") {
     g.add(buildConstruction(w,depth,h));return g;
   }
@@ -1077,17 +1077,17 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
     const roofGeo=new THREE.BufferGeometry();roofGeo.setAttribute("position",new THREE.Float32BufferAttribute(vertices,3));
     roofGeo.setIndex([0,4,5,0,5,1,3,2,5,3,5,4,0,3,4,1,5,2]);roofGeo.computeVertexNormals();mesh(coarse,roofGeo,roof);
     box(coarse,h.width*.55,h.height*.5,.025,0,h.height*.38,h.depth/2+.02,dark);batchStatic(coarse);
-    if(BUILDING_KINDS[index]==="construction" || BUILDING_KINDS[index]==="upper-storey"){
+    if(BUILDING_KINDS[index]==="ornate-gate" || BUILDING_KINDS[index]==="construction" || BUILDING_KINDS[index]==="upper-storey"){
       coarse.traverse(n=>{if(n instanceof THREE.Mesh || n instanceof THREE.Line)n.geometry.dispose();});coarse.clear();
       coarse.add(base.clone());
     }
     fine.visible=false;coarse.visible=false;
-    detailedBuildings.push({root,base,fine,coarse,height:BUILDING_KINDS[index]==="upper-storey"?top+h.height+.17:BUILDING_KINDS[index]==="construction"?h.height+1.15:top,detail:1});
+    detailedBuildings.push({root,base,fine,coarse,height:BUILDING_KINDS[index]==="upper-storey"?top+h.height+.17:BUILDING_KINDS[index]==="ornate-gate"?h.height+1.5:BUILDING_KINDS[index]==="construction"?h.height+1.15:top,detail:1});
   }
   const vegetationLevels=[0,1,2].map(level=>{
     geometryDetail=level as DetailLevel;const plants=new THREE.Group();plants.name="vegetation-detail-"+level;
     for (const {s,d,size,form} of FEATURE_TREES){
-      const p=scrollPoint(s,d),t=characterTree(plants,p.x,p.z,form,s);
+      const p=scrollPoint(s,d),t=characterTree(plants,p.x,p.z,form,s,true);
       t.scale.set(size*1.15,size*1.5,size*1.15);t.rotation.y=s*.31;
     }
     riversideNature(plants);batchStatic(plants);return plants;
@@ -1113,7 +1113,6 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
   detailedBuildings.forEach(b=>group.add(b.root));
   vegetationLevels.forEach(g=>group.add(g));
   let plantDetail:DetailLevel=1;
-  const bend=createRiverBend(group,{hall,person,cart:horseCart,batch:batchStatic});
   const carts = CARTS.map((_, i) => horseCart(group, i));
   const boats = BOATS.map((b) => {
     const vessel = workingBoat(
@@ -1226,7 +1225,6 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
   const buildingPeople=[
     {building:8,x:-.8,y:HALLS[8].height+.17,z:HALLS[8].depth*.39,variant:6},
     {building:8,x:.7,y:HALLS[8].height+.17,z:HALLS[8].depth*.39,variant:0},
-    {building:HALLS.length-1,x:-.2,y:1.273,z:-HALLS.at(-1)!.depth*.41,variant:9},
     {building:HALLS.length-1,x:.25,y:2.073,z:HALLS.at(-1)!.depth*.41,variant:9},
   ].map(site=>({...site,rig:addPerson(detailedBuildings[site.building].root,site.variant,"building-occupant")}));
   crowd.finish();
@@ -1286,7 +1284,7 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
       const roles=observers.reduce((counts,p)=>{
         const role=p.group.userData.activity as string;counts[role]=(counts[role]??0)+1;return counts;
       },{} as Record<string,number>);
-      return {riverBend:{...bend.metadata(),inventory:bend.inventory()},boatCrews:[...boats,...moored].map((b,i)=>({style:b.userData.boatStyle,count:crew.filter(c=>c.boat===i).length,roof:crew.filter(c=>c.boat===i&&c.station.role==="roof").length})),landmarks:["two-storey-balcony-house","open-timber-construction"],crowd:crowd.metadata(),seed,palette:getScenePalette(),vegetationLevel:plantDetail,
+      return {boatCrews:[...boats,...moored].map((b,i)=>({style:b.userData.boatStyle,count:crew.filter(c=>c.boat===i).length,roof:crew.filter(c=>c.boat===i&&c.station.role==="roof").length})),landmarks:["two-storey-balcony-house","ornate-street-gate"],crowd:crowd.metadata(),seed,palette:getScenePalette(),vegetationLevel:plantDetail,
         buildings:detailedBuildings.map(b=>b.detail),traffic:CART_KINDS,bridgeCounters,
         marketTypes:MARKET_TYPES,referenceTrees:FEATURE_TREES.map(t=>t.id),
         streetLife:{walkers:people.length,mainStreetWalkers:BRIDGE_WALKERS,approachPeople,
@@ -1298,8 +1296,7 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
     setPainting(enabled: boolean) {
       paintingAmount.value = enabled ? 1 : 0;
     },
-    update(time: number, camera?: THREE.Camera, viewportHeight = 800, preview=false, complete=false) {
-      bend.update(camera,preview,complete?Infinity:1);
+    update(time: number, camera?: THREE.Camera, viewportHeight = 800, preview=false) {
       waterTime.value = time;
       wakes.update(time);
       const ortho=camera as THREE.OrthographicCamera|undefined;
@@ -1400,7 +1397,7 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
         const pose = boatPose(i, time);
         const rig=vessel.getObjectByName("lowering-sail-rig");
         if(rig)updateLoweringRig(rig,Math.abs(pose.s-BRIDGE.center.s));
-        vessel.visible = pose.s > -64-BOATS[i].length*.62 && pose.s < 22+BOATS[i].length*.62+.2;
+        vessel.visible = Math.abs(pose.s) < 25 + BOATS[i].length * 0.62 && Math.abs(pose.d) < 23 + BOATS[i].length * 0.62;
         vessel.position.copy(scrollPoint(pose.s, pose.d));
         vessel.position.y = pose.y;
         vessel.rotation.set(
@@ -1436,7 +1433,7 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
         }
         positions.needsUpdate = true;
       });
-      crowd.update(camera, viewportHeight,preview);
+      crowd.update(camera, viewportHeight, preview);
       for (let i = 0; i < RIPPLE_COUNT; i++) {
         const ripple = riverRipple(i, time);
         for (let segment = 0; segment < 4; segment++)

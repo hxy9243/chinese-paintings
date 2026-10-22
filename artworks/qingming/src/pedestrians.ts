@@ -187,7 +187,9 @@ function advance(states: Actor[], time: number, seed: number): Actor[] {
         -0.09 * STEP,
         Math.min(0.09 * STEP, target - a.lateral),
       );
-      const distance = a.direction * a.speed * STEP;
+      const nextPoint=location(i,old.q+.01,old.lateral);
+      const metric=main?1:Math.max(1,Math.hypot(nextPoint.s-points[i].s,nextPoint.d-points[i].d)/.01);
+      const distance = a.direction * a.speed * STEP / metric;
       // Try a normal step, a slower step and then a small passing sidestep.
       for (const [forward, sideways] of [
         [1, lateralStep],

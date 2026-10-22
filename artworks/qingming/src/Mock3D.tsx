@@ -75,7 +75,7 @@ export default function Mock3D() {
     // Hulls enter through the two side edges, with recycling beyond the frame.
     const along = scrollPoint(1, 0).normalize();
     renderer.clippingPlanes = [
-      new THREE.Plane(along, 72),
+      new THREE.Plane(along, 32),
       new THREE.Plane(along.clone().negate(), 32),
     ];
     const finish = createInkFinish(renderer);
@@ -146,7 +146,7 @@ export default function Mock3D() {
     controls.mouseButtons.RIGHT = THREE.MOUSE.PAN;
     controls.touches.ONE = THREE.TOUCH.ROTATE;
     controls.touches.TWO = THREE.TOUCH.DOLLY_PAN;
-    controls.target.copy(scrollPoint(-20, -13));
+    controls.target.copy(scrollPoint(0, -1));
     controls.target.y = 1.1;
     const position = (
       degrees: number,
@@ -169,8 +169,8 @@ export default function Mock3D() {
       camera.lookAt(controls.target);
       controls.update();
     };
-    const defaultAngle = 0;
-    const defaultZoom = .46;
+    const defaultAngle = DEFAULT_VIEW_ANGLE;
+    const defaultZoom = .88;
     camera.zoom = defaultZoom;
     camera.updateProjectionMatrix();
     position(defaultAngle, 0);
@@ -202,7 +202,7 @@ export default function Mock3D() {
         );
       },
       travel(s, overview = false, depth = 0) {
-        controls.target.copy(scrollPoint(overview?-20:s, overview?-13:depth));
+        controls.target.copy(scrollPoint(overview?0:s, overview?-1:depth));
         controls.target.y = 1.1;
         camera.zoom = overview ? defaultZoom : 1.8;
         camera.updateProjectionMatrix();
@@ -226,7 +226,7 @@ export default function Mock3D() {
         camera.updateProjectionMatrix();
       },
       reset() {
-        controls.target.copy(scrollPoint(-20, -13));
+        controls.target.copy(scrollPoint(0, -1));
         controls.target.y = 1.1;
         camera.zoom = defaultZoom;
         camera.updateProjectionMatrix();
@@ -255,7 +255,7 @@ export default function Mock3D() {
         }
         camera.rotateZ(rollAngle);
         study.update(animationTime,camera,el.clientHeight,plan.preview);
-        pending=study.metadata().riverBend.pending>0;
+        pending=false;
         finish.render(scene,camera,paintingEnabled?inkSoftness:0);
         renderer.domElement.dataset.quality=plan.preview?"preview":"refined";
         renderer.domElement.dataset.frames=String(++draws);
@@ -287,7 +287,7 @@ export default function Mock3D() {
           immersive.updateMatrixWorld();view=immersive;
         }
         renderer.setPixelRatio(fullRatio);renderer.setSize(el.clientWidth,el.clientHeight);finish.resize(el.clientWidth,el.clientHeight);
-        study.update(seconds,view,el.clientHeight,false,true);renderer.info.autoReset=false;renderer.info.reset();
+        study.update(seconds,view,el.clientHeight,false);renderer.info.autoReset=false;renderer.info.reset();
         finish.render(scene,view,paintingEnabled?inkSoftness:0);
         const stats={...study.metadata(),triangles:renderer.info.render.triangles,calls:renderer.info.render.calls};renderer.info.autoReset=true;return stats;
       },
@@ -357,7 +357,7 @@ export default function Mock3D() {
               <button
                 key={stop.id}
                 disabled={!ready}
-                onClick={() => {api.current?.travel(stop.s, false, stop.depth);setReferenceArea(stop.id==="bend"||stop.id==="wharf"?"bend":"bridge");}}
+                onClick={() => {api.current?.travel(stop.s, false, stop.depth);setReferenceArea(stop.id==="bend"?"bend":"bridge");}}
               >
                 {lang === "en" ? stop.en : stop.zh}
               </button>

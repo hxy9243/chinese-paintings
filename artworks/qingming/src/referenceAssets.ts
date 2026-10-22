@@ -79,7 +79,7 @@ export function buildReferenceTree(
   seed: number,
   detail: DetailLevel = 2,
   landmark = false,
-  foliage: "full" | "open" = "full",
+  foliage: "full" | "open" | "bare" = "full",
 ) {
   const g = new THREE.Group();
   g.name = landmark ? "great-riverbank-tree" : "reference-tree";
@@ -96,7 +96,7 @@ export function buildReferenceTree(
   const pineSpray = (at: P, phase: number, extent = 1) => {
     // Leave most branch tips bare on the bend; retain a few uneven needle tufts.
     // Branch construction is independent of foliage, with no transparent crowns.
-    if (foliage === "open" && sprayIndex++ % 4 !== 0) return;
+    if (foliage === "bare" || (foliage === "open" && sprayIndex++ % 4 !== 0)) return;
     const shoots = detail === 2 ? 11 : detail === 1 ? 7 : 5;
     for (let f = 0; f < shoots; f++) {
       const az = phase + f * 2.39996,

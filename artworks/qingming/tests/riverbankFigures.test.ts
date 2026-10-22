@@ -26,7 +26,7 @@ it("raises occupied ground roughly three feet while leaving the water and vessel
   MOORED_BOATS.forEach((_, i) => {
     for (const side of [-1, 1]) {
       const p = mooringAnchor(i, side);
-      expect(shoreDepth("far", p.s) - p.d).toBeGreaterThan(0.2);
+      expect((MOORED_BOATS[i].side==="far"?1:-1)*(shoreDepth(MOORED_BOATS[i].side,p.s)-p.d)).toBeGreaterThan(.2);
     }
   });
   for (const side of ["far", "near"] as const)

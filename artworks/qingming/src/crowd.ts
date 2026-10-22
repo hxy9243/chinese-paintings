@@ -72,7 +72,7 @@ export function createCrowd(parent: THREE.Group,
         material.fragmentShader=material.fragmentShader.replace("void main(){",`void main(){
           float edgeS=point.x*.64278761+point.z*.76604444;
           float edgeD=-point.x*.76604444+point.z*.64278761;
-          if(length(vec2(max(0.,abs(edgeS)-16.),max(0.,abs(edgeD)-8.)))>6. && length(vec2(max(0.,abs(edgeS+40.)-17.),max(0.,abs(edgeD+10.)-22.)))>6.)discard;
+          if(abs(edgeS)>29. || abs(edgeD)>21.)discard;
         `);
         const drawable=pool.source instanceof THREE.Line ? new THREE.LineSegments(geo,material) : new THREE.Mesh(geo,material);
         drawable.name="animated-crowd"; drawable.userData.level=pool.level;

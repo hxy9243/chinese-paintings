@@ -1,0 +1,52 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> qingming-xiaojing@0.1.0 test
+> vitest run
+
+
+ RUN  v3.2.7 /workspace/scratch/ad3076fb5842/chinese-paintings-publish/artworks/qingming
+
+ ✓ tests/traffic.test.ts (5 tests) 13991ms
+   ✓ shared space and continuous traffic > keeps people and horse carts separated from one another and every registered obstacle  8655ms
+   ✓ shared space and continuous traffic > animates the actual horse legs and wheels, preserves their footprints, and freezes on pause  4950ms
+ ✓ tests/treeFoliage.test.ts (1 test) 4651ms
+   ✓ gives leafy plantings needle crowns and preserves explicitly bare trees at every detail  4650ms
+ ✓ tests/riverbankFigures.test.ts (5 tests) 149ms
+ ✓ tests/passageLayout.test.ts (6 tests) 79ms
+ ✓ tests/peopleMotion.test.ts (5 tests) 18018ms
+   ✓ independent activity and browsing > gives every walker repeatable pauses followed by movement, without synchronized stops  5241ms
+   ✓ independent activity and browsing > adds populated stands and keeps every local wander inside its reserved clear space  580ms
+   ✓ independent activity and browsing > keeps independently pausing walkers and moving bridge observers apart across schedules  7376ms
+   ✓ independent activity and browsing > animates every rendered role, shares crowd geometry, and freezes every instance on pause  4705ms
+ ✓ tests/passageLife.test.ts (7 tests) 7023ms
+   ✓ life in the reference passage > keeps all walkers on the bridge or dry, unobstructed bank lanes  1522ms
+   ✓ life in the reference passage > keeps drifting and rocking hulls in the water throughout their cycles  369ms
+   ✓ life in the reference passage > moves the rendered boats, walking legs and water without rebuilding geometry  5034ms
+ ✓ tests/bridgeActivity.test.ts (4 tests) 5098ms
+   ✓ busy bridge market > moves rendered torsos, elbows and hands while keeping the feet anchored and replayable  5088ms
+ ✓ tests/moorings.test.ts (2 tests) 4629ms
+   ✓ both-bank moorings > bobs rendered moored boats and their crews, follows the ropes, and freezes on pause  4423ms
+ ✓ tests/streetLife.test.ts (3 tests) 5984ms
+   ✓ irregular street journeys and painted wakes > pauses and reverses real walkers, and recycles only beyond the visible terrain  4911ms
+   ✓ irregular street journeys and painted wakes > keeps fading wake ribbons on the water and freezes reused buffers at a fixed time  877ms
+ ✓ tests/detail.test.ts (3 tests) 4633ms
+   ✓ reference landmarks and geometry detail > renders fewer actual crowd triangles when zoomed out and restores close detail  4628ms
+ ✓ tests/bridgeLanding.test.ts (1 test) 4518ms
+   ✓ keeps both landing board surfaces above the bank instead of coplanar  4517ms
+ ✓ tests/bridgeFlow.test.ts (3 tests) 1141ms
+   ✓ full-span bridge flow and connected mud roads > populates the full street and bridge at comparable walking density, with mixed directions and pauses  1137ms
+ ✓ tests/faceModels.test.ts (2 tests) 575ms
+   ✓ creates finite smooth head geometry with eyes lying on their sockets and stable articulation  557ms
+ ✓ tests/referenceDetails.test.ts (2 tests) 354ms
+   ✓ keeps roof workers and the articulated boat rigs below the bridge throughout a full navigation cycle  349ms
+ ✓ tests/marketVariety.test.ts (5 tests) 398ms
+ ✓ tests/referenceAssets.test.ts (5 tests) 323ms
+ ✓ tests/waterfrontVariants.test.ts (4 tests) 303ms
+ ✓ tests/mainStreet.test.ts (3 tests) 145ms
+ ✓ tests/model.test.ts (12 tests) 9ms
+ ✓ tests/progressiveRendering.test.ts (2 tests) 5ms
+
+ Test Files  20 passed (20)
+      Tests  80 passed (80)
+   Start at  23:27:08
+   Duration  82.46s (transform 486ms, setup 0ms, collect 6.79s, tests 72.03s, environment 3ms, prepare 1.09s)

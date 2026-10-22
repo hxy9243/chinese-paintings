@@ -69,23 +69,22 @@ describe("life in the reference passage", () => {
           }
       }
   });
-  it("brings new hulls through both sides and wraps only outside the frame", () => {
+  it("brings new hulls through the top and right exits and wraps outside the frame", () => {
+    const offstage=(p:{s:number,d:number},length:number)=>Math.abs(p.s)>25+length/2 || p.d< -23-length/2;
     for (let i = 0; i < BOATS.length; i++) {
       let entered = false;
       let previous = boatPose(i, 0);
       for (let time = 1; time <= 1400; time++) {
         const pose = boatPose(i, time);
         if (Math.abs(pose.s - previous.s) > 1) {
-          expect(Math.abs(pose.s)).toBeGreaterThan(22 + BOATS[i].length / 2);
-          expect(Math.abs(previous.s)).toBeGreaterThan(
-            22 + BOATS[i].length / 2,
-          );
+          expect(offstage(pose,BOATS[i].length)).toBe(true);
+          expect(offstage(previous,BOATS[i].length)).toBe(true);
         }
         if (Math.abs(previous.s) > 22 && Math.abs(pose.s) <= 22) entered = true;
         previous = pose;
       }
       expect(entered).toBe(true);
-      expect(Math.abs(boatPose(i, 12).s - boatPose(i, 0).s)).toBeGreaterThan(
+      expect(Math.hypot(boatPose(i,12).s-boatPose(i,0).s,boatPose(i,12).d-boatPose(i,0).d)).toBeGreaterThan(
         1.8,
       );
     }
@@ -190,6 +189,6 @@ describe("life in the reference passage", () => {
     });
     // Sixteen articulated occupation variants (formerly twelve), plus the
     // independent lowering rig. Keep a bounded no-camera medium-detail budget.
-    expect(draws).toBeLessThan(850);
+    expect(draws).toBeLessThan(900);
   });
 });

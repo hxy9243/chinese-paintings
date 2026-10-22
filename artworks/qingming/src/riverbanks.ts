@@ -1,7 +1,6 @@
 import * as THREE from "three";
 import {
   BRIDGE,
-  SHORELINES,
   GROUND_Y,
   bridgeHeight,
   shoreDepth,
@@ -24,24 +23,8 @@ earth.fragmentShader = earth.fragmentShader.replace(
 const stone = [0xa49c86, 0x9c967f].map((c) => paintMaterial(c));
 const greys = [0xb8b9ae, 0xc7c5b9].map((c) => paintMaterial(c));
 
-/** Exact box convolution of the reference polyline gives continuous tangents. */
-export function bankEdgeDepth(side: BankSide, s: number) {
-  const radius = 0.26,
-    left = s - radius,
-    right = s + radius;
-  const cuts = [
-    left,
-    ...SHORELINES[side].map((p) => p.s).filter((x) => x > left && x < right),
-    right,
-  ];
-  let area = 0;
-  for (let i = 1; i < cuts.length; i++)
-    area +=
-      (shoreDepth(side, cuts[i - 1]) + shoreDepth(side, cuts[i])) *
-      (cuts[i] - cuts[i - 1]) *
-      0.5;
-  return area / (radius * 2);
-}
+/** The geometry and water shader share the same continuous bank curve. */
+export function bankEdgeDepth(side: BankSide, s: number) { return shoreDepth(side,s); }
 export function bankSection(side: BankSide, s: number, t: number) {
   const direction = side === "far" ? 1 : -1;
   const rough = Math.sin(s * 1.1) * 0.008 + Math.sin(s * 2.7) * 0.003;
@@ -58,11 +41,11 @@ export function buildBankFace(side: BankSide) {
   group.name = `${side}-raised-bank`;
   const positions: number[] = [],
     indices: number[] = [];
-  const start = SHORELINES[side][0].s, count = Math.round((22-start)*10),
+  const count = 440,
     rows = 17;
   for (let i = 0; i <= count; i++)
     for (let j = 0; j < rows; j++) {
-      const p = bankSection(side, start + i * 0.1, j / (rows - 1)),
+      const p = bankSection(side, -22 + i * 0.1, j / (rows - 1)),
         world = scrollPoint(p.s, p.d);
       positions.push(world.x, p.y, world.z);
     }
@@ -81,8 +64,8 @@ export function buildBankFace(side: BankSide) {
   geometry.computeVertexNormals();
   group.add(new THREE.Mesh(geometry, earth));
   // Broken patches of riprap, rather than a continuous modern concrete wall.
-  for (let i = 0; i < Math.floor((22-start)/.203); i++) {
-    const s = start+.2 + i * 0.203;
+  for (let i = 0; i < 215; i++) {
+    const s = -21.8 + i * 0.203;
     if (Math.sin(s * 1.7) + Math.sin(s * 0.67) < 0.6) continue;
     const p = bankSection(side, s, 0.48 + (i % 3) * 0.17),
       world = scrollPoint(p.s, p.d);

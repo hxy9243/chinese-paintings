@@ -7,70 +7,43 @@ export const PERSON_SCALE = 1.25; // nominal adult height 0.85: bridge width ≈
 export const PERSON_WIDTH_SCALE = 1.05; // retain the existing walking clearance
 export const BRIDGE_RAIL_HEIGHT = 0.42;
 export const MIN_EAVE_HEIGHT = 1.12;
+// Traced composition: the west reach turns through the top crop, while the
+// east reach continues beyond the right crop. These are independent banks.
 export const SHORELINES: Record<BankSide, PassagePoint[]> = {
-  far: [
-    [-64, -39.5], [-58, -35], [-52, -33], [-46, -29],
-    [-40, -24], [-34, -18], [-28, -12],
-    [-22, -5.8],
-    [-13, -6.8],
-    [-7, -6.8],
-    [-3.6, -5.8],
-    [5, -5.5],
-    [11, -5],
-    [17, -4.2],
-    [22, -3.4],
-  ].map(([s, d]) => ({ s, d })),
-  near: [
-    [-64, -22.5], [-58, -21], [-52, -17], [-46, -11],
-    [-40, -4.5], [-34, -.8], [-28, -.4],
-    [-22, -0.1],
-    [-16, 0.7],
-    [-11, 1.8],
-    [-8.4, 2.05],
-    [-6.5, 2.25],
-    [-3, 4],
-    [0, 4],
-    [4, 4.25],
-    [7, 4.55],
-    [10, 4.9],
-    [16, 6.1],
-    [22, 6.4],
-  ].map(([s, d]) => ({ s, d })),
+  far: [[-30,-60],[-9,-60],[-8,-16],[-7,-10],[-5.8,-7],[-2,-6.6],
+    [3,-6.4],[8,-6.2],[12,-5.8],[17,-5.4],[22,-4.9],[30,-4.4]].map(([s,d])=>({s,d})),
+  near: [[-30,-60],[-20,-60],[-18.6,-14],[-18.3,-8],[-17.7,-4],
+    [-16.5,-.4],[-14,1.8],[-10,2.7],[-5,2.8],[-1,2.7],[3,1.2],
+    [5,-.4],[6,1],[7.4,3.2],[11,3.6],[15,4.3],[18,5.8],[22,6.5],[30,7]].map(([s,d])=>({s,d})),
 };
+// Monotone cubic tangents keep the traced bends smooth without overshooting
+// the dry-land anchors. The water shader uses these same coefficients.
+export const SHORE_TANGENTS=Object.fromEntries((['near','far'] as BankSide[]).map(side=>{
+  const points=SHORELINES[side],secants=points.slice(1).map((p,i)=>(p.d-points[i].d)/(p.s-points[i].s));
+  return [side,points.map((_,i)=>i===0?secants[0]:i===points.length-1?secants.at(-1)!:
+    secants[i-1]*secants[i]<=0?0:2*secants[i-1]*secants[i]/(secants[i-1]+secants[i]))];
+})) as Record<BankSide,number[]>;
 export function shoreDepth(side: BankSide, s: number): number {
   const shore = SHORELINES[side];
-  s = Math.max(shore[0].s, Math.min(shore.at(-1)!.s, s));
+  s = Math.max(-30, Math.min(30, s));
   for (let i = 1; i < shore.length; i++) {
     const a = shore[i - 1],
       b = shore[i];
     if (s <= b.s) {
-      const t=(s-a.s)/(b.s-a.s);
-      if(b.s>-22)return a.d+(b.d-a.d)*t;
-      const slope=(p:PassagePoint,q:PassagePoint)=>(q.d-p.d)/(q.s-p.s);
-      const middle=(x:number,y:number)=>x*y<=0?0:2*x*y/(x+y);
-      const sec=slope(a,b),m0=i>1?middle(slope(shore[i-2],a),sec):sec,
-        m1=i<shore.length-1?middle(sec,slope(b,shore[i+1])):sec,span=b.s-a.s;
-      return (2*t*t*t-3*t*t+1)*a.d+(t*t*t-2*t*t+t)*span*m0+(-2*t*t*t+3*t*t)*b.d+(t*t*t-t*t)*span*m1;
+      const dx=b.s-a.s,t=(s-a.s)/dx,t2=t*t,t3=t2*t;
+      return a.d+(-2*t3+3*t2)*(b.d-a.d)+(t3-2*t2+t)*dx*SHORE_TANGENTS[side][i-1]+(t3-t2)*dx*SHORE_TANGENTS[side][i];
     }
   }
   return shore.at(-1)!.d;
 }
-// Original bridge-district placement perimeter. The bend is an adjacent district.
+// Crop boundaries are a rectangular continuation of the landscape, not an island.
 export function bankOutline(side: BankSide): number[][] {
-  const edge = SHORELINES[side].filter(p=>p.s>=-22).map(({ s, d }) => [s, d]);
-  const sign = side === "far" ? -1 : 1;
-  const arc = (cx: number, start: number) =>
-    Array.from({ length: 17 }, (_, i) => {
-      const angle = start + ((i / 16) * Math.PI) / 2;
-      return [cx + 6 * Math.cos(angle), sign * (8 + 6 * Math.sin(angle))];
-    });
-  return [...edge, ...arc(16, 0), ...arc(-16, Math.PI / 2)];
+  const edge=SHORELINES[side].map(({s,d})=>[s,d]);
+  const back=side==="far"?-60:24;
+  return [...edge,[30,back],[-30,back]];
 }
 export function passageOutline(): number[][] {
-  return [
-    ...bankOutline("near").slice(SHORELINES.near.filter(p=>p.s>=-22).length),
-    ...bankOutline("far").slice(SHORELINES.far.filter(p=>p.s>=-22).length).reverse(),
-  ];
+  return [[-30,-30],[30,-30],[30,24],[-30,24]];
 }
 export function onBank(side: BankSide, p: PassagePoint, margin = 0): boolean {
   return side === "far"
@@ -108,181 +81,42 @@ export function roofFootprint(h: HallLayout): PassagePoint[] {
     }
   return points;
 }
-function waterfrontHall(
-  side: BankSide,
-  s: number,
-  width: number,
-  depth: number,
-  height: number,
-  setback: number,
-): HallLayout {
-  const angle = 0; // Roofs follow the two street/courtyard axes, not shoreline bends.
-  const h: HallLayout = {
-    side,
-    s,
-    d: shoreDepth(side, s),
-    width,
-    depth,
-    height,
-    angle,
-  };
-  const sign = side === "far" ? -1 : 1;
-  const clearance =
-    Math.max(
-      ...roofFootprint(h).map((p) => sign * (shoreDepth(side, p.s) - p.d)),
-    ) + setback;
-  h.d += sign * clearance;
-  return h;
-}
-// Low waterfront shops, rear warehouses, broad foreground roofs; heights are
-// relative to the same person scale rather than arbitrary per-object scaling.
+// Rectangular footprints are placed as rigid units. Angles follow the local
+// bank street or a perpendicular lane; painted roof silhouettes are not polygons.
+const nearHall=(s:number,d:number,width:number,depth:number,height=1.2,angle=0):HallLayout=>
+  ({side:"near",s,d,width,depth,height,angle});
+const farHall=(s:number,d:number,width:number,depth:number,height=1.2,angle=0):HallLayout=>
+  ({side:"far",s,d,width,depth,height,angle});
 export const HALLS: HallLayout[] = [
-  waterfrontHall("far", -18.3, 3.8, 2.0, 0.72, 3.7),
-  waterfrontHall("far", -13.5, 3.4, 2.2, 0.86, 3.7),
-  waterfrontHall("far", -9.2, 3, 2.2, 0.95, 1.6),
-  waterfrontHall("far", -0.7, 3.8, 2.7, 1.1, 3.7),
-  waterfrontHall("far", 3.45, 3.3, 2.3, 1, 3.7),
-  waterfrontHall("far", 10.2, 4.4, 2.3, 0.88, 1.4),
-  waterfrontHall("far", 16, 4.6, 2.4, 0.83, 1.4),
-  waterfrontHall("near", -16.5, 4.8, 3.8, 1.15, 2.5),
-  waterfrontHall("near", -10.4, 5.4, 3.8, 1.35, 3.9),
-  waterfrontHall("near", -4.4, 5.2, 3.6, 1.2, 2.5),
-  waterfrontHall("near", 1.05, 4.1, 3.5, 1.15, 3.5),
-  waterfrontHall("near", 2.6, 3.1, 2.1, 0.8, 1.35),
-  ...[-17, -13, -0.9, 3.2].map((s) =>
-    waterfrontHall("far", s, 2.7, 1.3, 0.6, 1.35),
-  ),
+  farHall(-4.4,-13.2,3.4,2.4), farHall(-.3,-13.2,3.5,2.4),
+  farHall(3.7,-13.2,3.1,2.5), farHall(14.9,-12,2.7,2.7,1.3,.08),
+  farHall(18.7,-11.3,3.0,2.7,1.2,.08), farHall(-3.5,-9.5,3.7,1.7),
+  farHall(.9,-9.3,3.9,1.7),
+  nearHall(-20.7,-3,2.7,3.2,1.2,1.15),
+  nearHall(-8.8,5.8,4.1,2.7,1.35),
+  nearHall(-3.2,10.6,4.3,2.8,1.25,Math.PI/2),
+  nearHall(-13.8,10.8,4.5,2.7), nearHall(3.2,4.1,1.5,1.1),
+  farHall(5,-9.1,2.8,1.8), farHall(14.35,-8.2,3.15,1.7,1.12,.08),
+  farHall(18.2,-8.25,3.5,1.7,1.12,.08), farHall(21.7,-10.1,1.4,2),
+  nearHall(12.6,7.2,4.2,2.6,1.2,.12), nearHall(18.2,10.1,4.6,2.8,1.2,.15),
+  farHall(7,-13.8,.7,1.6,1.12,0),
+  nearHall(-18.7,10.1,3.7,2.6,1.2,.05), nearHall(-9,11,3.8,2.7),
+  nearHall(-17.5,3.5,3.3,2.3,1.2,.5), nearHall(-13.2,5.5,3.1,2.3,1.2,.05),
+  nearHall(-21.1,4.9,2.6,2.5,1.2,1.15), nearHall(12.2,12.1,3.8,2.4,1.2,.12),
+  nearHall(22,13,1.5,1.8,1.12,.15),
+  nearHall(-2.8,5.8,2.2,1.7,2.8), // ornate street gate, not a worksite
 ];
-// Compact foreground street: matching roof axes and narrow gaps between eaves.
-[
-  { s: -16.7, d: 4.6 },
-  { s: -13.7, d: 10 },
-  { s: -3.4, d: 9.8 },
-  { s: 1.6, d: 10.5 },
-].forEach((p, i) => Object.assign(HALLS[7 + i], p, { angle: 0 }));
-// Leave the bridge axis open as a continuous market street on both banks.
-HALLS[1].d = -11.3;
-HALLS[1].depth = 2.05;
-HALLS[8].width = 4.4;
-HALLS[9].width = 4;
-HALLS[2].s = -9.55;
-HALLS[2].width = 2.4;
-// Broad foreground roofs and a small waterside shelter frame the open right
-// reach in the reference. Keep their full eaves on dry land and off the street.
-HALLS.push(
-  { ...waterfrontHall("near", 6.9, 3.8, 2.5, 1.05, 2.2), d: 9.0, angle: 0 },
-  waterfrontHall("near", 11.4, 3.3, 2.0, 0.88, 1.55),
-  waterfrontHall("far", 6.6, 1.6, 1.2, 0.58, 1.4),
-);
-// Hand-read roof axes: the foreground hall immediately right of the bridge
-// has its ridge perpendicular to the adjoining hall and the riverfront shops.
-HALLS[9].angle = Math.PI / 2;
-HALLS[9].gable = true;
-HALLS[9].depth = 3.0;
-HALLS[10].angle = 0;
-HALLS[3].angle = 0;
-HALLS[3].width = 3.35;
-// Small shelter beside the near landing and roofs partly visible behind the
-// far street. These were omitted when the scene was reduced to landmark blocks.
-Object.assign(HALLS[11], {
-  s: -3.8,
-  d: 6.2,
-  width: 1.8,
-  depth: 1.1,
-  height: 0.65,
-  angle: 0,
-});
-HALLS.push(
-  {
-    side: "near",
-    s: -19,
-    d: 9.4,
-    width: 2.4,
-    depth: 2.7,
-    height: 0.85,
-    angle: Math.PI / 2,
-    gable: true,
-  },
-  {
-    side: "near",
-    s: 11.6,
-    d: 11.2,
-    width: 2.1,
-    depth: 1.6,
-    height: 0.78,
-    angle: Math.PI / 2,
-    gable: true,
-  },
-  {
-    side: "far",
-    s: -16.4,
-    d: -13.35,
-    width: 2.5,
-    depth: 0.6,
-    height: 0.55,
-    angle: 0,
-  },
-  {
-    side: "far",
-    s: -11.8,
-    d: -13.35,
-    width: 2.6,
-    depth: 0.6,
-    height: 0.67,
-    angle: 0,
-  },
-  {
-    side: "far",
-    s: 1.3,
-    d: -13.4,
-    width: 2.9,
-    depth: 0.7,
-    height: 0.64,
-    angle: 0,
-  },
-  {
-    side: "far",
-    s: 12,
-    d: -11.7,
-    width: 3.4,
-    depth: 1.6,
-    height: 0.86,
-    angle: 0,
-  },
-  {
-    side: "near",
-    s: 17.5,
-    d: 11.3,
-    width: 3.1,
-    depth: 2,
-    height: 0.8,
-    angle: 0,
-  },
-);
-// Crop landmarks: the west foreground balcony and the tall open worksite beside
-// the approach are separate silhouettes, not another row of completed roofs.
-Object.assign(HALLS[8], { s: -14.7, d: 9.8, width: 3.8, depth: 3.1 });
-HALLS.push({ side: "near", s: -11.35, d: 7.25, width: 1.6, depth: 2.0,
-  height: 2.8, angle: 0 });
-// Small shop roofs formerly had eaves below adult head height. Keep their
-// authored footprints, but provide headroom for the tallest standing profile.
-HALLS.forEach(h => { h.height = Math.max(h.height, MIN_EAVE_HEIGHT); });
-// The old bare tree's trunk stands beside the near quay, behind the foreground
-// roof line, with the crown reaching into the water silhouette.
-export const REFERENCE_TREE = {
-  s: 6.1,
-  d: 6.5,
-  size: 1.45,
-  form: "spreading" as const,
-};
+HALLS[9].gable=true;
+HALLS.forEach(h=>{h.height=Math.max(h.height,MIN_EAVE_HEIGHT);});
+export const REFERENCE_TREE={s:21.8,d:8.2,size:1.45,form:"spreading" as const};
 // Both full-width landings sit inland. Local x runs from near bank to far bank.
-const near = { s: -7.4, d: 3.35 },
-  far = { s: -5.9, d: -7.35 };
+const near = { s: 7.8, d: 4.15 },
+  far = { s: 10.1, d: -7.1 };
 export const BRIDGE = {
   near,
   far,
   width: 3.2,
-  rise: 2.05,
+  rise: 2.35,
   length: Math.hypot(far.s - near.s, far.d - near.d),
   angle: Math.atan2(far.d - near.d, far.s - near.s),
   center: { s: (near.s + far.s) / 2, d: (near.d + far.d) / 2 },
@@ -325,11 +159,11 @@ export function bridgeHeight(x: number): number {
   );
 }
 export const BOATS = [
-  { s: 16, d: -0.3, length: 7.2, width: 1.2, cabin: true, angle: 0.12 },
-  { s: -6.8, d: -3.1, length: 5.4, width: 1.1, cabin: false, angle: 0 },
-  { s: -16, d: -3.8, length: 5.1, width: 1, cabin: true, angle: -0.1 },
-  { s: 10, d: 0.4, length: 4.9, width: 1, cabin: false, angle: 0.18 },
-  { s: 1, d: 1.3, length: 3.5, width: 0.75, cabin: false, angle: -0.25 },
-  { s: 25, d: 0, length: 3.8, width: 0.8, cabin: true, angle: 0 },
-  { s: -25, d: -3.6, length: 4.2, width: 0.8, cabin: false, angle: 0 },
+  { s:16,d:-.3,length:7.2,width:1.2,cabin:true,angle:0 },
+  { s:9,d:-2,length:5.4,width:1.1,cabin:false,angle:0 },
+  { s:-13,d:-10,length:5.1,width:1,cabin:true,angle:Math.PI/2 },
+  { s:1,d:-1.5,length:4.9,width:1,cabin:false,angle:0 },
+  { s:-12,d:-4,length:3.5,width:.75,cabin:false,angle:Math.PI/3 },
+  { s:25,d:0,length:3.8,width:.8,cabin:true,angle:0 },
+  { s:-13,d:-22,length:4.2,width:.8,cabin:false,angle:Math.PI/2 },
 ];

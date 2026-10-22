@@ -16,12 +16,12 @@ import {
 } from "../src/passageLayout";
 
 describe("reference passage geometry", () => {
-  it("rounds the outer corners and turns the bridge across the bank", () => {
-    const outline = passageOutline();
-    expect(outline.length).toBeGreaterThan(60);
-    expect(
-      outline.some(([s, d]) => Math.abs(s) === 22 && Math.abs(d) === 14),
-    ).toBe(false);
+  it("keeps the river open through the top and right crop and turns the bridge across the bank", () => {
+    expect(passageOutline()).toHaveLength(4);
+    expect(onBank("far", {s:-13,d:-16})).toBe(false);
+    expect(onBank("near", {s:-13,d:-16})).toBe(false);
+    expect(onBank("far", {s:24,d:0})).toBe(false);
+    expect(onBank("near", {s:24,d:0})).toBe(false);
     const tangent = Math.atan(
       (shoreDepth("far", BRIDGE.far.s + 1) -
         shoreDepth("far", BRIDGE.far.s - 1)) /
@@ -37,8 +37,8 @@ describe("reference passage geometry", () => {
           onBank(h.side, p, 0.24),
           `house at ${h.s}, roof at ${p.s},${p.d}`,
         ).toBe(true);
-        expect(Math.abs(p.s)).toBeLessThan(22);
-        expect(Math.abs(p.d)).toBeLessThan(14);
+        expect(Math.abs(p.s)).toBeLessThan(24);
+        expect(Math.abs(p.d)).toBeLessThan(16);
       }
   });
   it("leaves space between neighboring roofs", () => {
@@ -107,7 +107,7 @@ describe("reference passage geometry", () => {
     expect(BRIDGE.width / figureHeight).toBeGreaterThan(3.5);
     expect(BRIDGE.width / figureHeight).toBeLessThan(4.1);
     expect(Math.min(...HALLS.map(h=>h.height))*.875).toBeGreaterThan(figureHeight*1.08);
-    expect(Math.max(...HALLS.filter((_,i)=>BUILDING_KINDS[i]!=="construction").map((h) => h.height)) / figureHeight).toBeLessThan(
+    expect(Math.max(...HALLS.filter((_,i)=>!["construction","ornate-gate"].includes(BUILDING_KINDS[i])).map((h) => h.height)) / figureHeight).toBeLessThan(
       3,
     );
     expect(bridgeHeight(0)).toBeCloseTo(GROUND_Y + BRIDGE.rise);

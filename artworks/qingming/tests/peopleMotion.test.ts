@@ -114,8 +114,8 @@ describe("independent activity and browsing", () => {
     for (let t = 0; t < 500; t += 2) {
       const ships = BOATS.map((_, i) => boatPose(i, t));
       if (
-        ships.some((p) => p.angle === 0 && Math.abs(p.s) < 20) &&
-        ships.some((p) => p.angle === Math.PI && Math.abs(p.s) < 20)
+        ships.some((p) => Math.cos(p.angle) > .7 && p.s > -10 && p.s < 20) &&
+        ships.some((p) => Math.cos(p.angle) < -.7 && p.s > -10 && p.s < 20)
       )
         passes++;
     }

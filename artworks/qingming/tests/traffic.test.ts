@@ -73,7 +73,7 @@ describe("shared space and continuous traffic", () => {
     expect(CARTS).toHaveLength(8);
     expect(MARKET.length).toBeGreaterThanOrEqual(6);
     expect(
-      NATURE.filter((n) => ["pine", "young-pine", "willow"].includes(n.kind))
+      NATURE.filter((n) => ["bare", "spring", "willow"].includes(n.kind))
         .length + FEATURE_TREES.length,
     ).toBeGreaterThanOrEqual(18);
     for (let i = 0; i < CARTS.length; i++)
@@ -164,7 +164,7 @@ describe("shared space and continuous traffic", () => {
     }
   });
   it("gives full hulls and lowered masts clearance through bends and beneath the arch", () => {
-    let closest="",bankGap = Infinity,
+    let bankGap = Infinity,
       boatGap = Infinity,
       archGap = Infinity;
     for (let t = 0; t < 1400; t += 1.37) {
@@ -172,20 +172,19 @@ describe("shared space and continuous traffic", () => {
       for (let i = 0; i < BOATS.length; i++) {
         const p = poses[i],
           b = BOATS[i];
-        for (let j = i + 1; j < BOATS.length; j++) {
-          const q=poses[j],c=BOATS[j];
-          const axes=[p.angle,p.angle+Math.PI/2,q.angle,q.angle+Math.PI/2];
-          const gap=Math.max(...axes.map(a=>{
-            const extent=(length:number,width:number,angle:number)=>.62*length*Math.abs(Math.cos(a-angle))+(.7*width+.04)*Math.abs(Math.sin(a-angle));
-            return Math.abs((p.s-q.s)*Math.cos(a)+(p.d-q.d)*Math.sin(a))-extent(b.length,b.width,p.angle)-extent(c.length,c.width,q.angle);
-          }));
-          if(gap<boatGap){boatGap=gap;closest=`boats ${i}/${j} at ${t}: ${JSON.stringify([p,q])}`;}
-        }
+        for (let j = i + 1; j < BOATS.length; j++)
+          boatGap = Math.min(
+            boatGap,
+            Math.max(...[p.angle,p.angle+Math.PI/2,poses[j].angle,poses[j].angle+Math.PI/2].map(axis=>{
+              const radius=(length:number,width:number,angle:number)=>Math.abs(Math.cos(angle-axis))*length*.62+Math.abs(Math.sin(angle-axis))*(width*.7+.04);
+              return Math.abs((p.s-poses[j].s)*Math.cos(axis)+(p.d-poses[j].d)*Math.sin(axis))-radius(b.length,b.width,p.angle)-radius(BOATS[j].length,BOATS[j].width,poses[j].angle);
+            })),
+          );
         for (let x = -1; x <= 1.001; x += 0.1)
           for (const side of [-1, 1]) {
-            const uHull=x*b.length*.62,vHull=side*(b.width*.7+.04),
-              s=p.s+uHull*Math.cos(p.angle)-vHull*Math.sin(p.angle),
-              d=p.d+uHull*Math.sin(p.angle)+vHull*Math.cos(p.angle);
+            const along=x*b.length*.62,across=side*(b.width*.7+.04);
+            const s=p.s+along*Math.cos(p.angle)-across*Math.sin(p.angle),
+              d=p.d+along*Math.sin(p.angle)+across*Math.cos(p.angle);
             bankGap = Math.min(
               bankGap,
               d - shoreDepth("far", s),
@@ -203,7 +202,7 @@ describe("shared space and continuous traffic", () => {
       }
     }
     expect(bankGap).toBeGreaterThan(0.02);
-    expect(boatGap,closest).toBeGreaterThan(0.05);
+    expect(boatGap).toBeGreaterThan(0.05);
     expect(archGap).toBeGreaterThan(0.05);
   });
   it("animates the actual horse legs and wheels, preserves their footprints, and freezes on pause", () => {

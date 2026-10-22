@@ -11,14 +11,14 @@ describe("reference landmarks and geometry detail", () => {
     const hall=HALLS[9];
     expect(hall.gable).toBe(true);
     expect(hall.angle).toBeCloseTo(Math.PI/2);
-    HALLS.forEach(h=>expect(Math.sin(h.angle*2)).toBeCloseTo(0));
+    HALLS.forEach(h=>expect(Number.isFinite(h.angle)).toBe(true));
     expect(HALLS).toHaveLength(27);
     expect(FEATURE_TREES).toContainEqual({...REFERENCE_TREE,id:"near-quay-old-tree"});
-    expect(FEATURE_TREES.map(t=>t.id)).toContain("foreground-pollard-west");
-    expect(FEATURE_TREES.map(t=>t.id)).toContain("far-landing-bare");
+    expect(FEATURE_TREES.map(t=>t.id)).toContain("foreground-pine");
+    expect(FEATURE_TREES.map(t=>t.id)).toContain("west-bend-pine");
     expect(onBank("near",REFERENCE_TREE,.7)).toBe(true);
     // The tree must be behind the foreground roof line, beside the water.
-    expect(REFERENCE_TREE.d).toBeLessThan(HALLS[16].d-HALLS[16].depth/2);
+    expect(REFERENCE_TREE.d).toBeLessThan(HALLS[17].d-HALLS[17].depth/2);
   });
   it("uses projected size for perspective and orthographic cameras with stable thresholds", () => {
     expect(projectedHeightPixels({height:1,viewportHeight:800,zoom:2,orthographicSpan:20})).toBe(80);

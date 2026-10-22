@@ -160,3 +160,42 @@ export function updateLoweringRig(g:THREE.Object3D,distanceFromBridge:number){
   const attr=ropes.geometry.getAttribute("position") as THREE.BufferAttribute;
   attr.set(positions);attr.needsUpdate=true;
 }
+
+/** Tall decorated gateway read from anchor 5 of the supplied composition plan. */
+export function buildOrnateGate(width:number,depth:number,height:number){
+  const g=new THREE.Group();g.name="ornate-street-gate";
+  const w=width*.43;
+  // Paired posts leave the passage open; stacked crossbeams carry ornamental
+  // bracket work and tall finials. No scaffold decks, ladders or boat rigging.
+  for(const x of [-w,w])for(const z of [-depth*.22,depth*.22]){
+    box(g,[.23,.18,.25],[x,.09,z],light);
+    rod(g,[x,.12,z],[x,height+.8,z],.047,dark);
+    for(const y of [height*.59,height*.79,height])
+      box(g,[.20,.07,.30],[x,y,z],light);
+  }
+  for(const z of [-depth*.24,depth*.24]){
+    for(const y of [height*.6,height*.8,height]){
+      box(g,[width+.25,.12,.13],[0,y,z],dark);
+      for(let i=0;i<11;i++){
+        const x=-w+i*w/5;
+        rod(g,[x,y+.03,z],[x,y+.26,z],.012,light);
+        rod(g,[x-.08,y+.05,z],[x+.08,y+.23,z],.009);
+      }
+      for(const side of [-1,1]){
+        rod(g,[side*w*.8,y,z],[side*(w+.3),y+.2,z],.027,dark);
+        rod(g,[side*(w+.3),y+.2,z],[side*(w+.43),y+.34,z],.019,dark);
+      }
+    }
+    box(g,[width*.49,.3,.06],[0,height*.71,z+.04],dark);
+    for(let i=0;i<3;i++)box(g,[.13,.17,.025],[(i-1)*width*.13,height*.71,z+.08],light);
+    for(let i=0;i<5;i++){
+      const x=(i-2)*width*.22,top=height+.65+(i%2===0?.28:.6);
+      rod(g,[x,height,z],[x,top,z],.021,dark);
+      rod(g,[x-.14,height+.05,z],[x,top-.07,z],.014);
+      rod(g,[x+.14,height+.05,z],[x,top-.07,z],.014);
+      box(g,[.07,.16,.07],[x,top,z],light);
+    }
+  }
+  for(const x of [-w,w])for(const y of [height*.6,height])rod(g,[x,y,-depth*.24],[x,y,depth*.24],.03);
+  return g;
+}

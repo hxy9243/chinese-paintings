@@ -1,7 +1,6 @@
 import {
   BRIDGE,
   HALLS,
-  SHORELINES,
   shoreDepth,
   bridgePoint,
   type PassagePoint,
@@ -65,10 +64,7 @@ export function dryDisc(p: PassagePoint, radius: number) {
       d = p.d + Math.sin(a) * radius;
     // Rounded terrain, including the back corners.
     if (
-      Math.abs(s) > 21.9 ||
-      Math.abs(d) > 13.9 ||
-      Math.hypot(Math.max(0, Math.abs(s) - 16), Math.max(0, Math.abs(d) - 8)) >
-        5.9
+      Math.abs(s) > 23.9 || Math.abs(d) > 15.9
     )
       return false;
     if (
@@ -84,7 +80,7 @@ export const BANK_LOOPS = ["near", "far"].flatMap((side) => {
   const bank = side as BankSide,
     anchor = bank === "near" ? BRIDGE.near : BRIDGE.far;
   return [
-    { side: bank, start: -20, end: anchor.s - 2.1 },
+    { side: bank, start: bank === "far" ? -6 : -18, end: anchor.s - 2.1 },
     { side: bank, start: anchor.s + 2.1, end: 20 },
   ];
 });
@@ -94,9 +90,7 @@ export function bankCenter(side: BankSide, s: number) {
 export const WALK_SEGMENTS: Segment[] = BANK_LOOPS.flatMap((loop) => {
   const breaks = [
     loop.start,
-    ...SHORELINES[loop.side]
-      .map((p) => p.s)
-      .filter((s) => s > loop.start && s < loop.end),
+    ...Array.from({length:Math.ceil((loop.end-loop.start)/.2)-1},(_,i)=>loop.start+(i+1)*.2),
     loop.end,
   ];
   return breaks.slice(1).map((s, i) => ({
