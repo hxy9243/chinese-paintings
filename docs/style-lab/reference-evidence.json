@@ -1,0 +1,25 @@
+{
+  "evidence": [
+    {
+      "file": "artworks/qingming/public/reference/chicago-river-bend.png",
+      "sha256": "9cd4d793e958e3bbbce86e1199f0473b52e85c1d28eff70e9e460a274f5ba041",
+      "width": 2048,
+      "height": 610
+    },
+    {
+      "file": "artworks/thousand-miles/reference/source.png",
+      "sha256": "b1593a9260c87cd2512a460b373f0825441746e9829b267b5c93326550bbe614",
+      "width": 1779,
+      "height": 801
+    }
+  ],
+  "qingmingCrop": {
+    "left": 560,
+    "top": 190,
+    "width": 650,
+    "height": 380
+  },
+  "source": "https://scrolls.uchicago.edu/view-scroll/52",
+  "blueGreenProvenance": "Repository analysis.json: user-supplied screenshot; no historical attribution inferred",
+  "registration": "Not fitted; comparison is diagnostic, not a fidelity pass"
+}

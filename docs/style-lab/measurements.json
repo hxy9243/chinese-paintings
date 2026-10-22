@@ -1,0 +1,265 @@
+{
+  "errors": [],
+  "viewport": [
+    1200,
+    740
+  ],
+  "records": [
+    {
+      "style": "baseline",
+      "angle": -30,
+      "camera": [
+        -25.261763065937632,
+        19.278620636934853,
+        -2.122832815342807
+      ],
+      "target": [
+        -8.787637842938548,
+        0.7,
+        -5.027665575727404
+      ],
+      "drawCalls": 942,
+      "triangles": 49160,
+      "geometryHash": "1845b50e536264331d0246fd940048590b6061c2fa00cdc68282a60a7cbc8722",
+      "captureMs": 1679.3709410000001
+    },
+    {
+      "style": "baseline",
+      "angle": 0,
+      "camera": [
+        -21.602232410989437,
+        19.278620636934853,
+        5.7250560000104755
+      ],
+      "target": [
+        -8.787637842938548,
+        0.7,
+        -5.027665575727404
+      ],
+      "drawCalls": 942,
+      "triangles": 49160,
+      "geometryHash": "1845b50e536264331d0246fd940048590b6061c2fa00cdc68282a60a7cbc8722",
+      "captureMs": 2213.639612
+    },
+    {
+      "style": "baseline",
+      "angle": 30,
+      "camera": [
+        -14.509041490199756,
+        19.278620636934853,
+        10.691761752708082
+      ],
+      "target": [
+        -8.787637842938548,
+        0.7,
+        -5.027665575727404
+      ],
+      "drawCalls": 942,
+      "triangles": 49160,
+      "geometryHash": "1845b50e536264331d0246fd940048590b6061c2fa00cdc68282a60a7cbc8722",
+      "captureMs": 1693.3879930000003
+    },
+    {
+      "style": "baseline",
+      "repeatIdentical": true
+    },
+    {
+      "style": "baseline",
+      "steadyFrameMedianMs": 4.400000000023283,
+      "steadyFrameP95Ms": 19.70000000001164,
+      "measurement": "30 warmed fixed-camera render submissions + gl.finish; SwiftShader software GPU"
+    },
+    {
+      "style": "fine",
+      "angle": -30,
+      "camera": [
+        -25.261763065937632,
+        19.278620636934853,
+        -2.122832815342807
+      ],
+      "target": [
+        -8.787637842938548,
+        0.7,
+        -5.027665575727404
+      ],
+      "drawCalls": 941,
+      "triangles": 49158,
+      "geometryHash": "1845b50e536264331d0246fd940048590b6061c2fa00cdc68282a60a7cbc8722",
+      "captureMs": 46225.253795
+    },
+    {
+      "style": "fine",
+      "angle": 0,
+      "camera": [
+        -21.602232410989437,
+        19.278620636934853,
+        5.7250560000104755
+      ],
+      "target": [
+        -8.787637842938548,
+        0.7,
+        -5.027665575727404
+      ],
+      "drawCalls": 941,
+      "triangles": 49158,
+      "geometryHash": "1845b50e536264331d0246fd940048590b6061c2fa00cdc68282a60a7cbc8722",
+      "captureMs": 519.1052530000015
+    },
+    {
+      "style": "fine",
+      "angle": 30,
+      "camera": [
+        -14.509041490199756,
+        19.278620636934853,
+        10.691761752708082
+      ],
+      "target": [
+        -8.787637842938548,
+        0.7,
+        -5.027665575727404
+      ],
+      "drawCalls": 941,
+      "triangles": 49158,
+      "geometryHash": "1845b50e536264331d0246fd940048590b6061c2fa00cdc68282a60a7cbc8722",
+      "captureMs": 467.09786699999677
+    },
+    {
+      "style": "fine",
+      "repeatIdentical": true
+    },
+    {
+      "style": "fine",
+      "steadyFrameMedianMs": 5.600000000034925,
+      "steadyFrameP95Ms": 12.900000000023283,
+      "measurement": "30 warmed fixed-camera render submissions + gl.finish; SwiftShader software GPU"
+    },
+    {
+      "style": "ink",
+      "angle": -30,
+      "camera": [
+        -25.261763065937632,
+        19.278620636934853,
+        -2.122832815342807
+      ],
+      "target": [
+        -8.787637842938548,
+        0.7,
+        -5.027665575727404
+      ],
+      "drawCalls": 941,
+      "triangles": 49158,
+      "geometryHash": "1845b50e536264331d0246fd940048590b6061c2fa00cdc68282a60a7cbc8722",
+      "captureMs": 7360.658172000003
+    },
+    {
+      "style": "ink",
+      "angle": 0,
+      "camera": [
+        -21.602232410989437,
+        19.278620636934853,
+        5.7250560000104755
+      ],
+      "target": [
+        -8.787637842938548,
+        0.7,
+        -5.027665575727404
+      ],
+      "drawCalls": 941,
+      "triangles": 49158,
+      "geometryHash": "1845b50e536264331d0246fd940048590b6061c2fa00cdc68282a60a7cbc8722",
+      "captureMs": 575.4986970000027
+    },
+    {
+      "style": "ink",
+      "angle": 30,
+      "camera": [
+        -14.509041490199756,
+        19.278620636934853,
+        10.691761752708082
+      ],
+      "target": [
+        -8.787637842938548,
+        0.7,
+        -5.027665575727404
+      ],
+      "drawCalls": 941,
+      "triangles": 49158,
+      "geometryHash": "1845b50e536264331d0246fd940048590b6061c2fa00cdc68282a60a7cbc8722",
+      "captureMs": 410.06521000000066
+    },
+    {
+      "style": "ink",
+      "repeatIdentical": true
+    },
+    {
+      "style": "ink",
+      "steadyFrameMedianMs": 3.2999999999883585,
+      "steadyFrameP95Ms": 10.099999999976717,
+      "measurement": "30 warmed fixed-camera render submissions + gl.finish; SwiftShader software GPU"
+    },
+    {
+      "style": "mineral",
+      "angle": -30,
+      "camera": [
+        -25.261763065937632,
+        19.278620636934853,
+        -2.122832815342807
+      ],
+      "target": [
+        -8.787637842938548,
+        0.7,
+        -5.027665575727404
+      ],
+      "drawCalls": 941,
+      "triangles": 49158,
+      "geometryHash": "1845b50e536264331d0246fd940048590b6061c2fa00cdc68282a60a7cbc8722",
+      "captureMs": 4138.411662999992
+    },
+    {
+      "style": "mineral",
+      "angle": 0,
+      "camera": [
+        -21.602232410989437,
+        19.278620636934853,
+        5.7250560000104755
+      ],
+      "target": [
+        -8.787637842938548,
+        0.7,
+        -5.027665575727404
+      ],
+      "drawCalls": 941,
+      "triangles": 49158,
+      "geometryHash": "1845b50e536264331d0246fd940048590b6061c2fa00cdc68282a60a7cbc8722",
+      "captureMs": 285.3596220000036
+    },
+    {
+      "style": "mineral",
+      "angle": 30,
+      "camera": [
+        -14.509041490199756,
+        19.278620636934853,
+        10.691761752708082
+      ],
+      "target": [
+        -8.787637842938548,
+        0.7,
+        -5.027665575727404
+      ],
+      "drawCalls": 941,
+      "triangles": 49158,
+      "geometryHash": "1845b50e536264331d0246fd940048590b6061c2fa00cdc68282a60a7cbc8722",
+      "captureMs": 452.0149669999955
+    },
+    {
+      "style": "mineral",
+      "repeatIdentical": true
+    },
+    {
+      "style": "mineral",
+      "steadyFrameMedianMs": 3.2000000000116415,
+      "steadyFrameP95Ms": 4.2999999999883585,
+      "measurement": "30 warmed fixed-camera render submissions + gl.finish; SwiftShader software GPU"
+    }
+  ]
+}
