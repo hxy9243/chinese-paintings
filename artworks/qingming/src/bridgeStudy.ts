@@ -3,7 +3,7 @@ import {buildScrollTree} from "./referenceTrees";
 import {buildCrossroadsHouse} from "./crossroadsArchitecture";
 import {createCrossroadsGround,CROSSROADS_PEOPLE} from "./crossroads";
 import {buildConstruction, buildOrnateGate, boatCrewStations, addCrewEquipment, buildLoweringRig, updateLoweringRig} from "./referenceDetails";
-import {setScenePalette,getScenePalette,type ScenePalette} from "./scenePalette";
+import {setScenePalette,getScenePalette,setSceneArtStyle,getSceneArtStyle,type ScenePalette,type ArtStyleId} from "./scenePalette";
 import { buildReferenceBoat, addReferenceArchitecture, type TreeForm } from "./referenceAssets";
 import { REFERENCE_AZIMUTH, scrollPoint } from "./scrollLayout";
 import {
@@ -1291,7 +1291,7 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
       const roles=observers.reduce((counts,p)=>{
         const role=p.group.userData.activity as string;counts[role]=(counts[role]??0)+1;return counts;
       },{} as Record<string,number>);
-      return {boatCrews:[...boats,...moored].map((b,i)=>({style:b.userData.boatStyle,count:crew.filter(c=>c.boat===i).length,roof:crew.filter(c=>c.boat===i&&c.station.role==="roof").length})),landmarks:["two-storey-balcony-house","open-timber-construction","western-crossroads","joined-roof-houses"],crowd:crowd.metadata(),seed,palette:getScenePalette(),vegetationLevel:plantDetail,
+      return {boatCrews:[...boats,...moored].map((b,i)=>({style:b.userData.boatStyle,count:crew.filter(c=>c.boat===i).length,roof:crew.filter(c=>c.boat===i&&c.station.role==="roof").length})),landmarks:["two-storey-balcony-house","open-timber-construction","western-crossroads","joined-roof-houses"],crowd:crowd.metadata(),seed,palette:getScenePalette(),artStyle:getSceneArtStyle(),vegetationLevel:plantDetail,
         buildings:detailedBuildings.map(b=>b.detail),traffic:CART_KINDS,bridgeCounters,
         marketTypes:MARKET_TYPES,referenceTrees:FEATURE_TREES.map(t=>t.id),
         streetLife:{walkers:people.length,mainStreetWalkers:BRIDGE_WALKERS,approachPeople,
@@ -1300,6 +1300,7 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
         bridgeLife:{stands:bridgeCounters.length,stationaryPeople:observers.length,passingPeople,roles}};
     },
     setPalette(value:ScenePalette){setScenePalette(value);},
+    setArtStyle(style:ArtStyleId){return setSceneArtStyle(style);},
     setPainting(enabled: boolean) {
       paintingAmount.value = enabled ? 1 : 0;
     },

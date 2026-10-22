@@ -1,0 +1,84 @@
+{
+  "errors": [],
+  "measurements": {
+    "initMs": 25523,
+    "captures": {
+      "jiehua-ink-bridge": {
+        "style": "jiehua-ink",
+        "palette": "silk",
+        "triangles": 1539818,
+        "calls": 825,
+        "frameMs": 4462
+      },
+      "jiehua-ink-crossroads": {
+        "style": "jiehua-ink",
+        "palette": "silk",
+        "triangles": 725674,
+        "calls": 506,
+        "frameMs": 215
+      },
+      "anamorphic-scroll-bridge": {
+        "style": "anamorphic-scroll",
+        "palette": "silk",
+        "triangles": 1539818,
+        "calls": 825,
+        "frameMs": 192
+      },
+      "anamorphic-scroll-crossroads": {
+        "style": "anamorphic-scroll",
+        "palette": "silk",
+        "triangles": 725674,
+        "calls": 506,
+        "frameMs": 126
+      },
+      "baimiao-mineral-bridge": {
+        "style": "baimiao-mineral",
+        "palette": "indigo-amber",
+        "triangles": 1539818,
+        "calls": 825,
+        "frameMs": 213
+      },
+      "baimiao-mineral-crossroads": {
+        "style": "baimiao-mineral",
+        "palette": "indigo-amber",
+        "triangles": 725674,
+        "calls": 506,
+        "frameMs": 155
+      },
+      "river-mist-cinema-bridge": {
+        "style": "river-mist-cinema",
+        "palette": "silk",
+        "triangles": 1539818,
+        "calls": 825,
+        "frameMs": 97
+      },
+      "river-mist-cinema-crossroads": {
+        "style": "river-mist-cinema",
+        "palette": "silk",
+        "triangles": 725674,
+        "calls": 506,
+        "frameMs": 91
+      },
+      "xieyi-poetic-bridge": {
+        "style": "xieyi-poetic",
+        "palette": "silk",
+        "triangles": 1539818,
+        "calls": 825,
+        "frameMs": 123
+      },
+      "xieyi-poetic-crossroads": {
+        "style": "xieyi-poetic",
+        "palette": "silk",
+        "triangles": 725674,
+        "calls": 506,
+        "frameMs": 99
+      },
+      "jiehua-ink-full-layout": {
+        "style": "jiehua-ink",
+        "palette": "silk",
+        "triangles": 893054,
+        "calls": 770
+      }
+    }
+  }
+}

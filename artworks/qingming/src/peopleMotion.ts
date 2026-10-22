@@ -5,20 +5,18 @@ export function randomUnit(seed: number, step: number) {
 }
 export function activityClock(person: number, time: number, seed = 0) {
   const id = person + seed * 101,
-    offset = randomUnit(id, 4) * 18;
-  const sample = (t: number) => {
-    const cycle = Math.floor(t / 18),
-      local = t - cycle * 18,
-      pause = 1.2 + randomUnit(id, cycle + 11) * 2;
-    return {
-      progress: cycle * 18 + (Math.max(0, local - pause) * 18) / (18 - pause),
-      moving: local > pause,
-    };
-  };
-  const current = sample(time + offset);
+    offset = randomUnit(id, 4) * 18,
+    t = time + offset;
+  const cycle = Math.floor(t / 18),
+    local = t - cycle * 18,
+    pause = 1.2 + randomUnit(id, cycle + 11) * 2;
+  const currentProgress =
+    cycle * 18 + (Math.max(0, local - pause) * 18) / (18 - pause);
+  const pause0 = 1.2 + randomUnit(id, 11) * 2;
+  const baseProgress = (Math.max(0, offset - pause0) * 18) / (18 - pause0);
   return {
-    progress: current.progress - sample(offset).progress,
-    moving: current.moving,
+    progress: currentProgress - baseProgress,
+    moving: local > pause,
   };
 }
 export function wander(person: number, time: number, radius: number, seed = 0) {

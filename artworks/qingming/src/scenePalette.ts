@@ -1,4 +1,13 @@
 import * as THREE from "three";
+import {
+  ART_STYLES,
+  ART_STYLE_LIST,
+  type ArtStyleId,
+  type ArtStyleSpec,
+} from "../../../packages/painting-kit/artStyles";
+
+export { ART_STYLES, ART_STYLE_LIST, type ArtStyleId, type ArtStyleSpec };
+
 export type ScenePalette = "silk" | "indigo-amber";
 export const paletteAmount = { value: 0 };
 export const paletteInk = {
@@ -9,10 +18,23 @@ export const PALETTES = {
   silk: { paper: 0xeee5cb, road: 0x927a52 },
   "indigo-amber": { paper: 0xf5eee3, road: 0x9b855f },
 };
+
+export const currentArtStyleUniforms = {
+  styleSurface: { value: new THREE.Vector4(0.85, 0.9, 0.15, 0.78) },
+  styleFinish: { value: new THREE.Vector4(0.88, 0.18, 0.32, 0.72) },
+  styleLineWeight: { value: 1.15 },
+};
+
 let current: ScenePalette = "silk";
+let currentStyle: ArtStyleId = "jiehua-ink";
+
 export function getScenePalette() {
   return current;
 }
+export function getSceneArtStyle(): ArtStyleId {
+  return currentStyle;
+}
+
 export function setScenePalette(value: ScenePalette) {
   current = value;
   paletteAmount.value = value === "indigo-amber" ? 1 : 0;
@@ -25,6 +47,18 @@ export function setScenePalette(value: ScenePalette) {
     palettePaper.value.set(c.r, c.g, c.b);
   }
 }
+
+export function setSceneArtStyle(styleId: ArtStyleId): ArtStyleSpec {
+  const spec = ART_STYLES[styleId] ?? ART_STYLES["jiehua-ink"];
+  currentStyle = spec.id;
+  currentArtStyleUniforms.styleSurface.value.set(...spec.surfaceParams);
+  currentArtStyleUniforms.styleFinish.value.set(...spec.finishParams);
+  currentArtStyleUniforms.styleLineWeight.value = spec.lineWeight;
+  paletteInk.value.setRGB(...spec.inkVec);
+  palettePaper.value.set(...spec.paperVec);
+  return spec;
+}
+
 // The palette ID remains compatible with saved preferences. Roofs in both
 // palettes use unglazed blue-gray clay rather than saturated indigo.
 // Pigments are assigned to existing material families.

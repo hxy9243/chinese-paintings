@@ -132,32 +132,38 @@ function reset(seed: number): Timeline {
   const actors = initial(seed);
   return { tick: 0, before: actors, after: actors };
 }
+const cellHead = new Int16Array(65536).fill(-1);
+const cellNext = new Int16Array(WALKER_COUNT);
+const cellKeys = new Int32Array(WALKER_COUNT);
+
+function cellKey(p: { s: number; d: number }) {
+  return (((Math.floor(p.s * 2) + 128) & 255) << 8) | ((Math.floor(p.d * 2) + 128) & 255);
+}
+
 function advance(states: Actor[], time: number, seed: number): Actor[] {
   const next = states.map((a) => ({ ...a, moving: false, recycled: false }));
   const points = states.map((a, i) => location(i, a.q, a.lateral));
-  const grid = new Map<number, Set<number>>(),
-    // Route coordinates stay within ±24; numeric cell keys avoid per-step strings.
-    cell = (p: { s: number; d: number }) =>
-      Math.floor(p.s / 0.5) * 256 + Math.floor(p.d / 0.5);
-  points.forEach((p, i) => {
-    const key = cell(p);
-    if (!grid.has(key)) grid.set(key, new Set());
-    grid.get(key)!.add(i);
-  });
+  for (let i = 0; i < states.length; i++) {
+    const key = cellKey(points[i]);
+    cellKeys[i] = key;
+    cellNext[i] = cellHead[key];
+    cellHead[key] = i;
+  }
   function clear(p: { s: number; d: number }, index: number) {
-    const x = Math.floor(p.s / 0.5),
-      z = Math.floor(p.d / 0.5);
+    const cx = (Math.floor(p.s * 2) + 128) & 255,
+      cz = (Math.floor(p.d * 2) + 128) & 255;
     for (let dx = -1; dx <= 1; dx++)
       for (let dz = -1; dz <= 1; dz++) {
-        const nearby = grid.get((x + dx) * 256 + z + dz);
-        if (!nearby) continue;
-        for (const other of nearby)
+        let other = cellHead[(((cx + dx) & 255) << 8) | ((cz + dz) & 255)];
+        while (other !== -1) {
           if (
             other !== index &&
             (points[other].s - p.s) ** 2 + (points[other].d - p.d) ** 2 <
               GAP * GAP
           )
             return false;
+          other = cellNext[other];
+        }
       }
     return true;
   }
@@ -187,9 +193,14 @@ function advance(states: Actor[], time: number, seed: number): Actor[] {
         -0.09 * STEP,
         Math.min(0.09 * STEP, target - a.lateral),
       );
-      const nextPoint=location(i,old.q+.01,old.lateral);
-      const metric=main?1:Math.max(1,Math.hypot(nextPoint.s-points[i].s,nextPoint.d-points[i].d)/.01);
-      const distance = a.direction * a.speed * STEP / metric;
+      const nextPoint = main ? points[i] : location(i, old.q + 0.01, old.lateral);
+      const metric = main
+        ? 1
+        : Math.max(
+            1,
+            Math.hypot(nextPoint.s - points[i].s, nextPoint.d - points[i].d) / 0.01,
+          );
+      const distance = (a.direction * a.speed * STEP) / metric;
       // Try a normal step, a slower step and then a small passing sidestep.
       for (const [forward, sideways] of [
         [1, lateralStep],
@@ -207,14 +218,23 @@ function advance(states: Actor[], time: number, seed: number): Actor[] {
           continue;
         const p = location(i, q, lateral);
         if (!clear(p, i)) continue;
-        grid.get(cell(points[i]))!.delete(i);
+        // Remove i from old cell linked list
+        const oldKey = cellKeys[i];
+        if (cellHead[oldKey] === i) {
+          cellHead[oldKey] = cellNext[i];
+        } else {
+          let prev = cellHead[oldKey];
+          while (prev !== -1 && cellNext[prev] !== i) prev = cellNext[prev];
+          if (prev !== -1) cellNext[prev] = cellNext[i];
+        }
         const traveled = recycled
           ? Math.abs(distance * forward)
           : Math.hypot(p.s - points[i].s, p.d - points[i].d);
         points[i] = p;
-        const key = cell(p);
-        if (!grid.has(key)) grid.set(key, new Set());
-        grid.get(key)!.add(i);
+        const newKey = cellKey(p);
+        cellKeys[i] = newKey;
+        cellNext[i] = cellHead[newKey];
+        cellHead[newKey] = i;
         a.q = q;
         a.lateral = lateral;
         a.recycled = recycled;
@@ -223,13 +243,15 @@ function advance(states: Actor[], time: number, seed: number): Actor[] {
         break;
       }
     }
-    const desired =
-      location(i, a.q, a.lateral).angle + (a.direction < 0 ? Math.PI : 0);
+    const desired = points[i].angle + (a.direction < 0 ? Math.PI : 0);
     const turn = Math.atan2(
       Math.sin(desired - old.heading),
       Math.cos(desired - old.heading),
     );
     a.heading = old.heading + Math.max(-2 * STEP, Math.min(2 * STEP, turn));
+  }
+  for (let i = 0; i < states.length; i++) {
+    cellHead[cellKeys[i]] = -1;
   }
   return next;
 }

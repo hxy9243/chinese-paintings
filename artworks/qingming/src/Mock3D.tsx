@@ -22,7 +22,7 @@ import "./mock3d.css";
 import { RenderDemand } from "./renderDemand";
 import { createInkFinish } from "./inkFinish";
 import { advanceSceneTime } from "./peopleMotion";
-import { PALETTES,type ScenePalette } from "./scenePalette";
+import { PALETTES, ART_STYLES, ART_STYLE_LIST, type ScenePalette, type ArtStyleId } from "./scenePalette";
 import { boatPose } from "./passageLife";
 import { BOATS } from "./passageLayout";
 import { REFERENCE_AZIMUTH, SCROLL_STOPS, scrollPoint } from "./scrollLayout";
@@ -37,6 +37,7 @@ type StudyApi = {
   painting: (enabled: boolean) => void;
   softness: (amount: number) => void;
   palette: (value:ScenePalette) => void;
+  style: (value:ArtStyleId) => void;
 };
 export default function Mock3D() {
   const host = useRef<HTMLDivElement>(null),
@@ -56,6 +57,7 @@ export default function Mock3D() {
     [roll, setRoll] = useState(0),
     [painted, setPainted] = useState(true),
     [palette,setPalette]=useState<ScenePalette>(()=>{try{return localStorage.getItem('qingming.palette')==='indigo-amber'?'indigo-amber':'silk';}catch{return 'silk';}}),
+    [artStyle,setArtStyle]=useState<ArtStyleId>(()=>{try{const v=localStorage.getItem('qingming.artStyle') as ArtStyleId|null;return v&&v in ART_STYLES?v:'jiehua-ink';}catch{return 'jiehua-ink';}}),
     [softness, setSoftness] = useState(70),
     [scrollControlsOpen, setScrollControlsOpen] = useState(false),
     [ready, setReady] = useState(false),
@@ -96,6 +98,7 @@ export default function Mock3D() {
     const study = createBridgeStudy(9243);
     scene.add(study.group);
     study.setPainting(true);
+    study.setArtStyle(artStyle);
     study.setPalette(palette);finish.setPaper(PALETTES[palette].paper);
     const camera = new THREE.OrthographicCamera(-12, 12, 9, -9, 0.1, 250);
     const demand=new RenderDemand();
@@ -216,6 +219,7 @@ export default function Mock3D() {
         study.setPainting(enabled);
       },
       palette(value){invalidate();study.setPalette(value);finish.setPaper(PALETTES[value].paper);},
+      style(value){invalidate();const spec=study.setArtStyle(value);finish.setPaper(spec.paper);},
       softness(amount) {
         invalidate();
         inkSoftness = Math.max(0, Math.min(1, amount));
@@ -265,8 +269,9 @@ export default function Mock3D() {
     }
     schedule();
     const reviewApi={
-      frame(seconds:number,options:{zoom?:number;angle?:number;pitch?:number;target?:[number,number];palette?:ScenePalette;eye?:[number,number,number];look?:[number,number,number];fov?:number;aboard?:number}={}){
+      frame(seconds:number,options:{zoom?:number;angle?:number;pitch?:number;target?:[number,number];palette?:ScenePalette;style?:ArtStyleId;eye?:[number,number,number];look?:[number,number,number];fov?:number;aboard?:number}={}){
         if(options.palette){study.setPalette(options.palette);finish.setPaper(PALETTES[options.palette].paper);setPalette(options.palette);}
+        if(options.style){const spec=study.setArtStyle(options.style);finish.setPaper(spec.paper);setArtStyle(options.style);}
         if(options.target){controls.target.copy(scrollPoint(...options.target));controls.target.y=1.1;}
         if(options.zoom!==undefined){camera.zoom=options.zoom;camera.updateProjectionMatrix();}
         position(options.angle??0,options.pitch??0);animationTime=seconds;
@@ -322,6 +327,7 @@ export default function Mock3D() {
     <div
       className="study-shell"
       data-palette={palette}
+      data-art-style={artStyle}
       data-painting={painted}
       data-softness={softness}
     >
@@ -532,6 +538,15 @@ export default function Mock3D() {
           className="painting-controls"
           aria-label={t("Painting controls", "绘画设置")}
         >
+          <label className="palette-control">
+            <span>{t('Art style','画风')}</span>
+            <select aria-label={t('Art style','画风')} value={artStyle} disabled={!ready}
+              onChange={e=>{const value=e.target.value as ArtStyleId;setArtStyle(value);api.current?.style(value);try{localStorage.setItem('qingming.artStyle',value);}catch{}}}>
+              {ART_STYLE_LIST.map(s=>(
+                <option key={s.id} value={s.id}>{t(`${s.zh} · ${s.en}`, `${s.zh} · ${s.subtitleZh}`)}</option>
+              ))}
+            </select>
+          </label>
           <label className="palette-control">
             <span>{t('Color palette','设色')}</span>
             <select aria-label={t('Color palette','设色')} value={palette} disabled={!ready}

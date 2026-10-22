@@ -17,6 +17,233 @@ function strokes(root:THREE.Object3D,positions:number[],name:string){
 }
 type Roof={x0:number;x1:number;z0:number;z1:number;height:(x:number,z:number)=>number};
 
+type CachedRoofArrays = {
+  roofs: Float32Array;
+  roofNormals: Float32Array;
+  raised: Float32Array;
+  raisedNormals: Float32Array;
+  tileJoints: Float32Array;
+  tileCourses: Float32Array;
+  valleys: Float32Array;
+};
+
+const roofCache = new Map<string, CachedRoofArrays>();
+
+function getCrossroadsRoofArrays(w: number, d: number, h: number): CachedRoofArrays {
+  const key = `${w.toFixed(3)}:${d.toFixed(3)}:${h.toFixed(3)}`;
+  const hit = roofCache.get(key);
+  if (hit) return hit;
+
+  const wing = w * 0.42,
+    backDepth = d * 0.46,
+    backZ = -d * 0.27,
+    frontZ = d * 0.5;
+  const eave = h + 0.12,
+    rise = Math.min(0.84, d * 0.24),
+    wingRise = rise * 0.9;
+  const main: Roof = {
+    x0: -w / 2 - 0.18,
+    x1: w / 2 + 0.18,
+    z0: -d / 2 - 0.18,
+    z1: -d * 0.04 + 0.18,
+    height: (_x, z) => eave + rise * (1 - Math.abs(z - backZ) / (backDepth / 2 + 0.18)),
+  };
+  const front: Roof = {
+    x0: -wing / 2 - 0.18,
+    x1: wing / 2 + 0.18,
+    z0: backZ,
+    z1: frontZ + 0.2,
+    height: (x, _z) => eave + wingRise * (1 - Math.abs(x) / (wing / 2 + 0.18)),
+  };
+  const inside = (r: Roof, x: number, z: number) =>
+    x >= r.x0 - 1e-6 && x <= r.x1 + 1e-6 && z >= r.z0 - 1e-6 && z <= r.z1 + 1e-6;
+  const visible = (r: Roof, other: Roof, x: number, z: number) =>
+    !inside(other, x, z) || r.height(x, z) >= other.height(x, z) - 0.002;
+  const roofs: number[] = [],
+    ribs: number[] = [],
+    valleys: number[] = [];
+  for (const [r, other] of [
+    [main, front],
+    [front, main],
+  ]) {
+    // Include both ridges and the wing intersections in the surface grid.
+    const xs = Array.from(
+      new Set(
+        [
+          r.x0,
+          r.x1,
+          0,
+          other.x0,
+          other.x1,
+          ...Array.from({ length: Math.ceil((r.x1 - r.x0) / 0.12) }, (_, i) => r.x0 + i * 0.12),
+        ].filter((x) => x >= r.x0 && x <= r.x1),
+      ),
+    ).sort((a, b) => a - b);
+    const zs = Array.from(
+      new Set(
+        [
+          r.z0,
+          r.z1,
+          backZ,
+          other.z0,
+          other.z1,
+          ...Array.from({ length: Math.ceil((r.z1 - r.z0) / 0.12) }, (_, i) => r.z0 + i * 0.12),
+        ].filter((z) => z >= r.z0 && z <= r.z1),
+      ),
+    ).sort((a, b) => a - b);
+    for (let i = 0; i < xs.length - 1; i++)
+      for (let j = 0; j < zs.length - 1; j++) {
+        const center = [(xs[i] + xs[i + 1]) / 2, (zs[j] + zs[j + 1]) / 2];
+        let polygon: P[] = [
+          [xs[i], r.height(xs[i], zs[j]), zs[j]],
+          [xs[i + 1], r.height(xs[i + 1], zs[j]), zs[j]],
+          [xs[i + 1], r.height(xs[i + 1], zs[j + 1]), zs[j + 1]],
+          [xs[i], r.height(xs[i], zs[j + 1]), zs[j + 1]],
+        ];
+        if (inside(other, center[0], center[1])) {
+          const clipped: P[] = [];
+          for (let k = 0; k < polygon.length; k++) {
+            const a = polygon[k],
+              b = polygon[(k + 1) % polygon.length],
+              fa = a[1] - other.height(a[0], a[2]),
+              fb = b[1] - other.height(b[0], b[2]);
+            if (fa >= 0) clipped.push(a);
+            if (fa >= 0 !== fb >= 0) {
+              const t = fa / (fa - fb),
+                p: P = [
+                  a[0] + (b[0] - a[0]) * t,
+                  a[1] + (b[1] - a[1]) * t,
+                  a[2] + (b[2] - a[2]) * t,
+                ];
+              clipped.push(p);
+            }
+          }
+          polygon = clipped;
+        }
+        for (let k = 1; k < polygon.length - 1; k++)
+          roofs.push(...polygon[0], ...polygon[k + 1], ...polygon[k]);
+      }
+    // Raised tile courses follow each wing's slope and stop at the valley.
+    const rows =
+      r === main ? Math.ceil((r.x1 - r.x0) / 0.115) : Math.ceil((r.z1 - r.z0) / 0.115);
+    for (let i = 0; i <= rows; i++) {
+      const along = i / rows;
+      for (let j = 0; j < 50; j++) {
+        const t = j / 50,
+          u = (j + 1) / 50;
+        const a: P =
+          r === main
+            ? [r.x0 + (r.x1 - r.x0) * along, 0, r.z0 + (r.z1 - r.z0) * t]
+            : [r.x0 + (r.x1 - r.x0) * t, 0, r.z0 + (r.z1 - r.z0) * along];
+        const b: P =
+          r === main
+            ? [a[0], 0, r.z0 + (r.z1 - r.z0) * u]
+            : [r.x0 + (r.x1 - r.x0) * u, 0, a[2]];
+        if (visible(r, other, a[0], a[2]) && visible(r, other, b[0], b[2])) {
+          a[1] = r.height(a[0], a[2]) + 0.008;
+          b[1] = r.height(b[0], b[2]) + 0.008;
+          ribs.push(a[0], a[1], a[2], b[0], b[1], b[2]);
+        }
+      }
+    }
+    for (let j = 0; j < 40; j++) {
+      const z = main.z0 + ((main.z1 - main.z0) * j) / 40;
+      const x = (1 - (main.height(0, z) - eave) / wingRise) * (wing / 2 + 0.18);
+      if (z >= front.z0 && x > 0 && x < wing / 2 + 0.18) {
+        for (const side of [-1, 1])
+          valleys.push(
+            side * x,
+            main.height(0, z) + 0.014,
+            z,
+            side * x,
+            main.height(0, z) + 0.014,
+            z + 0.035,
+          );
+      }
+    }
+  }
+  const tempRoof = new THREE.BufferGeometry().setAttribute(
+    "position",
+    new THREE.Float32BufferAttribute(roofs, 3),
+  );
+  tempRoof.computeVertexNormals();
+  const roofNormals = new Float32Array(
+    (tempRoof.getAttribute("normal").array as Float32Array).slice(),
+  );
+  tempRoof.dispose();
+
+  const tileJoints: number[] = [],
+    raised: number[] = [],
+    tileCourses = new Float32Array(ribs.length);
+  for (let i = 0; i < ribs.length; i += 6) {
+    const ax = ribs[i],
+      ay = ribs[i + 1],
+      az = ribs[i + 2];
+    const bx = ribs[i + 3],
+      by = ribs[i + 4],
+      bz = ribs[i + 5];
+    tileCourses[i] = ax;
+    tileCourses[i + 1] = ay + 0.024;
+    tileCourses[i + 2] = az;
+    tileCourses[i + 3] = bx;
+    tileCourses[i + 4] = by + 0.024;
+    tileCourses[i + 5] = bz;
+    const vx = bx - ax,
+      vz = bz - az,
+      len = Math.hypot(vx, vz) || 1;
+    const nx = (-vz / len) * 0.012,
+      nz = (vx / len) * 0.012;
+    const Ax = ax + nx,
+      Ay = ay,
+      Az = az + nz;
+    const Bx = bx + nx,
+      By = by,
+      Bz = bz + nz;
+    const Cx = bx,
+      Cy = by + 0.015,
+      Cz = bz;
+    const Dx = ax,
+      Dy = ay + 0.015,
+      Dz = az;
+    raised.push(Ax, Ay, Az, Bx, By, Bz, Cx, Cy, Cz, Ax, Ay, Az, Cx, Cy, Cz, Dx, Dy, Dz);
+    if (i % 24 === 0) {
+      const cx = nx * 3.5,
+        cz = nz * 3.5;
+      const lx = ax - cx,
+        lz = az - cz,
+        rx = ax + cx,
+        rz = az + cz;
+      if (
+        (inside(main, lx, lz) || inside(front, lx, lz)) &&
+        (inside(main, rx, rz) || inside(front, rx, rz))
+      ) {
+        tileJoints.push(lx, ay + 0.024, lz, rx, ay + 0.024, rz);
+      }
+    }
+  }
+  const tempRib = new THREE.BufferGeometry().setAttribute(
+    "position",
+    new THREE.Float32BufferAttribute(raised, 3),
+  );
+  tempRib.computeVertexNormals();
+  const raisedNormals = new Float32Array(
+    (tempRib.getAttribute("normal").array as Float32Array).slice(),
+  );
+  tempRib.dispose();
+
+  const cached: CachedRoofArrays = {
+    roofs: new Float32Array(roofs),
+    roofNormals,
+    raised: new Float32Array(raised),
+    raisedNormals,
+    tileJoints: new Float32Array(tileJoints),
+    tileCourses,
+    valleys: new Float32Array(valleys),
+  };
+  roofCache.set(key, cached);
+  return cached;
+}
+
 /** Two rectangular timber wings join at a real roof valley, not two intersecting solid roofs. */
 export function buildCrossroadsHouse(w:number,d:number,h:number,shop=true){
   const root=new THREE.Group();root.name=shop?"crossroads-open-shop":"cross-wing-house";
@@ -26,60 +253,18 @@ export function buildCrossroadsHouse(w:number,d:number,h:number,shop=true){
     height:(_x,z)=>eave+rise*(1-Math.abs(z-backZ)/(backDepth/2+.18))};
   const front:Roof={x0:-wing/2-.18,x1:wing/2+.18,z0:backZ,z1:frontZ+.2,
     height:(x,_z)=>eave+wingRise*(1-Math.abs(x)/(wing/2+.18))};
-  const inside=(r:Roof,x:number,z:number)=>x>=r.x0-1e-6&&x<=r.x1+1e-6&&z>=r.z0-1e-6&&z<=r.z1+1e-6;
-  const visible=(r:Roof,other:Roof,x:number,z:number)=>!inside(other,x,z)||r.height(x,z)>=other.height(x,z)-.002;
-  const roofs:number[]=[],ribs:number[]=[],valleys:number[]=[];
-  for(const [r,other] of [[main,front],[front,main]]){
-    // Include both ridges and the wing intersections in the surface grid.
-    const xs=Array.from(new Set([r.x0,r.x1,0,other.x0,other.x1,...Array.from({length:Math.ceil((r.x1-r.x0)/.12)},(_,i)=>r.x0+i*.12)].filter(x=>x>=r.x0&&x<=r.x1))).sort((a,b)=>a-b);
-    const zs=Array.from(new Set([r.z0,r.z1,backZ,other.z0,other.z1,...Array.from({length:Math.ceil((r.z1-r.z0)/.12)},(_,i)=>r.z0+i*.12)].filter(z=>z>=r.z0&&z<=r.z1))).sort((a,b)=>a-b);
-    for(let i=0;i<xs.length-1;i++)for(let j=0;j<zs.length-1;j++){
-      const center=[(xs[i]+xs[i+1])/2,(zs[j]+zs[j+1])/2];
-      let polygon:P[]=[[xs[i],r.height(xs[i],zs[j]),zs[j]],[xs[i+1],r.height(xs[i+1],zs[j]),zs[j]],[xs[i+1],r.height(xs[i+1],zs[j+1]),zs[j+1]],[xs[i],r.height(xs[i],zs[j+1]),zs[j+1]]];
-      if(inside(other,center[0],center[1])){
-        const clipped:P[]=[];
-        for(let k=0;k<polygon.length;k++){
-          const a=polygon[k],b=polygon[(k+1)%polygon.length],fa=a[1]-other.height(a[0],a[2]),fb=b[1]-other.height(b[0],b[2]);
-          if(fa>=0)clipped.push(a);
-          if((fa>=0)!==(fb>=0)){
-            const t=fa/(fa-fb),p:P=[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t];clipped.push(p);
-          }
-        }
-        polygon=clipped;
-      }
-      for(let k=1;k<polygon.length-1;k++)roofs.push(...polygon[0],...polygon[k+1],...polygon[k]);
-    }
-    // Raised tile courses follow each wing's slope and stop at the valley.
-    const rows=r===main?Math.ceil((r.x1-r.x0)/.115):Math.ceil((r.z1-r.z0)/.115);
-    for(let i=0;i<=rows;i++){
-      const along=i/rows;
-      for(let j=0;j<50;j++){
-        const t=j/50,u=(j+1)/50;
-        const a:P=r===main?[r.x0+(r.x1-r.x0)*along,0,r.z0+(r.z1-r.z0)*t]:[r.x0+(r.x1-r.x0)*t,0,r.z0+(r.z1-r.z0)*along];
-        const b:P=r===main?[a[0],0,r.z0+(r.z1-r.z0)*u]:[r.x0+(r.x1-r.x0)*u,0,a[2]];
-        if(visible(r,other,a[0],a[2])&&visible(r,other,b[0],b[2])){a[1]=r.height(a[0],a[2])+.008;b[1]=r.height(b[0],b[2])+.008;ribs.push(...a,...b);}
-      }
-    }
-    for(let j=0;j<40;j++){
-      const z=main.z0+(main.z1-main.z0)*j/40;
-      const x=(1-(main.height(0,z)-eave)/wingRise)*(wing/2+.18);
-      if(z>=front.z0&&x>0&&x<wing/2+.18){
-        for(const side of [-1,1])valleys.push(side*x,main.height(0,z)+.014,z,side*x,main.height(0,z)+.014,z+.035);
-      }
-    }
-  }
-  const geometry=new THREE.BufferGeometry().setAttribute("position",new THREE.Float32BufferAttribute(roofs,3));geometry.computeVertexNormals();
+  const cached=getCrossroadsRoofArrays(w,d,h);
+  const geometry=new THREE.BufferGeometry();
+  geometry.setAttribute("position",new THREE.BufferAttribute(cached.roofs.slice(),3));
+  geometry.setAttribute("normal",new THREE.BufferAttribute(cached.roofNormals.slice(),3));
   const roof=new THREE.Mesh(geometry,tile);roof.material.side=THREE.DoubleSide;roof.name="joined-gable-roofs-with-valleys";root.add(roof);
-  const tileJoints:number[]=[],raised:number[]=[];
-  for(let i=0;i<ribs.length;i+=6){
-    const a=new THREE.Vector3(...ribs.slice(i,i+3) as P),b=new THREE.Vector3(...ribs.slice(i+3,i+6) as P),v=b.clone().sub(a),n=new THREE.Vector3(-v.z,0,v.x).normalize().multiplyScalar(.012);
-    const A=a.clone().add(n),B=b.clone().add(n),C=b.clone().add(new THREE.Vector3(0,.015,0)),D=a.clone().add(new THREE.Vector3(0,.015,0));
-    raised.push(...A.toArray(),...B.toArray(),...C.toArray(),...A.toArray(),...C.toArray(),...D.toArray());
-    if(i%24===0){const cross=n.clone().multiplyScalar(3.5),left=a.clone().sub(cross),right=a.clone().add(cross);if([left,right].every(p=>inside(main,p.x,p.z)||inside(front,p.x,p.z)))tileJoints.push(...left.toArray(),...right.toArray());}
-  }
-  const ribGeo=new THREE.BufferGeometry().setAttribute("position",new THREE.Float32BufferAttribute(raised,3));ribGeo.computeVertexNormals();root.add(new THREE.Mesh(ribGeo,tile));
-  strokes(root,tileJoints.map((v,i)=>i%3===1?v+.024:v),"staggered-tile-joints");
-  strokes(root,ribs.map((v,i)=>i%3===1?v+.024:v),"individual-tile-courses");strokes(root,valleys,"roof-valley-seams");
+  const ribGeo=new THREE.BufferGeometry();
+  ribGeo.setAttribute("position",new THREE.BufferAttribute(cached.raised.slice(),3));
+  ribGeo.setAttribute("normal",new THREE.BufferAttribute(cached.raisedNormals.slice(),3));
+  root.add(new THREE.Mesh(ribGeo,tile));
+  strokes(root,Array.from(cached.tileJoints),"staggered-tile-joints");
+  strokes(root,Array.from(cached.tileCourses),"individual-tile-courses");
+  strokes(root,Array.from(cached.valleys),"roof-valley-seams");
   beam(root,[main.x0,eave+rise,backZ],[main.x1,eave+rise,backZ],.04,dark);
   const joinZ=backZ+(rise-wingRise)/rise*(backDepth/2+.18);
   beam(root,[0,eave+wingRise,joinZ],[0,eave+wingRise,front.z1],.037,dark);

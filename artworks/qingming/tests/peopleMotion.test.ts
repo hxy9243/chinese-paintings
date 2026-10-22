@@ -29,19 +29,28 @@ describe("independent activity and browsing", () => {
       const states = new Set<string>();
       for (let i = 0; i < WALKER_COUNT; i++) {
         let paused = false,
-          resumed = false;
+          resumed = false,
+          valid = true;
         for (let t = 0; t < 90; t += 0.25) {
           const a = activityClock(i, t, seed),
-            b = activityClock(i, t + 0.01, seed);
+            b = activityClock(i, t + 0.01, seed),
+            again = activityClock(i, t, seed);
           if (!a.moving && !b.moving) {
             paused = true;
-            expect(b.progress).toBe(a.progress);
+            if (b.progress !== a.progress) valid = false;
           }
           if (paused && a.moving) resumed = true;
-          expect(b.progress - a.progress).toBeGreaterThanOrEqual(0);
-          expect(b.progress - a.progress).toBeLessThan(0.013);
-          expect(a).toEqual(activityClock(i, t, seed));
+          const delta = b.progress - a.progress;
+          if (
+            delta < 0 ||
+            delta >= 0.013 ||
+            a.progress !== again.progress ||
+            a.moving !== again.moving
+          ) {
+            valid = false;
+          }
         }
+        expect(valid).toBe(true);
         expect(paused && resumed).toBe(true);
         states.add(
           Array.from({ length: 18 }, (_, t) =>
