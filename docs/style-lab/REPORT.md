@@ -1,6 +1,6 @@
 # Controlled Chinese painting style lab
 
-Source: `hxy9243/chinese-paintings`, commit `5fdddcfea9425ec1e9a0454f031857a0d6b903e7` (2026-10-22). Original checkout `/workspace/chinese-paintings` stayed clean on branch `work`. Lab: `/workspace/chinese-paintings-style-lab`, branch `style-lab/controlled-study`. No main edits, push, merge, deployment or external posting. No AGENTS.md found under /workspace; /workspace/.agents was empty and no repository .agents/skills existed. Existing installed dependencies were reused via local symlinks; no dependency or external skill installation.
+Source: `hxy9243/chinese-paintings`, commit `5fdddcfea9425ec1e9a0454f031857a0d6b903e7` (2026-10-22). Original checkout `/workspace/chinese-paintings` stayed clean on branch `work`. Lab: `/workspace/chinese-paintings-style-lab`, branch `style-lab/controlled-study`. At initial study completion there were no main edits, pushes, merges, deployments or external posts. Subsequent publication of the isolated style-lab branch was explicitly authorized on 2026-10-23; main remains outside scope. No AGENTS.md found under /workspace; /workspace/.agents was empty and no repository .agents/skills existed. Existing installed dependencies were reused via local symlinks; no dependency or external skill installation.
 
 ## Outcome
 

@@ -1,0 +1,6 @@
+# Reproducible temporary capture outputs; keep curated evidence in this directory.
+*-repeat.png
+motion-*.png
+capture-log.txt
+video-log.txt
+transfer-status.txt
