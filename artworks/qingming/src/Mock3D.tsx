@@ -72,12 +72,7 @@ export default function Mock3D() {
     }
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setClearColor(0x000000, 0);
-    // Hulls enter through the two side edges, with recycling beyond the frame.
-    const along = scrollPoint(1, 0).normalize();
-    renderer.clippingPlanes = [
-      new THREE.Plane(along, 49),
-      new THREE.Plane(along.clone().negate(), 32),
-    ];
+    // Geometry dissolves through the shared world-space paper mask.
     const finish = createInkFinish(renderer);
     let paintingEnabled = true,
       inkSoftness = 0.7;
@@ -146,7 +141,7 @@ export default function Mock3D() {
     controls.mouseButtons.RIGHT = THREE.MOUSE.PAN;
     controls.touches.ONE = THREE.TOUCH.ROTATE;
     controls.touches.TWO = THREE.TOUCH.DOLLY_PAN;
-    controls.target.copy(scrollPoint(-10, -1));
+    controls.target.copy(scrollPoint(-10, 1));
     controls.target.y = 1.1;
     const position = (
       degrees: number,
@@ -170,7 +165,7 @@ export default function Mock3D() {
       controls.update();
     };
     const defaultAngle = DEFAULT_VIEW_ANGLE;
-    const defaultZoom = .63;
+    const defaultZoom = .55;
     camera.zoom = defaultZoom;
     camera.updateProjectionMatrix();
     position(defaultAngle, 0);
@@ -226,7 +221,7 @@ export default function Mock3D() {
         camera.updateProjectionMatrix();
       },
       reset() {
-        controls.target.copy(scrollPoint(-10, -1));
+        controls.target.copy(scrollPoint(-10, 1));
         controls.target.y = 1.1;
         camera.zoom = defaultZoom;
         camera.updateProjectionMatrix();

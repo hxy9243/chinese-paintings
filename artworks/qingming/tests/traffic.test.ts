@@ -1,4 +1,5 @@
-import {localClearance} from "./helpers/clearance";
+import { vesselGeometry } from "./helpers/vesselGeometry";
+import { localClearance } from "./helpers/clearance";
 import { describe, it, expect } from "vitest";
 import * as THREE from "three";
 import {
@@ -69,13 +70,21 @@ function cartGap(
   );
 }
 describe("shared space and continuous traffic", () => {
-  it("retains eight varied traffic slots, market activity and reference groves", () => {
+  it("retains eight varied traffic slots, market activity and traced landmark trees", () => {
     expect(CARTS).toHaveLength(8);
     expect(MARKET.length).toBeGreaterThanOrEqual(6);
-    expect(
-      NATURE.filter((n) => ["bare", "spring", "willow"].includes(n.kind))
-        .length + FEATURE_TREES.length,
-    ).toBeGreaterThanOrEqual(18);
+    expect(FEATURE_TREES.map((t) => t.id)).toEqual(
+      expect.arrayContaining([
+        "near-quay-old-tree",
+        "west-bend-pollard",
+        "bend-roof-pollard",
+        "balcony-rear-pollard",
+        "foreground-pollard",
+        "right-bank-pollard",
+        "crossroads-west-old-tree",
+      ]),
+    );
+    expect(FEATURE_TREES).toHaveLength(9);
     for (let i = 0; i < CARTS.length; i++)
       expect(distance(cartPose(i, 0), cartPose(i, 3))).toBeGreaterThan(0.1);
   });
@@ -93,9 +102,20 @@ describe("shared space and continuous traffic", () => {
         ...cartPose(i, time),
         radius: CART_LANE_RADIUS,
       }));
-      minPeople=Math.min(minPeople,localClearance([
-        ...walkers,...Array.from({length:BRIDGE_OBSERVERS},(_,i)=>({...observerPose(i,time),radius:PERSON_RADIUS,observer:true}))
-      ],true));
+      minPeople = Math.min(
+        minPeople,
+        localClearance(
+          [
+            ...walkers,
+            ...Array.from({ length: BRIDGE_OBSERVERS }, (_, i) => ({
+              ...observerPose(i, time),
+              radius: PERSON_RADIUS,
+              observer: true,
+            })),
+          ],
+          true,
+        ),
+      );
       for (let i = 0; i < carts.length; i++) {
         for (const person of walkers.filter((p) => Math.abs(p.d) < 14.3))
           minCarts = Math.min(
@@ -126,12 +146,12 @@ describe("shared space and continuous traffic", () => {
                     {
                       s:
                         p.s +
-                        x * Math.cos(BRIDGE.angle) -
-                        d * Math.sin(BRIDGE.angle),
+                        x * Math.cos((p as (typeof carts)[number]).angle) -
+                        d * Math.sin((p as (typeof carts)[number]).angle),
                       d:
                         p.d +
-                        x * Math.sin(BRIDGE.angle) +
-                        d * Math.cos(BRIDGE.angle),
+                        x * Math.sin((p as (typeof carts)[number]).angle) +
+                        d * Math.cos((p as (typeof carts)[number]).angle),
                     },
                     h,
                   ),
@@ -175,32 +195,102 @@ describe("shared space and continuous traffic", () => {
         for (let j = i + 1; j < BOATS.length; j++)
           boatGap = Math.min(
             boatGap,
-            Math.max(...[p.angle,p.angle+Math.PI/2,poses[j].angle,poses[j].angle+Math.PI/2].map(axis=>{
-              const radius=(length:number,width:number,angle:number)=>Math.abs(Math.cos(angle-axis))*length*.62+Math.abs(Math.sin(angle-axis))*(width*.7+.04);
-              return Math.abs((p.s-poses[j].s)*Math.cos(axis)+(p.d-poses[j].d)*Math.sin(axis))-radius(b.length,b.width,p.angle)-radius(BOATS[j].length,BOATS[j].width,poses[j].angle);
-            })),
+            Math.max(
+              ...[
+                p.angle,
+                p.angle + Math.PI / 2,
+                poses[j].angle,
+                poses[j].angle + Math.PI / 2,
+              ].map((axis) => {
+                const radius = (length: number, width: number, angle: number) =>
+                  Math.abs(Math.cos(angle - axis)) * length * 0.62 +
+                  Math.abs(Math.sin(angle - axis)) * (width * 0.7 + 0.04);
+                return (
+                  Math.abs(
+                    (p.s - poses[j].s) * Math.cos(axis) +
+                      (p.d - poses[j].d) * Math.sin(axis),
+                  ) -
+                  radius(b.length, b.width, p.angle) -
+                  radius(BOATS[j].length, BOATS[j].width, poses[j].angle)
+                );
+              }),
+            ),
           );
-        for (let x = -1; x <= 1.001; x += 0.1)
-          for (const side of [-1, 1]) {
-            const along=x*b.length*.62,across=side*(b.width*.7+.04);
-            const s=p.s+along*Math.cos(p.angle)-across*Math.sin(p.angle),
-              d=p.d+along*Math.sin(p.angle)+across*Math.cos(p.angle);
-            bankGap = Math.min(
-              bankGap,
-              d - shoreDepth("far", s),
-              shoreDepth("near", s) - d,
+        // Use every rendered mesh vertex and a densely sampled convex boundary;
+        // the old rectangle overestimated pointed hull ends by over a unit.
+        const geometry = vesselGeometry(b.length, b.width, b.cabin);
+        for (const vertex of geometry.footprint) {
+          const vtx = vertex
+            .clone()
+            .applyEuler(
+              new THREE.Euler(
+                p.pitch,
+                REFERENCE_AZIMUTH + Math.PI / 2 - p.angle,
+                p.roll,
+              ),
             );
-            const u =
+          // Native +z is along the boat; native +x points to decreasing depth.
+          const s =
+              p.s +
+              vtx.x * Math.cos(REFERENCE_AZIMUTH) -
+              vtx.z * Math.sin(REFERENCE_AZIMUTH),
+            d =
+              p.d +
+              vtx.x * Math.sin(REFERENCE_AZIMUTH) +
+              vtx.z * Math.cos(REFERENCE_AZIMUTH);
+          bankGap = Math.min(
+            bankGap,
+            d - shoreDepth("far", s),
+            shoreDepth("near", s) - d,
+          );
+          const u =
               (s - BRIDGE.center.s) * Math.cos(BRIDGE.angle) +
-              (d - BRIDGE.center.d) * Math.sin(BRIDGE.angle);
-            const v =
+              (d - BRIDGE.center.d) * Math.sin(BRIDGE.angle),
+            v =
               -(s - BRIDGE.center.s) * Math.sin(BRIDGE.angle) +
               (d - BRIDGE.center.d) * Math.cos(BRIDGE.angle);
-            if (Math.abs(v) < BRIDGE.width / 2 + 0.2)
-              archGap = Math.min(archGap, bridgeHeight(u) - 0.48 - 1.15);
-          }
+          if (
+            Math.abs(v) < BRIDGE.width / 2 + 0.2 &&
+            Math.abs(u) < BRIDGE.length / 2
+          )
+            archGap = Math.min(archGap, bridgeHeight(u) - 0.48 - (vtx.y + p.y));
+        }
       }
     }
+    // Check roof vertices too: the hull silhouette alone cannot establish arch headroom.
+    for (let t = 0; t < 260; t += 13)
+      for (let i = 0; i < BOATS.length; i++) {
+        const b = BOATS[i],
+          p = boatPose(i, t),
+          rotation = new THREE.Euler(
+            p.pitch,
+            REFERENCE_AZIMUTH + Math.PI / 2 - p.angle,
+            p.roll,
+          );
+        for (const vertex of vesselGeometry(b.length, b.width, b.cabin)
+          .vertices) {
+          const vtx = vertex.clone().applyEuler(rotation),
+            s =
+              p.s +
+              vtx.x * Math.cos(REFERENCE_AZIMUTH) -
+              vtx.z * Math.sin(REFERENCE_AZIMUTH),
+            d =
+              p.d +
+              vtx.x * Math.sin(REFERENCE_AZIMUTH) +
+              vtx.z * Math.cos(REFERENCE_AZIMUTH);
+          const u =
+              (s - BRIDGE.center.s) * Math.cos(BRIDGE.angle) +
+              (d - BRIDGE.center.d) * Math.sin(BRIDGE.angle),
+            v =
+              -(s - BRIDGE.center.s) * Math.sin(BRIDGE.angle) +
+              (d - BRIDGE.center.d) * Math.cos(BRIDGE.angle);
+          if (
+            Math.abs(v) < BRIDGE.width / 2 + 0.2 &&
+            Math.abs(u) < BRIDGE.length / 2
+          )
+            archGap = Math.min(archGap, bridgeHeight(u) - 0.48 - (vtx.y + p.y));
+        }
+      }
     expect(bankGap).toBeGreaterThan(0.02);
     expect(boatGap).toBeGreaterThan(0.05);
     expect(archGap).toBeGreaterThan(0.05);

@@ -1,18 +1,47 @@
 import * as THREE from "three";
-import { SHORELINES, shoreDepth, type BankSide } from "./passageLayout";
-import { MAIN_STREET } from "./passageSpace";
+import {
+  BRIDGE,
+  SHORELINES,
+  shoreDepth,
+  bridgePoint,
+  type BankSide,
+} from "./passageLayout";
+
+const half = BRIDGE.length / 2;
+const routeKnots = [
+  -40,
+  ...Array.from({ length: 9 }, (_, i) => -half - 2 + i * 0.25),
+  half,
+  ...Array.from({ length: 8 }, (_, i) => half + (i + 1) * 0.25),
+  40,
+];
+export const STREET_ROAD_SEGMENTS = routeKnots
+  .slice(1)
+  .map((q, i) => ({
+    a: bridgePoint(routeKnots[i]),
+    b: bridgePoint(q),
+    width: routeKnots[i] >= half + 2 ? 1.1 : 1.85,
+  }));
+export const ROAD_TERMINI = [
+  bridgePoint(-40),
+  bridgePoint(40),
+  ...(["near", "far"] as BankSide[]).flatMap((side) =>
+    [SHORELINES[side][0], SHORELINES[side].at(-1)!].map((p) => ({
+      s: p.s,
+      d: p.d + (side === "near" ? 1 : -1) * 0.85,
+    })),
+  ),
+];
 export const ROAD_SEGMENTS = [
-  { a: MAIN_STREET.a, b: MAIN_STREET.b, width: 1.5 },
+  ...STREET_ROAD_SEGMENTS,
   ...(["near", "far"] as BankSide[]).flatMap((side) => {
     const shore = SHORELINES[side],
       sign = side === "near" ? 1 : -1;
-    return shore
-      .slice(1)
-      .map((p, i) => ({
-        a: { s: shore[i].s, d: shoreDepth(side, shore[i].s) + sign * 0.85 },
-        b: { s: p.s, d: p.d + sign * 0.85 },
-        width: 0.64,
-      }));
+    return shore.slice(1).map((p, i) => ({
+      a: { s: shore[i].s, d: shoreDepth(side, shore[i].s) + sign * 0.85 },
+      b: { s: p.s, d: p.d + sign * 0.85 },
+      width: 0.64,
+    }));
   }),
 ];
 export const roadUniforms = {

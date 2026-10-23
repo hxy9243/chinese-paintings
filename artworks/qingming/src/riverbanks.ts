@@ -21,8 +21,7 @@ earth.fragmentShader = earth.fragmentShader.replace(
   gl_FragColor=vec4(result,alpha);`,
 );
 earth.depthWrite=true;
-const stone = [0x887e66, 0x9c9174].map((c) => paintMaterial(c));
-const rockInk=createDryInk(.78);
+const stone = [0xa18e68, 0xab9871].map((c) => paintMaterial(c));
 const greys = [0xb8b9ae, 0xc7c5b9].map((c) => paintMaterial(c));
 
 /** The geometry and water shader share the same continuous bank curve. */
@@ -42,63 +41,45 @@ export function bankSection(side: BankSide, s: number, t: number) {
   };
 }
 export function buildBankFace(side: BankSide) {
-  const group = new THREE.Group();
-  group.name = `${side}-raised-bank`;
-  const positions: number[] = [],
-    indices: number[] = [];
-  const count = 540,
-    rows = 17;
-  for (let i = 0; i <= count; i++)
-    for (let j = 0; j < rows; j++) {
-      const p = bankSection(side, -24 + i * 0.1, j / (rows - 1)),
-        world = scrollPoint(p.s, p.d);
-      positions.push(world.x, p.y, world.z);
-    }
-  for (let i = 0; i < count; i++)
-    for (let j = 0; j < rows - 1; j++) {
-      const a = i * rows + j,
-        b = a + rows;
-      indices.push(a, b, a + 1, b, b + 1, a + 1);
-    }
-  const geometry = new THREE.BufferGeometry();
-  geometry.setAttribute(
-    "position",
-    new THREE.Float32BufferAttribute(positions, 3),
-  );
-  geometry.setIndex(indices);
-  geometry.computeVertexNormals();
-  group.add(new THREE.Mesh(geometry, earth));
-  // Broken patches of riprap, rather than a continuous modern concrete wall.
-  for (let i = 0; i < 300; i++) {
-    const s = -23.8 + i * 0.178;
-    if(s>22.5)continue;
-    if (Math.sin(s * 1.7) + Math.sin(s * 0.67) < -.55) continue;
-    const p = bankSection(side, s, 0.12 + (i % 4) * 0.18),
-      world = scrollPoint(p.s, p.d);
-    const rock = new THREE.Mesh(
-      new THREE.IcosahedronGeometry(1, 0),
-      stone[i % 2],
-    );
-    rock.position.set(world.x, p.y, world.z);
-    rock.scale.set(0.13 + (i % 4) * 0.055, 0.075 + (i % 3) * 0.045, 0.07);
-    // Local depth points across the river; constrain the riverward envelope.
-    rock.rotation.y = THREE.MathUtils.degToRad(-50);
-    rock.rotation.z = Math.sin(i * 3.1) * 0.22;
-    group.add(rock);
-    const cracks=new THREE.LineSegments(new THREE.EdgesGeometry(rock.geometry,25),rockInk);
-    cracks.position.copy(rock.position);cracks.rotation.copy(rock.rotation);cracks.scale.copy(rock.scale).multiplyScalar(1.003);group.add(cracks);
-  }
-  const fissures:number[]=[];
-  for(let s=-22;s<25;s+=.22){
-    if(Math.sin(s*7)<-.3)continue;
-    for(let j=0;j<4;j++){
-      for(const t of [j/5,(j+1)/5]){
-        const p=bankSection(side,s+Math.sin(t*8+s*4)*.055,t),v=scrollPoint(p.s,p.d);
-        fissures.push(v.x,p.y+.008,v.z);
+  const group=new THREE.Group();group.name=`${side}-raised-bank`;
+  const positions:number[]=[],indices:number[]=[],seams:number[]=[],hatching:number[]=[],lipLines:number[]=[];
+  const start=-61,end=41,count=1020,rows=17;
+  const world=(s:number,t:number,lift=0)=>{const p=bankSection(side,s,t),v=scrollPoint(p.s,p.d);return new THREE.Vector3(v.x,p.y+lift,v.z);};
+  const stroke=(a:THREE.Vector3,b:THREE.Vector3,out=seams)=>out.push(...a.toArray(),...b.toArray());
+  const hash=(n:number)=>{const v=Math.sin(n*91.17+(side==="far"?21.3:7.8))*14827.19;return v-Math.floor(v);};
+  for(let i=0;i<=count;i++)for(let j=0;j<rows;j++)positions.push(...world(start+(end-start)*i/count,j/(rows-1)).toArray());
+  for(let i=0;i<count;i++)for(let j=0;j<rows-1;j++){const a=i*rows+j,b=a+rows;indices.push(a,b,a+1,b,b+1,a+1);}
+  const geo=new THREE.BufferGeometry().setAttribute("position",new THREE.Float32BufferAttribute(positions,3));geo.setIndex(indices);geo.computeVertexNormals();
+  const mesh=new THREE.Mesh(geo,earth);mesh.name="eroded-earth-face";group.add(mesh);
+  // Long broken strata are embedded in the soil: no repeating bead outlines.
+  const rocks:number[][]=[[],[]];
+  for(let layer=0;layer<2;layer++)for(let i=0,s=start+layer*.72;s<end-.1;i++){
+    const len=.85+hash(i+layer*90)*1.65,t0=.12+layer*.25+hash(i+4)*.10,t1=Math.min(.93,t0+.28+hash(i+32)*.14);
+    if(Math.sin(s*.67)+Math.sin(s*1.2) > -.6){
+      const c:[number,number][]=[[s,t0+.03],[s+len*.27,t0],[s+len*.75,t0+.08],[s+len,t0+.15],[s+len*.84,t1-.025],[s+len*.42,t1],[s+len*.08,t1-.09]];
+      const verts=c.map(([ss,t])=>world(ss,t,.012+hash(i+14)*.017)),middle=world(s+len*.5,(t0+t1)*.5,.038);
+      for(let j=0;j<verts.length;j++){
+        rocks[layer].push(...middle.toArray(),...verts[j].toArray(),...verts[(j+1)%verts.length].toArray());
+        if(j>=3&&j<6&&i%3!==1)stroke(verts[j].clone().add(new THREE.Vector3(0,.005,0)),verts[(j+1)%verts.length].clone().add(new THREE.Vector3(0,.005,0)));
       }
+      if(i%2===0){stroke(verts[0],middle);stroke(middle,verts[4]);}
+      for(let q=0;q<4;q++)stroke(world(s+len*(.2+q*.11),t0+.04,.047),world(s+len*(.34+q*.11),t1-.03,.048),hatching);
+    }
+    s+=len*(.65+hash(i+6)*.45);
+  }
+  rocks.forEach((p,i)=>{if(!p.length)return;const g=new THREE.BufferGeometry().setAttribute("position",new THREE.Float32BufferAttribute(p,3));g.computeVertexNormals();const m=new THREE.Mesh(g,stone[i]);m.name="overlapping-angular-bank-strata";group.add(m);});
+  for(let i=0,s=start;s<end;i++,s+=.14+hash(i+700)*.18){
+    const b=s+.12+hash(i+700)*.20;
+    if(i%7!==0){stroke(world(s,.025,.009),world((s+b)*.5,.08,.011),lipLines);stroke(world((s+b)*.5,.08,.011),world(b,.02,.009),lipLines);}
+    const t0=.11+hash(i+1000)*.23,t1=.55+hash(i+1200)*.33;
+    for(let q=0;q<3;q++){
+      const ss=s+q*.031,zig=(i%2?1:-1)*(.075+hash(i)*.14);
+      stroke(world(ss,t0,.009),world(ss+zig,(t0+t1)*.5,.013),hatching);
+      if((i+q)%4!==0)stroke(world(ss+zig,(t0+t1)*.5,.013),world(ss+zig*.55,t1,.009),hatching);
     }
   }
-  group.add(new THREE.LineSegments(new THREE.BufferGeometry().setAttribute("position",new THREE.Float32BufferAttribute(fissures,3)),createDryInk(.82)));
+  const add=(p:number[],opacity:number,name:string)=>{if(!p.length)return;const m=new THREE.LineSegments(new THREE.BufferGeometry().setAttribute("position",new THREE.Float32BufferAttribute(p,3)),createDryInk(opacity));m.name=name;group.add(m);};
+  add(seams,.68,"fractured-rock-plate-outlines");add(hatching,.78,"broken-bank-strata-hatching");add(lipLines,.95,"zigzag-eroded-bank-lip");
   return group;
 }
 const mortarInk = createDryInk(0.25);

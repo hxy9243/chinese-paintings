@@ -11,7 +11,7 @@ const timber = paintMaterial(0x9f895f),
   produce = paintMaterial(0x789353);
 // Varied dyed cloths and glazes, shared across batches instead of one red canopy.
 const fabrics = [
-  0xb86c50, 0xc59b4d, 0x6d8d81, 0x72839a, 0xc6ae7a, 0x906b6b,
+  0x9d8164, 0xb2a07a, 0x87917c, 0x8c938a, 0xb4a37f, 0x927e6d,
 ].map((c) => paintMaterial(c));
 const ink = createDryInk(0.55);
 type P = [number, number, number];
@@ -144,8 +144,8 @@ function jar(p: THREE.Object3D, x: number, y: number, z: number, r = 0.085) {
 // The aged crop shows flax/paper and oiled brown umbrellas. Muted mineral
 // reds and greens are restrained color interpretations, not recovered dyes.
 export const PARASOL_COLORS = [
-  0xd6c49b, 0xc5a16a, 0x967354, 0xa46551, 0x748978, 0xe1d2ad, 0x7d8a87,
-  0xb39a68,
+  0xc7b68d, 0xb49a71, 0x967b5e, 0x9d7964, 0x89927e, 0xd2c29d, 0x8b9691,
+  0xb1a07b,
 ] as const;
 const parasolPigments = PARASOL_COLORS.map((c) => paintMaterial(c));
 export function parasolStyle(index: number, compact = false) {
@@ -154,7 +154,7 @@ export function parasolStyle(index: number, compact = false) {
     form: ["round", "oval", "scalloped", "patched"][index % 4],
     radius: compact ? 0.96 : 1.22 + (index % 3) * 0.09,
     rimHeight: 1.43 + (index % 3) * 0.025,
-    rise: 0.22 + (index % 2) * 0.07,
+    rise: 0.14 + (index % 2) * 0.045,
   };
 }
 export function marketParasol(
@@ -176,7 +176,7 @@ export function marketParasol(
       spec.form === "scalloped" ? 0.035 * Math.cos((a * ribs) / 2) * t ** 8 : 0;
     return [
       lean + r * Math.cos(a),
-      spec.rimHeight + spec.rise * (1 - t ** 1.3) + scallop,
+      spec.rimHeight + spec.rise * (1 - t ** 1.55) + scallop,
       r * Math.sin(a) * (spec.form === "oval" ? 0.76 : 1),
     ];
   };
@@ -212,6 +212,11 @@ export function marketParasol(
         return p;
       }),
     );
+    // Slender bamboo ribs sit just under the cloth, with a continuous bound hem.
+    const rib=Array.from({length:5},(_,k)=>{const p=point(a,k/4);p[1]-=.009;return p;});
+    for(let k=1;k<rib.length;k++)rod(g,rib[k-1],rib[k],.0045,timber);
+    const hem=Array.from({length:4},(_,k)=>point((j+k/3)/ribs*Math.PI*2,1));
+    mark(g,hem);
     if (j % 4 === 0)
       rod(g, [lean, spec.rimHeight - 0.24, 0], point(a, 0.78), 0.006, timber);
   }

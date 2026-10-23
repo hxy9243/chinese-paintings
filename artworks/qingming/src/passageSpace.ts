@@ -3,6 +3,8 @@ import {
   HALLS,
   shoreDepth,
   bridgePoint,
+  streetAngle,
+  TERRAIN_BOUNDS,
   type PassagePoint,
   type BankSide,
 } from "./passageLayout";
@@ -64,7 +66,10 @@ export function dryDisc(p: PassagePoint, radius: number) {
       d = p.d + Math.sin(a) * radius;
     // Rounded terrain, including the back corners.
     if (
-      s < -46 || s > 23.9 || Math.abs(d) > 19.9
+      s < TERRAIN_BOUNDS.sMin + 1 ||
+      s > TERRAIN_BOUNDS.sMax - 1 ||
+      d < TERRAIN_BOUNDS.dMin + 1 ||
+      d > TERRAIN_BOUNDS.dMax - 1
     )
       return false;
     if (
@@ -80,8 +85,8 @@ export const BANK_LOOPS = ["near", "far"].flatMap((side) => {
   const bank = side as BankSide,
     anchor = bank === "near" ? BRIDGE.near : BRIDGE.far;
   return [
-    { side: bank, start: bank === "far" ? -6 : -18, end: anchor.s - 2.1 },
-    { side: bank, start: anchor.s + 2.1, end: 20 },
+    { side: bank, start: bank === "far" ? -13 : -26, end: anchor.s - 2.1 },
+    { side: bank, start: anchor.s + 2.1, end: 34 },
   ];
 });
 export function bankCenter(side: BankSide, s: number) {
@@ -90,7 +95,10 @@ export function bankCenter(side: BankSide, s: number) {
 export const WALK_SEGMENTS: Segment[] = BANK_LOOPS.flatMap((loop) => {
   const breaks = [
     loop.start,
-    ...Array.from({length:Math.ceil((loop.end-loop.start)/.2)-1},(_,i)=>loop.start+(i+1)*.2),
+    ...Array.from(
+      { length: Math.ceil((loop.end - loop.start) / 0.2) - 1 },
+      (_, i) => loop.start + (i + 1) * 0.2,
+    ),
     loop.end,
   ];
   return breaks.slice(1).map((s, i) => ({
@@ -109,11 +117,21 @@ export type CartRoute = Segment &
 // The main street continues the bridge axis through both banks.
 export const STREET_HALF_WIDTH = 1.85;
 export const CART_LANE_RADIUS = 0.46;
-export const MAIN_STREET: Segment = { a: bridgePoint(-22), b: bridgePoint(22) };
+export const MAIN_STREET: Segment = { a: bridgePoint(-40), b: bridgePoint(40) };
+export const STREET_SEGMENTS: Segment[] = Array.from(
+  { length: 800 },
+  (_, i) => ({
+    a: bridgePoint(-40 + i * 0.1),
+    b: bridgePoint(-40 + (i + 1) * 0.1),
+  }),
+);
+export function streetDistance(p: PassagePoint) {
+  return Math.min(...STREET_SEGMENTS.map((s) => segmentDistance(p, s)));
+}
 export const CART_ROUTES: CartRoute[] = Array.from({ length: 8 }, (_, i) => ({
-  ...bridgePoint(-17 + i * 4.6),
-  angle: BRIDGE.angle,
-  length: 44,
+  ...bridgePoint(-17 + i * 5.5),
+  angle: streetAngle(-17 + i * 5.5),
+  length: 80,
   ...MAIN_STREET,
 }));
 export function trafficClear(
@@ -124,7 +142,7 @@ export function trafficClear(
   return (
     walkingClear(p, radius) &&
     bridgeClear(p, radius) &&
-    segmentDistance(p, MAIN_STREET) > radius + streetClearance + 0.08
+    streetDistance(p) > radius + streetClearance + 0.08
   );
 }
 export const STATIC_OBSTACLES: Disc[] = [];

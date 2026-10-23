@@ -69,11 +69,6 @@ export function createCrowd(parent: THREE.Group,
         material.vertexShader="attribute mat4 crowdMatrix;\n"+material.vertexShader
           .replace("modelMatrix*vec4(position,1.)","modelMatrix*crowdMatrix*vec4(position,1.)")
           .replace("mat3(modelMatrix)*normal","mat3(modelMatrix*crowdMatrix)*normal");
-        material.fragmentShader=material.fragmentShader.replace("void main(){",`void main(){
-          float edgeS=point.x*.64278761+point.z*.76604444;
-          float edgeD=-point.x*.76604444+point.z*.64278761;
-          if(edgeS< -47. || edgeS>29. || abs(edgeD)>23.)discard;
-        `);
         const drawable=pool.source instanceof THREE.Line ? new THREE.LineSegments(geo,material) : new THREE.Mesh(geo,material);
         drawable.name="animated-crowd"; drawable.userData.level=pool.level;
         drawable.frustumCulled=false; parent.add(drawable);pool.drawable=drawable;

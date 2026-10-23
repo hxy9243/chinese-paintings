@@ -1,4 +1,6 @@
-import {localClearance} from "./helpers/clearance";
+import { streetCoordinates } from "./helpers/streetCoordinates";
+import { paintingEdgeAlpha } from "../src/paintingBoundary";
+import { localClearance } from "./helpers/clearance";
 import { describe, it, expect } from "vitest";
 import * as THREE from "three";
 import { activityClock } from "../src/peopleMotion";
@@ -21,7 +23,7 @@ import {
 } from "../src/passageLife";
 import { WALKER_RADIUS, STATIC_OBSTACLES, distance } from "../src/passageSpace";
 import { MOORED_BOATS } from "../src/moorings";
-import { BOATS, BRIDGE } from "../src/passageLayout";
+import { BOATS, BRIDGE, streetAngle } from "../src/passageLayout";
 
 describe("independent activity and browsing", () => {
   it("gives every walker repeatable pauses followed by movement, without synchronized stops", () => {
@@ -92,34 +94,42 @@ describe("independent activity and browsing", () => {
           walkPose(i, t, seed),
         );
         people.push(
-          ...Array.from({ length: BRIDGE_OBSERVERS }, (_, i) => observerPose(i, t, seed)),
+          ...Array.from({ length: BRIDGE_OBSERVERS }, (_, i) =>
+            observerPose(i, t, seed),
+          ),
         );
-        minimum=Math.min(minimum,localClearance(people.map(p=>({...p,radius:WALKER_RADIUS}))));
+        minimum = Math.min(
+          minimum,
+          localClearance(people.map((p) => ({ ...p, radius: WALKER_RADIUS }))),
+        );
       }
     expect(minimum).toBeGreaterThan(0.02);
   }, 60000); // Three 20-minute fixed-step crowd simulations.
-  it("keeps carts facing forward, wraps offstage, and brings simultaneous opposing boats", () => {
-    for (let i = 0; i < 6; i++)
-      for (let t = 0; t < 800; t += 0.7) {
+  it("keeps carts aligned to the curved street and recycles only after full fade", () => {
+    for (let i = 0; i < CARTS.length; i++)
+      for (let t = 0; t < 1100; t += 0.7) {
         const a = cartPose(i, t),
-          b = cartPose(i, t + 0.7);
-        expect(a.angle).toBe(BRIDGE.angle);
+          b = cartPose(i, t + 0.7),
+          q = streetCoordinates(a).u;
+        expect(a.angle).toBeCloseTo(streetAngle(q), 2);
         expect(a.turning).toBe(false);
-        if (b.s < a.s) {
-          expect(Math.abs(a.d)).toBeGreaterThan(19);
-          expect(Math.abs(b.d)).toBeGreaterThan(19);
-        }
+        if (Math.hypot(a.s - b.s, a.d - b.d) > 1)
+          for (const p of [a, b])
+            for (const u of [-1.35, 1.35])
+              for (const v of [-0.32, 0.32])
+                expect(
+                  paintingEdgeAlpha(
+                    p.s + u * Math.cos(p.angle) - v * Math.sin(p.angle),
+                    p.d + u * Math.sin(p.angle) + v * Math.cos(p.angle),
+                  ),
+                ).toBe(0);
       }
-    let passes = 0;
-    for (let t = 0; t < 500; t += 2) {
-      const ships = BOATS.map((_, i) => boatPose(i, t));
-      if (
-        ships.some((p) => Math.cos(p.angle) > .7 && p.s > -10 && p.s < 20) &&
-        ships.some((p) => Math.cos(p.angle) < -.7 && p.s > -10 && p.s < 20)
-      )
-        passes++;
-    }
-    expect(passes).toBeGreaterThan(100);
+    for (let i = 0; i < BOATS.length; i++)
+      for (let t = 0; t < 500; t += 2) {
+        const a = boatPose(i, t),
+          b = boatPose(i, t + 0.01);
+        expect(Math.hypot(a.s - b.s, a.d - b.d)).toBeLessThan(0.00005);
+      }
   });
   it("animates every rendered role, shares crowd geometry, and freezes every instance on pause", () => {
     const study = createBridgeStudy(7);
@@ -143,7 +153,7 @@ describe("independent activity and browsing", () => {
         BRIDGE_OBSERVERS +
         MARKET.length +
         SHOP_VISITORS.length +
-        study.metadata().boatCrews.reduce((n,b)=>n+b.count,0) +
+        study.metadata().boatCrews.reduce((n, b) => n + b.count, 0) +
         CARTS.length,
     );
     const snapshots = () =>
@@ -153,7 +163,11 @@ describe("independent activity and browsing", () => {
       study.group.traverse((n) => {
         if (n instanceof THREE.Mesh || n instanceof THREE.Line) {
           const a = n.geometry.getAttribute("crowdMatrix");
-          if (a && (n.geometry as THREE.InstancedBufferGeometry).instanceCount>0) data.push(Array.from(a.array));
+          if (
+            a &&
+            (n.geometry as THREE.InstancedBufferGeometry).instanceCount > 0
+          )
+            data.push(Array.from(a.array));
         }
       });
       return data;

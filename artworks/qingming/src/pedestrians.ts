@@ -1,11 +1,21 @@
 import {
   BRIDGE,
+  BRIDGE_PEOPLE_PER_SIDE,
+  HALLS,
+  onBank,
   GROUND_Y,
   bridgeHeight,
   bridgePoint,
+  streetAngle,
   shoreDepth,
 } from "./passageLayout";
-import { BANK_LOOPS, bankCenter } from "./passageSpace";
+import {
+  BANK_LOOPS,
+  bankCenter,
+  STATIC_OBSTACLES,
+  WALKER_RADIUS,
+  PERSON_RADIUS,
+} from "./passageSpace";
 import { activityClock, randomUnit } from "./peopleMotion";
 
 // One population spans both streets and the bridge. The bank paths have their
@@ -15,7 +25,7 @@ export const WALKER_COUNT = MAIN_STREET_WALKERS + 48;
 const STEP = 0.2,
   // Include interpolation clearance between fixed steps, including bank bends.
   GAP = 0.34,
-  EDGE = 24;
+  EDGE = 40;
 type Actor = {
   q: number;
   lateral: number;
@@ -44,12 +54,143 @@ function perimeter(index: number) {
   const loop = bankRoute(index);
   return 2 * (loop.end - loop.start) + 2 * Math.PI * 0.26;
 }
+// Near each curved landing, a long cart sweeps farther sideways than its
+// half-width. Reserve its complete swept rectangle before placing walking lanes.
+const laneFloors = new Map<number, number>();
+function laneFloor(q: number, side: number) {
+  if (Math.abs(Math.abs(q) - BRIDGE.length / 2) > 3.7) return 0.51;
+  const rounded = Math.round(q * 40) / 40,
+    key = Math.round(q * 40) * 2 + (side > 0 ? 1 : 0);
+  const cached = laneFloors.get(key);
+  if (cached !== undefined) return cached;
+  function gap(lateral: number) {
+    const p = bridgePoint(rounded, side * lateral);
+    let minimum = Infinity;
+    for (let k = -24; k <= 24; k++) {
+      const cq = rounded + k * 0.075,
+        c = bridgePoint(cq),
+        a = streetAngle(cq),
+        ds = p.s - c.s,
+        dd = p.d - c.d;
+      minimum = Math.min(
+        minimum,
+        Math.hypot(
+          Math.max(0, Math.abs(ds * Math.cos(a) + dd * Math.sin(a)) - 1.35),
+          Math.max(0, Math.abs(-ds * Math.sin(a) + dd * Math.cos(a)) - 0.32),
+        ),
+      );
+    }
+    return minimum;
+  }
+  let lo = 0.51,
+    hi = 0.89;
+  for (let i = 0; i < 10; i++) {
+    const m = (lo + hi) / 2;
+    if (gap(m) < WALKER_RADIUS + 0.04) lo = m;
+    else hi = m;
+  }
+  const floor = hi;
+  laneFloors.set(key, floor);
+  return floor;
+}
+function actualLateral(index: number, q: number, lateral: number) {
+  return Math.max(lateral, laneFloor(q, index % 2 ? 1 : -1));
+}
+
+// Broad-phase cells avoid scanning every house and prop on each fixed step.
+let obstacleCount = -1;
+type Bounds = {
+  s: number;
+  d: number;
+  r: number;
+  h?: (typeof HALLS)[number];
+  c?: number;
+  sn?: number;
+};
+const environment = new Map<string, Bounds[]>();
+function prepareEnvironment() {
+  if (obstacleCount === STATIC_OBSTACLES.length) return;
+  obstacleCount = STATIC_OBSTACLES.length;
+  environment.clear();
+  const add = (o: Bounds) => {
+    for (
+      let x = Math.floor(o.s - o.r - 0.5);
+      x <= Math.floor(o.s + o.r + 0.5);
+      x++
+    )
+      for (
+        let z = Math.floor(o.d - o.r - 0.5);
+        z <= Math.floor(o.d + o.r + 0.5);
+        z++
+      ) {
+        const k = x + ":" + z,
+          a = environment.get(k) ?? [];
+        a.push(o);
+        environment.set(k, a);
+      }
+  };
+  HALLS.forEach((h) =>
+    add({
+      s: h.s,
+      d: h.d,
+      r: Math.hypot(h.width / 2 + 0.2, h.depth / 2 + 0.23),
+      h,
+      c: Math.cos(h.angle),
+      sn: Math.sin(h.angle),
+    }),
+  );
+  STATIC_OBSTACLES.forEach((o) => add({ s: o.s, d: o.d, r: o.radius }));
+  for (let i = 0; i < BRIDGE_PEOPLE_PER_SIDE * 2; i++) {
+    const x =
+        -BRIDGE.length / 2 +
+        0.4 +
+        (Math.floor(i / 2) * (BRIDGE.length - 0.8)) /
+          (BRIDGE_PEOPLE_PER_SIDE - 1),
+      p = bridgePoint(x, i % 2 ? 1.32 : -1.32);
+    add({ ...p, r: PERSON_RADIUS + 0.008 });
+  }
+}
+function environmentClear(
+  p: { s: number; d: number },
+  index: number,
+  q: number,
+) {
+  if (index >= MAIN_STREET_WALKERS) {
+    if (!onBank(bankRoute(index).side, p, 0.08)) return false;
+  } else if (
+    Math.abs(q) > BRIDGE.length / 2 + 0.05 &&
+    !onBank(q < 0 ? "near" : "far", p, 0.02)
+  )
+    return false;
+  for (const o of environment.get(Math.floor(p.s) + ":" + Math.floor(p.d)) ??
+    []) {
+    if (o.h) {
+      const ds = p.s - o.s,
+        dd = p.d - o.d,
+        u = ds * o.c! + dd * o.sn!,
+        v = -ds * o.sn! + dd * o.c!;
+      if (
+        Math.hypot(
+          Math.max(0, Math.abs(u) - o.h.width / 2 - 0.2),
+          Math.max(0, Math.abs(v) - o.h.depth / 2 - 0.23),
+        ) <
+        WALKER_RADIUS + 0.045
+      )
+        return false;
+    } else if (Math.hypot(p.s - o.s, p.d - o.d) < o.r + WALKER_RADIUS + 0.035)
+      return false;
+  }
+  return true;
+}
 function location(index: number, q: number, lateral: number) {
   if (index < MAIN_STREET_WALKERS)
     return {
-      ...bridgePoint(q, (index % 2 ? 1 : -1) * lateral),
+      ...bridgePoint(
+        q,
+        (index % 2 ? 1 : -1) * actualLateral(index, q, lateral),
+      ),
       y: bridgeHeight(q),
-      angle: BRIDGE.angle,
+      angle: streetAngle(q),
     };
   const loop = bankRoute(index),
     straight = loop.end - loop.start,
@@ -89,15 +230,17 @@ function location(index: number, q: number, lateral: number) {
   };
 }
 function initial(seed: number): Actor[] {
-  return Array.from({ length: WALKER_COUNT }, (_, i) => {
+  prepareEnvironment();
+  const actors: Actor[] = [],
+    placed: { s: number; d: number }[] = [];
+  for (let i = 0; i < WALKER_COUNT; i++) {
     const id = i + seed * 101,
       main = i < MAIN_STREET_WALKERS;
-    const q = main
-      ? -EDGE +
+    const desired = main
+      ? -24 +
         ((Math.floor(i / 2) + 0.15 + randomUnit(id, 1) * 0.45) /
           (MAIN_STREET_WALKERS / 2)) *
-          EDGE *
-          2
+          48
       : ((Math.floor((i - MAIN_STREET_WALKERS) / 4) +
           0.2 +
           randomUnit(id, 1) * 0.6) /
@@ -105,18 +248,43 @@ function initial(seed: number): Actor[] {
         perimeter(i);
     const direction = main && randomUnit(id, 2) < 0.5 ? -1 : 1,
       lateral = direction > 0 ? 0.52 : 0.88;
-    return {
+    let q = desired,
+      p = location(i, q, lateral),
+      found = false;
+    for (let attempt = 0; attempt < 2400; attempt++) {
+      q = main
+        ? Math.max(
+            -24,
+            Math.min(
+              24,
+              desired + (attempt % 2 ? 1 : -1) * Math.ceil(attempt / 2) * 0.08,
+            ),
+          )
+        : (desired + attempt * 0.08) % perimeter(i);
+      p = location(i, q, lateral);
+      if (
+        environmentClear(p, i, q) &&
+        placed.every((o) => Math.hypot(o.s - p.s, o.d - p.d) >= GAP)
+      ) {
+        found = true;
+        break;
+      }
+    }
+    if (!found) throw new Error("No clear initial walking site for " + i);
+    placed.push(p);
+    actors.push({
       q,
       lateral,
       direction,
       speed: 0.14 + randomUnit(id, 5) * 0.1,
       stride: 0,
-      heading: location(i, q, lateral).angle + (direction < 0 ? Math.PI : 0),
+      heading: p.angle + (direction < 0 ? Math.PI : 0),
       moving: false,
       scheduled: activityClock(i, 0, seed).moving,
       recycled: false,
-    };
-  });
+    });
+  }
+  return actors;
 }
 type Timeline = {
   tick: number;
@@ -136,7 +304,7 @@ function advance(states: Actor[], time: number, seed: number): Actor[] {
   const next = states.map((a) => ({ ...a, moving: false, recycled: false }));
   const points = states.map((a, i) => location(i, a.q, a.lateral));
   const grid = new Map<number, Set<number>>(),
-    // Route coordinates stay within ±24; numeric cell keys avoid per-step strings.
+    // Extended hidden approaches retain numeric cell keys.
     cell = (p: { s: number; d: number }) =>
       Math.floor(p.s / 0.5) * 256 + Math.floor(p.d / 0.5);
   points.forEach((p, i) => {
@@ -144,7 +312,7 @@ function advance(states: Actor[], time: number, seed: number): Actor[] {
     if (!grid.has(key)) grid.set(key, new Set());
     grid.get(key)!.add(i);
   });
-  function clear(p: { s: number; d: number }, index: number) {
+  function clear(p: { s: number; d: number }, index: number, q: number) {
     const x = Math.floor(p.s / 0.5),
       z = Math.floor(p.d / 0.5);
     for (let dx = -1; dx <= 1; dx++)
@@ -159,7 +327,7 @@ function advance(states: Actor[], time: number, seed: number): Actor[] {
           )
             return false;
       }
-    return true;
+    return environmentClear(p, index, q);
   }
   // Rotate priority deterministically; a long-lived actor never owns right of way.
   const first = Math.floor(time / STEP) % states.length;
@@ -187,9 +355,12 @@ function advance(states: Actor[], time: number, seed: number): Actor[] {
         -0.09 * STEP,
         Math.min(0.09 * STEP, target - a.lateral),
       );
-      const nextPoint=location(i,old.q+.01,old.lateral);
-      const metric=main?1:Math.max(1,Math.hypot(nextPoint.s-points[i].s,nextPoint.d-points[i].d)/.01);
-      const distance = a.direction * a.speed * STEP / metric;
+      const nextPoint = location(i, old.q + 0.01, old.lateral);
+      const metric = Math.max(
+        1,
+        Math.hypot(nextPoint.s - points[i].s, nextPoint.d - points[i].d) / 0.01,
+      );
+      const distance = (a.direction * a.speed * STEP) / metric;
       // Try a normal step, a slower step and then a small passing sidestep.
       for (const [forward, sideways] of [
         [1, lateralStep],
@@ -206,7 +377,7 @@ function advance(states: Actor[], time: number, seed: number): Actor[] {
         if (forward === 0 && Math.abs(lateral - old.lateral) < 0.00001)
           continue;
         const p = location(i, q, lateral);
-        if (!clear(p, i)) continue;
+        if (!clear(p, i, q)) continue;
         grid.get(cell(points[i]))!.delete(i);
         const traveled = recycled
           ? Math.abs(distance * forward)
@@ -223,6 +394,8 @@ function advance(states: Actor[], time: number, seed: number): Actor[] {
         break;
       }
     }
+    // A quay walk turns back at a building or occupied bank stretch.
+    if (i >= MAIN_STREET_WALKERS && scheduled && !a.moving) a.direction *= -1;
     const desired =
       location(i, a.q, a.lateral).angle + (a.direction < 0 ? Math.PI : 0);
     const turn = Math.atan2(

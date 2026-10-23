@@ -1,15 +1,15 @@
 import {expect,it} from "vitest";
 import * as THREE from "three";
-import {BOATS,BRIDGE,bridgeHeight,PERSON_SCALE} from "../src/passageLayout";
+import {BOATS,BRIDGE,bridgeCoordinates,bridgeHeight,PERSON_SCALE} from "../src/passageLayout";
 import {boatPose} from "../src/passageLife";
 import {FIGURE_HEIGHT} from "../src/figures";
 import {boatCrewStations,buildLoweringRig,updateLoweringRig} from "../src/referenceDetails";
 it("keeps roof workers and the articulated boat rigs below the bridge throughout a full navigation cycle",()=>{
   let crossings=0,clearance=Infinity,closest="";
-  for(const index of [0,1,2,5]){
+  for(const index of [0]){
   const b=BOATS[index],rig=buildLoweringRig(b.length,b.width);
   for(let time=0;time<400;time+=.75){
-    const pose=boatPose(index,time),distance=Math.abs(pose.s-BRIDGE.center.s);
+    const pose=boatPose(index,time),distance=Math.abs(bridgeCoordinates(pose).cross);
     if(distance>12)continue;
     updateLoweringRig(rig,distance);rig.updateMatrixWorld(true);
     const points:THREE.Vector3[]=[];

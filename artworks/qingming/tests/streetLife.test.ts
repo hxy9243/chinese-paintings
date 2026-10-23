@@ -1,3 +1,4 @@
+import { paintingEdgeAlpha } from "../src/paintingBoundary";
 import { describe, expect, it } from "vitest";
 import { MAIN_STREET_WALKERS, pedestrianPoses } from "../src/pedestrians";
 import { BRIDGE, shoreDepth } from "../src/passageLayout";
@@ -19,8 +20,16 @@ describe("irregular street journeys and painted wakes", () => {
       people.forEach((p, i) => {
         const distance = Math.hypot(p.s - previous[i].s, p.d - previous[i].d);
         if (distance > 1) {
-          expect(Math.abs(p.d)).toBeGreaterThan(20);
-          expect(Math.abs(previous[i].d)).toBeGreaterThan(20);
+          for (const a of [p, previous[i]])
+            for (let j = 0; j < 8; j++) {
+              const angle = (j * Math.PI) / 4;
+              expect(
+                paintingEdgeAlpha(
+                  a.s + Math.cos(angle) * 0.3,
+                  a.d + Math.sin(angle) * 0.3,
+                ),
+              ).toBe(0);
+            }
           wraps++;
         } else expect(distance).toBeLessThan(0.2);
         if (i < MAIN_STREET_WALKERS) {
@@ -55,8 +64,8 @@ describe("irregular street journeys and painted wakes", () => {
       opacity = geometry.getAttribute("opacity");
     for (let i = 0; i < positions.count; i++) {
       expect(Number.isFinite(positions.getX(i))).toBe(true);
-      expect(positions.getY(i)).toBeGreaterThan(-.065);
-      expect(positions.getY(i)).toBeLessThan(-.008);
+      expect(positions.getY(i)).toBeGreaterThan(-0.065);
+      expect(positions.getY(i)).toBeLessThan(-0.008);
       expect(opacity.getX(i)).toBeGreaterThanOrEqual(0);
       expect(opacity.getX(i)).toBeLessThanOrEqual(0.55);
       if (opacity.getX(i) === 0) continue;
@@ -66,7 +75,7 @@ describe("irregular street journeys and painted wakes", () => {
         x * Math.cos(REFERENCE_AZIMUTH) - z * Math.sin(REFERENCE_AZIMUTH);
       const d =
         x * Math.sin(REFERENCE_AZIMUTH) + z * Math.cos(REFERENCE_AZIMUTH);
-      expect(positions.getY(i)-waterHeight(s,d,32)).toBeCloseTo(.010,1);
+      expect(positions.getY(i) - waterHeight(s, d, 32)).toBeCloseTo(0.01, 1);
       expect(d).toBeGreaterThan(shoreDepth("far", s));
       expect(d).toBeLessThan(shoreDepth("near", s));
     }

@@ -60,7 +60,7 @@ export function createInkFinish(renderer: THREE.WebGLRenderer) {
         }
         halo/=16.;
         float outer=(1.-smoothstep(.25,.94,texture2D(source,p).a));
-        color=mix(color,min(background(p),halo),outer*strength*.82);
+        color=mix(color,min(background(p),halo),outer*min(1.,strength*1.4));
         float pooled=smoothstep(.06,.32,edge/8.);
         color*=1.-pooled*strength*.055;
         float grain=hash(pixel)*.6+hash(floor(pixel*.4))*.4;

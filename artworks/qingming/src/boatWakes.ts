@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { paintingBoundaryShader } from "./paintingBoundary";
 import { BOATS, shoreDepth } from "./passageLayout";
 import { boatPose } from "./passageLife";
 import { scrollPoint } from "./scrollLayout";
@@ -57,14 +58,13 @@ export function createBoatWakes() {
     fragmentShader: `
       #include <clipping_planes_pars_fragment>
       uniform vec3 palettePaper; varying float fade; varying vec3 brush;varying float widthCoord;
+      ${paintingBoundaryShader}
       void main(){
         #include <clipping_planes_fragment>
         float grain=fract(sin(dot(floor(brush*80.),vec3(127.1,311.7,74.7)))*43758.5453);
         float softEdge=1.-smoothstep(.15,1.,abs(widthCoord));
-        vec2 river=vec2(brush.x*.64278761+brush.z*.76604444,-brush.x*.76604444+brush.z*.64278761);
-        vec2 q=abs(river)-vec2(16.,8.);
-        float boundary=length(max(q,0.))+min(max(q.x,q.y),0.)-6.;
-        float soak=1.-smoothstep(0.,5.5,max(boundary,0.));
+        float soak=paintingEdgeAlpha(brush);
+        if(soak<.001)discard;
         gl_FragColor=vec4(mix(palettePaper,vec3(.63,.77,.70),.16),fade*(.65+grain*.35)*softEdge*soak);
         #include <tonemapping_fragment>
         #include <colorspace_fragment>

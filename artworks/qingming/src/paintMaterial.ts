@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { paintingBoundaryShader } from "./paintingBoundary";
 import {
   paletteAmount,
   palettePaper,
@@ -40,7 +41,7 @@ export function paintMaterial(
       waterTime,
       foliage: { value: foliage ? 1 : 0 },
     },
-    transparent: ground,
+    transparent: true,
     depthWrite: !ground,
     side: THREE.DoubleSide,
     vertexShader: `
@@ -66,6 +67,7 @@ export function paintMaterial(
       float noise(vec3 p){vec3 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
         return mix(mix(mix(hash(i),hash(i+vec3(1,0,0)),f.x),mix(hash(i+vec3(0,1,0)),hash(i+vec3(1,1,0)),f.x),f.y),
           mix(mix(hash(i+vec3(0,0,1)),hash(i+vec3(1,0,1)),f.x),mix(hash(i+vec3(0,1,1)),hash(i+vec3(1,1,1)),f.x),f.y),f.z);}
+      ${paintingBoundaryShader}
       ${roadShader}
       ${riverShader}
       void main(){
@@ -86,9 +88,9 @@ export function paintMaterial(
         float sediment=smoothstep(.48,.77,second)*smoothstep(.24,.72,grain);
         float dry=smoothstep(.70,.88,grain)*.055;
         vec3 transmission=clamp(localPigment/max(paper,vec3(.01)),vec3(.015),vec3(1.2));
-        vec3 firstGlaze=paper*pow(transmission,vec3(.48+glaze*.18));
-        vec3 painted=firstGlaze*pow(transmission,vec3(.30+second*.17));
-        painted=mix(painted,paper,.025+wash*.08+dry);
+        vec3 firstGlaze=paper*pow(transmission,vec3(.60+glaze*.18));
+        vec3 painted=firstGlaze*pow(transmission,vec3(.36+second*.17));
+        painted=mix(painted,paper,.015+wash*.045+dry);
         painted*=.94+glaze*.16-rim*.07-sediment*.11;
         painted*=.91+.09*max(0.,dot(normalize(facing),normalize(vec3(-.6,1.,.8))));
         vec2 river=riverPoint(point);
@@ -119,15 +121,8 @@ export function paintMaterial(
           painted=mix(painted,paper,wet*noise(vec3(river*4.,9.))*.15);
         }
         vec3 result=mix(localPigment*shade,painted,painting);
-        float scroll=point.x*.64278761+point.z*.76604444;
-        float depth=-point.x*.76604444+point.z*.64278761;
-        vec2 q=abs(vec2(scroll+10.,depth))-vec2(33.,19.);
-        float boundary=max(q.x,q.y);
-        // Preserve the complete painted footprint. Only the added exterior
-        // land/water apron dissolves into paper; structures keep their color.
-        float outward=max(boundary,0.);
-        float absorption=.85+.3*noise(vec3(river*.65,7.));
-        float alpha=ground>.5 ? 1.-smoothstep(0.,5.5,outward*absorption) : 1.;
+        float alpha=paintingEdgeAlpha(point);
+        if(alpha<.001)discard;
         if(bank>.5)alpha*=smoothstep(-.30,.24,shore+(noise(vec3(river*12.,5.))-.5)*.15);
         gl_FragColor=vec4(result,alpha);
         #include <tonemapping_fragment>
@@ -152,13 +147,16 @@ export function createDryInk(fade = 1) {
     fragmentShader: `
       #include <clipping_planes_pars_fragment>
       uniform float painting;uniform float fade;uniform vec3 paletteInk;varying vec3 point;varying vec3 strokePoint;
+      ${paintingBoundaryShader}
       void main(){
         #include <clipping_planes_fragment>
         float grain=fract(sin(dot(floor(strokePoint*95.),vec3(127.1,311.7,74.7)))*43758.5453);
         float flow=.5+.5*sin(strokePoint.x*41.+strokePoint.y*29.+strokePoint.z*37.);
-        float opacity=mix(.65,.28+flow*.40+grain*.18,painting);
+        float opacity=mix(.78,.40+flow*.34+grain*.18,painting);
         if(painting>.5 && grain>.92)opacity*=.22;
-        gl_FragColor=vec4(paletteInk,opacity*fade);
+        float edgeAlpha=paintingEdgeAlpha(point);
+        if(edgeAlpha<.001)discard;
+        gl_FragColor=vec4(paletteInk,opacity*fade*edgeAlpha);
         #include <tonemapping_fragment>
         #include <colorspace_fragment>
       }`,

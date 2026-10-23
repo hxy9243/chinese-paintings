@@ -1,3 +1,4 @@
+import { streetCoordinates } from "./helpers/streetCoordinates";
 import { describe, expect, it } from "vitest";
 import * as THREE from "three";
 import {
@@ -26,7 +27,9 @@ describe("life in the reference passage", () => {
   it("varies architecture and nature while keeping planting clear of roofs", () => {
     expect(BUILDING_KINDS).toHaveLength(HALLS.length);
     expect(new Set(BUILDING_KINDS).size).toBe(12);
-    expect(new Set(NATURE.map((n) => n.kind)).size).toBe(5);
+    expect(new Set(NATURE.map((n) => n.kind))).toEqual(
+      new Set(["rock", "reed"]),
+    );
     for (const n of NATURE) {
       expect(onBank("near", n) || onBank("far", n)).toBe(true);
       expect(insideRoof(n, 0.1)).toBe(false);
@@ -42,11 +45,9 @@ describe("life in the reference passage", () => {
           expect(onBank(i % 2 ? "far" : "near", p, 0.05)).toBe(true);
           expect(p.y).toBe(GROUND_Y);
         } else {
-          const s = p.s - BRIDGE.center.s,
-            d = p.d - BRIDGE.center.d;
-          expect(
-            Math.abs(-s * Math.sin(BRIDGE.angle) + d * Math.cos(BRIDGE.angle)),
-          ).toBeLessThan(BRIDGE.width / 2 - 0.1);
+          expect(Math.abs(streetCoordinates(p).v)).toBeLessThan(
+            BRIDGE.width / 2 - 0.1,
+          );
           expect(p.y).toBeGreaterThanOrEqual(GROUND_Y);
         }
       }
@@ -69,24 +70,27 @@ describe("life in the reference passage", () => {
           }
       }
   });
-  it("brings new hulls through the top and right exits and wraps outside the frame", () => {
-    const offstage=(p:{s:number,d:number},length:number)=>Math.abs(p.s)>25+length/2 || p.d< -23-length/2;
+  it("preserves each traced berth while drifting continuously along its heading", () => {
     for (let i = 0; i < BOATS.length; i++) {
-      let entered = false;
-      let previous = boatPose(i, 0);
-      for (let time = 1; time <= 1400; time++) {
-        const pose = boatPose(i, time);
-        if (Math.abs(pose.s - previous.s) > 1) {
-          expect(offstage(pose,BOATS[i].length)).toBe(true);
-          expect(offstage(previous,BOATS[i].length)).toBe(true);
-        }
-        if (Math.abs(previous.s) > 22 && Math.abs(pose.s) <= 22) entered = true;
-        previous = pose;
+      let minimum = Infinity,
+        maximum = -Infinity;
+      for (let time = 0; time < 1400; time++) {
+        const a = boatPose(i, time),
+          b = boatPose(i, time + 0.01),
+          base = BOATS[i];
+        const ds = a.s - base.s,
+          dd = a.d - base.d;
+        expect(Math.hypot(ds, dd)).toBeLessThanOrEqual(0.1800001);
+        expect(
+          Math.abs(-ds * Math.sin(base.angle) + dd * Math.cos(base.angle)),
+        ).toBeLessThan(0.000001);
+        expect(Math.hypot(a.s - b.s, a.d - b.d)).toBeLessThan(0.00005);
+        expect(a.angle).toBe(base.angle);
+        const along = ds * Math.cos(base.angle) + dd * Math.sin(base.angle);
+        minimum = Math.min(minimum, along);
+        maximum = Math.max(maximum, along);
       }
-      expect(entered).toBe(true);
-      expect(Math.hypot(boatPose(i,12).s-boatPose(i,0).s,boatPose(i,12).d-boatPose(i,0).d)).toBeGreaterThan(
-        1.8,
-      );
+      expect(maximum - minimum).toBeGreaterThan(0.35);
     }
   });
   it("keeps the horse-cart footprints on the bridge or dry street and clear of roofs", () => {
@@ -180,8 +184,15 @@ describe("life in the reference passage", () => {
     let draws = 0;
     study.group.traverse((n) => {
       if (n instanceof THREE.Mesh || n instanceof THREE.Line) {
-        let visible=true;for(let p:THREE.Object3D|null=n;p;p=p.parent)visible&&=p.visible;
-        if(visible && (!(n.geometry instanceof THREE.InstancedBufferGeometry)||n.geometry.instanceCount>0))draws++;
+        let visible = true;
+        for (let p: THREE.Object3D | null = n; p; p = p.parent)
+          visible &&= p.visible;
+        if (
+          visible &&
+          (!(n.geometry instanceof THREE.InstancedBufferGeometry) ||
+            n.geometry.instanceCount > 0)
+        )
+          draws++;
         n.geometry.computeBoundingBox();
         expect(Number.isFinite(n.geometry.boundingBox!.min.x)).toBe(true);
         n.geometry.dispose();

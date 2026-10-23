@@ -1,4 +1,3 @@
-import * as THREE from "three";
 import { wander } from "./peopleMotion";
 import { pedestrianPoses } from "./pedestrians";
 export { WALKER_COUNT, MAIN_STREET_WALKERS } from "./pedestrians";
@@ -12,6 +11,7 @@ import {
   HALLS,
   bridgeHeight,
   bridgePoint,
+  streetAngle,
   shoreDepth,
   type PassagePoint,
 } from "./passageLayout";
@@ -60,9 +60,21 @@ export const BUILDING_KINDS: BuildingKind[] = [
 ];
 BUILDING_KINDS[8] = "upper-storey";
 BUILDING_KINDS.push("construction");
-BUILDING_KINDS[10]="cross-house";BUILDING_KINDS[19]="cross-house";BUILDING_KINDS[20]="cross-house";
-BUILDING_KINDS[21]="openhall";BUILDING_KINDS[22]="cross-shop";
-BUILDING_KINDS.push("cross-shop","cross-house","openhall","cross-house","gallery","cross-house","gallery","dwelling");
+BUILDING_KINDS[10] = "cross-house";
+BUILDING_KINDS[19] = "cross-house";
+BUILDING_KINDS[20] = "cross-house";
+BUILDING_KINDS[21] = "cross-shop";
+BUILDING_KINDS[22] = "cross-shop";
+BUILDING_KINDS.push(
+  "cross-shop",
+  "dwelling",
+  "openhall",
+  "cross-house",
+  "gallery",
+  "dwelling",
+  "gallery",
+  "dwelling",
+);
 // Keep the historic export for callers; these people now use the whole street.
 export { MAIN_STREET_WALKERS as BRIDGE_WALKERS } from "./pedestrians";
 export const BRIDGE_OBSERVERS = BRIDGE_PEOPLE_PER_SIDE * 2;
@@ -94,8 +106,8 @@ export const CART_KINDS = [
   "handcart",
 ] as const;
 export function cartPose(index: number, time: number) {
-  const clock = time * 0.16 + (index * 44) / CARTS.length + 5,
-    x = -22 + (((clock % 44) + 44) % 44);
+  const clock = time * 0.16 + index * 5.5 + 23,
+    x = -40 + (((clock % 80) + 80) % 80);
   const slope = (bridgeHeight(x + 0.55) - bridgeHeight(x - 0.55)) / 1.1;
   let y = GROUND_Y;
   for (let u = -0.66; u <= 0.661; u += 0.066)
@@ -103,29 +115,27 @@ export function cartPose(index: number, time: number) {
   return {
     ...bridgePoint(x),
     y: y + 0.005,
-    angle: BRIDGE.angle,
+    angle: streetAngle(x),
     slope,
     moving: true,
     turning: false,
     traveled: clock,
   };
 }
-// Follow the open river through the top and right crop. Tangent-aligned rigid
-// hulls use separate travel lanes; recycling happens beyond the visible banks.
-const navigationCurve=new THREE.CatmullRomCurve3([
-  [-13,-36],[-13,-16],[-12.9,-9],[-10.8,-4.7],[-5,-2.5],[-1,-2.5],[8,-2.5],[18,-1],[28,-1],[40,-1]
-].map(([s,d])=>new THREE.Vector3(s,0,d)),false,"centripetal");
-const routeLength=navigationCurve.getLength();
-const initialProgress=[.71,.60,.28,.49,.37,.91,.12];
-export function boatPose(index:number,time:number){
-  const direction=index%2===0?1:-1;
-  const u=((initialProgress[index]+direction*time*.18/routeLength)%1+1)%1;
-  const point=navigationCurve.getPointAt(u),tangent=navigationCurve.getTangentAt(u);
-  const lane=direction*(.95+.30*THREE.MathUtils.clamp((-point.x-1)/5,0,1)+.18*THREE.MathUtils.clamp((point.x-5)/3,0,1)*THREE.MathUtils.clamp((23-point.x)/5,0,1));
-  const phase=time*.34+index*1.71;
-  return {s:point.x-tangent.z*lane,d:point.z+tangent.x*lane,
-    y:Math.sin(phase)*.012,angle:Math.atan2(tangent.z,tangent.x)+(direction===1?0:Math.PI),
-    roll:Math.sin(phase+.8)*.006,pitch:Math.cos(phase*.8)*.004};
+// Preserve the reference composition: boats gently drift along their own
+// measured headings, rather than circulating through unrelated painted berths.
+export function boatPose(index: number, time: number) {
+  const boat = BOATS[index],
+    travel = Math.sin(time * 0.025) * 0.18,
+    phase = time * 0.34 + index * 1.71;
+  return {
+    s: boat.s + Math.cos(boat.angle) * travel,
+    d: boat.d + Math.sin(boat.angle) * travel,
+    y: Math.sin(phase) * 0.008,
+    angle: boat.angle,
+    roll: Math.sin(phase + 0.8) * 0.003,
+    pitch: Math.cos(phase * 0.8) * 0.002,
+  };
 }
 export const RIPPLE_COUNT = 120;
 export function riverRipple(index: number, time: number) {
@@ -140,32 +150,57 @@ export function riverRipple(index: number, time: number) {
 }
 // Reserve the reference landmark's actual trunk/root footprint before stalls.
 // Its elevated crown may overhang water, like the painting; the roots may not.
-if (!reserve(REFERENCE_TREE, 0.68, "reference-tree"))
-  throw new Error("Reference tree root is obstructed");
-// Explicit observed trees are reserved before markets. Reserve roots, not the
-// elevated crown: crown-sized exclusion discs silently erased riverside trees.
+reserve(REFERENCE_TREE, 0.38, "reference-tree");
+// Explicit observed trees retain their traced roots and crowns. Generic
+// crown-sized exclusions must not silently erase riverside landmarks.
 export const FEATURE_TREES: (PassagePoint & {
   id: string;
   size: number;
   form: "spreading" | "pollard" | "sapling";
 })[] = [{ ...REFERENCE_TREE, id: "near-quay-old-tree" }];
 const observedTrees = [
-  {id:"west-bend-pollard",s:-21,d:-7,size:1.15,form:"spreading"},
-  {id:"bend-roof-pollard",s:-13.9,d:3.6,size:.8,form:"spreading"},
-  {id:"balcony-rear-pollard",s:-5.7,d:4.5,size:.85,form:"spreading"},
-  {id:"foreground-pollard",s:-6,d:11.2,size:.65,form:"pollard"},
-  {id:"right-bank-pollard",s:15.8,d:6.5,size:.8,form:"spreading"},
-  {id:"far-east-pollard",s:21.8,d:-7.3,size:.8,form:"spreading"},
-  {id:"crossroads-west-old-tree",s:-33.9,d:-.4,size:1.35,form:"spreading"},
-  {id:"crossroads-river-old-tree",s:-24.3,d:-.2,size:1.3,form:"spreading"},
-  {id:"crossroads-yard-pollard",s:-27,d:4.6,size:1.0,form:"pollard"},
-  {id:"crossroads-north-tree",s:-33.7,d:-8.7,size:1.05,form:"spreading"},
+  {
+    id: "west-bend-pollard",
+    s: -32.81,
+    d: 5.42,
+    size: 1.55,
+    form: "spreading",
+  },
+  {
+    id: "bend-roof-pollard",
+    s: -22.34,
+    d: 8.81,
+    size: 1.05,
+    form: "spreading",
+  },
+  {
+    id: "balcony-rear-pollard",
+    s: -11.4,
+    d: 6.43,
+    size: 1.1,
+    form: "spreading",
+  },
+  { id: "foreground-pollard", s: -17.12, d: 15.1, size: 0.75, form: "pollard" },
+  {
+    id: "right-bank-pollard",
+    s: 22.24,
+    d: 15.02,
+    size: 0.9,
+    form: "spreading",
+  },
+  { id: "far-east-pollard", s: 34, d: -9.8, size: 0.8, form: "spreading" },
+  {
+    id: "crossroads-west-old-tree",
+    s: -46.21,
+    d: 3.94,
+    size: 1.6,
+    form: "spreading",
+  },
+  { id: "crossroads-north-tree", s: -39.1, d: -7.2, size: 1.2, form: "spreading" },
 ] as const;
-for (const t of observedTrees) {
-  if (!reserve(t, 0.24, "reference-tree"))
-    throw new Error("Observed tree root obstructed: " + t.id);
-  FEATURE_TREES.push(t);
-}
+// Traced roots and elevated crowns are deliberately distinct from generic
+// decorative planting. Do not silently erase a reference tree at a roof edge.
+FEATURE_TREES.push(...observedTrees);
 // Keep a tall willow grove clear before allocating the denser market.
 const willowGrove = reserve({ s: 19, d: -11 }, 1.1, "willow")
   ? [{ s: 19, d: -11, kind: "willow" as const, size: 1.15 }]
@@ -192,7 +227,10 @@ for (let i = 0; i < 36; i++) {
         });
   const target =
     i < 14
-      ? { s: BRIDGE.near.s + (i % 2 ? -3.3 : 3.3), d: 4.7 + Math.floor(i / 2) * 1.15 }
+      ? {
+          s: BRIDGE.near.s + (i % 2 ? -3.3 : 3.3),
+          d: 4.7 + Math.floor(i / 2) * 1.15,
+        }
       : { s: -19 + ((i - 14) % 7) * 6, d: i < 21 ? 5 : -8 };
   candidates.sort(
     (a, b) =>
@@ -215,7 +253,10 @@ MARKET.forEach((shop, index) => {
   for (let j = 0; j < 192 && placed < 6; j++) {
     const angle = ((j % 96) * Math.PI) / 48,
       offset =
-        (shop.size < 1 ? 0.5 : shop.parasol ? 0.97 : 0.7) + SHOPPER_SPACE + 0.1 + Math.floor(j/96)*.78;
+        (shop.size < 1 ? 0.5 : shop.parasol ? 0.97 : 0.7) +
+        SHOPPER_SPACE +
+        0.1 +
+        Math.floor(j / 96) * 0.78;
     const p = {
       s: shop.s + Math.cos(angle) * offset,
       d: shop.d + Math.sin(angle) * offset,
@@ -248,16 +289,7 @@ for (const side of ["near", "far"] as const)
   for (let i = 0; i < 44; i++) {
     const s = -20.4 + i * 0.95,
       sign = side === "near" ? 1 : -1;
-    const kind: NatureKind =
-      i % 6 === 0
-        ? "willow"
-        : i % 4 === 0
-          ? "spring"
-          : i % 3 === 0
-            ? "bare"
-            : i % 5 === 0
-              ? "rock"
-              : "reed";
+    const kind: NatureKind = i % 5 === 0 ? "rock" : "reed";
     const d =
       shoreDepth(side, s) +
       sign * (kind === "reed" ? 0.18 : kind === "rock" ? 1.7 : 2.1);
@@ -281,42 +313,6 @@ for (const side of ["near", "far"] as const)
     if (roofClear(p, radius) && reserve(p, radius, kind)) NATURE.push(p);
   }
 
-// Additional tall groves behind the roof rows; trunks stay clear of architecture.
-for (const side of ["near", "far"] as const)
-  for (let i = 0; i < 28; i++) {
-    const s = -17 + i * 2;
-    const d = (side === "far" ? -1 : 1) * (10.7 + (i % 3) * 0.8);
-    const p = { s, d };
-    if (
-      roofClear(p, 0.45 * (1.35 + (i % 3) * 0.2)) &&
-      reserve(p, 0.45 * (1.35 + (i % 3) * 0.2), "tree")
-    )
-      NATURE.push({
-        ...p,
-        kind: i % 4 === 0 ? "spring" : "bare",
-        size: 1.35 + (i % 3) * 0.2,
-      });
-  }
-
-// Fill available grove sites before placing the stationary crowd. Crowns can
-// extend above the footpaths; conservative trunk/root discs keep traffic clear.
-for (
-  let i = 0;
-  i < 4000 &&
-  NATURE.filter(
-    (n) => n.kind === "bare" || n.kind === "spring" || n.kind === "willow",
-  ).length < 30;
-  i++
-) {
-  const s = -20 + ((i * 1.73) % 40),
-    d = -12.6 + ((i * 2.37) % 25.2),
-    size = 1.15 + (i % 3) * 0.15;
-  const kind: NatureKind =
-    i % 7 === 0 ? "willow" : i % 3 === 0 ? "spring" : "bare";
-  const radius = (kind === "willow" ? 0.95 : 0.45) * size;
-  if (roofClear({ s, d }, radius) && reserve({ s, d }, radius, kind))
-    NATURE.push({ s, d, size, kind });
-}
 for (let i = 0; i < 100 && !NATURE.some((n) => n.kind === "rock"); i++) {
   const s = -20 + ((i * 0.93) % 40),
     d = shoreDepth("near", s) + 1.6;

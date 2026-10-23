@@ -34,7 +34,7 @@ describe("reference-led asset geometry", () => {
         expect(bounds.max.z).toBeLessThan(5.4 * 0.62);
         expect(bounds.max.y).toBeLessThan(1.15);
         expect(g.getObjectByName("hollow-planked-hull")).toBeDefined();
-        if (style === "cabin" || style === "freight") {
+        if (style === "cabin") {
           // A side-facing ray above the sill passes through an actual open cabin bay.
           // A solid prefab cabin box would block this ray before the opposite wall.
           const cabin = g.getObjectByName("timber-cabin")!;
@@ -42,7 +42,7 @@ describe("reference-led asset geometry", () => {
             new THREE.Vector3(
               1,
               0.7,
-              5.4 * (style === "freight" ? 0.2 : 0.245) * 0.23,
+              5.4 * 0.245 * 0.23,
             ),
             new THREE.Vector3(-1, 0, 0),
           );
