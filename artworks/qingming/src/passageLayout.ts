@@ -1,4 +1,5 @@
 import { applyWestStreetLayout } from "./westStreetLayout";
+import { TRACED_BUILDINGS, tracedGround } from "./paintingLayout";
 // Coordinates in the reference crop's horizontal/depth basis. All terrain,
 // architecture and pedestrian routes share this basis before world rotation.
 export type BankSide = "far" | "near";
@@ -12,12 +13,14 @@ export const TERRAIN_BOUNDS = {sMin:-61,sMax:41,dMin:-30,dMax:30} as const;
 // Traced composition: the west reach turns through the top crop, while the
 // east reach continues beyond the right crop. These are independent banks.
 export const SHORELINES: Record<BankSide, PassagePoint[]> = {
-  far: [[-56,-60],[-17,-60],[-16.7,-18],[-15,-11.8],[-13,-8.6],[-8,-8.1],
-    [-3.7,-8.0],[3.8,-8.2],[7,-6.1],[12.5,-5.6],[17,-5.7],[19.4,-2.3],[21.8,-2.3],
+  // East of the bend the painting keeps the far shops and their moored
+  // freighters in frame, so this reach is narrower than the bridge crossing.
+  far: [[-56,-60],[-17,-60],[-16.7,-18],[-15,-11.8],[-13.6,-8.0],[-12.6,-6.9],[-10.5,-6.2],[-8,-5.9],
+    [-3.7,-5.6],[3.8,-5.9],[7,-5.9],[12.5,-5.6],[17,-5.9],[21,-7.4],
     [23.5,-8.6],[29,-8.6],[36,-7.8]].map(([s,d])=>({s,d})),
   near: [[-56,-60],[-27.6,-60],[-27.4,-15],[-27.3,-7],[-27.1,-4.4],[-26.44,-1.15],
     [-24.08,1.45],[-19.11,2.96],[-11.15,3.18],[-4.94,2.32],[0,3.4],[3.8,4.5],
-    [5.4,3.7],[6.53,2.79],[7.668,4.436],[8.804,6.082],[10.8,7.06],[16.7,7.06],[22.24,8.75],[27.78,10.44],[36.03,11.89]].map(([s,d])=>({s,d})),
+    [5.4,3.7],[6.53,3.2],[7.668,3.9],[8.804,4.6],[10.8,6.3],[16.7,7.06],[22.24,8.75],[27.78,10.44],[36.03,11.89]].map(([s,d])=>({s,d})),
 };
 // Monotone cubic tangents keep the traced bends smooth without overshooting
 // the dry-land anchors. The water shader uses these same coefficients.
@@ -95,23 +98,23 @@ const nearHall=(s:number,d:number,width:number,depth:number,height=1.2,angle=0):
 const farHall=(s:number,d:number,width:number,depth:number,height=1.2,angle=0):HallLayout=>
   ({side:"far",s,d,width,depth,height,angle});
 export const HALLS: HallLayout[] = [
-  farHall(-10.4,-12.2,4.5,3.5,1.5), farHall(-4.7,-12.2,5.8,3.5,1.5),
-  farHall(1.6,-12.1,5.6,3.3,1.4), farHall(26,-12.4,5.4,3.5,1.5),
-  farHall(32.3,-12.1,5.5,3.4,1.4), farHall(-10.4,-10.4,4.3,.9,1.2),
-  farHall(-4.7,-10.4,5.5,.9,1.2),
+  farHall(-10.0,-9.6,4.2,3.5,1.5), farHall(-4.7,-9.6,5.8,3.5,1.5),
+  farHall(1.6,-9.5,5.6,3.3,1.4), farHall(26,-12.4,5.4,3.5,1.5),
+  farHall(32.3,-12.1,5.5,3.4,1.4), farHall(-10.0,-7.8,4.0,.9,1.2),
+  farHall(-4.7,-7.8,5.5,.9,1.2),
   nearHall(-30.55,-2.5,3.7,5.5,1.5,1.15),
   nearHall(-16.12,10.68,6.9,3.2,2.0),
-  nearHall(-10.5,18.7,4.7,3.2,1.4,-.55),
+  nearHall(-10.5,18.7,3.6,3.6,1.5,-.55), // inn hall; position from TRACED_BUILDINGS
   nearHall(-29.5,14.3,8.0,5.8,1.6), nearHall(.6,5.5,2.3,1.6,1.35),
-  farHall(9,-8.8,2.9,2.4,1.3,.18), farHall(26,-10.5,5.0,.9,1.2),
+  farHall(7.9,-8.8,2.9,2.4,1.3,.18), farHall(26,-10.5,5.0,.9,1.2),
   farHall(32.3,-10.2,5.2,.9,1.2), farHall(37.5,-10.8,3.1,3.4,1.35),
   nearHall(11.5,13.3,8,4.7,1.5,-.12), nearHall(19.75,14.0,6.8,3.9,1.4,.15),
-  farHall(14.2,-8.65,2.8,2.3,1.3,.18),
-  nearHall(-43.3,14.1,8.0,6.3,1.5), nearHall(-22.3,21.9,7.3,4.9,1.45),
+  farHall(15.3,-8.85,2.8,2.3,1.3,.18),
+  nearHall(-43.3,14.1,8.0,6.3,1.5), nearHall(-22.3,21.9,7.3,4.9,1.45), // position from TRACED_BUILDINGS
   nearHall(-28.23,4.06,7.0,4.2,1.6), nearHall(-22.5,6.15,2.2,1.6,1.3,.05),
   nearHall(-31.5,-9.8,4.3,5.3,1.45,.98), nearHall(30.4,18.9,7.5,4.8,1.45,.15),
   nearHall(35.2,25.6,3.2,2.6,1.3,.15),
-  nearHall(-6.56,11.85,4.4,3.9,6,-.15),
+  nearHall(-5.4,13.2,3.4,3.0,1.6,-.15), // inn gatehouse carrying the festooned lattice
   nearHall(-42.06,1.44,7.0,5.0,1.6),
   nearHall(-38.2,21.3,5.4,4.4,1.45),
   nearHall(-51.5,.6,6.8,4.8,1.5), nearHall(-55.0,14.0,6.0,5.8,1.5),
@@ -119,12 +122,18 @@ export const HALLS: HallLayout[] = [
   nearHall(-50.7,-10.8,6.8,4.8,1.4), nearHall(-43.0,-16.5,8.3,4.6,1.4),
 ];
 applyWestStreetLayout(HALLS);
+for(const t of TRACED_BUILDINGS)Object.assign(HALLS[t.hall],tracedGround(t,GROUND_Y,HALLS[t.hall].height));
 for(const [gallery,parent] of [[5,0],[6,1],[13,3],[14,4]])HALLS[gallery].attachedTo=parent;
 HALLS[9].gable=true;
 HALLS.forEach(h=>{h.height=Math.max(h.height,MIN_EAVE_HEIGHT);});
 export const REFERENCE_TREE={s:26.11,d:10.85,size:1.8,form:"spreading" as const};
-const near={s:7.01,d:4.89},far={s:20.30,d:-4.28};
-export const BRIDGE={near,far,width:3.4,rise:5.4,
+// The painting draws the deck foreshortened along the scroll so the arch's
+// side reads; taken literally that puts the far foot mid-river. In plan the
+// bridge crosses the river with a 20° skew, which keeps the arch elevation
+// visible from the comparison camera while both landings stay on dry banks.
+const BRIDGE_PLAN_ANGLE=-70*Math.PI/180,BRIDGE_SPAN=13;
+const near={s:7.01,d:4.89},far={s:near.s+BRIDGE_SPAN*Math.cos(BRIDGE_PLAN_ANGLE),d:near.d+BRIDGE_SPAN*Math.sin(BRIDGE_PLAN_ANGLE)};
+export const BRIDGE={near,far,width:3.4,rise:3.8,
   length:Math.hypot(far.s-near.s,far.d-near.d),
   angle:Math.atan2(far.d-near.d,far.s-near.s),
   center:{s:(near.s+far.s)/2,d:(near.d+far.d)/2}};

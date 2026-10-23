@@ -13,7 +13,7 @@ it("keeps both crossroads and the bank-lane connection clear of building wings",
   }
   for(const p of CROSSROADS_PEOPLE){expect(roofClear(p,.2),`resident ${p.s},${p.d}`).toBe(true);expect(onBank("near",p,.1)).toBe(true);}
   expect(CROSSROADS_PEOPLE).toHaveLength(42);
-  expect(BUILDING_KINDS[26]).toBe("construction");
+  expect(BUILDING_KINDS[26]).toBe("festoon-gate");
   expect(Math.hypot(HALLS[26].s-BRIDGE.near.s,HALLS[26].d-BRIDGE.near.d)).toBeLessThan(18);
   expect(HALLS[26].s).toBeLessThan(BRIDGE.near.s);
   expect(HALLS[26].d).toBeGreaterThan(BRIDGE.near.d);

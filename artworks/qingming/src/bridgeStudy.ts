@@ -3,7 +3,7 @@ import {buildScrollTree} from "./referenceTrees";
 import {buildCrossroadsHouse,buildReferenceHouse} from "./crossroadsArchitecture";
 import {buildReferenceCoveredCart} from "./referenceStreetObjects";
 import {createCrossroadsGround,CROSSROADS_PEOPLE} from "./crossroads";
-import {buildConstruction, buildOrnateGate, boatCrewStations, addCrewEquipment, buildLoweringRig, updateLoweringRig} from "./referenceDetails";
+import {buildFestoonGate, buildOrnateGate, boatCrewStations, addCrewEquipment, buildLoweringRig, updateLoweringRig} from "./referenceDetails";
 import {setScenePalette,getScenePalette,type ScenePalette} from "./scenePalette";
 import { buildReferenceBoat, addReferenceArchitecture, type TreeForm } from "./referenceAssets";
 import { REFERENCE_AZIMUTH, scrollPoint } from "./scrollLayout";
@@ -503,9 +503,7 @@ export function hall(
   g.rotation.y = turn;
   if(kind==="cross-shop"||kind==="cross-house"){g.add(buildCrossroadsHouse(w,depth,h,kind==="cross-shop"));return g;}
   if (kind === "ornate-gate") { g.add(buildOrnateGate(w,depth,h)); return g; }
-  if (kind === "construction") {
-    g.add(buildConstruction(w,depth,h));return g;
-  }
+  if (kind === "festoon-gate") { g.add(buildFestoonGate(w,depth,h)); return g; }
   if (kind === "upper-storey") {
     g.name="two-storey-balcony-house";
     const floor=h+.12;
@@ -1058,7 +1056,7 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
     const kind=BUILDING_KINDS[index];
     const base=kind==="cross-shop"||kind==="cross-house"
       ? buildCrossroadsHouse(h.width,h.depth,h.height,kind==="cross-shop",index===27?"rear-wing":index===19?"side-wing":"front-wing")
-      : ["construction","ornate-gate"].includes(kind)
+      : ["festoon-gate","ornate-gate"].includes(kind)
       ? hall(new THREE.Group(),0,0,h.width,h.depth,h.height,0,kind,h.gable)
       : buildReferenceHouse(h.width,h.depth,h.height,kind);
     base.position.set(0,0,0);
@@ -1069,7 +1067,7 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
     for(const part of closeParts){const matrix=part.matrixWorld.clone();part.removeFromParent();part.applyMatrix4(matrix);fine.add(part);}
     batchStatic(base);root.add(base);
     // Recessed lattice screens, brackets and stacked wares add real depth.
-    const customFront=["cross-shop","cross-house","construction"].includes(BUILDING_KINDS[index]);
+    const customFront=["cross-shop","cross-house","festoon-gate"].includes(BUILDING_KINDS[index]);
     if(!customFront)for(let x=-h.width*.4;x<h.width*.45;x+=.55){
       for(const side of [-1,1]){
         beam(fine,[x,h.height-.14,side*h.depth*.48],[x+.1,h.height-.03,side*(h.depth*.5+.1)],.012,dark);
@@ -1090,12 +1088,12 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
     const roofGeo=new THREE.BufferGeometry();roofGeo.setAttribute("position",new THREE.Float32BufferAttribute(vertices,3));
     roofGeo.setIndex([0,4,5,0,5,1,3,2,5,3,5,4,0,3,4,1,5,2]);roofGeo.computeVertexNormals();mesh(coarse,roofGeo,roof);
     box(coarse,h.width*.55,h.height*.5,.025,0,h.height*.38,h.depth/2+.02,dark);batchStatic(coarse);
-    if(BUILDING_KINDS[index]==="ornate-gate" || BUILDING_KINDS[index]==="construction" || BUILDING_KINDS[index]==="upper-storey" || BUILDING_KINDS[index]==="cross-shop" || BUILDING_KINDS[index]==="cross-house"){
+    if(BUILDING_KINDS[index]==="ornate-gate" || BUILDING_KINDS[index]==="festoon-gate" || BUILDING_KINDS[index]==="upper-storey" || BUILDING_KINDS[index]==="cross-shop" || BUILDING_KINDS[index]==="cross-house"){
       coarse.traverse(n=>{if(n instanceof THREE.Mesh || n instanceof THREE.Line)n.geometry.dispose();});coarse.clear();
       coarse.add(base.clone());
     }
     fine.visible=false;coarse.visible=false;
-    detailedBuildings.push({root,base,fine,coarse,height:BUILDING_KINDS[index]==="upper-storey"?h.height+Math.min(.92,h.depth*.26)+.1:BUILDING_KINDS[index]==="ornate-gate"?h.height+1.5:BUILDING_KINDS[index]==="construction"?h.height*1.92:top,detail:1});
+    detailedBuildings.push({root,base,fine,coarse,height:BUILDING_KINDS[index]==="upper-storey"?h.height+Math.min(.92,h.depth*.26)+.1:BUILDING_KINDS[index]==="ornate-gate"?h.height+1.5:BUILDING_KINDS[index]==="festoon-gate"?(base.getObjectByName("festooned-inn-gateway")?.userData.maximumHeight??h.height):top,detail:1});
   }
   const vegetationLevels=[0,1,2].map(level=>{
     geometryDetail=level as DetailLevel;const plants=new THREE.Group();plants.name="vegetation-detail-"+level;
@@ -1245,7 +1243,7 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
   const buildingPeople=[
     {building:8,x:-.8,y:HALLS[8].height*.52+.04,z:HALLS[8].depth*.39,variant:6},
     {building:8,x:.7,y:HALLS[8].height*.52+.04,z:HALLS[8].depth*.39,variant:0},
-    {building:26,x:.25,y:HALLS[26].height*.52+.025,z:HALLS[26].depth*.41,variant:9},
+    {building:26,x:.25,y:.07,z:HALLS[26].depth*.62,variant:9},
   ].map(site=>({...site,rig:addPerson(detailedBuildings[site.building].root,site.variant,"building-occupant")}));
   crowd.finish();
   function animatePerson(
@@ -1304,7 +1302,7 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
       const roles=observers.reduce((counts,p)=>{
         const role=p.group.userData.activity as string;counts[role]=(counts[role]??0)+1;return counts;
       },{} as Record<string,number>);
-      return {boatCrews:[...boats,...moored].map((b,i)=>({style:b.userData.boatStyle,count:crew.filter(c=>c.boat===i).length,roof:crew.filter(c=>c.boat===i&&c.station.role==="roof").length})),landmarks:["two-storey-balcony-house","open-timber-construction","western-crossroads","joined-roof-houses"],crowd:crowd.metadata(),seed,palette:getScenePalette(),vegetationLevel:plantDetail,
+      return {boatCrews:[...boats,...moored].map((b,i)=>({style:b.userData.boatStyle,count:crew.filter(c=>c.boat===i).length,roof:crew.filter(c=>c.boat===i&&c.station.role==="roof").length})),landmarks:["two-storey-balcony-house","festooned-inn-gateway","western-crossroads","joined-roof-houses"],crowd:crowd.metadata(),seed,palette:getScenePalette(),vegetationLevel:plantDetail,
         buildings:detailedBuildings.map(b=>b.detail),traffic:CART_KINDS,bridgeCounters,
         marketTypes:MARKET_TYPES,referenceTrees:FEATURE_TREES.map(t=>t.id),
         streetLife:{walkers:people.length,mainStreetWalkers:BRIDGE_WALKERS,approachPeople,

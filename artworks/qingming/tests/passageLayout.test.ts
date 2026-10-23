@@ -23,9 +23,11 @@ describe("reference passage geometry", () => {
     expect(onBank("near", {s:-22,d:-16})).toBe(false);
     expect(onBank("far", {s:24,d:0})).toBe(false);
     expect(onBank("near", {s:24,d:0})).toBe(false);
-    expect(BRIDGE.far.s-BRIDGE.near.s).toBeGreaterThan(12);
-    expect(BRIDGE.angle).toBeGreaterThan(-.7);
-    expect(BRIDGE.angle).toBeLessThan(-.5);
+    // The bridge crosses the river with a modest skew, not along it.
+    expect(BRIDGE.angle).toBeGreaterThan(-1.4);
+    expect(BRIDGE.angle).toBeLessThan(-1.05);
+    expect(BRIDGE.far.d).toBeLessThan(shoreDepth("far",BRIDGE.far.s)-1);
+    expect(BRIDGE.near.d).toBeGreaterThan(shoreDepth("near",BRIDGE.near.s)+.5);
   });
   it("keeps every roof overhang on its own riverbank", () => {
     for (const h of HALLS)
@@ -110,7 +112,7 @@ describe("reference passage geometry", () => {
     expect(BRIDGE.width / figureHeight).toBeGreaterThan(3.5);
     expect(BRIDGE.width / figureHeight).toBeLessThan(4.1);
     expect(Math.min(...HALLS.map(h=>h.height))*.875).toBeGreaterThan(figureHeight*1.08);
-    expect(Math.max(...HALLS.filter((_,i)=>!["construction","ornate-gate"].includes(BUILDING_KINDS[i])).map((h) => h.height)) / figureHeight).toBeLessThan(
+    expect(Math.max(...HALLS.filter((_,i)=>!["festoon-gate","ornate-gate"].includes(BUILDING_KINDS[i])).map((h) => h.height)) / figureHeight).toBeLessThan(
       3,
     );
     expect(bridgeHeight(0)).toBeCloseTo(GROUND_Y + BRIDGE.rise);

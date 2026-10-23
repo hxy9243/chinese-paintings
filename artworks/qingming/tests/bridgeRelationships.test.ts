@@ -31,10 +31,9 @@ it("puts the near-bank projection under the abutment rather than beside the brid
   const foot=-BRIDGE.length/2;
   expect(onBank("near",bridgePoint(foot+.35))).toBe(true);
   expect(onBank("near",bridgePoint(foot+1.6))).toBe(false);
-  // The bank to the left must recede behind the landing. The previous detached
-  // peak projected into the water six units beside the bridge's actual base.
-  for(let s=BRIDGE.near.s-6;s<BRIDGE.near.s-2;s+=.1) {
-    const p=bridgeCoordinates({s,d:shoreDepth("near",s)});
-    expect(p.along,`shore at ${s}`).toBeLessThan(foot-.5);
-  }
+  // The bank beside the bridge must not reach further into the river than the
+  // abutment. A detached peak once projected six units beside the base.
+  const abutmentEdge=bridgePoint(foot+1.6).d;
+  for(let s=BRIDGE.near.s-6;s<BRIDGE.near.s-2;s+=.1)
+    expect(shoreDepth("near",s),`shore at ${s}`).toBeGreaterThan(abutmentEdge-.3);
 });

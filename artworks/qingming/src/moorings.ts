@@ -2,8 +2,8 @@ import { shoreDepth, SHORELINES, type BankSide } from "./passageLayout";
 
 // Traced long freighters below the far shops and shorter working boats at the bend.
 export const MOORED_BOATS = [
-  {s:-8.48,d:-6.30,length:8.09,width:1.25,cabin:true,angle:.054,side:"far" as BankSide},
-  {s:1,d:-6.50,length:8.23,width:1.25,cabin:true,angle:-.079,side:"far" as BankSide},
+  {s:-8.48,d:-4.60,length:8.09,width:1.25,cabin:true,angle:.054,side:"far" as BankSide},
+  {s:1,d:-4.55,length:8.23,width:1.25,cabin:true,angle:-.079,side:"far" as BankSide},
   {s:29.1,d:-6.6,length:10.6,width:1.35,cabin:true,angle:-.083,side:"far" as BankSide},
   {s:-21.84,d:-9.87,length:2.49,width:1.05,cabin:true,angle:.087,side:"near" as BankSide},
   {s:-23.52,d:-6.95,length:3.46,width:1.25,cabin:true,angle:-.253,side:"near" as BankSide},

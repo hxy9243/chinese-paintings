@@ -26,7 +26,7 @@ export type BuildingKind =
   | "openhall"
   | "compound"
   | "upper-storey"
-  | "construction"
+  | "festoon-gate"
   | "ornate-gate"
   | "cross-shop"
   | "cross-house";
@@ -59,7 +59,7 @@ export const BUILDING_KINDS: BuildingKind[] = [
   "courtyard",
 ];
 BUILDING_KINDS[8] = "upper-storey";
-BUILDING_KINDS.push("construction");
+BUILDING_KINDS.push("festoon-gate");
 BUILDING_KINDS[10] = "cross-house";
 BUILDING_KINDS[19] = "cross-house";
 BUILDING_KINDS[20] = "cross-house";

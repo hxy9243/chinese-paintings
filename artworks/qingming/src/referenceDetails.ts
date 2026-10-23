@@ -19,59 +19,79 @@ function line(g:THREE.Object3D,points:P[]){
   g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(points.map(p=>new THREE.Vector3(...p))),ink));
 }
 
-export function buildConstruction(width:number,depth:number,height:number){
-  const g=new THREE.Group();g.name="open-timber-construction";
-  const w=width*.44,d=depth*.43,stage=height*.52,eave=height*.57,peak=height*.72;
+// The painting's 彩楼欢门: a pole lattice raised on the flat top of the inn's
+// gatehouse, tiered and stepped in, ending in clusters of pointed spires with
+// splayed corner poles. It advertises the inn; it is not a building site.
+export function buildFestoonGate(width:number,depth:number,eave:number){
+  const g=new THREE.Group();g.name="festooned-inn-gateway";
+  const w=width/2,d=depth/2,overhang=.36,rise=.42;
   box(g,[width,.07,depth],[0,.035,0],light);
-  // Narrow occupied lower bays remain open between real posts and beams.
-  for(const x of [-w,-w*.5,0,w*.5,w])for(const z of [-d,d]){
-    rod(g,[x,0,z],[x,eave,z],.035,dark);
-    if(Math.abs(x)>w*.9)for(let y=.3;y<stage;y+=.24)rod(g,[x-.035,y,z],[x+.035,y,z],.012,light);
-  }
-  for(const y of [height*.27,stage])for(const z of [-d,d])rod(g,[-w,y,z],[w,y,z],.028,dark);
-  for(const x of [-w,w])for(const y of [height*.27,stage])rod(g,[x,y,-d],[x,y,d],.028,dark);
-  for(const side of [-1,1])box(g,[width*.91,.045,depth*.20],[0,stage,side*depth*.34],light);
-  // A low swept tile canopy around the stage, with its corners gently lifted.
+  // Open gatehouse: framed bays, a closed rear wall and the inn's sign board.
+  for(const x of [-w*.9,0,w*.9])for(const z of [-d*.9,d*.9])rod(g,[x,0,z],[x,eave,z],.045,dark);
+  for(const x of [-w*.9,w*.9])rod(g,[x,0,0],[x,eave,0],.04,dark);
+  for(const z of [-d*.9,d*.9])box(g,[width*.94,.09,.07],[0,eave-.06,z],dark);
+  for(const x of [-w*.9,w*.9])box(g,[.07,.09,depth*.94],[x,eave-.06,0],dark);
+  box(g,[width*.86,eave*.78,.05],[0,eave*.39,-d*.88],light);
+  box(g,[.05,eave*.78,depth*.5],[-w*.88,eave*.39,-d*.42],light);
+  box(g,[width*.36,eave*.5,.02],[-w*.42,eave*.66,d*.9],cloth);
+  const sign=box(g,[.24,.62,.035],[w*.62,eave*.42,d*.96],light);
+  line(sign,[[-.1,-.29,.02],[-.1,.29,.02],[.1,.29,.02],[.1,-.29,.02],[-.1,-.29,.02]]);
+  // Flat-topped hip roof with a concave sweep and lifted corners.
+  const X=w+overhang,Z=d+overhang,X2=w*.78,Z2=d*.78,top=eave+rise;
+  const corners:[number,number][]=[[-1,1],[1,1],[1,-1],[-1,-1]];
   const positions:number[]=[];
-  const roofY=(x:number,z:number)=>eave+(peak-eave)*(1-1.35*Math.abs(z)/(d+.1)+.35*(Math.abs(z)/(d+.1))**2)+.16*(Math.abs(x)/(w+.1))**5;
-  const point=(x:number,z:number):P=>[x,roofY(x,z),z];
-  for(let i=0;i<24;i++)for(let j=0;j<20;j++){
-    const x0=-(w+.1)+2*(w+.1)*i/24,x1=-(w+.1)+2*(w+.1)*(i+1)/24,z0=-(d+.1)+2*(d+.1)*j/20,z1=-(d+.1)+2*(d+.1)*(j+1)/20;
-    positions.push(...point(x0,z0),...point(x1,z0),...point(x1,z1),...point(x0,z0),...point(x1,z1),...point(x0,z1));
+  const roofPoint=(face:number,a:number,t:number):P=>{
+    const [ax,az]=corners[face],[bx,bz]=corners[(face+1)%4];
+    const ox=(ax+(bx-ax)*a)*X,oz=(az+(bz-az)*a)*Z,ix=(ax+(bx-ax)*a)*X2,iz=(az+(bz-az)*a)*Z2;
+    const lift=.13*(1-t)**2*(2*Math.abs(a-.5))**4;
+    return [ox+(ix-ox)*t,eave+rise*t**1.8+lift,oz+(iz-oz)*t];
+  };
+  for(let face=0;face<4;face++){
+    for(let i=0;i<12;i++)for(let j=0;j<6;j++){
+      const a0=i/12,a1=(i+1)/12,t0=j/6,t1=(j+1)/6;
+      positions.push(...roofPoint(face,a0,t0),...roofPoint(face,a1,t0),...roofPoint(face,a1,t1),
+        ...roofPoint(face,a0,t0),...roofPoint(face,a1,t1),...roofPoint(face,a0,t1));
+    }
+    for(let i=1;i<12;i++)line(g,Array.from({length:7},(_,j)=>{const p=roofPoint(face,i/12,j/6);return [p[0],p[1]+.012,p[2]] as P;}));
+    line(g,Array.from({length:13},(_,i)=>roofPoint(face,i/12,0)));
   }
   const geo=new THREE.BufferGeometry().setAttribute("position",new THREE.Float32BufferAttribute(positions,3));geo.computeVertexNormals();
-  const roof=new THREE.Mesh(geo,dark);roof.name="swept-staging-roof";g.add(roof);
-  for(let x=-w;x<=w+.01;x+=.12)line(g,Array.from({length:21},(_,i)=>{const z=-(d+.1)+2*(d+.1)*i/20;return [x,roofY(x,z)+.012,z] as P;}));
-  for(const z of [-d-.1,d+.1])line(g,Array.from({length:25},(_,i)=>point(-(w+.1)+2*(w+.1)*i/24,z)));
-  // Closely lashed verticals and ledgers continue above the roof. They taper
-  // into an irregular forest of poles, rather than a single box-shaped tower.
-  for(const side of [-1,1])for(let j=0;j<9;j++){
-    const x=-w+j*w/4,z=side*d,top=height*(1.60+.32*((j*7)%9)/8);
-    rod(g,[x,.03,z],[x+.025*Math.sin(j*2.3),top,z],.016,j%2?timber:dark);
-    for(let y=stage;y<top-.03;y+=.22){
-      const spread=Math.max(.025,.16*(1-(y-stage)/(top-stage)));
-      rod(g,[x-spread,y,z],[x+spread,y,z],.011,timber);
-      if(y<height*1.44&&j<8)rod(g,[x,y,z],[x+w/4,y+.015*Math.sin(j),z],.012,timber);
-      if(j%2===0)line(g,[[x-.028,y-.018,z-.02],[x+.028,y+.02,z+.02],[x-.025,y+.035,z-.02]]);
+  const roof=new THREE.Mesh(geo,dark);roof.name="gatehouse-roof";g.add(roof);
+  box(g,[2*X2,.06,2*Z2],[0,top,0],timber);
+  for(let i=0;i<=8;i++)for(const [x,z] of [[-X2+2*X2*i/8,Z2],[-X2+2*X2*i/8,-Z2]] as [number,number][])rod(g,[x,top,z],[x,top+.26,z],.01,dark);
+  for(const y of [.13,.26])for(const [a,b] of [[[-X2,Z2],[X2,Z2]],[[X2,Z2],[X2,-Z2]],[[X2,-Z2],[-X2,-Z2]],[[-X2,-Z2],[-X2,Z2]]] as [number,number][][])
+    rod(g,[a[0],top+y,a[1]],[b[0],top+y,b[1]],.012,dark);
+  // Three stepped tiers of lashed poles and ledgers.
+  let base=top+.03,tip=base;
+  for(const [k,[sx,sz,h]] of [[.94,.92,1.6],[.74,.68,1.25],[.52,.46,1.0]].entries()){
+    const hx=X2*sx,hz=Z2*sz,ring:[number,number][]=[];
+    const across=8-2*k,deep=6-2*k;
+    for(let i=0;i<=across;i++)ring.push([-hx+2*hx*i/across,hz],[-hx+2*hx*i/across,-hz]);
+    for(let i=1;i<deep;i++)ring.push([-hx,-hz+2*hz*i/deep],[hx,-hz+2*hz*i/deep]);
+    for(const [n,[x,z]] of ring.entries())rod(g,[x,base,z],[x+.02*Math.sin(n*2.1+k),base+h,z],.017,n%3?dark:timber);
+    for(let y=.14;y<h;y+=.16)for(const [a,b] of [[[-hx,hz],[hx,hz]],[[hx,hz],[hx,-hz]],[[hx,-hz],[-hx,-hz]],[[-hx,-hz],[-hx,hz]]] as [number,number][][])
+      rod(g,[a[0],base+y,a[1]],[b[0],base+y,b[1]],.012,dark);
+    // Cross-bracing makes each tier read as one lashed frame from afar.
+    for(const z of [-hz,hz])for(let i=0;i<across;i+=2)rod(g,[-hx+2*hx*i/across,base,z],[-hx+2*hx*(i+1)/across,base+h,z],.009,timber);
+    // Corner poles splay outward like the painting's spiky silhouette.
+    for(const [cx,cz] of corners)rod(g,[cx*hx,base+h*.2,cz*hz],[cx*(hx+.42),base+h+.5,cz*(hz+.2)],.01,timber);
+    base+=h;
+    if(k===2)for(const [n,[x,z]] of ring.entries()){
+      const spire=.7+.6*((n*5)%7)/6,peak:P=[x*.9,base+spire,z*.9];
+      if(n%2)continue;
+      rod(g,[x,base,z],peak,.015,dark);
+      for(const side of [-1,1])rod(g,[x+side*.1,base,z],peak,.01,dark);
+      for(let y=.12;y<spire-.08;y+=.14){const half=.09*(1-y/spire);rod(g,[x*.97-half,base+y,z*.97],[x*.97+half,base+y,z*.97],.006,timber);}
+      tip=Math.max(tip,peak[1]);
     }
-    rod(g,[x-.18,height*1.35,z],[x,top-.02,z],.012,timber);
-    rod(g,[x+.18,height*1.35,z],[x,top-.02,z],.012,timber);
   }
-  for(const side of [-1,1])for(let j=0;j<6;j++){
-    const x=side*w,z=-d+j*2*d/5,top=height*(1.43+(j%3)*.09);
-    rod(g,[x,.03,z],[x,top,z],.014,light);
-    for(let y=stage;y<height*1.39;y+=.22)if(j<5)rod(g,[x,y,z],[x,y+.018,z+2*d/5],.011,timber);
-  }
-  for(const z of [-d,d])for(let j=0;j<4;j++){
-    const x=-w+j*w/2;
-    rod(g,[x,stage+.1,z],[x+w/2,height*1.37,z],.011,light);
-    rod(g,[x,height*1.37,z],[x+w/2,stage+.1,z],.011,light);
-  }
-  // Interior ladder and tied supplies occupy the staging, not the street.
-  for(const x of [-.16,.16])rod(g,[x,.03,d*.9],[x,stage,d*.45],.018);
-  for(let y=.16;y<stage;y+=.2)rod(g,[-.16,y,d*(.9-.45*y/stage)],[.16,y,d*(.9-.45*y/stage)],.012);
-  for(let j=0;j<5;j++)rod(g,[-w*.85,.1+j*.025,-d*.15],[w*.7,.1+j*.025,-d*.15],.025);
-  g.userData.stagingHeight=stage;g.userData.maximumHeight=height*1.92;
+  // An outrigger carries the striped hanging banner over the street side.
+  const arm=top+1.0;
+  rod(g,[w*.7,arm,d*.3],[w+1.6,arm+.06,d*.3],.014,dark);
+  const banner=new THREE.Group();banner.position.set(w+1.15,arm-.55,d*.3);banner.name="striped-inn-banner";g.add(banner);
+  box(banner,[.72,1.0,.015],[0,0,0],cloth);
+  for(const x of [-.26,0,.26])box(banner,[.11,.98,.02],[x,0,.003],dark);
+  g.userData.maximumHeight=tip;
   return g;
 }
 

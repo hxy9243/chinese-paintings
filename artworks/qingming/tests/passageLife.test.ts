@@ -28,7 +28,7 @@ describe("life in the reference passage", () => {
     expect(BUILDING_KINDS).toHaveLength(HALLS.length);
     expect(new Set(BUILDING_KINDS).size).toBe(12);
     expect(new Set(NATURE.map((n) => n.kind))).toEqual(
-      new Set(["rock", "reed"]),
+      new Set(["rock", "reed", "willow"]),
     );
     for (const n of NATURE) {
       expect(onBank("near", n) || onBank("far", n)).toBe(true);
