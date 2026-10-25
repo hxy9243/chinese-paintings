@@ -14,7 +14,7 @@ Validation:
 - Production still capture: shader/console/network errors, scene-time changes, exact replay, coarse overview and mixed perspective LOD are checked in `review.json`. Source hashes bind the stills to these model factories.
 - Seven JPEG stills, no video. Software Chromium; no hardware performance claim.
 
-Reproduction after `npm run build --prefix artworks/qingming`:
+Reproduction after `npm run qingming:build`:
 
 ```sh
 REVIEW_FOUNDATIONS=1 REVIEW_DIR=docs/reviews/2026-10-20-foundations-clothing node scripts/review-qingming-stills.mjs

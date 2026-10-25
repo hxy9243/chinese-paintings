@@ -1,5 +1,5 @@
-import {chromium} from '../artworks/qingming/node_modules/playwright/index.mjs';
-import {createServer} from '../artworks/qingming/node_modules/vite/dist/node/index.js';
+import {chromium} from 'playwright';
+import {createServer} from 'vite';
 import fs from 'node:fs';
 const out='docs/reviews/2026-10-22-reconstruction';fs.mkdirSync(out,{recursive:true});
 const server=await createServer({root:'artworks/qingming',server:{host:'127.0.0.1',port:4192,strictPort:true}});await server.listen();
@@ -7,7 +7,7 @@ const browser=await chromium.launch({executablePath:process.env.PLAYWRIGHT_CHROM
 try{
  const page=await browser.newPage();await page.goto('http://127.0.0.1:4192/');
  const data=await page.evaluate(async()=>{
-  const THREE=await import('/node_modules/three/build/three.module.js');
+  const THREE=await import('/@id/three');
   const {paintMaterial,createDryInk}=await import('/src/paintMaterial.ts');
   const {scrollPoint}=await import('/src/scrollLayout.ts');
   const renderer=new THREE.WebGLRenderer({alpha:true,antialias:false});renderer.setSize(128,128);renderer.setClearColor(0,0);

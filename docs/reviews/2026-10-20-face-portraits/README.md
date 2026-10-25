@@ -8,7 +8,7 @@ The figure study now has a **Face close-up** checkbox. Select a person and use t
 
 Validation: production TypeScript/Vite build and 10 focused tests passed across face geometry, riverbank/figure compatibility and screen-space detail. Tests check finite vertices, unit outward-facing normals, matching feature and sculpt surfaces, distinct profiles and geometry reduction. Production browser capture checks shader/console/network errors, exact-time replay, high-detail faces in the main scene and a fully coarse overview crowd. See `review.json` for source hashes and settings. Four actual Three.js stills, no generated imagery or video. Software Chromium; no hardware frame-rate claim.
 
-Reproduce after `npm run build --prefix artworks/qingming`:
+Reproduce after `npm run qingming:build`:
 
 ```sh
 node scripts/review-qingming-faces.mjs

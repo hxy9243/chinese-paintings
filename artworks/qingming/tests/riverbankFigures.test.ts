@@ -11,6 +11,7 @@ import {
   GROUND_Y,
   PERSON_SCALE,
   shoreDepth,
+  shoreJitter,
   bridgeHeight,
 } from "../src/passageLayout";
 import { mooringAnchor, MOORED_BOATS } from "../src/moorings";
@@ -107,9 +108,12 @@ it("rounds shoreline bends and eases the bank lip without changing the raised da
   for (const side of ["near", "far"] as const) {
     for (const s of [-13, -7, -3.6, -3, 0, 4, 7, 10, 11, 17]) {
       const h = 0.001;
-      const left = (bankEdgeDepth(side, s) - bankEdgeDepth(side, s - h)) / h;
-      const right = (bankEdgeDepth(side, s + h) - bankEdgeDepth(side, s)) / h;
+      // The traced curve is smooth; the zigzag jitter on top of it is bounded.
+      const base = (x: number) => bankEdgeDepth(side, x) - shoreJitter(side, x);
+      const left = (base(s) - base(s - h)) / h;
+      const right = (base(s + h) - base(s)) / h;
       expect(Math.abs(left - right)).toBeLessThan(0.005);
+      expect(Math.abs(shoreJitter(side, s))).toBeLessThan(0.26);
     }
     const top = bankSection(side, 0, 0),
       lip = bankSection(side, 0, 0.05);

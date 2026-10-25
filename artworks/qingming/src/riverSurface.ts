@@ -4,6 +4,7 @@ import { scrollPoint } from "./scrollLayout";
 
 // The same analytic surface supports GPU water and CPU wake ribbons. Its
 // crests stay below the low quays; no frame history is needed when seeking.
+// The shallows follow the smooth traced banks; their zigzag is bank geometry.
 export const WATER_LEVEL = -0.045;
 export function waterHeight(s: number, d: number, time: number) {
   return (

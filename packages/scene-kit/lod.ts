@@ -17,3 +17,8 @@ export function chooseDetail(pixels: number, previous: DetailLevel = 1): DetailL
   if (previous === 0 && pixels <= 10) return 0;
   return pixels >= 22 ? 2 : pixels < 8 ? 0 : 1;
 }
+/** Level drawn during camera drags: one step below the settled choice. Going
+ * straight to level 0 made close views read as plain boxes while turning. */
+export function dragDetail(level: DetailLevel): DetailLevel {
+  return Math.max(0, level - 1) as DetailLevel;
+}

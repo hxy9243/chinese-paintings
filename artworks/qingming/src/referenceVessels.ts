@@ -167,9 +167,11 @@ export function buildReferenceBoat(
   for (const end of [-1, 1]) {
     const s = section(end);
     rod(g, [-s.breadth, s.sheer, s.z], [s.breadth, s.sheer, s.z], 0.022, edge);
+    // End platforms stand a board above the deck: a top face flush with the
+    // deck z-fights and flickers as the boat bobs or the camera turns.
     block(g, width * 0.44, 0.045, length * 0.13, [
       0,
-      0.3125,
+      0.335 + 0.012 - 0.0225,
       end * length * 0.39,
     ]);
   }

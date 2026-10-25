@@ -52,9 +52,9 @@ through the review script's optional local font mirror, without changing the app
 Reproduce the checks:
 
 ```sh
-npm test --prefix artworks/qingming
-npm run build --prefix artworks/qingming
-npm run test:e2e --prefix artworks/qingming
+npm test
+npm run qingming:build
+npm run test:e2e
 REVIEW_FRAMES=48 REVIEW_DIR=docs/reviews/2026-10-20-street-watercolor node scripts/review-qingming-watercolor.mjs
 ```
 

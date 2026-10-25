@@ -252,3 +252,71 @@ export function buildCrossroadsHouse(w:number,d:number,h:number,shop=true,varian
   root.userData.variant=variant;
   return root;
 }
+
+/** Distant/drag stand-in for buildReferenceHouse. It keeps the same curved
+ * gable envelope, eave overhang, ridge, tile courses and ink outline, but as a
+ * handful of flat strips and line strokes instead of 3D barrel caps and joinery. */
+const tileCourse=createDryInk(.5);
+export function buildDistantReferenceHouse(w:number,d:number,h:number,kind="shop"){
+  const root=new THREE.Group();root.name="distant-reference-house";
+  const shop=kind==="shop"||kind==="gallery"||kind==="market"||kind==="teahouse";
+  const eave=h+.10,rise=Math.min(.92,d*.26),x0=-w/2-.18,x1=w/2+.18,z1=d/2+.20;
+  const y=(z:number)=>eave+rise*profile(Math.min(1,Math.abs(z)/z1));
+  // Five rows per slope keep the concave sweep that the refined roof has.
+  const rows=[0,.2,.4,.6,.8,1].map(t=>t*z1);
+  const faces:number[]=[],courses:number[]=[],outline:number[]=[],fascia:number[]=[];
+  const tri=(out:number[],a:P,b:P,c:P)=>out.push(...a,...b,...c);
+  for(const side of [-1,1])for(let j=1;j<rows.length;j++){
+    const za=side*rows[j-1],zb=side*rows[j];
+    const a:P=[x0,y(za),za],b:P=[x1,y(za),za],c:P=[x1,y(zb),zb],e:P=[x0,y(zb),zb];
+    if(side>0){tri(faces,a,c,b);tri(faces,a,e,c);}else{tri(faces,a,b,c);tri(faces,a,c,e);}
+  }
+  // Tile courses run down each slope, at the refined roof's cap spacing.
+  for(let i=0,n=Math.ceil((x1-x0)/.13);i<=n;i++){
+    const x=x0+(x1-x0)*i/n;
+    for(const side of [-1,1])for(let j=1;j<rows.length;j++){
+      const za=side*rows[j-1],zb=side*rows[j];courses.push(x,y(za)+.014,za,x,y(zb)+.014,zb);
+    }
+  }
+  for(const side of [-1,1]){
+    const z=side*z1,top=y(z);
+    // Eave fascia: a thin dark band under the overhang, plus layered eave ink.
+    tri(fascia,[x0,top,z],[x1,top,z],[x1,top-.1,z]);tri(fascia,[x0,top,z],[x1,top-.1,z],[x0,top-.1,z]);
+    outline.push(x0,top-.02,z,x1,top-.02,z,x0,top-.09,z,x1,top-.09,z);
+    for(const x of [x0,x1])for(let j=1;j<rows.length;j++){
+      const za=side*rows[j-1],zb=side*rows[j];outline.push(x,y(za),za,x,y(zb),zb);
+    }
+  }
+  surface(root,faces,tile,"distant-curved-tile-roof");surface(root,fascia,dark,"distant-eave-fascia");
+  beam(root,[x0,eave+rise+.04,0],[x1,eave+rise+.04,0],.045,tileLight);
+  // Walls, gable infill and timber frame, outlined like the painted halls.
+  box(root,w,h,d*.96,0,h/2,0,plaster);
+  for(const side of [-1,1]){
+    const gx=side*w/2,peak=eave+rise-.03;
+    surface(root,[gx+side*.005,h,-d/2,gx+side*.005,peak,0,gx+side*.005,h,d/2],plaster,"distant-gable");
+    outline.push(gx,h,-d/2,gx,peak,0,gx,peak,0,gx,h,d/2,gx,h,-d/2,gx,h,d/2);
+    for(const z of [-d/2,d/2])outline.push(gx,0,z,gx,h,z);
+  }
+  const n=Math.max(2,Math.round(w/.88)),bay=w/n;
+  for(const side of [-1,1]){
+    const z=side*(d*.48+.012);
+    outline.push(-w/2,h,z,w/2,h,z,-w/2,.02,z,w/2,.02,z);
+    for(let j=0;j<=n;j++)box(root,.05,h,.04,-w/2+j*bay,h/2,z,dark);
+    for(let j=0;j<n;j++){
+      const x=-w/2+(j+.5)*bay;
+      // Doors read as timber recesses, open shop bays as a transom and counter,
+      // and the rest as lattice screens, matching the refined bay fronts.
+      const zz=z+side*.006;
+      if(j===Math.floor(n/2))box(root,bay-.1,h*.8,.02,x,h*.4,z+side*.004,timber);
+      else if(side>0&&shop)outline.push(x-bay*.45,h*.87,zz,x+bay*.45,h*.87,zz,x-bay*.4,h*.47,zz,x+bay*.4,h*.47,zz);
+      else{
+        const lw=bay*.72,lh=h*.4,ly=h*.56;
+        for(let q=0;q<=5;q++){const lx=x-lw/2+q*lw/5;outline.push(lx,ly-lh/2,zz,lx,ly+lh/2,zz);}
+        for(const t of [-.5,0,.5])outline.push(x-lw/2,ly+t*lh,zz,x+lw/2,ly+t*lh,zz);
+      }
+    }
+  }
+  strokes(root,courses,"distant-tile-courses",tileCourse);strokes(root,outline,"distant-ink-outline");
+  root.userData={architecture:"distant-timber-hall",kind};
+  return root;
+}

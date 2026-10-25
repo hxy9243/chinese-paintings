@@ -78,7 +78,8 @@ export function paintMaterial(
         vec3 paper=palettePaper;
         vec3 localPigment=mix(pigment,alternatePigment,paletteAmount);
         if(bank>.5){vec2 p=vec2(point.x*.64278761+point.z*.76604444,-point.x*.76604444+point.z*.64278761);
-          localPigment=mix(localPigment,mix(roadPigment,alternateRoadPigment,paletteAmount),wornRoad(p)*.55);}
+          // Trodden earth is only a slightly paler wash of the same ground.
+          localPigment=mix(localPigment,mix(roadPigment,alternateRoadPigment,paletteAmount),wornRoad(p)*.6);}
         // Two translucent pigment glazes over the substrate. Broad washes and
         // finer sediment use independent scales, with darker drying rims.
         float glaze=noise(stroke*vec3(2.1,3.8,2.6));

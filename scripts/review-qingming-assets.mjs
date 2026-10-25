@@ -1,4 +1,4 @@
-import { chromium } from "../artworks/qingming/node_modules/playwright/index.mjs";
+import { chromium } from "playwright";
 import fs from "node:fs";
 import crypto from "node:crypto";
 const out = process.env.REVIEW_DIR ?? "qa/assets-current";
@@ -41,7 +41,7 @@ try {
   // Inspect the exact model factories independently of the scene's camera limit.
   await page.evaluate(async () => {
     const THREE =
-      await import("/qingming/node_modules/three/build/three.module.js");
+      await import("/qingming/@id/three");
     const assets = await import("/qingming/src/referenceAssets.ts"),
       { hall } = await import("/qingming/src/bridgeStudy.ts");
     document.body.innerHTML = "";

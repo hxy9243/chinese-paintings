@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { paintingBoundaryShader } from "./paintingBoundary";
 import { BOATS, shoreDepth } from "./passageLayout";
 import { boatPose } from "./passageLife";
+import { BOAT_SPEED } from "./boatNavigation";
 import { scrollPoint } from "./scrollLayout";
 import { palettePaper } from "./scenePalette";
 import { waterHeight } from "./riverSurface";
@@ -105,7 +106,11 @@ export function createBoatWakes() {
                 const onWater =
                   d > shoreDepth("far", s) + 0.08 &&
                   d < shoreDepth("near", s) - 0.08;
-                const continuous = Math.abs(sample.s - current.s) < 10;
+                // A recycled boat leaves no trail across the scroll; the
+                // reach along the west bend runs mostly in depth, so use both.
+                const continuous =
+                  Math.hypot(sample.s - current.s, sample.d - current.d) <
+                  BOAT_SPEED * LIFETIME * 2;
                 const crest =
                   0.01 + Math.sin(age * 1.1 - time * 0.8 + layer) * 0.005;
                 positions.setXYZ(

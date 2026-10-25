@@ -1,5 +1,5 @@
 from pathlib import Path
-import json,hashlib,subprocess
+import json,hashlib,os,subprocess
 P=Path(__file__).resolve().parents[1]
 sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
 checks={}
@@ -19,8 +19,8 @@ canonical=json.loads((P/'reference/analysis.json').read_text())['sha256'];assert
 archive={}
 for file in ['lowlands-manifest.json','renders/lowlands-flyby.mp4','pavilion-film-manifest.json','renders/pavilion-flyby.mp4']:
  old=subprocess.check_output(['git','show',f'102474a:{file}'],cwd=P);assert hashlib.sha256(old).hexdigest()==sha(P/file),file;archive[file]=sha(P/file)
-sources=[*P.glob('src/*.js'),*P.glob('scripts/orbit*'),P/'index.html',P/'orbit.html',P/'README.md',P/'package.json',P/'package-lock.json']
+sources=[*P.glob('src/*.js'),*P.glob('scripts/orbit*'),P/'index.html',P/'orbit.html',P/'README.md',P.parents[1]/'package.json',P.parents[1]/'package-lock.json']
 artifacts=[*P.glob('renders/orbit-*/*.png'),*P.glob('renders/orbit-*.png'),P/'renders/orbit-comparison.jpg',*P.glob('renders/pavilion-orbit*.png'),P/'renders/pavilion-orbit-contact.jpg',P/'renders/pavilion-orbit.mp4']
 reports=[*P.glob('qa/orbit-*.json'),*P.glob('qa/orbit-encoded/*.png')]
-m={'title':'Circle the pavilion and return to the painting','revision':'blue-green-08','baseCommit':subprocess.check_output(['git','rev-parse','102474a'],cwd=P,text=True).strip(),'sourcePaintingSha256':canonical,'geometryUnchanged':True,'scene':scene,'ink':study['ink'],'film':pilot['route'],'validation':checks,'archiveHashesUnchanged':archive,'sources':{str(p.relative_to(P)):sha(p)for p in sources},'artifacts':{str(p.relative_to(P)):{'bytes':p.stat().st_size,'sha256':sha(p)}for p in artifacts},'reports':{str(p.relative_to(P)):sha(p)for p in reports},'limits':['Original painting camera and framing are reproduced; geometry remains a 3D interpretation.','Blur is local to low bank/water contacts; it is not a simulation of physical ink diffusion.','Targeted camera, feature-isolation, replay and encoded-film checks do not certify every camera angle or exact historical painting fidelity.']}
+m={'title':'Circle the pavilion and return to the painting','revision':'blue-green-08','baseCommit':subprocess.check_output(['git','rev-parse','102474a'],cwd=P,text=True).strip(),'sourcePaintingSha256':canonical,'geometryUnchanged':True,'scene':scene,'ink':study['ink'],'film':pilot['route'],'validation':checks,'archiveHashesUnchanged':archive,'sources':{os.path.relpath(p,P):sha(p)for p in sources},'artifacts':{str(p.relative_to(P)):{'bytes':p.stat().st_size,'sha256':sha(p)}for p in artifacts},'reports':{str(p.relative_to(P)):sha(p)for p in reports},'limits':['Original painting camera and framing are reproduced; geometry remains a 3D interpretation.','Blur is local to low bank/water contacts; it is not a simulation of physical ink diffusion.','Targeted camera, feature-isolation, replay and encoded-film checks do not certify every camera angle or exact historical painting fidelity.']}
 (P/'orbit-manifest.json').write_text(json.dumps(m,indent=2));print(json.dumps({'revision':m['revision'],'geometryUnchanged':True,'film':m['film']['film'],'checks':checks,'artifacts':len(artifacts)},indent=2))

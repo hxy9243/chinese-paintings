@@ -1,5 +1,5 @@
-import { chromium } from '../artworks/qingming/node_modules/playwright/index.mjs';
-import { createServer } from '../artworks/qingming/node_modules/vite/dist/node/index.js';
+import { chromium } from 'playwright';
+import { createServer } from 'vite';
 import fs from 'node:fs';
 const out=process.env.REVIEW_OUTPUT??'docs/reviews/2026-10-22-reconstruction';fs.mkdirSync(out,{recursive:true});
 const server=await createServer({root:'artworks/qingming',server:{host:'127.0.0.1',port:4185,strictPort:true}});await server.listen();

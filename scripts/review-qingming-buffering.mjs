@@ -1,5 +1,5 @@
-import {chromium} from "../artworks/qingming/node_modules/playwright/index.mjs";
-import {preview} from "../artworks/qingming/node_modules/vite/dist/node/index.js";
+import {chromium} from "playwright";
+import {preview} from "vite";
 import fs from "node:fs";import path from "node:path";
 const out=process.env.REVIEW_DIR??"docs/reviews/2026-10-21-river-bend";fs.mkdirSync(out,{recursive:true});
 const server=await preview({root:"artworks/qingming",preview:{host:"127.0.0.1",port:4185,strictPort:true}});

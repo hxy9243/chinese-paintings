@@ -19,4 +19,4 @@ The earlier `docs/reviews/2026-10-21-river-bend` screenshots show the baseline, 
 
 New geometry tests cover separated roof envelopes and closer group relationships; dry, matched landing/deck endpoints; uncluttered interaction approaches; exact coarse/fine gangplank endpoint transforms; stockyard vertices outside rotated walls; boat variants within navigation envelopes; true open deck holes; short/offset shelter proportions; retained branch tips with thinned foliage.
 
-Run `npm test --prefix artworks/qingming` and `npm run build --prefix artworks/qingming`. For visual QA, use the existing review script with `REVIEW_VIEWS=whole-extended-scene,river-bend,cargo-landings` and `REVIEW_DIR=docs/reviews/2026-10-21-waterfront-relations` in an environment that can launch Chromium. No video is required.
+Run `npm test` and `npm run qingming:build`. For visual QA, use the existing review script with `REVIEW_VIEWS=whole-extended-scene,river-bend,cargo-landings` and `REVIEW_DIR=docs/reviews/2026-10-21-waterfront-relations` in an environment that can launch Chromium. No video is required.

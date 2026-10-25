@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { paintMaterial, createDryInk } from "./paintMaterial";
+import { marketParasol } from "./marketModels";
 
 // Visible evidence in the supplied Chicago crop; the obscured back faces and
 // exact headcounts remain modelling interpretations.
@@ -226,5 +227,34 @@ export function buildOrnateGate(width:number,depth:number,height:number){
     }
   }
   for(const x of [-w,w])for(const y of [height*.6,height])rod(g,[x,y,-depth*.24],[x,y,depth*.24],.03);
+  return g;
+}
+
+// The painting's stand by the bridge approach: a woven-mat awning on slender
+// poles over trestle counters, with a paper parasol. No walls, no tiled roof.
+export function buildCanopyStall(width:number,depth:number){
+  const g=new THREE.Group();g.name="mat-canopy-stall";
+  const w=width/2,d=depth/2,front=1.5,back=1.28,mat=paintMaterial(0xa8956a);mat.side=THREE.DoubleSide;
+  for(const x of [-w*.92,0,w*.92])for(const [z,y] of [[d*.95,front],[-d*.95,back]] as [number,number][])
+    rod(g,[x+.02*Math.sin(x*7),0,z],[x,y,z],.022,dark);
+  const positions:number[]=[],sag=(x:number,z:number):P=>{const t=(z+d+.18)/(2*d+.36);return [x,back+(front-back)*t-.05*Math.sin(Math.PI*(x+w+.25)/(2*w+.5)),z];};
+  for(let i=0;i<10;i++)for(let j=0;j<4;j++){
+    const x0=-w-.25+(2*w+.5)*i/10,x1=-w-.25+(2*w+.5)*(i+1)/10,z0=-d-.18+(2*d+.36)*j/4,z1=-d-.18+(2*d+.36)*(j+1)/4;
+    positions.push(...sag(x0,z0),...sag(x1,z0),...sag(x1,z1),...sag(x0,z0),...sag(x1,z1),...sag(x0,z1));
+  }
+  const geo=new THREE.BufferGeometry().setAttribute("position",new THREE.Float32BufferAttribute(positions,3));geo.computeVertexNormals();
+  const awning=new THREE.Mesh(geo,mat);awning.name="woven-mat-awning";g.add(awning);
+  // Woven mat strokes and a frayed front edge.
+  for(let i=0;i<=14;i++){const x=-w-.25+(2*w+.5)*i/14;line(g,Array.from({length:5},(_,j)=>{const p=sag(x,-d-.18+(2*d+.36)*j/4);return [p[0],p[1]+.01,p[2]] as P;}));}
+  line(g,Array.from({length:11},(_,i)=>sag(-w-.25+(2*w+.5)*i/10,d+.18)));
+  for(const [x,z] of [[-w*.45,d*.25],[w*.45,d*.25]]){
+    box(g,[w*.8,.06,.5],[x,.62,z],light);
+    for(const dx of [-w*.35,w*.35])for(const dz of [-.2,.2])rod(g,[x+dx,0,z+dz],[x+dx,.6,z+dz],.016,timber);
+    for(let k=0;k<4;k++)box(g,[.13,.08,.13],[x-w*.27+k*w*.18,.7,z],k%2?cloth:timber);
+  }
+  box(g,[.3,.36,.3],[-w*.8,.18,-d*.5],timber);box(g,[.26,.28,.26],[-w*.55,.14,-d*.6],cloth);
+  // A paper parasol shades the open end, as on the bridge stalls.
+  const shade=new THREE.Group();shade.position.set(w+.75,0,d*.4);g.add(shade);marketParasol(shade,2,true);
+  g.userData.maximumHeight=front+.1;
   return g;
 }

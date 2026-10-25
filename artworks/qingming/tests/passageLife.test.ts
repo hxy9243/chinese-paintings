@@ -15,6 +15,8 @@ import {
   CARTS,
   WALKER_COUNT,
   BRIDGE_WALKERS,
+  BANK_WALKERS,
+  WEST_STREET_WALKERS,
   boatPose,
   walkPose,
   insideRoof,
@@ -22,11 +24,12 @@ import {
   RIPPLE_COUNT,
 } from "../src/passageLife";
 import { createBridgeStudy } from "../src/bridgeStudy";
+import { BOAT_DIRECTIONS, BOAT_PERIOD } from "../src/boatNavigation";
 
 describe("life in the reference passage", () => {
   it("varies architecture and nature while keeping planting clear of roofs", () => {
     expect(BUILDING_KINDS).toHaveLength(HALLS.length);
-    expect(new Set(BUILDING_KINDS).size).toBe(12);
+    expect(new Set(BUILDING_KINDS).size).toBe(13);
     expect(new Set(NATURE.map((n) => n.kind))).toEqual(
       new Set(["rock", "reed", "willow"]),
     );
@@ -36,12 +39,19 @@ describe("life in the reference passage", () => {
     }
   });
   it("keeps all walkers on the bridge or dry, unobstructed bank lanes", () => {
-    expect(WALKER_COUNT).toBe(204);
+    expect(WALKER_COUNT).toBe(BRIDGE_WALKERS + BANK_WALKERS + WEST_STREET_WALKERS);
     for (let t = 0; t <= 400; t += 2.5)
       for (let i = 0; i < WALKER_COUNT; i++) {
         const p = walkPose(i, t);
         expect(insideRoof(p, 0.06), `walker ${i} at ${t}`).toBe(false);
-        if (i >= BRIDGE_WALKERS) {
+        if (i >= BRIDGE_WALKERS + BANK_WALKERS) {
+          // Western street walkers are on the near bank or, after joining
+          // the main street, within its deck width.
+          const onStreet =
+            Math.abs(streetCoordinates(p).v) < BRIDGE.width / 2 - 0.1;
+          expect(onBank("near", p, 0.05) || onStreet, `walker ${i} at ${t}`).toBe(true);
+          if (!onStreet) expect(p.y).toBe(GROUND_Y);
+        } else if (i >= BRIDGE_WALKERS) {
           expect(onBank(i % 2 ? "far" : "near", p, 0.05)).toBe(true);
           expect(p.y).toBe(GROUND_Y);
         } else {
@@ -70,27 +80,34 @@ describe("life in the reference passage", () => {
           }
       }
   });
-  it("preserves each traced berth while drifting continuously along its heading", () => {
+  it("starts each boat at its traced berth, then travels the channel both ways at an unhurried pace", () => {
+    expect(new Set(BOAT_DIRECTIONS)).toEqual(new Set([1, -1]));
     for (let i = 0; i < BOATS.length; i++) {
-      let minimum = Infinity,
-        maximum = -Infinity;
-      for (let time = 0; time < 1400; time++) {
-        const a = boatPose(i, time),
-          b = boatPose(i, time + 0.01),
-          base = BOATS[i];
-        const ds = a.s - base.s,
-          dd = a.d - base.d;
-        expect(Math.hypot(ds, dd)).toBeLessThanOrEqual(0.1800001);
-        expect(
-          Math.abs(-ds * Math.sin(base.angle) + dd * Math.cos(base.angle)),
-        ).toBeLessThan(0.000001);
-        expect(Math.hypot(a.s - b.s, a.d - b.d)).toBeLessThan(0.00005);
-        expect(a.angle).toBe(base.angle);
-        const along = ds * Math.cos(base.angle) + dd * Math.sin(base.angle);
-        minimum = Math.min(minimum, along);
-        maximum = Math.max(maximum, along);
+      const start = boatPose(i, 0),
+        base = BOATS[i];
+      expect(Math.hypot(start.s - base.s, start.d - base.d), `boat ${i} berth`).toBeLessThan(0.6);
+      // Hull axis within 30 degrees of the painted one (either end forward).
+      const turn = Math.abs(Math.sin(start.angle - base.angle));
+      expect(turn, `boat ${i} heading`).toBeLessThan(0.5);
+      let path = 0,
+        previous = start;
+      for (let t = 1; t <= 60; t++) {
+        const p = boatPose(i, t);
+        path += Math.hypot(p.s - previous.s, p.d - previous.d);
+        previous = p;
       }
-      expect(maximum - minimum).toBeGreaterThan(0.35);
+      expect(path / 60, `boat ${i} speed`).toBeGreaterThan(0.1);
+      expect(path / 60, `boat ${i} speed`).toBeLessThan(0.45);
+      // Over one passage each boat reaches both the west bend and the east crop.
+      let west = Infinity,
+        east = -Infinity;
+      for (let t = 0; t < BOAT_PERIOD; t += 2) {
+        const p = boatPose(i, t);
+        west = Math.min(west, p.s);
+        east = Math.max(east, p.s);
+      }
+      expect(west, `boat ${i} reaches the bend`).toBeLessThan(-18);
+      expect(east, `boat ${i} leaves by the east crop`).toBeGreaterThan(45);
     }
   });
   it("keeps the horse-cart footprints on the bridge or dry street and clear of roofs", () => {
@@ -201,6 +218,7 @@ describe("life in the reference passage", () => {
     // Sixteen articulated occupation variants (formerly twelve), plus the
     // independent lowering rig. Keep a bounded no-camera medium-detail budget.
     // Eight western buildings, the crossroads and four observed old trees add bounded detail.
-    expect(draws).toBeLessThan(1000);
+    // Six riding horses with articulated legs and heads add about 80 more.
+    expect(draws).toBeLessThan(1080);
   });
 });

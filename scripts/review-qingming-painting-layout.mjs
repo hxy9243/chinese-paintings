@@ -1,11 +1,10 @@
 // Renders the scene through the painting's registered comparison camera and
 // writes the stitched panorama, the traced layout, a plan and an overlay.
 // REVIEW_OUTPUT selects the folder; PLAYWRIGHT_CHROMIUM_EXECUTABLE a browser.
-import { chromium } from '../artworks/qingming/node_modules/playwright/index.mjs';
-import { createServer } from '../artworks/qingming/node_modules/vite/dist/node/index.js';
-import { createRequire } from 'node:module';
+import { chromium } from 'playwright';
+import { createServer } from 'vite';
+import sharp from 'sharp';
 import fs from 'node:fs';
-const sharp=createRequire(new URL('../artworks/qingming/package.json',import.meta.url))('sharp');
 const out=process.env.REVIEW_OUTPUT??'docs/reviews/2026-10-23-painting-layout';fs.mkdirSync(out,{recursive:true});
 const root='artworks/qingming';
 const server=await createServer({root,server:{host:'127.0.0.1',port:4187,strictPort:true}});await server.listen();

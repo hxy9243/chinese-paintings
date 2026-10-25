@@ -19,6 +19,6 @@ The original uploaded crossroads screenshot and annotated plan were recovered an
 - `scaffold-and-bridge.jpg`: bridge approach and surrounding buildings.
 - `painting-edge.jpg`: retained shared paper fade.
 
-From the repository root, run `npm test --prefix artworks/qingming` and `npm run build --prefix artworks/qingming`. To reproduce these images, run `REVIEW_OUTPUT=docs/reviews/2026-10-22-layout-correction REVIEW_VIEWS=full-layout,crossroads,boat-close,bridge-topology,scaffold-and-bridge,painting-edge node scripts/review-qingming-reconstruction.mjs` with Chromium installed. An existing executable can be selected with `PLAYWRIGHT_CHROMIUM_EXECUTABLE`.
+From the repository root, run `npm test` and `npm run qingming:build`. To reproduce these images, run `REVIEW_OUTPUT=docs/reviews/2026-10-22-layout-correction REVIEW_VIEWS=full-layout,crossroads,boat-close,bridge-topology,scaffold-and-bridge,painting-edge node scripts/review-qingming-reconstruction.mjs` with Chromium installed. An existing executable can be selected with `PLAYWRIGHT_CHROMIUM_EXECUTABLE`.
 
 No push or merge was performed. The review archive contains the complete patch against main commit `5fdddcfea9425ec1e9a0454f031857a0d6b903e7`, not only this correction's incremental changes.

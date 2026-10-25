@@ -23,9 +23,8 @@ describe("reference passage geometry", () => {
     expect(onBank("near", {s:-22,d:-16})).toBe(false);
     expect(onBank("far", {s:24,d:0})).toBe(false);
     expect(onBank("near", {s:24,d:0})).toBe(false);
-    // The bridge crosses the river with a modest skew, not along it.
-    expect(BRIDGE.angle).toBeGreaterThan(-1.4);
-    expect(BRIDGE.angle).toBeLessThan(-1.05);
+    // The bridge crosses nearly square to the river, not along it.
+    expect(Math.abs(BRIDGE.angle+Math.PI/2)).toBeLessThan(.15);
     expect(BRIDGE.far.d).toBeLessThan(shoreDepth("far",BRIDGE.far.s)-1);
     expect(BRIDGE.near.d).toBeGreaterThan(shoreDepth("near",BRIDGE.near.s)+.5);
   });

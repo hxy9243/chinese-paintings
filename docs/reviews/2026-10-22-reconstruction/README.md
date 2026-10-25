@@ -24,10 +24,10 @@ Final validation: all 91 tests across 23 files pass; the TypeScript/Vite product
 From the repository root:
 
 ```sh
-npm ci --prefix artworks/qingming
-npm test --prefix artworks/qingming
-npm run build --prefix artworks/qingming
-npx --prefix artworks/qingming playwright install chromium
+npm ci
+npm test
+npm run qingming:build
+npx playwright install chromium
 node scripts/review-qingming-reconstruction.mjs
 node scripts/check-qingming-edge.mjs
 ```

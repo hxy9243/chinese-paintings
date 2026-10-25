@@ -23,6 +23,7 @@ import {
 } from "../src/passageLife";
 import { WALKER_RADIUS, STATIC_OBSTACLES, distance } from "../src/passageSpace";
 import { MOORED_BOATS } from "../src/moorings";
+import { BOAT_PERIOD, BOAT_SPEED } from "../src/boatNavigation";
 import { BOATS, BRIDGE, streetAngle } from "../src/passageLayout";
 
 describe("independent activity and browsing", () => {
@@ -124,11 +125,22 @@ describe("independent activity and browsing", () => {
                   ),
                 ).toBe(0);
       }
+    // Boats glide continuously; they recycle only while fully faded out.
     for (let i = 0; i < BOATS.length; i++)
-      for (let t = 0; t < 500; t += 2) {
+      for (let t = 0; t < BOAT_PERIOD * 1.2; t += 0.5) {
         const a = boatPose(i, t),
-          b = boatPose(i, t + 0.01);
-        expect(Math.hypot(a.s - b.s, a.d - b.d)).toBeLessThan(0.00005);
+          b = boatPose(i, t + 0.01),
+          step = Math.hypot(a.s - b.s, a.d - b.d);
+        if (step < BOAT_SPEED * 0.01 * 2.5) continue;
+        for (const p of [a, b])
+          for (const u of [-0.62, 0, 0.62])
+            expect(
+              paintingEdgeAlpha(
+                p.s + u * BOATS[i].length * Math.cos(p.angle),
+                p.d + u * BOATS[i].length * Math.sin(p.angle),
+              ),
+              `boat ${i} recycled in view at ${t}`,
+            ).toBe(0);
       }
   });
   it("animates every rendered role, shares crowd geometry, and freezes every instance on pause", () => {

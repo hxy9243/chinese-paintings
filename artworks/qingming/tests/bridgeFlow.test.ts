@@ -21,7 +21,8 @@ describe("full-span bridge flow and connected mud roads", () => {
       const span = poses
         .map(local)
         .filter((p) => Math.abs(p.u) < BRIDGE.length / 2 - 0.2);
-      expect(span.length).toBeGreaterThanOrEqual(16);
+      // At least one walker per unit of span (the reworked bridge is 14 long).
+      expect(span.length).toBeGreaterThanOrEqual(Math.floor(BRIDGE.length));
       for (const side of [-1, 1])
         expect(
           span.filter((p) => Math.sign(p.v) === side).length,

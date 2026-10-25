@@ -6,8 +6,8 @@ export const paletteInk = {
 };
 export const palettePaper = { value: new THREE.Vector3(0.78, 0.68, 0.46) };
 export const PALETTES = {
-  silk: { paper: 0xeee5cb, road: 0x927a52 },
-  "indigo-amber": { paper: 0xf5eee3, road: 0x9b855f },
+  silk: { paper: 0xeee5cb, road: 0xc2b28c },
+  "indigo-amber": { paper: 0xf5eee3, road: 0xcbc3a3 },
 };
 let current: ScenePalette = "silk";
 export function getScenePalette() {

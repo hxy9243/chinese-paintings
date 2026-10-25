@@ -3,7 +3,7 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {execFileSync} from 'node:child_process';
 const root=fileURLToPath(new URL('../',import.meta.url)),out=path.join(root,'dist');
-execFileSync('npm',['run','build'],{cwd:path.join(root,'artworks/qingming'),env:{...process.env,PAINTING_BASE:'/qingming/'},stdio:'inherit'});
+execFileSync('npm',['run','qingming:build'],{cwd:root,env:{...process.env,PAINTING_BASE:'/qingming/'},stdio:'inherit'});
 fs.rmSync(out,{recursive:true,force:true});fs.mkdirSync(out);
 fs.cpSync(path.join(root,'apps/gallery'),out,{recursive:true});
 fs.cpSync(path.join(root,'artworks/qingming/dist'),path.join(out,'qingming'),{recursive:true});

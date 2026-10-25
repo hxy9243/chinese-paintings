@@ -6,16 +6,22 @@ import {
 } from "../../../packages/scene-kit/lod";
 import { createBridgeStudy } from "../src/bridgeStudy";
 import { FIGURE_TYPES } from "../src/figureTypes";
-import { HALLS, REFERENCE_TREE, onBank } from "../src/passageLayout";
+import { BRIDGE, HALLS, REFERENCE_TREE, onBank, shoreDepth } from "../src/passageLayout";
 import { buildScrollTree } from "../src/referenceTrees";
 import { REFERENCE_AZIMUTH } from "../src/scrollLayout";
 import { FEATURE_TREES } from "../src/passageLife";
 
 describe("reference landmarks and geometry detail", () => {
-  it("retains the street-aligned foreground gable and explicitly placed old tree", () => {
-    const hall = HALLS[9];
-    expect(hall.gable).toBe(true);
-    expect(hall.angle).toBeCloseTo(-0.55);
+  it("keeps the riverside restaurant, bridge-foot store and explicitly placed old tree", () => {
+    // As painted: the balcony restaurant and its gateway back onto the river
+    // left of the open plaza, and a tiled store stands right of the bridge foot.
+    const [restaurant, store, gateway] = [HALLS[8], HALLS[9], HALLS[26]];
+    for (const h of [restaurant, store, gateway])
+      expect(h.d - shoreDepth("near", h.s), `hall at ${h.s}`).toBeLessThan(4.5);
+    expect(gateway.s).toBeGreaterThan(restaurant.s + restaurant.width / 2);
+    expect(BRIDGE.near.s - gateway.s).toBeGreaterThan(11);
+    expect(store.s).toBeGreaterThan(BRIDGE.near.s + BRIDGE.width / 2);
+    expect(store.s - BRIDGE.near.s).toBeLessThan(6);
     HALLS.forEach((h) => expect(Number.isFinite(h.angle)).toBe(true));
     expect(HALLS).toHaveLength(35);
     expect(FEATURE_TREES).toContainEqual({

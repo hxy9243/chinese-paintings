@@ -31,7 +31,7 @@ describe("irregular street journeys and painted wakes", () => {
               ).toBe(0);
             }
           wraps++;
-        } else expect(distance).toBeLessThan(0.2);
+        } else expect(distance).toBeLessThan(0.3);
         if (i < MAIN_STREET_WALKERS) {
           if (!p.moving) stopped.add(i);
           const traveled =

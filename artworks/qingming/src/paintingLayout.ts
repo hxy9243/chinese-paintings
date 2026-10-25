@@ -71,10 +71,6 @@ export interface TracedBuilding {
 // Roof centres read from the stitched panorama. Ids name what the painting
 // shows; hall indices refer to HALLS in passageLayout.
 export const TRACED_BUILDINGS: TracedBuilding[] = [
-  { hall: 8, id: "two-storey-balcony-house", roof: [1365, 392] },
-  { hall: 26, id: "inn-festooned-gatehouse", roof: [1740, 470] },
-  // The inn's hall stands in front of its gatehouse, lower in the picture.
-  { hall: 9, id: "inn-main-hall", roof: [1585, 560] },
   { hall: 20, id: "bend-foreground-joined-roofs", roof: [1110, 580] },
 ];
 

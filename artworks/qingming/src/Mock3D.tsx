@@ -96,6 +96,8 @@ export default function Mock3D() {
     const demand=new RenderDemand();
     let frame=0,timer:ReturnType<typeof setTimeout>|null=null,last=performance.now(),pending=false,previewResolution=false,draws=0;
     const fullRatio=Math.min(window.devicePixelRatio,2);
+    // Drag frames trade resolution for speed, but keep at least 0.8 device px per CSS px.
+    const PREVIEW_RATIO=Math.min(fullRatio,Math.max(.8,fullRatio*.5));
     function schedule(delay=0){
       if(capture||frame||timer!==null||document.hidden)return;
       if(delay>0)timer=setTimeout(()=>{timer=null;schedule();},delay);
@@ -244,7 +246,7 @@ export default function Mock3D() {
       if(plan.draw){
         if(previewResolution!==plan.preview){
           previewResolution=plan.preview;
-          renderer.setPixelRatio(plan.preview?.65:fullRatio);
+          renderer.setPixelRatio(plan.preview?PREVIEW_RATIO:fullRatio);
           renderer.setSize(el.clientWidth,el.clientHeight);
           finish.resize(el.clientWidth,el.clientHeight);
         }
@@ -260,7 +262,7 @@ export default function Mock3D() {
     }
     schedule();
     const reviewApi={
-      frame(seconds:number,options:{zoom?:number;angle?:number;pitch?:number;target?:[number,number];palette?:ScenePalette;eye?:[number,number,number];look?:[number,number,number];fov?:number;aboard?:number}={}){
+      frame(seconds:number,options:{zoom?:number;angle?:number;pitch?:number;target?:[number,number];palette?:ScenePalette;eye?:[number,number,number];look?:[number,number,number];fov?:number;aboard?:number;preview?:boolean}={}){
         if(options.palette){study.setPalette(options.palette);finish.setPaper(PALETTES[options.palette].paper);setPalette(options.palette);}
         if(options.target){controls.target.copy(scrollPoint(...options.target));controls.target.y=1.1;}
         if(options.zoom!==undefined){camera.zoom=options.zoom;camera.updateProjectionMatrix();}
@@ -281,8 +283,9 @@ export default function Mock3D() {
           const aim=scrollPoint(ts,td);aim.y=ty;immersive.lookAt(aim);
           immersive.updateMatrixWorld();view=immersive;
         }
-        renderer.setPixelRatio(fullRatio);renderer.setSize(el.clientWidth,el.clientHeight);finish.resize(el.clientWidth,el.clientHeight);
-        study.update(seconds,view,el.clientHeight,false);renderer.info.autoReset=false;renderer.info.reset();
+        // `preview` reproduces the drag frame: reduced resolution and drag-time models.
+        renderer.setPixelRatio(options.preview?PREVIEW_RATIO:fullRatio);renderer.setSize(el.clientWidth,el.clientHeight);finish.resize(el.clientWidth,el.clientHeight);
+        study.update(seconds,view,el.clientHeight,!!options.preview);renderer.info.autoReset=false;renderer.info.reset();
         finish.render(scene,view,paintingEnabled?inkSoftness:0);
         const stats={...study.metadata(),triangles:renderer.info.render.triangles,calls:renderer.info.render.calls};renderer.info.autoReset=true;return stats;
       },

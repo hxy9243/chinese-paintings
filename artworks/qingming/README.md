@@ -8,15 +8,15 @@ The home page opens the 3D scene directly. Older `?view=3d` links still work. Th
 
 ## Run
 
-Node.js 22.12+ (Node 24 recommended).
+Node.js 22.12+ (Node 24 recommended). Dependencies live in the repository root `package.json`; run these from the repository root.
 
 ```sh
 npm ci
-npm run dev
+npm run qingming:dev
 npm test
 npx playwright install chromium
 npm run test:e2e
-npm run build
+npm run qingming:build
 ```
 
 Open the local address printed by Vite. The private Sites project is recorded in `.openai/hosting.json`; public access remains disabled.

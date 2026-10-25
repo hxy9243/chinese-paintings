@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { FIGURE_HEIGHT } from "./figures";
-import { projectedHeightPixels, type DetailLevel } from "../../../packages/scene-kit/lod";
+import { dragDetail, projectedHeightPixels, type DetailLevel } from "../../../packages/scene-kit/lod";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 import { FIGURE_TYPES, figureDetail } from "./figureTypes";
 
@@ -51,7 +51,7 @@ export function createCrowd(parent: THREE.Group,
       }
       const actor=skeleton(templates[variant][2]); actor.name=name;
       actor.userData.variant=variant; actor.userData.figureType=FIGURE_TYPES[variant].name;
-      actor.userData.detail=1;actor.userData.bones={};
+      actor.userData.detail=1;actor.userData.lod=1;actor.userData.bones={};
       actor.traverse(n=>{if(n.name)actor.userData.bones[n.name]=n;});
       owner.add(actor); actors.push(actor); return actor;
     },
@@ -88,7 +88,10 @@ export function createCrowd(parent: THREE.Group,
         const pixels=projectedHeightPixels({height:FIGURE_HEIGHT*scale.y,viewportHeight,zoom:ortho.zoom??1,
           orthographicSpan:ortho.isOrthographicCamera?ortho.top-ortho.bottom:undefined,
           distance:center.distanceTo(camera.position),verticalFov:perspective.fov});
-        actor.userData.detail=preview?0:figureDetail(pixels,actor.userData.detail);
+        // Keep the chosen level for hysteresis. Drag frames step down one level,
+        // so close figures stay articulated instead of collapsing to stubs.
+        actor.userData.lod=figureDetail(pixels,actor.userData.lod);
+        actor.userData.detail=preview?dragDetail(actor.userData.lod):actor.userData.lod;
         sphere.center.copy(center);sphere.center.y+=FIGURE_HEIGHT*scale.y*.5;sphere.radius=FIGURE_HEIGHT*scale.y*.85;
         actor.userData.inView=frustum.intersectsSphere(sphere);
       }

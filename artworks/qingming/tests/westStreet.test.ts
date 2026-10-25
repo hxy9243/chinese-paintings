@@ -6,7 +6,8 @@ it("forms a continuous street between inward-facing rectangular shop rows",()=>{
   const west=[34,33,29].map(i=>HALLS[i]);
   const east=[31,23,7].map(i=>HALLS[i]);
   for(const h of west)expect(-Math.sin(h.angle)).toBeGreaterThan(.99);
-  for(const h of east)expect(-Math.sin(h.angle)).toBeLessThan(-.99);
+  // The east row faces the street but turns with the river bend behind it.
+  for(const h of east)expect(-Math.sin(h.angle)).toBeLessThan(-.97);
   // Each sampled street station has a frontage on both sides, allowing only
   // narrow alleys between adjacent houses instead of a dispersed house grid.
   for(let d=-20;d<=-2;d+=.25){

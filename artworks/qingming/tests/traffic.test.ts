@@ -84,7 +84,7 @@ describe("shared space and continuous traffic", () => {
         "crossroads-west-old-tree",
       ]),
     );
-    expect(FEATURE_TREES).toHaveLength(9);
+    expect(FEATURE_TREES).toHaveLength(13);
     for (let i = 0; i < CARTS.length; i++)
       expect(distance(cartPose(i, 0), cartPose(i, 3))).toBeGreaterThan(0.1);
   });

@@ -1,7 +1,6 @@
 import { expect, it } from "vitest";
 import * as THREE from "three";
 import { ELEVATION } from "../src/bridgeStudy";
-import { BUILDING_KINDS } from "../src/passageLife";
 import { GROUND_Y, HALLS } from "../src/passageLayout";
 import {
   PANORAMA,
@@ -58,6 +57,4 @@ it("puts every traced building's roof on its painted roof", () => {
     expect(Math.hypot(p.x - t.roof[0], p.y - t.roof[1]), t.id).toBeLessThan(1);
     expect(h.side).toBe("near");
   }
-  const gate = TRACED_BUILDINGS.find((t) => t.id === "inn-festooned-gatehouse")!;
-  expect(BUILDING_KINDS[gate.hall]).toBe("festoon-gate");
 });

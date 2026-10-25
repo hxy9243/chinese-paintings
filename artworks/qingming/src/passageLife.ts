@@ -1,9 +1,14 @@
 import { wander } from "./peopleMotion";
 import { pedestrianPoses } from "./pedestrians";
-export { WALKER_COUNT, MAIN_STREET_WALKERS } from "./pedestrians";
+export {
+  WALKER_COUNT,
+  MAIN_STREET_WALKERS,
+  BANK_WALKERS,
+  WEST_STREET_WALKERS,
+} from "./pedestrians";
 import { CART_ROUTES, reserve, roofClear } from "./passageSpace";
+import { STREET_OBSTACLES, offStreet } from "./streetRoutes";
 import {
-  BOATS,
   REFERENCE_TREE,
   BRIDGE,
   BRIDGE_PEOPLE_PER_SIDE,
@@ -27,6 +32,7 @@ export type BuildingKind =
   | "compound"
   | "upper-storey"
   | "festoon-gate"
+  | "canopy-stall"
   | "ornate-gate"
   | "cross-shop"
   | "cross-house";
@@ -59,6 +65,8 @@ export const BUILDING_KINDS: BuildingKind[] = [
   "courtyard",
 ];
 BUILDING_KINDS[8] = "upper-storey";
+BUILDING_KINDS[9] = "shop";
+BUILDING_KINDS[11] = "canopy-stall";
 BUILDING_KINDS.push("festoon-gate");
 BUILDING_KINDS[10] = "cross-house";
 BUILDING_KINDS[19] = "cross-house";
@@ -105,9 +113,10 @@ export const CART_KINDS = [
   "horse-cart",
   "handcart",
 ] as const;
-export function cartPose(index: number, time: number) {
-  const clock = time * 0.16 + index * 5.5 + 23,
-    x = -40 + (((clock % 80) + 80) % 80);
+// One-way traffic shares a single conveyor along the main street and over the
+// bridge; carts and riders keep their spacing because they share one clock.
+function streetTrafficPose(clock: number) {
+  const x = -40 + (((clock % 80) + 80) % 80);
   const slope = (bridgeHeight(x + 0.55) - bridgeHeight(x - 0.55)) / 1.1;
   let y = GROUND_Y;
   for (let u = -0.66; u <= 0.661; u += 0.066)
@@ -122,21 +131,23 @@ export function cartPose(index: number, time: number) {
     traveled: clock,
   };
 }
-// Preserve the reference composition: boats gently drift along their own
-// measured headings, rather than circulating through unrelated painted berths.
-export function boatPose(index: number, time: number) {
-  const boat = BOATS[index],
-    travel = Math.sin(time * 0.025) * 0.18,
-    phase = time * 0.34 + index * 1.71;
-  return {
-    s: boat.s + Math.cos(boat.angle) * travel,
-    d: boat.d + Math.sin(boat.angle) * travel,
-    y: Math.sin(phase) * 0.008,
-    angle: boat.angle,
-    roll: Math.sin(phase + 0.8) * 0.003,
-    pitch: Math.cos(phase * 0.8) * 0.002,
-  };
+const TRAFFIC_SPEED = 0.16,
+  TRAFFIC_SPACING = 5.5;
+export function cartPose(index: number, time: number) {
+  return streetTrafficPose(time * TRAFFIC_SPEED + index * TRAFFIC_SPACING + 23);
 }
+// Riders at a walk travel midway between carts: a horse and rider is far
+// shorter than a cart, so the half spacing still clears both carts' sweeps.
+export const MAIN_STREET_RIDERS = 3;
+export function mainRiderPose(index: number, time: number) {
+  return streetTrafficPose(
+    time * TRAFFIC_SPEED + 23 + (1.5 + 2 * index) * TRAFFIC_SPACING,
+  );
+}
+export { STREET_RIDERS, streetRiderPose } from "./pedestrians";
+// Working boats travel the shoreline-derived channel in both directions,
+// recycling beyond the painted edges; see boatNavigation for the route.
+export { boatPose } from "./boatNavigation";
 export const RIPPLE_COUNT = 120;
 export function riverRipple(index: number, time: number) {
   const phase = (index * 0.61803398875 + time * 0.025) % 1;
@@ -175,16 +186,17 @@ const observedTrees = [
   },
   {
     id: "balcony-rear-pollard",
-    s: -11.4,
-    d: 6.43,
+    // Between the riverside restaurant and its gateway.
+    s: -8.8,
+    d: 6.2,
     size: 1.1,
     form: "spreading",
   },
   { id: "foreground-pollard", s: -17.12, d: 15.1, size: 0.75, form: "pollard" },
   {
     id: "right-bank-pollard",
-    s: 22.24,
-    d: 15.02,
+    s: 25.2,
+    d: 15.5,
     size: 0.9,
     form: "spreading",
   },
@@ -197,10 +209,19 @@ const observedTrees = [
     form: "spreading",
   },
   { id: "crossroads-north-tree", s: -39.1, d: -7.2, size: 1.2, form: "spreading" },
+  // Willows and an old tree stand on the far bank where the river turns.
+  { id: "far-bend-old-tree", s: -13.6, d: -11.2, size: 1.3, form: "spreading" },
+  { id: "far-bend-pollard", s: -16.4, d: -15.6, size: 1.0, form: "pollard" },
+  { id: "far-bend-rear-tree", s: -12.2, d: -13.8, size: 0.85, form: "spreading" },
+  { id: "far-bend-upstream-tree", s: -19.6, d: -21.4, size: 1.1, form: "spreading" },
 ] as const;
 // Traced roots and elevated crowns are deliberately distinct from generic
 // decorative planting. Do not silently erase a reference tree at a roof edge.
 FEATURE_TREES.push(...observedTrees);
+// Street walkers and riders on the western streets step around trunk roots.
+STREET_OBSTACLES.push(
+  ...FEATURE_TREES.map((t) => ({ s: t.s, d: t.d, radius: 0.45 * t.size })),
+);
 // Keep a tall willow grove clear before allocating the denser market.
 const willowGrove = reserve({ s: 19, d: -11 }, 1.1, "willow")
   ? [{ s: 19, d: -11, kind: "willow" as const, size: 1.15 }]
@@ -208,7 +229,7 @@ const willowGrove = reserve({ s: 19, d: -11 }, 1.1, "willow")
 export const MARKET: (PassagePoint & { parasol: boolean; size: number })[] = [];
 // Small roadside counters fill the street edges before the broader market.
 for (const lateral of [-2.55, 2.55, -3.75, 3.75, -4.85, 4.85]) {
-  for (let x = -15.7; x <= 11.7 && MARKET.length < 16; x += 1.2) {
+  for (let x = -19.3; x <= 15.3 && MARKET.length < 16; x += 1.2) {
     if (Math.abs(x) < BRIDGE.length / 2 + 0.8) continue;
     const p = bridgePoint(x, lateral);
     if (reserve(p, 0.5, "market"))
@@ -327,14 +348,17 @@ for (let i = 0; i < 2400 && STATIC_PEOPLE.length < 50; i++) {
     side = i % 3 ? "near" : "far";
   const d =
     shoreDepth(side, s) + (side === "near" ? 1 : -1) * (1.65 + (i % 7) * 0.6);
-  if (reserve({ s, d }, RESIDENT_SPACE, "person")) STATIC_PEOPLE.push({ s, d });
+  // Standing neighbours keep the western shop street open for walkers.
+  if (offStreet({ s, d }, RESIDENT_SPACE) && reserve({ s, d }, RESIDENT_SPACE, "person"))
+    STATIC_PEOPLE.push({ s, d });
 }
 
 // Also use clear courtyards and inland gaps when waterfront browsing spaces fill.
 for (let i = 0; i < 8000 && STATIC_PEOPLE.length < 50; i++) {
   const s = -20 + ((i * 0.731) % 40),
     d = -12.5 + ((i * 1.117) % 25);
-  if (reserve({ s, d }, RESIDENT_SPACE, "person")) STATIC_PEOPLE.push({ s, d });
+  if (offStreet({ s, d }, RESIDENT_SPACE) && reserve({ s, d }, RESIDENT_SPACE, "person"))
+    STATIC_PEOPLE.push({ s, d });
 }
 
 export function residentPose(index: number, time: number, seed = 0) {

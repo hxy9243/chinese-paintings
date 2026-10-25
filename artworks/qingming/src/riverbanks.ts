@@ -1,9 +1,14 @@
 import * as THREE from "three";
+import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 import {
   BRIDGE,
+  BRIDGE_SITE,
   GROUND_Y,
+  baseShoreSlope,
   bridgeHeight,
+  shoreAtArc,
   shoreDepth,
+  shoreLength,
   type BankSide,
 } from "./passageLayout";
 import { scrollPoint } from "./scrollLayout";
@@ -22,7 +27,8 @@ earth.fragmentShader = earth.fragmentShader.replace(
 );
 earth.depthWrite=true;
 const stone = [0xa18e68, 0xab9871].map((c) => paintMaterial(c));
-const greys = [0xb8b9ae, 0xc7c5b9].map((c) => paintMaterial(c));
+// Weathered stone in the bank's earth palette, not bright white masonry.
+const greys = [0x9f9682, 0xaba28b].map((c) => paintMaterial(c));
 
 /** The geometry and water shader share the same continuous bank curve. */
 export function bankEdgeDepth(side: BankSide, s: number) { return shoreDepth(side,s); }
@@ -34,17 +40,23 @@ export function bankSection(side: BankSide, s: number, t: number) {
   const rough=(saw(s*1.47)*.065+saw(s*3.73)*.026)*(1-t);
   // Ease both ends of the cross-section into a rounded lip and submerged toe.
   const drop = 0.5 - 0.5 * Math.cos(Math.PI * t);
+  // Offset across the bank, not merely in depth: the steep upstream reach
+  // of the bend keeps a real sloped face instead of a vertical cut.
+  const slope = baseShoreSlope(side, s), norm = Math.hypot(1, slope),
+    offset = direction * (-0.55 + 0.575 * t + rough);
   return {
-    s,
-    d: bankEdgeDepth(side, s) + direction * (-0.55 + 0.575 * t + rough),
+    s: s - (offset * slope) / norm,
+    d: bankEdgeDepth(side, s) + offset / norm,
     y: THREE.MathUtils.lerp(GROUND_Y + 0.004, -0.14, drop),
   };
 }
 export function buildBankFace(side: BankSide) {
   const group=new THREE.Group();group.name=`${side}-raised-bank`;
   const positions:number[]=[],indices:number[]=[],seams:number[]=[],hatching:number[]=[],lipLines:number[]=[];
-  const start=-61,end=41,count=1020,rows=17;
-  const world=(s:number,t:number,lift=0)=>{const p=bankSection(side,s,t),v=scrollPoint(p.s,p.d);return new THREE.Vector3(v.x,p.y+lift,v.z);};
+  // Everything below is laid out by length along the bank, so the steep reach
+  // of the bend receives as many columns, strata and stones as the gentle ones.
+  const start=0,end=shoreLength(side),count=Math.ceil(end/.1),rows=17;
+  const world=(l:number,t:number,lift=0)=>{const p=bankSection(side,shoreAtArc(side,l),t),v=scrollPoint(p.s,p.d);return new THREE.Vector3(v.x,p.y+lift,v.z);};
   const stroke=(a:THREE.Vector3,b:THREE.Vector3,out=seams)=>out.push(...a.toArray(),...b.toArray());
   const hash=(n:number)=>{const v=Math.sin(n*91.17+(side==="far"?21.3:7.8))*14827.19;return v-Math.floor(v);};
   for(let i=0;i<=count;i++)for(let j=0;j<rows;j++)positions.push(...world(start+(end-start)*i/count,j/(rows-1)).toArray());
@@ -78,8 +90,34 @@ export function buildBankFace(side: BankSide) {
       if((i+q)%4!==0)stroke(world(ss+zig,(t0+t1)*.5,.013),world(ss+zig*.55,t1,.009),hatching);
     }
   }
+  // Stacked angular stones in broken runs, as the painting reinforces its
+  // banks: each rock is outlined, and the lip above them steps in a zigzag.
+  const boulders:THREE.BufferGeometry[]=[],zigzag:number[]=[];
+  for(let i=0,s=start+hash(4)*.5;s<end;i++){
+    const run=Math.sin(s*.29+(side==="far"?2.1:0))+.6*Math.sin(s*.83+1.3);
+    if(run>-.15&&Math.abs(shoreAtArc(side,s)-BRIDGE_SITE.s)>3.2){
+      for(let k=0;k<2+(i%2);k++){
+        const t=.3+k*.24+hash(i*3+k)*.12,size=.13+hash(i*5+k)*.17;
+        const rock=new THREE.IcosahedronGeometry(size,0);
+        rock.scale(1+hash(i+k*7)*.6,.5+hash(i*2+k)*.25,.8+hash(i*9+k)*.4);
+        rock.rotateY(hash(i*11+k)*Math.PI);rock.rotateZ((hash(i*13+k)-.5)*.5);
+        const at=world(s+(hash(i*17+k)-.5)*.2,t,-.02);rock.translate(at.x,at.y,at.z);
+        boulders.push(rock);
+      }
+      // Zigzag top course: alternate between the lip and a step down the face.
+      const a=world(s,.03,.012),m=world(s+.16,.16+hash(i)*.06,.014),b=world(s+.32,.03,.012);
+      stroke(a,m,zigzag);stroke(m,b,zigzag);
+    }
+    s+=.3+hash(i+300)*.28;
+  }
+  if(boulders.length){
+    const geo=mergeGeometries(boulders.map(g=>g.toNonIndexed()));geo.computeVertexNormals();
+    const rocks=new THREE.Mesh(geo,stone[1]);rocks.name="stacked-bank-stones";group.add(rocks);
+    const edges=new THREE.LineSegments(new THREE.EdgesGeometry(geo,25),createDryInk(.7));edges.name="stacked-bank-stone-outlines";group.add(edges);
+    boulders.forEach(g=>g.dispose());
+  }
   const add=(p:number[],opacity:number,name:string)=>{if(!p.length)return;const m=new THREE.LineSegments(new THREE.BufferGeometry().setAttribute("position",new THREE.Float32BufferAttribute(p,3)),createDryInk(opacity));m.name=name;group.add(m);};
-  add(seams,.68,"fractured-rock-plate-outlines");add(hatching,.78,"broken-bank-strata-hatching");add(lipLines,.95,"zigzag-eroded-bank-lip");
+  add(seams,.68,"fractured-rock-plate-outlines");add(hatching,.78,"broken-bank-strata-hatching");add(lipLines,.95,"zigzag-eroded-bank-lip");add(zigzag,.9,"zigzag-stone-course");
   return group;
 }
 const mortarInk = createDryInk(0.25);
