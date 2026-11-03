@@ -22,7 +22,7 @@ const server=http.createServer((req,res)=>{
  res.writeHead(200,{'Content-Type':types[path.extname(file)]??'application/octet-stream'});fs.createReadStream(file).pipe(res);
 });
 vite=await createServer({root:path.join(root,'artworks/qingming'),base:'/qingming/',server:{middlewareMode:true,hmr:{server},fs:{allow:[root]}}});
-pondVite=await createServer({configFile:false,root:path.join(root,'artworks/ink-pond'),base:'/ink-pond/',server:{middlewareMode:true,hmr:{server,path:'/ink-pond-hmr'},fs:{allow:[root]}}});
+pondVite=await createServer({configFile:false,cacheDir:path.join(root,'node_modules/.vite-ink-pond'),root:path.join(root,'artworks/ink-pond'),base:'/ink-pond/',server:{middlewareMode:true,hmr:{server,path:'/ink-pond-hmr'},fs:{allow:[root]}}});
 const port=Number(process.env.PORT??5180);
 server.listen(port,'127.0.0.1',()=>console.log(`Living Paintings: http://127.0.0.1:${port}/`));
 async function stop(){await Promise.all([vite.close(),pondVite.close()]);server.close(()=>process.exit());}

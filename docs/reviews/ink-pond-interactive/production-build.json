@@ -1,0 +1,56 @@
+{
+  "sources": {
+    "apps/gallery/index.html": "2159b97de54ac314f901ce6aac6a9e97a2c9cee81b4d794fa849cafbffb5d690",
+    "apps/gallery/gallery.css": "80677e1eb48eed97ac767a42f0bdd2ac67e06abe2a10e992b565150efc330454",
+    "artworks/ink-pond/src/style.css": "a313228fd16de95777b504d026008703396da8b461bd5d3fd454a4288c3326dc",
+    "artworks/ink-pond/src/main.js": "5ba90ca642ee27e72957505bcdf8ead5264dea14743ff218590f6fb25c74d1a9",
+    "artworks/ink-pond/src/pond.js": "aab3144931626771aaf34bdff637e835d6dda89e226a052a137271f45ece6a39",
+    "artworks/ink-pond/src/entries.js": "22a5b4eb258c6d058a169804ad88bad3b1ab474d2d7f462448f5467ff17f9b0a",
+    "artworks/ink-pond/src/gpu-ink.js": "0a156346cc6b97ba1f5fa563d89294ac32df9038dc2d7b16cdf980695f9bf4c1",
+    "scripts/build.mjs": "65eee7a24a16a14f5893732996692bbd490448ebcc658517498b6dbb38c07c9d",
+    "scripts/dev.mjs": "315ed0b6297799c5735cd6babfa9ec4a10db5ce2b19a26bdd2e18949790d5ad8"
+  },
+  "validationScripts": {
+    "scripts/review-pond-population.mjs": "771500863996287b3c6892e90672e4c2fad38838757148b92d22dbbc06dc9d6c",
+    "scripts/check-gallery-build.mjs": "ee959a1597e6861bd7f6a0d5047045078e562aa974e910d6e940184a87d59bca",
+    "artworks/ink-pond/scripts/check-population.mjs": "92a6bb5d8533b331e0c0233044d1464e93ff2db15c243123f7442b6fcb6e4518"
+  },
+  "still": {
+    "file": "interactive-pond-790418fa.png",
+    "sha256": "790418fab51c9d7726f1aa678649c525f15e3d56138db9973920775ed99976e6",
+    "source": "Production build at 3.5 seconds, default population and camera"
+  },
+  "productionBuild": {
+    "pass": true,
+    "threeCards": true,
+    "fullInkPreview": true,
+    "populationSliders": true,
+    "viewReset": true,
+    "referenceLoaded": true,
+    "shortViewports": [
+      {
+        "width": 844,
+        "height": 390,
+        "scroll": 844
+      },
+      {
+        "width": 1280,
+        "height": 600,
+        "scroll": 1280
+      }
+    ],
+    "routes": [
+      {
+        "route": "/qingming/",
+        "title": "清明小景 · A little life along the river",
+        "htmlServed": true
+      },
+      {
+        "route": "/thousand-miles/",
+        "title": "Blue & Green Waterways",
+        "htmlServed": true
+      }
+    ],
+    "errors": []
+  }
+}

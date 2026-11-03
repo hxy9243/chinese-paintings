@@ -36,17 +36,11 @@ function setView({azimuthDegrees=-45,elevationDegrees=45,zoom=1}={}){
   const damping=orbit.enableDamping;orbit.enableDamping=false;orbit.update();orbit.reset();orbit.target.set(0,0,0);camera.position.set(1800*Math.cos(el)*Math.cos(az),1800*Math.cos(el)*Math.sin(az),1800*Math.sin(el));
   camera.zoom=THREE.MathUtils.clamp(zoom,.6,2.4);camera.updateProjectionMatrix();camera.lookAt(orbit.target);orbit.update();orbit.enableDamping=damping;renderFrame();
 }
-async function setPopulation({fish=Number($('fish').value),shrimp=Number($('shrimp').value)}={}){
+function setPopulation({fish=Number($('fish').value),shrimp=Number($('shrimp').value)}={}){
   clearTimeout(populationTimer);
-  const previous=view.pond.describe(),pond=createPond({fish,shrimp,seed:previous.seed,rain:Number(rain.value)});
-  // Reuse pigment textures, pose samples, canvas and renderer across edits.
-  const ink=await createGpuInk(container,view.renderer,view.camera,pond,view.paint),old=view;
-  const scale=old.ink.describe().renderScale;
-  view={...old,pond,ink};old.ink.dispose();old.pond.dispose();
-  current=0;resize();ink.setRenderScale(scale);renderFrame();
-  const population=pond.describe();
+  view.pond.setPopulation({fish,shrimp},view.camera);renderFrame();
+  const population=view.pond.describe();
   for(const species of ['fish','shrimp']){$(species).value=String(population[species]);$(species+'-value').value=String(population[species]);}
-  frameTimes.length=0;last=performance.now();
   status.textContent=`${population.fish} fish · ${population.shrimp} shrimp`;
 }
 function reset(){view.pond.reset();current=0;wash.value='.42';timeline.max=String(DURATION);renderFrame(0);last=performance.now();}

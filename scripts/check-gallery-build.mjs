@@ -27,16 +27,16 @@ try{
  await page.locator('#reference-open').click();await page.locator('dialog img').waitFor({state:'visible'});assert.ok(await page.locator('dialog img').evaluate(i=>i.complete&&i.naturalWidth>0));await page.locator('#reference-close').click();
  const shortViewports=[];
  for(const viewport of [{width:844,height:390},{width:1280,height:600}]){await page.setViewportSize(viewport);const layout=await page.evaluate(()=>({width:innerWidth,scroll:document.documentElement.scrollWidth}));assert.ok(layout.scroll<=layout.width);shortViewports.push({...viewport,...layout});}
- await page.setViewportSize({width:1280,height:940});await page.evaluate(async()=>{await window.pondPainting.setPopulation({fish:5,shrimp:5});window.pondPainting.setView();window.pondPainting.setRenderScale(1);window.pondPainting.renderFrame(3.5);});
+ await page.setViewportSize({width:1280,height:940});await page.evaluate(async()=>{await window.pondPainting.setPopulation({fish:5,shrimp:5});document.getElementById('reset').click();window.pondPainting.setView();window.pondPainting.setRenderScale(1);window.pondPainting.renderFrame(3.5);});
  await page.locator('h1').click();const still=await page.screenshot({path:path.join(out,'interactive-pond.png'),fullPage:true});
  const stillHash=createHash('sha256').update(still).digest('hex'),stillName=`interactive-pond-${stillHash.slice(0,8)}.png`;fs.writeFileSync(path.join(out,stillName),still);
  await page.goto(base+'/');const routes=[];
  for(const route of ['/qingming/','/thousand-miles/']){const response=await fetch(base+route);assert.equal(response.status,200);const html=await response.text();assert.ok(html.includes('<title>'));routes.push({route,title:html.match(/<title>(.*?)<\/title>/s)?.[1],htmlServed:true});}
  assert.deepEqual(errors,[]);
- const sha=b=>createHash('sha256').update(b).digest('hex'),report=JSON.parse(fs.readFileSync(path.join(out,'review.json'),'utf8'));
- for(const name of ['apps/gallery/gallery.css','artworks/ink-pond/src/style.css'])report.sources[name]=sha(fs.readFileSync(path.join(root,name)));
- report.validationScripts=Object.fromEntries(['scripts/review-ink-pond.mjs','scripts/check-gallery-build.mjs','artworks/ink-pond/scripts/check-population.mjs'].map(name=>[name,sha(fs.readFileSync(path.join(root,name)))]));
+ const sha=b=>createHash('sha256').update(b).digest('hex'),report={};
+ report.sources={};for(const name of ['apps/gallery/index.html','apps/gallery/gallery.css','artworks/ink-pond/src/style.css','artworks/ink-pond/src/main.js','artworks/ink-pond/src/pond.js','artworks/ink-pond/src/entries.js','artworks/ink-pond/src/gpu-ink.js','scripts/build.mjs','scripts/dev.mjs'])report.sources[name]=sha(fs.readFileSync(path.join(root,name)));
+ report.validationScripts=Object.fromEntries(['scripts/review-pond-population.mjs','scripts/check-gallery-build.mjs','artworks/ink-pond/scripts/check-population.mjs'].map(name=>[name,sha(fs.readFileSync(path.join(root,name)))]));
  report.still={file:stillName,sha256:stillHash,source:'Production build at 3.5 seconds, default population and camera'};
  report.productionBuild={pass:true,threeCards:true,fullInkPreview:true,populationSliders:true,viewReset:true,referenceLoaded:true,shortViewports,routes,errors};
- fs.writeFileSync(path.join(out,'review.json'),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report.productionBuild,null,2));
+ fs.writeFileSync(path.join(out,'production-build.json'),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report.productionBuild,null,2));
 }finally{await browser.close();await new Promise(resolve=>server.close(resolve));}

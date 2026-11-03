@@ -1,0 +1,103 @@
+{
+  "pass": true,
+  "existingPosesUnchanged": true,
+  "weatherAndCameraRetained": true,
+  "offscreenAtBirth": true,
+  "swamIntoView": true,
+  "removalImmediate": true,
+  "repeatableHistory": true,
+  "playingPreserved": true,
+  "mutations": [
+    {
+      "value": {
+        "fish": 6,
+        "shrimp": 6
+      },
+      "synchronousMs": 30.19999998807907
+    },
+    {
+      "value": {
+        "fish": 5,
+        "shrimp": 5
+      },
+      "synchronousMs": 18.400000035762787
+    },
+    {
+      "value": {
+        "fish": 7,
+        "shrimp": 8
+      },
+      "synchronousMs": 81.5
+    },
+    {
+      "value": {
+        "fish": 8,
+        "shrimp": 12
+      },
+      "synchronousMs": 51.09999996423721
+    },
+    {
+      "value": {
+        "fish": 0,
+        "shrimp": 0
+      },
+      "synchronousMs": 8.300000011920929
+    },
+    {
+      "value": {
+        "fish": 1,
+        "shrimp": 0
+      },
+      "synchronousMs": 17.600000023841858
+    },
+    {
+      "value": {
+        "fish": 0,
+        "shrimp": 1
+      },
+      "synchronousMs": 11.800000011920929
+    },
+    {
+      "value": {
+        "fish": 5,
+        "shrimp": 5
+      },
+      "synchronousMs": 27.600000023841858
+    },
+    {
+      "value": {
+        "fish": 6,
+        "shrimp": 6
+      },
+      "synchronousMs": 27.69999998807907
+    }
+  ],
+  "film": {
+    "file": "swim-in.mp4",
+    "frames": 48,
+    "fps": 6.25,
+    "sha256": "a12e0754f198bc63bb031eaa61a178a77d8af5e948541bd38069af66cc5c3393",
+    "offlineSample": true
+  },
+  "still": "swim-in-944c3f72.png",
+  "sources": {
+    "artworks/ink-pond/src/appendage-motion.js": "b2c79324eacec2ade9c9dd7f86fe29d50c7ea4decf9dae6c391cf9e3371a79ef",
+    "artworks/ink-pond/src/entries.js": "22a5b4eb258c6d058a169804ad88bad3b1ab474d2d7f462448f5467ff17f9b0a",
+    "artworks/ink-pond/src/gpu-ink.js": "0a156346cc6b97ba1f5fa563d89294ac32df9038dc2d7b16cdf980695f9bf4c1",
+    "artworks/ink-pond/src/gpu-ripples.js": "4858c6d09af09876db3ca1de1647178d3fb2ba77000d52607f8b426c07fee5e9",
+    "artworks/ink-pond/src/ink-atlas.js": "bd5fc3bcd949e302ae34a46d0ee838b4499072438f0470a3d9c3834fd4ad9897",
+    "artworks/ink-pond/src/main.js": "5ba90ca642ee27e72957505bcdf8ead5264dea14743ff218590f6fb25c74d1a9",
+    "artworks/ink-pond/src/pond.js": "aab3144931626771aaf34bdff637e835d6dda89e226a052a137271f45ece6a39",
+    "artworks/ink-pond/src/pose-cache.js": "d618090e514ac2f6bcb96ebf771d97ba89524d08bcb1e200eeee26c6d0c8798a",
+    "artworks/ink-pond/src/rain.js": "a0885bb4e6dd2dba3ee57ba34539a7cc7c79f83890a04b3d042575ee3d52c068",
+    "artworks/ink-pond/src/ripples.js": "3d5422a777eb0bdc8f50d9b337dbc517f69b6f32eb3b7b26294b4d51d4bca61a",
+    "artworks/ink-pond/src/shrimp-individuals.js": "3a2f0d06e1663d01543505e95a7bfed5f9896790a9da9881fc4780c965627efd",
+    "artworks/ink-pond/src/style.css": "a313228fd16de95777b504d026008703396da8b461bd5d3fd454a4288c3326dc",
+    "artworks/ink-pond/src/swimming.js": "24567c64048bfc29adbbf09588bfb0878bf97cdab3a06eff29b488c1438ed384",
+    "artworks/ink-pond/src/water-space.js": "65ed35f5042a580866a6304a32ebcf791e21d017927cb3ae44ae124bce43b58e",
+    "artworks/ink-pond/src/models/fish.js": "225cb63743057d2a242c19e1c2419daa6ba5037f5e56c5e303afac028838cc3c",
+    "artworks/ink-pond/src/models/shrimp.js": "53b4a79ca130905507a6c2b4fd55fd522a07b72678aa08b1f64a51b6634290a8",
+    "artworks/ink-pond/src/models/volume.js": "5183a6eaf32415bf50b611c2a823f4c96331130ff099b36a35494e43a3ce97c9"
+  },
+  "errors": []
+}

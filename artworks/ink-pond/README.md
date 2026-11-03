@@ -7,14 +7,14 @@ The third painting in **画中行 · Living Paintings**. An original, editable c
 From the combined repository root:
 
 ```sh
-npm run setup
+npm ci
 npm run dev
 # http://127.0.0.1:5180/ink-pond/
 ```
 
 - Drag to orbit; scroll to zoom. On touch screens, drag with one finger and pinch with two.
 - **Reset view** restores the original 45° elevated, side-on view without restarting the swimming.
-- **Fish** (0–8) and **Shrimp** (0–12) change the population. Individual animals keep seeded paths, gestures, ink and proportions. A population edit recomposes their routes at the current painting time.
+- **Fish** (0–8) and **Shrimp** (0–12) change the population. Individual animals keep seeded paths, gestures, ink and proportions. New animals swim in from outside the current camera view. Lowering a count removes animals immediately. Existing swimmers, rain, ripples, camera, playback state and timeline keep going unchanged.
 - **Rain** ranges from a dry pond to a shower; **Ink** adjusts the wash, and **Speed** changes the playback rate from 0.25× to 2×.
 - Click the water for ripples and a local swimming disturbance. Pause and seek to choose a moment; **Save picture** exports the current angle at twice the displayed resolution.
 - With the canvas focused, arrow keys orbit, +/− zoom and Home resets the view. All parameter sliders support keyboard navigation. Reduced motion starts the painting paused; the camera remains interactive.
@@ -27,7 +27,7 @@ The camera stays above the water (20°–80° elevation), may rotate through a f
 
 `src/ink-atlas.js` uses p5 to prepare stable wet deposits, feathering, backruns, dithering and paper grain. Surface UVs hold these marks in place while geometry and camera move. Five authored shrimp profiles vary silhouette, feelers, claw reach, eye marks and gesture tempo. Fish use five restrained pigment tints. The default five fish average about 3.1 times the shrimp's head-to-tail body length.
 
-Paper, all animals, and water render in three GPU draws for a populated scene. Population edits reuse the pigment atlas, species pose caches, WebGL context and canvas; obsolete batch geometry and model resources are released. Empty populations are supported. Automatic internal resolution reduction helps slower devices; export resolution is independent of playback quality.
+Paper, all animals, and water render in three GPU draws for a populated scene. All twenty possible models and their paint buffers are prepared once at loading. Population edits reuse the pigment atlas, species pose caches, WebGL context, canvas and batch geometry. Inactive slots are skipped; no pond is reconstructed and no established swimming history is replayed. New arrivals have their own birth-time paths; complete silhouettes begin beyond a camera-relative edge, including feelers and claws. Removing one only hides its complete slot. Timestamped lifetimes retain repeatable seeking. Empty populations are supported. Automatic internal resolution reduction helps slower devices; export resolution is independent of playback quality.
 
 Each complete swimmer retains a persistent water-depth paint layer. Its real self-occlusion remains intact, while its silhouette covers deeper animals without mixing their pigment into the pale wash. This painterly layer convention avoids bodies cutting through one another and stays stable during orbiting and timeline seeking. It is an artistic shallow-water arrangement rather than a fluid or collision simulation.
 

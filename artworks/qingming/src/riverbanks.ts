@@ -111,7 +111,7 @@ export function buildBankFace(side: BankSide) {
     s+=.3+hash(i+300)*.28;
   }
   if(boulders.length){
-    const geo=mergeGeometries(boulders.map(g=>g.toNonIndexed()));geo.computeVertexNormals();
+    const geo=mergeGeometries(boulders.map(g=>g.index?g.toNonIndexed():g));geo.computeVertexNormals();
     const rocks=new THREE.Mesh(geo,stone[1]);rocks.name="stacked-bank-stones";group.add(rocks);
     const edges=new THREE.LineSegments(new THREE.EdgesGeometry(geo,25),createDryInk(.7));edges.name="stacked-bank-stone-outlines";group.add(edges);
     boulders.forEach(g=>g.dispose());

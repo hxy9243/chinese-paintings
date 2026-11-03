@@ -55,12 +55,12 @@ export async function createGpuInk(container,renderer,camera,pond,sharedPaint=nu
   geometry.setAttribute('animalId',new THREE.BufferAttribute(animalIds,1));geometry.setIndex(indices);
   geometry.setAttribute('waterLayer',new THREE.BufferAttribute(depthLayers,1));
   geometry.setAttribute('paintTone',new THREE.BufferAttribute(tones,3));
-  const uniforms={pigment:{value:paint.atlas},paper:{value:paint.paper},paperTone:{value:new THREE.Vector3(243/255,237/255,223/255)},
+  const uniforms={animalActive:{value:pond.animals.map(a=>a.active?1:0)},pigment:{value:paint.atlas},paper:{value:paint.paper},paperTone:{value:new THREE.Vector3(243/255,237/255,223/255)},
     waterLayerCount:{value:Math.max(1,pond.animals.length)},wash:{value:.42},formOnly:{value:0},ownerMode:{value:0},hideFine:{value:0},resolution:{value:new THREE.Vector2(1,1)},cssResolution:{value:new THREE.Vector2(1,1)}};
   const water=createGpuRipples(uniforms);
   const vertexShader=`attribute vec4 paintMeta;attribute float animalId;attribute float waterLayer;attribute vec3 paintTone;varying vec3 inkTone;varying vec2 brushUv;varying vec4 brush;varying vec3 facing;varying float animal;varying float coverage;
-    uniform vec2 resolution;uniform vec2 cssResolution;uniform float formOnly;uniform float waterLayerCount;
-    void main(){brushUv=uv;brush=paintMeta;inkTone=paintTone;animal=animalId;coverage=1.;vec4 mv=modelViewMatrix*vec4(position,1.);
+    uniform vec2 resolution;uniform vec2 cssResolution;uniform float formOnly;uniform float waterLayerCount;uniform float animalActive[${Math.max(1,pond.animals.length)}];
+    void main(){if(animalActive[int(animalId+.5)]<.5){gl_Position=vec4(2.,2.,2.,1.);return;}brushUv=uv;brush=paintMeta;inkTone=paintTone;animal=animalId;coverage=1.;vec4 mv=modelViewMatrix*vec4(position,1.);
       vec4 clip=projectionMatrix*mv;facing=normalize(normalMatrix*normal);
       if(paintMeta.x>5.5&&paintMeta.x<6.5){
         vec4 ahead=projectionMatrix*(mv+vec4(mat3(modelViewMatrix)*normal,0.));
@@ -125,6 +125,7 @@ export async function createGpuInk(container,renderer,camera,pond,sharedPaint=nu
   function updateGeometry(){
     pond.root.updateMatrixWorld(true);
     for(const item of items){
+      if(!pond.animals[item.mesh.userData.animalIndex]?.active)continue;
       const src=item.position.array,ns=item.joinedNormals?joinedShellNormals(item.normal.array,item.joinedNormals,item.columns,item.rows):item.normal.array,m=item.mesh.matrixWorld.elements;
       if(item.kind===6){
         const cols=item.columns,centers=item.centers,radii=item.radii,worldScale=Math.hypot(m[0],m[1],m[2]);
@@ -151,7 +152,7 @@ export async function createGpuInk(container,renderer,camera,pond,sharedPaint=nu
     geometry.attributes.position.needsUpdate=true;geometry.attributes.normal.needsUpdate=true;geometry.attributes.paintMeta.needsUpdate=true;
   }
   function draw(wash=.42){
-    const started=performance.now(),rings=pond.rippleSample(),rain=pond.rainSample?.()??[];updateGeometry();uniforms.wash.value=wash;uniforms.formOnly.value=formOnly?1:0;
+    const started=performance.now(),rings=pond.rippleSample(),rain=pond.rainSample?.()??[];pond.animals.forEach((a,i)=>{uniforms.animalActive.value[i]=a.active?1:0;});updateGeometry();uniforms.wash.value=wash;uniforms.formOnly.value=formOnly?1:0;
     renderer.info.autoReset=false;renderer.info.reset();water.update(camera,[...rings,...rain]);
     renderer.setRenderTarget(null);renderer.setClearColor(0xf3eddf,1);renderer.clear();renderer.render(scene,camera);
     stats={renderer:'Batched GPU wet ink on articulated 3D surfaces',p5PigmentAtlas:true,readbacksPerFrame:0,drawCalls:renderer.info.render.calls,triangles:renderer.info.render.triangles,vertices:count,renderScale:scale,gpuMemory:{...renderer.info.memory},cpuDrawMs:performance.now()-started,depthOwnership:true,animalOcclusion:'Persistent disjoint water-depth intervals; true self-occlusion within each swimmer',translucentDiffusion:true,diffusion:'p5 wet pigment with feathered coverage',carapaceInk:'Irregular loaded brush strokes, dilute wash, backruns and surface-seeded wet rim',individualPigmentTints:true,waterRipples:{enabled:uniforms.rippleEnabled.value>.5,activeRings:rings.length,sharedPerspective:true,throughBodies:true,refractionCssPixels:0,method:water.method},stableDithering:true,formOnly};
