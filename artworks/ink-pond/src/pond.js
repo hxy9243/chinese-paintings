@@ -64,7 +64,7 @@ export function createPond({fish=5,shrimp=5,seed:initialSeed=4317,rain:rainInten
   function pose(animal,state){
     const {model,placement}=animal;
     model.update(state.phase%12,0,false,false,true,.42);
-    animal.applyPose(state.phase,{speed:Math.hypot(...state.velocity.slice(0,2)),turn:state.turnRate,time,seed:seed+POPULATION_POOL.indexOf(animal.definition)*1009});
+    animal.applyPose(state.phase,{speed:Math.hypot(...state.velocity.slice(0,2)),effort:state.effort,turn:state.turnRate,time,seed:seed+POPULATION_POOL.indexOf(animal.definition)*1009});
     model.root.position.set(0,0,0);model.root.rotation.set(0,0,0);
     placement.position.fromArray(waterToWorld(state.position));placement.quaternion.fromArray(state.quaternion);
   }
@@ -94,7 +94,7 @@ export function createPond({fish=5,shrimp=5,seed:initialSeed=4317,rain:rainInten
         // Only this dormant model is posed to measure its entry silhouette.
         const state={phase:definition.phase,position:[0,0,definition.start[2]],velocity:[30,0,0],turnRate:0,quaternion:[0,0,0,1]};pose(animal,state);
         const entry=planEntry(camera,animal,serial++),born=time;
-        const swimming=createSwimming([{...definition,start:entry.start,velocity:entry.velocity}],seed+1009+serial*37);
+        const swimming=createSwimming([{...definition,entry:true,start:entry.start,velocity:entry.velocity}],seed+1009+serial*37);
         if(current)swimming.setCurrent(current,0);
         animal.lives.push({born,until:Infinity,initial:false,simulation:swimming,entrySide:entry.side});
       }
@@ -108,7 +108,7 @@ export function createPond({fish=5,shrimp=5,seed:initialSeed=4317,rain:rainInten
       animals:active.map(({definition:d,placement,state,model,waterDepthLayer,individual,lives})=>({id:d.id,species:d.species,individual:individual?.profile??null,waterDepthLayer,position:placement.position.toArray(),waterPosition:state.position,velocity:waterToWorld(state.velocity),quaternion:state.quaternion,
         topDirection:new THREE.Vector3(0,1,0).applyQuaternion(model.root.children[0].quaternion).applyQuaternion(placement.quaternion).toArray(),
         born:lifeAt({lives},time).born,entrySide:lifeAt({lives},time).entrySide??null,
-        bank:state.bank,turnRate:state.turnRate,depthTilt:state.depthTilt,heading:state.heading,behavior:d.species==='shrimp'?(state.effort>.6?'rowing':'gliding'):state.gather>.6?'gathering':state.gather<.25?'scattering':'roaming',gather:state.gather,effort:state.effort,swimPhase:state.phase,
+        bank:state.bank,turnRate:state.turnRate,depthTilt:state.depthTilt,heading:state.heading,behavior:d.species==='shrimp'?(state.effort>.6?'rowing':'gliding'):state.effort>.15?'swimming':Math.hypot(...state.velocity.slice(0,2))<9?'resting':'coasting',gather:state.gather,effort:state.effort,swimPhase:state.phase,
         scale:d.size,ink:d.ink,color:d.color??'ink',pigment:d.pigment??[.073,.077,.068],bodyLength:d.size*(d.species==='fish'?284:212),anatomy:model.anatomy,spatial:true}))};
   }
   startPopulation(fish,shrimp);

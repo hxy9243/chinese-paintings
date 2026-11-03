@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import {swimmerOrientation} from './water-space.js';
+import {createFishRhythm} from './fish-rhythm.js';
 
 const RATE=60,DT=1/RATE,STRIDE=17;
 const hash=n=>{const v=Math.sin(n*127.13+71.7)*43758.5453;return v-Math.floor(v);};
@@ -15,7 +16,7 @@ export const SWIM_LIMITS={fishTurnRate:.25,fishTurnAcceleration:.10,shrimpTurnRa
 export function createSwimming(definitions,seed=4317){
   const specs=definitions.map((a,i)=>{
     const s=seed+i*37.17,same=definitions.map((d,j)=>d.species===a.species?j:-1).filter(j=>j>=0),local=same.indexOf(i);
-    return{...a,seed:s,buddy:same[local%2?local-1:local+1]??-1,
+    return{...a,seed:s,rhythm:a.species==='fish'?createFishRhythm(s):null,buddy:same[local%2?local-1:local+1]??-1,
       period:24+hash(s+2)*16,scatterAt:5+hash(s+3)*9,pathInterval:24+hash(s+4)*15,
       cruise:a.species==='fish'?46+hash(s+5)*16:27+hash(s+5)*12,
       halfLength:a.size*(a.species==='fish'?142:106),halfWidth:a.size*(a.species==='fish'?52:48),
@@ -28,7 +29,7 @@ export function createSwimming(definitions,seed=4317){
   }
   specs.forEach((s,i)=>{
     const a=i*STRIDE,heading=Math.atan2(s.velocity[1],s.velocity[0]);
-    first.set([...s.start,...s.velocity,s.phase,0,0,0,1,0,1,0,0,heading,Math.atan2(s.velocity[2],Math.hypot(...s.velocity.slice(0,2)))],a);orient(first,a);
+    first.set([...s.start,...s.velocity,s.phase,0,0,0,1,0,1,s.rhythm?mood(s,0).effort:0,0,heading,Math.atan2(s.velocity[2],Math.hypot(...s.velocity.slice(0,2)))],a);orient(first,a);
   });
   function point(spec,k){
     if(k===0)return spec.start;
@@ -42,8 +43,10 @@ export function createSwimming(definitions,seed=4317){
   }
   function mood(spec,t){
     const u=((t+spec.period*.45-spec.scatterAt)%spec.period+spec.period)%spec.period/spec.period;
+    const rhythm=spec.rhythm?.(t),entry=spec.entry?1-smooth(5,9,t):0;
     return{gather:1-smooth(.38,.52,u)*(1-smooth(.76,.94,u)),
-      effort:spec.species==='shrimp'?smooth(.15,.80,.5+.5*Math.sin(t*Math.PI*2/(7+hash(spec.seed+7)*4)+spec.seed)):0};
+      pace:rhythm?Math.max(rhythm.pace,entry):1,
+      effort:rhythm?Math.max(rhythm.effort,entry):smooth(.15,.80,.5+.5*Math.sin(t*Math.PI*2/(7+hash(spec.seed+7)*4)+spec.seed))};
   }
   function support(spec,dx,dy,heading){
     const c=Math.cos(heading),s=Math.sin(heading);
@@ -53,7 +56,7 @@ export function createSwimming(definitions,seed=4317){
     const next=new Float64Array(previous),count=specs.length;let current=0;
     for(const e of events)if(e.time<=t&&e.kind==='current')current=e.value;
     for(let i=0;i<count;i++){
-      const spec=specs[i],a=i*STRIDE,x=previous[a],y=previous[a+1],z=previous[a+2],heading=previous[a+15],{gather,effort}=mood(spec,t);
+      const spec=specs[i],a=i*STRIDE,x=previous[a],y=previous[a+1],z=previous[a+2],heading=previous[a+15],{gather,effort,pace}=mood(spec,t),fish=spec.species==='fish';
       const dirX=Math.cos(heading),dirY=Math.sin(heading),target=personalTarget(spec,t);
       // A distant return bend takes place outside the paper. No wrapping or
       // position reset is used when a swimmer crosses the picture edge.
@@ -101,16 +104,17 @@ export function createSwimming(definitions,seed=4317){
         wantY=wantY*(1-weight)+(target[1]-y)/distance*weight*magnitude;
       }
       const error=wrap(Math.atan2(wantY,wantX)-heading),maxTurn=spec.species==='fish'?SWIM_LIMITS.fishTurnRate:SWIM_LIMITS.shrimpTurnRate;
-      const wantedTurn=clamp(error*.40,-maxTurn,maxTurn),maxChange=(spec.species==='fish'?SWIM_LIMITS.fishTurnAcceleration:SWIM_LIMITS.shrimpTurnAcceleration)*DT;
+      const oldSpeed=Math.hypot(previous[a+3],previous[a+4]),steering=fish?.08+.92*smooth(3,30,oldSpeed):1;
+      const wantedTurn=clamp(error*.40,-maxTurn,maxTurn)*steering,maxChange=(fish?SWIM_LIMITS.fishTurnAcceleration:SWIM_LIMITS.shrimpTurnAcceleration)*DT;
       const turn=previous[a+14]+clamp(wantedTurn-previous[a+14],-maxChange,maxChange),newHeading=heading+turn*DT;
-      const oldSpeed=Math.hypot(previous[a+3],previous[a+4]),cruise=spec.cruise*(spec.species==='fish'?.91+.055*Math.sin(t*.13+spec.seed):.72+.27*effort);
-      const targetSpeed=Math.max(20.5,cruise*(1-.48*caution*(1-returning)));
-      const speed=oldSpeed+clamp(targetSpeed-oldSpeed,-7*DT,8*DT);
+      const cruise=spec.cruise*(fish?pace*(.91+.055*Math.sin(t*.13+spec.seed)):.72+.27*effort);
+      const targetSpeed=Math.max(fish?2.5:20.5,cruise*(1-.48*caution*(1-returning)));
+      const speed=oldSpeed+clamp(targetSpeed-oldSpeed,-(fish?11:7)*DT,(fish?10:8)*DT);
       const depthTarget=spec.start[2]*.45+17*Math.sin(t*.095+spec.seed);
       const vz=previous[a+5]+clamp((depthTarget-z)*.12-previous[a+5]*.75,-2.5,2.5)*DT;
       const vx=Math.cos(newHeading)*speed,vy=Math.sin(newHeading)*speed;
       next.set([x+vx*DT,y+vy*DT,z+vz*DT,vx,vy,vz],a);next[a+15]=newHeading;next[a+14]=turn;
-      const rate=spec.species==='fish'?.85+speed/55*1.5:.15+.95*effort;next[a+6]=previous[a+6]+DT*rate;
+      const rate=fish?.12+effort*(.65+speed/55*1.45):.15+.95*effort;next[a+6]=previous[a+6]+DT*rate;
       const bank=clamp(-turn*.17,-SWIM_LIMITS.bank,SWIM_LIMITS.bank);next[a+11]=previous[a+11]+(bank-previous[a+11])*DT*1.4;
       const tilt=clamp(Math.atan2(vz,speed)+Math.sin(t*.09+spec.seed)*.018,-SWIM_LIMITS.depthTilt,SWIM_LIMITS.depthTilt);
       next[a+16]=previous[a+16]+(tilt-previous[a+16])*DT*1.2;orient(next,a);next[a+12]=gather;next[a+13]=effort;

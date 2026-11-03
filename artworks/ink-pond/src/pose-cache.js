@@ -29,10 +29,17 @@ export function posePlayer(model,cache,individual=null){
     const a=cache.frames[index],b=cache.frames[(index+1)%cache.frameCount];
     for(let i=0;i<meshes.length;i++){
       const geometry=meshes[i].geometry,output=geometry.attributes.position.array,first=a[i].position,next=b[i].position;
-      for(let j=0;j<output.length;j++)output[j]=first[j]+(next[j]-first[j])*mix;
+      // Settle towards the straight resting pose, rather than freezing a tail
+      // halfway through a stroke. Paired fins retain a small balancing motion.
+      const fin=meshes[i].name.startsWith('pectoral')||meshes[i].userData.inkStroke?.seed>=575;
+      const amplitude=cache.species==='fish'&&motion?.effort!==undefined?(fin?.22:.018)+(fin?.78:.982)*motion.effort:1;
+      const rest=cache.frames[0][i];
+      if(amplitude===1)for(let j=0;j<output.length;j++)output[j]=first[j]+(next[j]-first[j])*mix;
+      else for(let j=0;j<output.length;j++)output[j]=rest.position[j]+(first[j]+(next[j]-first[j])*mix-rest.position[j])*amplitude;
       if(a[i].normal){
         const out=geometry.attributes.normal.array,from=a[i].normal,to=b[i].normal;
-        for(let j=0;j<out.length;j++)out[j]=from[j]+(to[j]-from[j])*mix;
+        if(amplitude===1)for(let j=0;j<out.length;j++)out[j]=from[j]+(to[j]-from[j])*mix;
+        else for(let j=0;j<out.length;j++)out[j]=rest.normal[j]+(from[j]+(to[j]-from[j])*mix-rest.normal[j])*amplitude;
       }
     }
     morph?.();appendages(motion&&individual?{...motion,time:motion.time*individual.profile.gestureTempo}:motion);
