@@ -34,16 +34,19 @@ docs/                   Architecture, migration, and production workflows
 Requires Node.js 22.12+ and Python 3 for the original landscape utilities.
 
 ```sh
-npm run setup
+npm ci
 npm run dev
 # http://127.0.0.1:5180/
 npm test
 npm run build
 ```
 
-Qingming also runs independently with `npm run dev --prefix artworks/qingming`.
-Its existing Chromium suite runs with `npm run test:e2e` after installing the Playwright browser.
-The original Thousand Miles study/capture commands remain in its own README.
+The repository is a single npm project: every dependency is declared in the root `package.json` and installed into the root `node_modules`. Run all commands from the repository root.
+
+Qingming also runs independently with `npm run qingming:dev`.
+Its existing Chromium suite runs with `npm run test:e2e` after `npx playwright install chromium`.
+Thousand Miles is served with `npm run thousand-miles:start`; its study and capture commands remain in its own README.
+
 Fish and shrimp controls and renderer details are in [the pond README](artworks/ink-pond/README.md). Run `npm run test:pond` for its population checks.
 
 See [the implementation plan](docs/PLAN.md) for migration, sharing, visual direction, and validation.

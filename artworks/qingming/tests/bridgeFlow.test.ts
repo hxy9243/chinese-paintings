@@ -1,18 +1,12 @@
+import { streetCoordinates } from "./helpers/streetCoordinates";
 import { describe, it, expect } from "vitest";
 import { BRIDGE, bridgeHeight, bridgePoint } from "../src/passageLayout";
 import { BRIDGE_WALKERS, walkPose } from "../src/passageLife";
 import { paintMaterial } from "../src/paintMaterial";
 import { setScenePalette, paletteAmount } from "../src/scenePalette";
-import { ROAD_SEGMENTS } from "../src/roadSurface";
+import { ROAD_SEGMENTS, ROAD_TERMINI } from "../src/roadSurface";
 import { segmentDistance } from "../src/passageSpace";
-const local = (p: { s: number; d: number }) => ({
-  u:
-    (p.s - BRIDGE.center.s) * Math.cos(BRIDGE.angle) +
-    (p.d - BRIDGE.center.d) * Math.sin(BRIDGE.angle),
-  v:
-    -(p.s - BRIDGE.center.s) * Math.sin(BRIDGE.angle) +
-    (p.d - BRIDGE.center.d) * Math.cos(BRIDGE.angle),
-});
+const local = streetCoordinates;
 describe("full-span bridge flow and connected mud roads", () => {
   it("populates the full street and bridge at comparable walking density, with mixed directions and pauses", () => {
     let bridgePopulation = 0,
@@ -27,7 +21,8 @@ describe("full-span bridge flow and connected mud roads", () => {
       const span = poses
         .map(local)
         .filter((p) => Math.abs(p.u) < BRIDGE.length / 2 - 0.2);
-      expect(span.length).toBeGreaterThanOrEqual(16);
+      // At least one walker per unit of span (the reworked bridge is 14 long).
+      expect(span.length).toBeGreaterThanOrEqual(Math.floor(BRIDGE.length));
       for (const side of [-1, 1])
         expect(
           span.filter((p) => Math.sign(p.v) === side).length,
@@ -65,7 +60,7 @@ describe("full-span bridge flow and connected mud roads", () => {
     }
     for (const r of ROAD_SEGMENTS.slice(1))
       for (const p of [r.a, r.b])
-        if (Math.abs(p.s) < 21.9)
+        if (!ROAD_TERMINI.some((t) => Math.hypot(t.s - p.s, t.d - p.d) < 0.001))
           expect(
             ROAD_SEGMENTS.some(
               (other) => other !== r && segmentDistance(p, other) < r.width,

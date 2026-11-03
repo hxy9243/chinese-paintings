@@ -4,6 +4,7 @@ import { scrollPoint } from "./scrollLayout";
 
 // The same analytic surface supports GPU water and CPU wake ribbons. Its
 // crests stay below the low quays; no frame history is needed when seeking.
+// The shallows follow the smooth traced banks; their zigzag is bank geometry.
 export const WATER_LEVEL = -0.045;
 export function waterHeight(s: number, d: number, time: number) {
   return (
@@ -37,11 +38,11 @@ export const riverShader = `
 
 /** Tessellation makes the highlights follow a real, shallow 3D surface. */
 export function riverGeometry() {
-  const g = new THREE.PlaneGeometry(60, 44, 300, 220);
+  const g = new THREE.PlaneGeometry(104, 62, 360, 220);
   g.rotateX(-Math.PI / 2);
   const p = g.getAttribute("position");
   for (let i = 0; i < p.count; i++) {
-    const q = scrollPoint(p.getX(i), p.getZ(i));
+    const q = scrollPoint(p.getX(i)-10, p.getZ(i));
     p.setXYZ(i, q.x, WATER_LEVEL, q.z);
   }
   g.computeVertexNormals();

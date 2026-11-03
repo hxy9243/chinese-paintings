@@ -11,6 +11,6 @@ The full-scene and close-up captures cover the curved upstream channel, working 
 
 ## Reproduce
 
-Build with `npm run build --prefix artworks/qingming` and run `npm test --prefix artworks/qingming`. Set `PLAYWRIGHT_CHROMIUM_EXECUTABLE` to a working Chromium executable and `QINGMING_QA_FONTS` to a local `@fontsource/noto-serif-sc` package.
+Build with `npm run qingming:build` and run `npm test`. Set `PLAYWRIGHT_CHROMIUM_EXECUTABLE` to a working Chromium executable and `QINGMING_QA_FONTS` to a local `@fontsource/noto-serif-sc` package.
 
 Run `scripts/review-qingming-reference.mjs` with `REVIEW_DIR=docs/reviews/2026-10-21-river-bend` and `REVIEW_VIEWS=whole-extended-scene,river-bend,cargo-landings,upstream-boats,bend-bank-level`, followed by `scripts/review-qingming-buffering.mjs`.

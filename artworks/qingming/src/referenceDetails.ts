@@ -1,11 +1,13 @@
 import * as THREE from "three";
 import { paintMaterial, createDryInk } from "./paintMaterial";
+import { marketParasol } from "./marketModels";
 
 // Visible evidence in the supplied Chicago crop; the obscured back faces and
 // exact headcounts remain modelling interpretations.
 type P = [number, number, number];
 const timber=paintMaterial(0x987b50), light=paintMaterial(0xc0a87a),
   dark=paintMaterial(0x61533d), cloth=paintMaterial(0xc8bb96), ink=createDryInk(.55);
+cloth.side=THREE.DoubleSide;
 function box(g:THREE.Object3D,size:P,at:P,m:THREE.Material=timber){
   const mesh=new THREE.Mesh(new THREE.BoxGeometry(...size),m);mesh.position.set(...at);g.add(mesh);return mesh;
 }
@@ -18,73 +20,79 @@ function line(g:THREE.Object3D,points:P[]){
   g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(points.map(p=>new THREE.Vector3(...p))),ink));
 }
 
-export function buildConstruction(width:number,depth:number,height:number){
-  const g=new THREE.Group();g.name="open-timber-construction";
-  const w=width*.39,d=depth*.38;
-  box(g,[width,.09,depth],[0,.045,0],light);
-  // Unfinished timber bays: real open space between posts and roof trusses.
-  for(const x of [-w,0,w])for(const z of [-d,d])
-    rod(g,[x,0,z],[x,height,z],.045);
-  for(const y of [.95,1.9,height]){
-    for(const z of [-d,d])rod(g,[-w,y,z],[w,y,z],.04);
-    for(const x of [-w,w])rod(g,[x,y,-d],[x,y,d],.04);
+// The painting's 彩楼欢门: a pole lattice raised on the flat top of the inn's
+// gatehouse, tiered and stepped in, ending in clusters of pointed spires with
+// splayed corner poles. It advertises the inn; it is not a building site.
+export function buildFestoonGate(width:number,depth:number,eave:number){
+  const g=new THREE.Group();g.name="festooned-inn-gateway";
+  const w=width/2,d=depth/2,overhang=.36,rise=.42;
+  box(g,[width,.07,depth],[0,.035,0],light);
+  // Open gatehouse: framed bays, a closed rear wall and the inn's sign board.
+  for(const x of [-w*.9,0,w*.9])for(const z of [-d*.9,d*.9])rod(g,[x,0,z],[x,eave,z],.045,dark);
+  for(const x of [-w*.9,w*.9])rod(g,[x,0,0],[x,eave,0],.04,dark);
+  for(const z of [-d*.9,d*.9])box(g,[width*.94,.09,.07],[0,eave-.06,z],dark);
+  for(const x of [-w*.9,w*.9])box(g,[.07,.09,depth*.94],[x,eave-.06,0],dark);
+  box(g,[width*.86,eave*.78,.05],[0,eave*.39,-d*.88],light);
+  box(g,[.05,eave*.78,depth*.5],[-w*.88,eave*.39,-d*.42],light);
+  box(g,[width*.36,eave*.5,.02],[-w*.42,eave*.66,d*.9],cloth);
+  const sign=box(g,[.24,.62,.035],[w*.62,eave*.42,d*.96],light);
+  line(sign,[[-.1,-.29,.02],[-.1,.29,.02],[.1,.29,.02],[.1,-.29,.02],[-.1,-.29,.02]]);
+  // Flat-topped hip roof with a concave sweep and lifted corners.
+  const X=w+overhang,Z=d+overhang,X2=w*.78,Z2=d*.78,top=eave+rise;
+  const corners:[number,number][]=[[-1,1],[1,1],[1,-1],[-1,-1]];
+  const positions:number[]=[];
+  const roofPoint=(face:number,a:number,t:number):P=>{
+    const [ax,az]=corners[face],[bx,bz]=corners[(face+1)%4];
+    const ox=(ax+(bx-ax)*a)*X,oz=(az+(bz-az)*a)*Z,ix=(ax+(bx-ax)*a)*X2,iz=(az+(bz-az)*a)*Z2;
+    const lift=.13*(1-t)**2*(2*Math.abs(a-.5))**4;
+    return [ox+(ix-ox)*t,eave+rise*t**1.8+lift,oz+(iz-oz)*t];
+  };
+  for(let face=0;face<4;face++){
+    for(let i=0;i<12;i++)for(let j=0;j<6;j++){
+      const a0=i/12,a1=(i+1)/12,t0=j/6,t1=(j+1)/6;
+      positions.push(...roofPoint(face,a0,t0),...roofPoint(face,a1,t0),...roofPoint(face,a1,t1),
+        ...roofPoint(face,a0,t0),...roofPoint(face,a1,t1),...roofPoint(face,a0,t1));
+    }
+    for(let i=1;i<12;i++)line(g,Array.from({length:7},(_,j)=>{const p=roofPoint(face,i/12,j/6);return [p[0],p[1]+.012,p[2]] as P;}));
+    line(g,Array.from({length:13},(_,i)=>roofPoint(face,i/12,0)));
   }
-  for(const x of [-w,0,w]){
-    rod(g,[x,height,-d],[x,height+.52,0],.035);
-    rod(g,[x,height+.52,0],[x,height,d],.035);
-    rod(g,[x,height,-d],[x,height,d],.028);
-  }
-  rod(g,[-w,height+.52,0],[w,height+.52,0],.04);
-  // Sparse purlins, an incomplete tile patch and exposed rafter ends.
-  for(const z of [-d,-d*.5,d*.5,d])rod(g,[-w,height+.52*(1-Math.abs(z/d)),z],[w,height+.52*(1-Math.abs(z/d)),z],.023);
-  for(let x=-w;x<=w;x+=.18)for(const side of [-1,1])
-    rod(g,[x,height+.52,0],[x,height-.07,side*(d+.08)],.015,light);
-  for(let j=0;j<4;j++)for(let k=0;k<4;k++){
-    const z=.15+k*.13,y=height+.52*(1-z/d)+.025;
-    const tile=box(g,[.15,.028,.16],[-w+.09+j*.15,y,z],dark);
-    tile.rotation.x=Math.atan(.52/d);
-  }
-  // Bamboo staging extends above the frame, with ties and diagonal bracing.
-  for(const x of [-width*.49,width*.49])for(const z of [-depth*.49,depth*.49]){
-    rod(g,[x,0,z],[x+.025,height+1.05+(x>0?.1:0),z],.022,light);
-    for(const y of [.55,1.25,2.05,2.8,3.45]){
-      rod(g,[-width*.49,y,z],[width*.49,y,z],.014,light);
-      rod(g,[x,y,-depth*.49],[x,y,depth*.49],.014,light);
-      for(const dy of [-.018,.018])line(g,[[x-.03,y+dy,z-.03],[x+.03,y+dy,z+.03]]);
+  const geo=new THREE.BufferGeometry().setAttribute("position",new THREE.Float32BufferAttribute(positions,3));geo.computeVertexNormals();
+  const roof=new THREE.Mesh(geo,dark);roof.name="gatehouse-roof";g.add(roof);
+  box(g,[2*X2,.06,2*Z2],[0,top,0],timber);
+  for(let i=0;i<=8;i++)for(const [x,z] of [[-X2+2*X2*i/8,Z2],[-X2+2*X2*i/8,-Z2]] as [number,number][])rod(g,[x,top,z],[x,top+.26,z],.01,dark);
+  for(const y of [.13,.26])for(const [a,b] of [[[-X2,Z2],[X2,Z2]],[[X2,Z2],[X2,-Z2]],[[X2,-Z2],[-X2,-Z2]],[[-X2,-Z2],[-X2,Z2]]] as [number,number][][])
+    rod(g,[a[0],top+y,a[1]],[b[0],top+y,b[1]],.012,dark);
+  // Three stepped tiers of lashed poles and ledgers.
+  let base=top+.03,tip=base;
+  for(const [k,[sx,sz,h]] of [[.94,.92,1.6],[.74,.68,1.25],[.52,.46,1.0]].entries()){
+    const hx=X2*sx,hz=Z2*sz,ring:[number,number][]=[];
+    const across=8-2*k,deep=6-2*k;
+    for(let i=0;i<=across;i++)ring.push([-hx+2*hx*i/across,hz],[-hx+2*hx*i/across,-hz]);
+    for(let i=1;i<deep;i++)ring.push([-hx,-hz+2*hz*i/deep],[hx,-hz+2*hz*i/deep]);
+    for(const [n,[x,z]] of ring.entries())rod(g,[x,base,z],[x+.02*Math.sin(n*2.1+k),base+h,z],.017,n%3?dark:timber);
+    for(let y=.14;y<h;y+=.16)for(const [a,b] of [[[-hx,hz],[hx,hz]],[[hx,hz],[hx,-hz]],[[hx,-hz],[-hx,-hz]],[[-hx,-hz],[-hx,hz]]] as [number,number][][])
+      rod(g,[a[0],base+y,a[1]],[b[0],base+y,b[1]],.012,dark);
+    // Cross-bracing makes each tier read as one lashed frame from afar.
+    for(const z of [-hz,hz])for(let i=0;i<across;i+=2)rod(g,[-hx+2*hx*i/across,base,z],[-hx+2*hx*(i+1)/across,base+h,z],.009,timber);
+    // Corner poles splay outward like the painting's spiky silhouette.
+    for(const [cx,cz] of corners)rod(g,[cx*hx,base+h*.2,cz*hz],[cx*(hx+.42),base+h+.5,cz*(hz+.2)],.01,timber);
+    base+=h;
+    if(k===2)for(const [n,[x,z]] of ring.entries()){
+      const spire=.7+.6*((n*5)%7)/6,peak:P=[x*.9,base+spire,z*.9];
+      if(n%2)continue;
+      rod(g,[x,base,z],peak,.015,dark);
+      for(const side of [-1,1])rod(g,[x+side*.1,base,z],peak,.01,dark);
+      for(let y=.12;y<spire-.08;y+=.14){const half=.09*(1-y/spire);rod(g,[x*.97-half,base+y,z*.97],[x*.97+half,base+y,z*.97],.006,timber);}
+      tip=Math.max(tip,peak[1]);
     }
   }
-  for(const z of [-depth*.49,depth*.49])for(const y of [.1,1.3,2.1])
-    rod(g,[-width*.48,y,z],[width*.48,y+1.15,z],.013,light);
-  for(const y of [1.25,2.05])for(const side of [-1,1])
-    box(g,[width,.045,.29],[0,y,side*depth*.41],light);
-  // Dense bamboo staging in the reference surrounds the house on every face.
-  // Unequal upright heights and lashed ledgers keep its silhouette irregular.
-  for(const side of [-1,1])for(let j=0;j<7;j++){
-    const x=-width*.48+j*width*.96/6,z=side*depth*.48,top=height+.8+(j%3)*.22;
-    rod(g,[x,.02,z],[x+.03*Math.sin(j*3),top,z+.025*side],.014,light);
-    for(let y=.25;y<height+.55;y+=.23){
-      if(j===0)rod(g,[-width*.49,y,z],[width*.49,y+.025*Math.sin(y*7),z],.012,timber);
-      line(g,[[x-.028,y-.022,z-.025],[x+.028,y+.022,z+.025],[x-.028,y+.04,z-.025]]);
-    }
-  }
-  for(const side of [-1,1])for(let j=0;j<5;j++){
-    const x=side*width*.48,z=-depth*.48+j*depth*.96/4;
-    rod(g,[x,0,z],[x,height+.88+(j%2)*.21,z],.015,light);
-    for(let y=.28;y<height+.4;y+=.27)if(j===0)rod(g,[x,y,-depth*.49],[x,y+.025,depth*.49],.011,timber);
-  }
-  for(const side of [-1,1])for(let j=0;j<3;j++){
-    const x=-width*.48+j*width*.32,z=side*depth*.49;
-    rod(g,[x,.35,z],[x+width*.32,2.8,z],.012,light);
-    rod(g,[x,2.8,z],[x+width*.32,.35,z],.012,light);
-  }
-  // Ladder is inside the worksite footprint, not across the pedestrian route.
-  for(const x of [-.19,.19])rod(g,[x,0,depth*.43],[x,2.07,depth*.12],.021);
-  for(let j=1;j<11;j++)rod(g,[-.19,j*.19,depth*.43-j*.028],[.19,j*.19,depth*.43-j*.028],.017);
-  for(let j=0;j<5;j++)rod(g,[-w,.11+j*.025,-d*.3],[w*.8,.11+j*.025,-d*.3],.035);
-  for(let j=0;j<3;j++){
-    const fabric=box(g,[.2,.65+j*.1,.015],[-.4+j*.36,1.65,depth*.49],cloth);
-    fabric.rotation.z=(j-1)*.07;
-  }
+  // An outrigger carries the striped hanging banner over the street side.
+  const arm=top+1.0;
+  rod(g,[w*.7,arm,d*.3],[w+1.6,arm+.06,d*.3],.014,dark);
+  const banner=new THREE.Group();banner.position.set(w+1.15,arm-.55,d*.3);banner.name="striped-inn-banner";g.add(banner);
+  box(banner,[.72,1.0,.015],[0,0,0],cloth);
+  for(const x of [-.26,0,.26])box(banner,[.11,.98,.02],[x,0,.003],dark);
+  g.userData.maximumHeight=tip;
   return g;
 }
 
@@ -97,19 +105,21 @@ export function boatCrewStations(length:number,width:number,style:string):CrewSt
   if(style==="skiff")return crew;
   crew.push({x:width*.18,y:.34,z:length*.29,role:"passenger",facing:-.6});
   if(style==="canopy")return crew;
-  crew.push({x:0,y:1.025,z:-length*.11,role:"roof",facing:1.1},
-    {x:0,y:1.025,z:length*.105,role:"roof",facing:-1.2},
+  const roofHeight=style==="freight"?1.08:1.115;
+  crew.push({x:0,y:roofHeight,z:-length*.11,role:"roof",facing:1.1},
+    {x:0,y:roofHeight,z:length*.105,role:"roof",facing:-1.2},
     {x:-width*.2,y:.34,z:-length*.31,role:"haul",facing:Math.PI/2});
   if(style==="freight")crew.push(
     {x:width*.22,y:.34,z:length*.45,role:"haul",facing:Math.PI/2},
     {x:-width*.22,y:.34,z:length*.29,role:"haul",facing:Math.PI/2},
-    {x:0,y:1.025,z:0,role:"roof",facing:Math.PI/2});
+    {x:0,y:roofHeight,z:0,role:"roof",facing:Math.PI/2});
   return crew;
 }
 export function addCrewEquipment(g:THREE.Object3D,length:number,width:number,style:string){
   if(style==="freight" || style==="cabin"){
     // Narrow roof gangway supports the feet of roof workers on the curved cabin.
-    box(g,[width*.28,.035,length*.35],[0,1.007,0],light);
+    const roofHeight=style==="freight"?1.08:1.115;
+    box(g,[width*.28,.035,length*.35],[0,roofHeight-.0175,0],light);
     for(const end of [-1,1])rod(g,[0,.35,end*length*.34],[0,1.02,end*length*.16],.018);
   }
   // Stowed/working poles and hauling lines remain inside the vessel envelope.
@@ -217,5 +227,34 @@ export function buildOrnateGate(width:number,depth:number,height:number){
     }
   }
   for(const x of [-w,w])for(const y of [height*.6,height])rod(g,[x,y,-depth*.24],[x,y,depth*.24],.03);
+  return g;
+}
+
+// The painting's stand by the bridge approach: a woven-mat awning on slender
+// poles over trestle counters, with a paper parasol. No walls, no tiled roof.
+export function buildCanopyStall(width:number,depth:number){
+  const g=new THREE.Group();g.name="mat-canopy-stall";
+  const w=width/2,d=depth/2,front=1.5,back=1.28,mat=paintMaterial(0xa8956a);mat.side=THREE.DoubleSide;
+  for(const x of [-w*.92,0,w*.92])for(const [z,y] of [[d*.95,front],[-d*.95,back]] as [number,number][])
+    rod(g,[x+.02*Math.sin(x*7),0,z],[x,y,z],.022,dark);
+  const positions:number[]=[],sag=(x:number,z:number):P=>{const t=(z+d+.18)/(2*d+.36);return [x,back+(front-back)*t-.05*Math.sin(Math.PI*(x+w+.25)/(2*w+.5)),z];};
+  for(let i=0;i<10;i++)for(let j=0;j<4;j++){
+    const x0=-w-.25+(2*w+.5)*i/10,x1=-w-.25+(2*w+.5)*(i+1)/10,z0=-d-.18+(2*d+.36)*j/4,z1=-d-.18+(2*d+.36)*(j+1)/4;
+    positions.push(...sag(x0,z0),...sag(x1,z0),...sag(x1,z1),...sag(x0,z0),...sag(x1,z1),...sag(x0,z1));
+  }
+  const geo=new THREE.BufferGeometry().setAttribute("position",new THREE.Float32BufferAttribute(positions,3));geo.computeVertexNormals();
+  const awning=new THREE.Mesh(geo,mat);awning.name="woven-mat-awning";g.add(awning);
+  // Woven mat strokes and a frayed front edge.
+  for(let i=0;i<=14;i++){const x=-w-.25+(2*w+.5)*i/14;line(g,Array.from({length:5},(_,j)=>{const p=sag(x,-d-.18+(2*d+.36)*j/4);return [p[0],p[1]+.01,p[2]] as P;}));}
+  line(g,Array.from({length:11},(_,i)=>sag(-w-.25+(2*w+.5)*i/10,d+.18)));
+  for(const [x,z] of [[-w*.45,d*.25],[w*.45,d*.25]]){
+    box(g,[w*.8,.06,.5],[x,.62,z],light);
+    for(const dx of [-w*.35,w*.35])for(const dz of [-.2,.2])rod(g,[x+dx,0,z+dz],[x+dx,.6,z+dz],.016,timber);
+    for(let k=0;k<4;k++)box(g,[.13,.08,.13],[x-w*.27+k*w*.18,.7,z],k%2?cloth:timber);
+  }
+  box(g,[.3,.36,.3],[-w*.8,.18,-d*.5],timber);box(g,[.26,.28,.26],[-w*.55,.14,-d*.6],cloth);
+  // A paper parasol shades the open end, as on the bridge stalls.
+  const shade=new THREE.Group();shade.position.set(w+.75,0,d*.4);g.add(shade);marketParasol(shade,2,true);
+  g.userData.maximumHeight=front+.1;
   return g;
 }

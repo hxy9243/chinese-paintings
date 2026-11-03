@@ -1,3 +1,4 @@
+import { streetCoordinates } from "./helpers/streetCoordinates";
 import { describe, expect, it } from "vitest";
 import * as THREE from "three";
 import {
@@ -14,6 +15,8 @@ import {
   CARTS,
   WALKER_COUNT,
   BRIDGE_WALKERS,
+  BANK_WALKERS,
+  WEST_STREET_WALKERS,
   boatPose,
   walkPose,
   insideRoof,
@@ -21,32 +24,40 @@ import {
   RIPPLE_COUNT,
 } from "../src/passageLife";
 import { createBridgeStudy } from "../src/bridgeStudy";
+import { BOAT_DIRECTIONS, BOAT_PERIOD } from "../src/boatNavigation";
 
 describe("life in the reference passage", () => {
   it("varies architecture and nature while keeping planting clear of roofs", () => {
     expect(BUILDING_KINDS).toHaveLength(HALLS.length);
-    expect(new Set(BUILDING_KINDS).size).toBe(12);
-    expect(new Set(NATURE.map((n) => n.kind)).size).toBe(5);
+    expect(new Set(BUILDING_KINDS).size).toBe(13);
+    expect(new Set(NATURE.map((n) => n.kind))).toEqual(
+      new Set(["rock", "reed", "willow"]),
+    );
     for (const n of NATURE) {
       expect(onBank("near", n) || onBank("far", n)).toBe(true);
       expect(insideRoof(n, 0.1)).toBe(false);
     }
   });
   it("keeps all walkers on the bridge or dry, unobstructed bank lanes", () => {
-    expect(WALKER_COUNT).toBe(204);
+    expect(WALKER_COUNT).toBe(BRIDGE_WALKERS + BANK_WALKERS + WEST_STREET_WALKERS);
     for (let t = 0; t <= 400; t += 2.5)
       for (let i = 0; i < WALKER_COUNT; i++) {
         const p = walkPose(i, t);
         expect(insideRoof(p, 0.06), `walker ${i} at ${t}`).toBe(false);
-        if (i >= BRIDGE_WALKERS) {
+        if (i >= BRIDGE_WALKERS + BANK_WALKERS) {
+          // Western street walkers are on the near bank or, after joining
+          // the main street, within its deck width.
+          const onStreet =
+            Math.abs(streetCoordinates(p).v) < BRIDGE.width / 2 - 0.1;
+          expect(onBank("near", p, 0.05) || onStreet, `walker ${i} at ${t}`).toBe(true);
+          if (!onStreet) expect(p.y).toBe(GROUND_Y);
+        } else if (i >= BRIDGE_WALKERS) {
           expect(onBank(i % 2 ? "far" : "near", p, 0.05)).toBe(true);
           expect(p.y).toBe(GROUND_Y);
         } else {
-          const s = p.s - BRIDGE.center.s,
-            d = p.d - BRIDGE.center.d;
-          expect(
-            Math.abs(-s * Math.sin(BRIDGE.angle) + d * Math.cos(BRIDGE.angle)),
-          ).toBeLessThan(BRIDGE.width / 2 - 0.1);
+          expect(Math.abs(streetCoordinates(p).v)).toBeLessThan(
+            BRIDGE.width / 2 - 0.1,
+          );
           expect(p.y).toBeGreaterThanOrEqual(GROUND_Y);
         }
       }
@@ -69,24 +80,34 @@ describe("life in the reference passage", () => {
           }
       }
   });
-  it("brings new hulls through the top and right exits and wraps outside the frame", () => {
-    const offstage=(p:{s:number,d:number},length:number)=>Math.abs(p.s)>25+length/2 || p.d< -23-length/2;
+  it("starts each boat at its traced berth, then travels the channel both ways at an unhurried pace", () => {
+    expect(new Set(BOAT_DIRECTIONS)).toEqual(new Set([1, -1]));
     for (let i = 0; i < BOATS.length; i++) {
-      let entered = false;
-      let previous = boatPose(i, 0);
-      for (let time = 1; time <= 1400; time++) {
-        const pose = boatPose(i, time);
-        if (Math.abs(pose.s - previous.s) > 1) {
-          expect(offstage(pose,BOATS[i].length)).toBe(true);
-          expect(offstage(previous,BOATS[i].length)).toBe(true);
-        }
-        if (Math.abs(previous.s) > 22 && Math.abs(pose.s) <= 22) entered = true;
-        previous = pose;
+      const start = boatPose(i, 0),
+        base = BOATS[i];
+      expect(Math.hypot(start.s - base.s, start.d - base.d), `boat ${i} berth`).toBeLessThan(0.6);
+      // Hull axis within 30 degrees of the painted one (either end forward).
+      const turn = Math.abs(Math.sin(start.angle - base.angle));
+      expect(turn, `boat ${i} heading`).toBeLessThan(0.5);
+      let path = 0,
+        previous = start;
+      for (let t = 1; t <= 60; t++) {
+        const p = boatPose(i, t);
+        path += Math.hypot(p.s - previous.s, p.d - previous.d);
+        previous = p;
       }
-      expect(entered).toBe(true);
-      expect(Math.hypot(boatPose(i,12).s-boatPose(i,0).s,boatPose(i,12).d-boatPose(i,0).d)).toBeGreaterThan(
-        1.8,
-      );
+      expect(path / 60, `boat ${i} speed`).toBeGreaterThan(0.1);
+      expect(path / 60, `boat ${i} speed`).toBeLessThan(0.45);
+      // Over one passage each boat reaches both the west bend and the east crop.
+      let west = Infinity,
+        east = -Infinity;
+      for (let t = 0; t < BOAT_PERIOD; t += 2) {
+        const p = boatPose(i, t);
+        west = Math.min(west, p.s);
+        east = Math.max(east, p.s);
+      }
+      expect(west, `boat ${i} reaches the bend`).toBeLessThan(-18);
+      expect(east, `boat ${i} leaves by the east crop`).toBeGreaterThan(45);
     }
   });
   it("keeps the horse-cart footprints on the bridge or dry street and clear of roofs", () => {
@@ -180,8 +201,15 @@ describe("life in the reference passage", () => {
     let draws = 0;
     study.group.traverse((n) => {
       if (n instanceof THREE.Mesh || n instanceof THREE.Line) {
-        let visible=true;for(let p:THREE.Object3D|null=n;p;p=p.parent)visible&&=p.visible;
-        if(visible && (!(n.geometry instanceof THREE.InstancedBufferGeometry)||n.geometry.instanceCount>0))draws++;
+        let visible = true;
+        for (let p: THREE.Object3D | null = n; p; p = p.parent)
+          visible &&= p.visible;
+        if (
+          visible &&
+          (!(n.geometry instanceof THREE.InstancedBufferGeometry) ||
+            n.geometry.instanceCount > 0)
+        )
+          draws++;
         n.geometry.computeBoundingBox();
         expect(Number.isFinite(n.geometry.boundingBox!.min.x)).toBe(true);
         n.geometry.dispose();
@@ -190,6 +218,7 @@ describe("life in the reference passage", () => {
     // Sixteen articulated occupation variants (formerly twelve), plus the
     // independent lowering rig. Keep a bounded no-camera medium-detail budget.
     // Eight western buildings, the crossroads and four observed old trees add bounded detail.
-    expect(draws).toBeLessThan(1000);
+    // Six riding horses with articulated legs and heads add about 80 more.
+    expect(draws).toBeLessThan(1080);
   });
 });

@@ -3,11 +3,42 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "setup": "npm ci --prefix artworks/qingming && npm ci --prefix artworks/thousand-miles && npm ci --prefix artworks/ink-pond",
     "dev": "node scripts/dev.mjs",
     "build": "node scripts/build.mjs",
-    "test": "npm test --prefix artworks/qingming",
-    "test:e2e": "npm run test:e2e --prefix artworks/qingming",
-    "test:pond": "npm test --prefix artworks/ink-pond"
+    "test": "vitest run --root artworks/qingming",
+    "test:e2e": "playwright test -c artworks/qingming/playwright.config.ts",
+    "qingming:dev": "vite artworks/qingming --host 0.0.0.0",
+    "qingming:build": "tsc -b artworks/qingming && vite build artworks/qingming",
+    "qingming:preview": "vite preview artworks/qingming --host 0.0.0.0",
+    "thousand-miles:start": "python3 artworks/thousand-miles/scripts/serve.py",
+    "thousand-miles:capture": "node artworks/thousand-miles/scripts/capture.cjs stills",
+    "thousand-miles:film": "node artworks/thousand-miles/scripts/capture.cjs motion",
+    "thousand-miles:check": "node artworks/thousand-miles/scripts/check.cjs",
+    "setup": "npm ci",
+    "test:pond": "node artworks/ink-pond/scripts/check-population.mjs",
+    "pond:dev": "vite artworks/ink-pond --host 127.0.0.1 --port 5189",
+    "pond:build": "vite build artworks/ink-pond"
+  },
+  "dependencies": {
+    "lucide-react": "^0.468.0",
+    "pixi.js": "^8.14.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "three": "^0.186.0",
+    "p5": "1.11.11"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0",
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@types/three": "^0.186.0",
+    "@vitejs/plugin-react": "^6.1.1",
+    "playwright": "1.63.0",
+    "prettier": "^3.9.8",
+    "sharp": "^0.35.4",
+    "typescript": "~5.9.3",
+    "vite": "^8.3.0",
+    "vitest": "^3.2.0"
   }
 }

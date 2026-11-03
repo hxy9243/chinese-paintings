@@ -1,6 +1,8 @@
 import * as THREE from "three";
+import { paintingBoundaryShader } from "./paintingBoundary";
 import { BOATS, shoreDepth } from "./passageLayout";
 import { boatPose } from "./passageLife";
+import { BOAT_SPEED } from "./boatNavigation";
 import { scrollPoint } from "./scrollLayout";
 import { palettePaper } from "./scenePalette";
 import { waterHeight } from "./riverSurface";
@@ -57,14 +59,13 @@ export function createBoatWakes() {
     fragmentShader: `
       #include <clipping_planes_pars_fragment>
       uniform vec3 palettePaper; varying float fade; varying vec3 brush;varying float widthCoord;
+      ${paintingBoundaryShader}
       void main(){
         #include <clipping_planes_fragment>
         float grain=fract(sin(dot(floor(brush*80.),vec3(127.1,311.7,74.7)))*43758.5453);
         float softEdge=1.-smoothstep(.15,1.,abs(widthCoord));
-        vec2 river=vec2(brush.x*.64278761+brush.z*.76604444,-brush.x*.76604444+brush.z*.64278761);
-        vec2 q=abs(river)-vec2(16.,8.);
-        float boundary=length(max(q,0.))+min(max(q.x,q.y),0.)-6.;
-        float soak=1.-smoothstep(0.,5.5,max(boundary,0.));
+        float soak=paintingEdgeAlpha(brush);
+        if(soak<.001)discard;
         gl_FragColor=vec4(mix(palettePaper,vec3(.63,.77,.70),.16),fade*(.65+grain*.35)*softEdge*soak);
         #include <tonemapping_fragment>
         #include <colorspace_fragment>
@@ -105,7 +106,11 @@ export function createBoatWakes() {
                 const onWater =
                   d > shoreDepth("far", s) + 0.08 &&
                   d < shoreDepth("near", s) - 0.08;
-                const continuous = Math.abs(sample.s - current.s) < 10;
+                // A recycled boat leaves no trail across the scroll; the
+                // reach along the west bend runs mostly in depth, so use both.
+                const continuous =
+                  Math.hypot(sample.s - current.s, sample.d - current.d) <
+                  BOAT_SPEED * LIFETIME * 2;
                 const crest =
                   0.01 + Math.sin(age * 1.1 - time * 0.8 + layer) * 0.005;
                 positions.setXYZ(

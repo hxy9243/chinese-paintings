@@ -1,5 +1,5 @@
 from pathlib import Path
-import json,hashlib,subprocess
+import json,hashlib,os,subprocess
 P=Path(__file__).resolve().parents[1]
 sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
 checks={}
@@ -17,9 +17,9 @@ for f in ['scene-manifest.json','pavilion-film-manifest.json','renders/pavilion-
  old=subprocess.check_output(['git','show',f'f45c470:{f}'],cwd=P)
  assert sha(P/f)==hashlib.sha256(old).hexdigest(),f
  archive[f]=sha(P/f)
-sources=[*P.glob('src/*.js'),*P.glob('scripts/lowlands*'),P/'index.html',P/'lowlands.html',P/'README.md',P/'package.json',P/'package-lock.json']
+sources=[*P.glob('src/*.js'),*P.glob('scripts/lowlands*'),P/'index.html',P/'lowlands.html',P/'README.md',P.parents[1]/'package.json',P.parents[1]/'package-lock.json']
 artifacts=[*P.glob('renders/lowlands-*/*.png'),*P.glob('renders/lowlands-*.png'),*P.glob('renders/lowlands-*.jpg'),P/'renders/lowlands-flyby.mp4']
 reports=[*P.glob('qa/lowlands-*.json'),*P.glob('qa/lowlands-encoded/*/*.png')]
-m={'title':'Wooded foothills and pavilion flight','revision':'blue-green-07','baseCommit':subprocess.check_output(['git','rev-parse','f45c470'],cwd=P,text=True).strip(),'sourcePaintingSha256':canonical,'scene':scene,'filmRoute':pilot['route'],'validation':checks,'sourceImageProjectedOnGeometry':False,'archiveHashesUnchanged':archive,'sources':{str(p.relative_to(P)):sha(p)for p in sources},'artifacts':{str(p.relative_to(P)):{'bytes':p.stat().st_size,'sha256':sha(p)}for p in artifacts},'reports':{str(p.relative_to(P)):sha(p)for p in reports},'limits':['A 3D interpretation, with inferred foreground extension and unseen sides.','Existing revision 6 records remain archived; this manifest covers the current live scene and updated ink film.','Targeted geometry, replay, wind, camera and encoded-film checks do not certify every camera angle or exact painting fidelity.']}
+m={'title':'Wooded foothills and pavilion flight','revision':'blue-green-07','baseCommit':subprocess.check_output(['git','rev-parse','f45c470'],cwd=P,text=True).strip(),'sourcePaintingSha256':canonical,'scene':scene,'filmRoute':pilot['route'],'validation':checks,'sourceImageProjectedOnGeometry':False,'archiveHashesUnchanged':archive,'sources':{os.path.relpath(p,P):sha(p)for p in sources},'artifacts':{str(p.relative_to(P)):{'bytes':p.stat().st_size,'sha256':sha(p)}for p in artifacts},'reports':{str(p.relative_to(P)):sha(p)for p in reports},'limits':['A 3D interpretation, with inferred foreground extension and unseen sides.','Existing revision 6 records remain archived; this manifest covers the current live scene and updated ink film.','Targeted geometry, replay, wind, camera and encoded-film checks do not certify every camera angle or exact painting fidelity.']}
 (P/'lowlands-manifest.json').write_text(json.dumps(m,indent=2))
 print(json.dumps({'revision':m['revision'],'trees':scene['stats']['trees'],'lowlandTrees':scene['stats']['lowlandTrees'],'foothills':scene['stats']['lowlandFoothills'],'artifacts':len(artifacts),'checks':checks},indent=2))

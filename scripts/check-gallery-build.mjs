@@ -5,7 +5,7 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {createRequire} from 'node:module';
 import {createHash} from 'node:crypto';
-const require=createRequire(new URL('../artworks/qingming/package.json',import.meta.url)),{chromium}=require('@playwright/test');
+const require=createRequire(new URL('../package.json',import.meta.url)),{chromium}=require('@playwright/test');
 const root=fileURLToPath(new URL('..',import.meta.url)),dist=path.join(root,'dist'),out=path.join(root,'docs/reviews/ink-pond-interactive');
 const types={'.html':'text/html','.js':'text/javascript','.css':'text/css','.json':'application/json','.png':'image/png','.webp':'image/webp','.jpg':'image/jpeg','.glb':'model/gltf-binary'};
 const server=http.createServer((req,res)=>{

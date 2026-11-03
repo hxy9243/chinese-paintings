@@ -10,7 +10,7 @@ These use true perspective projection (60–62 degree vertical field of view). T
 
 Validation: production TypeScript/Vite build and the browser results in `review.json`. The capture checks console/shader/network errors, exact-time replay for both boat-attached and overview cameras, changing scene time, and source hashes. Images were inspected in software Chromium; no hardware performance claim.
 
-Reproduce after `npm run build --prefix artworks/qingming`:
+Reproduce after `npm run qingming:build`:
 
 ```sh
 REVIEW_PLACES=1 REVIEW_DIR=docs/reviews/2026-10-20-riverside-views node scripts/review-qingming-stills.mjs

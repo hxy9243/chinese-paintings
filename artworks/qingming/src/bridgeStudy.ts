@@ -1,8 +1,9 @@
 import * as THREE from "three";
 import {buildScrollTree} from "./referenceTrees";
-import {buildCrossroadsHouse} from "./crossroadsArchitecture";
-import {createCrossroadsGround,CROSSROADS_PEOPLE} from "./crossroads";
-import {buildConstruction, buildOrnateGate, boatCrewStations, addCrewEquipment, buildLoweringRig, updateLoweringRig} from "./referenceDetails";
+import {buildCrossroadsHouse,buildDistantReferenceHouse,buildReferenceHouse} from "./crossroadsArchitecture";
+import {buildReferenceCoveredCart} from "./referenceStreetObjects";
+import {createCrossroadsGround,CROSSROADS_PEOPLE,CROSSROADS_CARTS,loiterPose} from "./crossroads";
+import {buildFestoonGate, buildCanopyStall, buildOrnateGate, boatCrewStations, addCrewEquipment, buildLoweringRig, updateLoweringRig} from "./referenceDetails";
 import {setScenePalette,getScenePalette,setSceneArtStyle,getSceneArtStyle,type ScenePalette,type ArtStyleId} from "./scenePalette";
 import { buildReferenceBoat, addReferenceArchitecture, type TreeForm } from "./referenceAssets";
 import { REFERENCE_AZIMUTH, scrollPoint } from "./scrollLayout";
@@ -15,8 +16,12 @@ import {
 } from "./paintMaterial";
 import {
   shoreDepth,
+  shoreAtArc,
+  shoreLength,
+  TERRAIN_BOUNDS,
   HALLS,
   BOATS,
+  bridgeCoordinates,
   BRIDGE,
   bridgeHeight,
   bridgePoint,
@@ -47,15 +52,20 @@ import {
   SHOP_VISITORS,
   shopperPose,
   riverRipple,
+  MAIN_STREET_RIDERS,
+  mainRiderPose,
+  STREET_RIDERS,
+  streetRiderPose,
   type BuildingKind,
 } from "./passageLife";
 import { MOORED_BOATS, mooredBoatPose, mooringAnchor } from "./moorings";
+import { rigBridgeDistance } from "./boatNavigation";
 import { MAIN_STREET, segmentDistance } from "./passageSpace";
 import { createCrowd } from "./crowd";
 import { FIGURE_TYPES } from "./figureTypes";
 import { buildFigure, FIGURE_HEIGHT } from "./figures";
 import { marketStall, bridgeMarket, marketParasol, MARKET_TYPES } from "./marketModels";
-import { chooseDetail, projectedHeightPixels, type DetailLevel } from "../../../packages/scene-kit/lod";
+import { chooseDetail, dragDetail, projectedHeightPixels, type DetailLevel } from "../../../packages/scene-kit/lod";
 import { idleMotion } from "./peopleMotion";
 import { bridgeActivity, bridgeRole, bridgeVariant } from "./bridgeActivity";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
@@ -226,8 +236,14 @@ function riversideNature(parent: THREE.Group) {
     }
   }
 }
-function horseCart(parent: THREE.Group, index: number) {
-  const layout = CARTS[index],kind=CART_KINDS[index];
+// A riding horse shares the cart horse's modelling; it carries a saddle and a
+// mounted figure instead of shafts and a cart.
+type TrafficKind = (typeof CART_KINDS)[number] | "riding-horse";
+export const RIDING_HORSE_SCALE = 0.5;
+// Local x of the horse's middle; riders are placed by that point.
+export const RIDING_HORSE_CENTRE = 0.75;
+function horseCart(parent: THREE.Group, index: number, kind: TrafficKind = CART_KINDS[index], clip = true) {
+  const layout = CARTS[index % CARTS.length];
   const g = new THREE.Group();
   g.position.copy(scrollPoint(layout.s, layout.d));
   g.position.y = GROUND_Y;
@@ -279,7 +295,19 @@ function horseCart(parent: THREE.Group, index: number) {
   beam(animal, [0.22, 0.72, 0], [0.04, 0.35, 0.03], 0.055, dark);
   beam(animal, [0.94, 0.88, 0], [1.05, 1.12, 0], 0.045, dark);
   const wheels: THREE.Group[] = [];
-  if(kind!=="pack-horse") {
+  if(kind==="riding-horse"){
+    // Saddle cloth, padded seat, girth, stirrup leathers and reins.
+    const cloth=mesh(animal,new THREE.SphereGeometry(1,10,6,0,Math.PI*2,0,Math.PI*.42),index%2?linen:green,.64,.73,0);
+    cloth.scale.set(.27,.16,.24);
+    const seat=mesh(animal,new THREE.SphereGeometry(1,8,5,0,Math.PI*2,0,Math.PI*.5),dark,.62,.85,0);
+    seat.scale.set(.16,.05,.15);
+    for(const side of [-1,1]){
+      beam(animal,[.62,.86,side*.14],[.62,.5,side*.2],.008,dark);
+      box(animal,.05,.012,.04,.62,.49,side*.2,dark);
+    }
+    beam(animal,[.62,.86,0],[.62,.45,0],.01,dark);
+    for(const side of [-1,1])beam(g,[.72,1.42,side*.06],[1.34,1.0,side*.08],.006,dark);
+  } else if(kind!=="pack-horse") {
   // Two wooden shafts visibly join harness and cart.
   for (const z of [-0.24, 0.24]) {
     beam(g, [-1.1, 0.38, z], [0.85, 0.47, z], 0.025);
@@ -347,6 +375,11 @@ function horseCart(parent: THREE.Group, index: number) {
     for(const side of [-1,1])beam(g,[-.4,.43,side*.24],[.58,.54,side*.24],.024,wood);
   }
   if(kind==="pack-horse")beam(g,[1.3,1.02,0],[1.9,.78,.13],.008,dark);
+  if(kind==="riding-horse"){
+    g.scale.setScalar(RIDING_HORSE_SCALE);
+    // A flowing tail, which the harnessed cart horses do not show.
+    beam(animal,[.16,.74,0],[-.06,.42,.02],.035,coat);
+  }
   animal.scale.y=1.6;headGroup.scale.y=1.6;
   legs.forEach(leg=>{leg.position.y*=1.6;leg.scale.y=1.6;});
   const animated = [...legs, ...wheels, headGroup];
@@ -359,7 +392,7 @@ function horseCart(parent: THREE.Group, index: number) {
   // Clip the traffic to the same rounded ground boundary. Each train wraps
   // only after its entire horse, cart and driver have left that boundary.
   const materials = new Map<THREE.Material, THREE.ShaderMaterial>();
-  g.traverse((n) => {
+  if (clip) g.traverse((n) => {
     if (!(n instanceof THREE.Mesh || n instanceof THREE.Line)) return;
     const original = n.material as THREE.ShaderMaterial;
     let material = materials.get(original);
@@ -448,11 +481,13 @@ function bank(parent: THREE.Group, side: "near" | "far") {
   const shape = new THREE.Shape();
   const direction = side === "far" ? 1 : -1;
   const coast: number[][] = [];
-  for(let s=-47;s<=29.001;s+=.2)
-    coast.push([s,bankSection(side,s,0).d]);
+  for(let l=0;l<=shoreLength(side)+.001;l+=.12){
+    const p=bankSection(side,shoreAtArc(side,l),0);
+    coast.push([THREE.MathUtils.clamp(p.s,TERRAIN_BOUNDS.sMin,TERRAIN_BOUNDS.sMax),THREE.MathUtils.clamp(p.d,TERRAIN_BOUNDS.dMin,TERRAIN_BOUNDS.dMax)]);
+  }
   // Continue dry land beyond the crop without joining the opposite bank.
-  const back=side==="far"?-60:24;
-  const expanded=[...coast,[29,back],[-47,back]];
+  const back=side==="far"?TERRAIN_BOUNDS.dMin:TERRAIN_BOUNDS.dMax;
+  const expanded=[...coast,[TERRAIN_BOUNDS.sMax,back],[TERRAIN_BOUNDS.sMin,back]];
   expanded.forEach(([x,z],i)=>{
     const p=scrollPoint(x,z);
     if(i===0)shape.moveTo(p.x,-p.z);else shape.lineTo(p.x,-p.z);
@@ -500,9 +535,8 @@ export function hall(
   g.rotation.y = turn;
   if(kind==="cross-shop"||kind==="cross-house"){g.add(buildCrossroadsHouse(w,depth,h,kind==="cross-shop"));return g;}
   if (kind === "ornate-gate") { g.add(buildOrnateGate(w,depth,h)); return g; }
-  if (kind === "construction") {
-    g.add(buildConstruction(w,depth,h));return g;
-  }
+  if (kind === "festoon-gate") { g.add(buildFestoonGate(w,depth,h)); return g; }
+  if (kind === "canopy-stall") { g.add(buildCanopyStall(w,depth)); return g; }
   if (kind === "upper-storey") {
     g.name="two-storey-balcony-house";
     const floor=h+.12;
@@ -1033,9 +1067,11 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
   // Compacted-earth approaches: broken wheel wear, retaining one ground palette.
   // Interpretation informed by Song road traces at Shuntian Gate, not proof of
   // the material at this bridge. No continuous stone-paving pattern is assumed.
-  const roadInk=createDryInk(.17),rutPositions:number[]=[];
+  // Ruts stay faint and broken, so the approach reads as trodden earth.
+  const roadInk=createDryInk(.07),rutPositions:number[]=[];
   for(const side of [-1,1])for(let x=half+.9;x<16;x+=.18){
     const centre=bridgePoint(side*x);if(Math.abs(centre.d)>13.3)continue;
+    if(Math.sin(x*2.9+side)+Math.sin(x*.83)*.9<.1)continue;
     for(const lane of [-.16,.16])for(const end of [0,1]){
       const p=bridgePoint(side*(x+end*.12),lane+.018*Math.sin(x*1.7));
       const point=scrollPoint(p.s,p.d);rutPositions.push(point.x,GROUND_Y+.008,point.z);
@@ -1047,12 +1083,17 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
   }
   group.add(new THREE.LineSegments(new THREE.BufferGeometry().setAttribute('position',new THREE.Float32BufferAttribute(rutPositions,3)),roadInk));
   const bridgeCounters=bridgeMarket(bridge,height,BRIDGE.width,BRIDGE.length);
-  const detailedBuildings: {root:THREE.Group; base:THREE.Group; fine:THREE.Group; coarse:THREE.Group; height:number; detail:DetailLevel}[]=[];
+  const detailedBuildings: {root:THREE.Group; base:THREE.Group; fine:THREE.Group; coarse:THREE.Group; height:number; detail:DetailLevel; shown:DetailLevel}[]=[];
   for (const [index,h] of HALLS.entries()) {
     const root=new THREE.Group();root.name="reference-building";
     root.position.copy(scrollPoint(h.s,h.d));root.position.y=GROUND_Y;
-    root.rotation.y=REFERENCE_AZIMUTH-h.angle+(h.side==="near"?Math.PI:0);
-    const base=hall(new THREE.Group(),0,0,h.width,h.depth,h.height,0,BUILDING_KINDS[index],h.gable);
+    root.rotation.y=REFERENCE_AZIMUTH-h.angle;
+    const kind=BUILDING_KINDS[index];
+    const base=kind==="cross-shop"||kind==="cross-house"
+      ? buildCrossroadsHouse(h.width,h.depth,h.height,kind==="cross-shop",index===27?"rear-wing":index===19?"side-wing":"front-wing")
+      : ["festoon-gate","canopy-stall","ornate-gate"].includes(kind)
+      ? hall(new THREE.Group(),0,0,h.width,h.depth,h.height,0,kind,h.gable)
+      : buildReferenceHouse(h.width,h.depth,h.height,kind);
     base.position.set(0,0,0);
     const fine=new THREE.Group();fine.name="close-architecture";root.add(fine);
     base.updateMatrixWorld(true);
@@ -1061,7 +1102,7 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
     for(const part of closeParts){const matrix=part.matrixWorld.clone();part.removeFromParent();part.applyMatrix4(matrix);fine.add(part);}
     batchStatic(base);root.add(base);
     // Recessed lattice screens, brackets and stacked wares add real depth.
-    const customFront=["cross-shop","cross-house","construction"].includes(BUILDING_KINDS[index]);
+    const customFront=["cross-shop","cross-house","festoon-gate","canopy-stall"].includes(BUILDING_KINDS[index]);
     if(!customFront)for(let x=-h.width*.4;x<h.width*.45;x+=.55){
       for(const side of [-1,1]){
         beam(fine,[x,h.height-.14,side*h.depth*.48],[x+.1,h.height-.03,side*(h.depth*.5+.1)],.012,dark);
@@ -1075,19 +1116,14 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
     }
     batchStatic(fine);
     const coarse=new THREE.Group();coarse.name="distant-architecture";root.add(coarse);
-    // Same footprint and roof envelope, but no rafters, tile ribs or lattice.
-    box(coarse,h.width,h.height,h.depth,0,h.height/2,0,plaster);
-    const w=h.width/2+.2,d=h.depth/2+.23,y=h.height+.08,top=h.height+Math.min(.64,h.depth*.23),ridge=h.gable?w:w*.58;
-    const vertices=[-w,y,-d,w,y,-d,w,y,d,-w,y,d,-ridge,top,0,ridge,top,0];
-    const roofGeo=new THREE.BufferGeometry();roofGeo.setAttribute("position",new THREE.Float32BufferAttribute(vertices,3));
-    roofGeo.setIndex([0,4,5,0,5,1,3,2,5,3,5,4,0,3,4,1,5,2]);roofGeo.computeVertexNormals();mesh(coarse,roofGeo,roof);
-    box(coarse,h.width*.55,h.height*.5,.025,0,h.height*.38,h.depth/2+.02,dark);batchStatic(coarse);
-    if(BUILDING_KINDS[index]==="ornate-gate" || BUILDING_KINDS[index]==="construction" || BUILDING_KINDS[index]==="upper-storey" || BUILDING_KINDS[index]==="cross-shop" || BUILDING_KINDS[index]==="cross-house"){
-      coarse.traverse(n=>{if(n instanceof THREE.Mesh || n instanceof THREE.Line)n.geometry.dispose();});coarse.clear();
-      coarse.add(base.clone());
-    }
+    const top=h.height+Math.min(.64,h.depth*.23);
+    // Landmarks and joined/two-storey halls keep their shared base silhouette.
+    // Plain halls get the same footprint, curved roof, eave overhang, ridge, tile
+    // courses and ink outline as the refined hall, without barrel caps or wares.
+    if(["ornate-gate","festoon-gate","canopy-stall","upper-storey","cross-shop","cross-house"].includes(kind))coarse.add(base.clone());
+    else{coarse.add(buildDistantReferenceHouse(h.width,h.depth,h.height,kind));batchStatic(coarse);}
     fine.visible=false;coarse.visible=false;
-    detailedBuildings.push({root,base,fine,coarse,height:BUILDING_KINDS[index]==="upper-storey"?top+h.height+.17:BUILDING_KINDS[index]==="ornate-gate"?h.height+1.5:BUILDING_KINDS[index]==="construction"?h.height+1.15:top,detail:1});
+    detailedBuildings.push({root,base,fine,coarse,height:BUILDING_KINDS[index]==="upper-storey"?h.height+Math.min(.92,h.depth*.26)+.1:BUILDING_KINDS[index]==="ornate-gate"?h.height+1.5:BUILDING_KINDS[index]==="festoon-gate"?(base.getObjectByName("festooned-inn-gateway")?.userData.maximumHeight??h.height):BUILDING_KINDS[index]==="canopy-stall"?1.65:top,detail:1,shown:1});
   }
   const vegetationLevels=[0,1,2].map(level=>{
     geometryDetail=level as DetailLevel;const plants=new THREE.Group();plants.name="vegetation-detail-"+level;
@@ -1097,6 +1133,10 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
     }
     riversideNature(plants);batchStatic(plants);return plants;
   });geometryDetail=2;
+  for(const [i,[s,d,angle]] of CROSSROADS_CARTS.entries()){
+    const cart=buildReferenceCoveredCart(i);cart.position.copy(scrollPoint(s,d));cart.position.y=GROUND_Y;
+    cart.rotation.y=REFERENCE_AZIMUTH-angle;cart.name="reference-covered-ox-cart";batchStatic(cart);group.add(cart);
+  }
   const crossroadsGround=createCrossroadsGround();batchStatic(crossroadsGround);group.add(crossroadsGround);
   const vendorSites: {position:THREE.Vector3;turn:number;shop:number}[]=[];
   MARKET.forEach(({ s, d, parasol: covered, size }, i) => {
@@ -1118,7 +1158,7 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
   batchStatic(group);
   detailedBuildings.forEach(b=>group.add(b.root));
   vegetationLevels.forEach(g=>group.add(g));
-  let plantDetail:DetailLevel=1;
+  let plantDetail:DetailLevel=1,plantShown:DetailLevel=1;
   const carts = CARTS.map((_, i) => horseCart(group, i));
   const boats = BOATS.map((b) => {
     const vessel = workingBoat(
@@ -1145,6 +1185,7 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
       REFERENCE_AZIMUTH + Math.PI / 2 - b.angle,
     );
     vessel.name = "moored-boat";
+    const rig=vessel.getObjectByName("lowering-sail-rig");if(rig)rig.visible=false;
 
     return vessel;
   });
@@ -1220,6 +1261,17 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
     addPerson(group, i, "shop-visitor"),
   );
   const vendors=vendorSites.map((_,i)=>addPerson(group,i%2?5:9,"market-vendor"));
+  // Mounted travellers: a few ride the main street and over the bridge with the
+  // cart traffic; others ride the western streets among the walkers.
+  const riderHorses=[
+    ...Array.from({length:MAIN_STREET_RIDERS},(_,i)=>horseCart(group,i+1,"riding-horse",true)),
+    ...Array.from({length:STREET_RIDERS},(_,i)=>horseCart(group,i,"riding-horse",false)),
+  ];
+  riderHorses.forEach(h=>h.group.name="riding-horse");
+  const riders=riderHorses.map((h,i)=>{
+    const rider=addPerson(h.group,[0,2,10,4,7,0][i%6],"horse-rider");
+    rider.group.scale.multiplyScalar(1/h.group.scale.x);return rider;
+  });
   const drivers = carts.map((c,i)=>{
     const driver=addPerson(c.group,CART_KINDS[i]==="pack-horse"?4:3,"cart-driver");driver.group.scale.multiplyScalar(1/c.group.scale.x);return driver;
   });
@@ -1230,9 +1282,9 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
     })),
   );
   const buildingPeople=[
-    {building:8,x:-.8,y:HALLS[8].height+.17,z:HALLS[8].depth*.39,variant:6},
-    {building:8,x:.7,y:HALLS[8].height+.17,z:HALLS[8].depth*.39,variant:0},
-    {building:26,x:.25,y:2.073,z:HALLS[26].depth*.41,variant:9},
+    {building:8,x:-.8,y:HALLS[8].height*.52+.04,z:HALLS[8].depth*.39,variant:6},
+    {building:8,x:.7,y:HALLS[8].height*.52+.04,z:HALLS[8].depth*.39,variant:0},
+    {building:26,x:.25,y:.07,z:HALLS[26].depth*.62,variant:9},
   ].map(site=>({...site,rig:addPerson(detailedBuildings[site.building].root,site.variant,"building-occupant")}));
   crowd.finish();
   function animatePerson(
@@ -1291,10 +1343,13 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
       const roles=observers.reduce((counts,p)=>{
         const role=p.group.userData.activity as string;counts[role]=(counts[role]??0)+1;return counts;
       },{} as Record<string,number>);
-      return {boatCrews:[...boats,...moored].map((b,i)=>({style:b.userData.boatStyle,count:crew.filter(c=>c.boat===i).length,roof:crew.filter(c=>c.boat===i&&c.station.role==="roof").length})),landmarks:["two-storey-balcony-house","open-timber-construction","western-crossroads","joined-roof-houses"],crowd:crowd.metadata(),seed,palette:getScenePalette(),artStyle:getSceneArtStyle(),vegetationLevel:plantDetail,
-        buildings:detailedBuildings.map(b=>b.detail),traffic:CART_KINDS,bridgeCounters,
+      return {boatCrews:[...boats,...moored].map((b,i)=>({style:b.userData.boatStyle,count:crew.filter(c=>c.boat===i).length,roof:crew.filter(c=>c.boat===i&&c.station.role==="roof").length})),landmarks:["two-storey-balcony-house","festooned-inn-gateway","western-crossroads","joined-roof-houses"],crowd:crowd.metadata(),seed,palette:getScenePalette(),artStyle:getSceneArtStyle(),vegetationLevel:plantShown,
+        buildings:detailedBuildings.map(b=>b.shown),traffic:CART_KINDS,bridgeCounters,
         marketTypes:MARKET_TYPES,referenceTrees:FEATURE_TREES.map(t=>t.id),
         streetLife:{walkers:people.length,mainStreetWalkers:BRIDGE_WALKERS,approachPeople,
+          riders:riders.length,mainStreetRiders:MAIN_STREET_RIDERS,streetRiders:STREET_RIDERS,
+          crossroadsLoiterers:crossroadsPeople.length,
+          riderPositions:riderHorses.map(h=>h.group.position.toArray().map(v=>+v.toFixed(2))),
           bridgeWalkingDensity:passingPeople/BRIDGE.length,
           streetWalkingDensity:approachPeople/(27-BRIDGE.length)},
         bridgeLife:{stands:bridgeCounters.length,stationaryPeople:observers.length,passingPeople,roles}};
@@ -1312,14 +1367,19 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
         const screen=(height:number,center:THREE.Vector3)=>projectedHeightPixels({height,viewportHeight,zoom:ortho?.zoom??1,
           orthographicSpan:ortho?.isOrthographicCamera?ortho.top-ortho.bottom:undefined,
           distance:center.distanceTo(camera.position),verticalFov:(camera as THREE.PerspectiveCamera).fov});
-        for(const b of detailedBuildings){
-          b.detail=chooseDetail(screen(b.height,b.root.position)/3,b.detail);
-          b.base.visible=b.detail>0;b.fine.visible=b.detail===2;b.coarse.visible=b.detail===0;
-        }
+        for(const b of detailedBuildings)b.detail=chooseDetail(screen(b.height,b.root.position)/3,b.detail);
         plantDetail=chooseDetail(screen(FIGURE_HEIGHT*PERSON_SCALE,new THREE.Vector3()),plantDetail);
       }
-      if(preview){plantDetail=0;for(const b of detailedBuildings){b.base.visible=false;b.fine.visible=false;b.coarse.visible=true;b.detail=0;}}
-      vegetationLevels.forEach((g,i)=>g.visible=i===plantDetail);
+      // Drag frames step halls down one level instead of collapsing everything
+      // to the distant level: close halls keep their tiled base model, others
+      // use the outlined distant hall. Trees keep their medium fan branches.
+      // The chosen level (and its hysteresis) is kept intact for the settle.
+      for(const b of detailedBuildings){
+        b.shown=preview?dragDetail(b.detail):b.detail;
+        b.base.visible=b.shown>0;b.fine.visible=b.shown===2;b.coarse.visible=b.shown===0;
+      }
+      plantShown=preview?Math.min(plantDetail,1) as DetailLevel:plantDetail;
+      vegetationLevels.forEach((g,i)=>g.visible=i===plantShown);
       carts.forEach((cart, i) => {
         const pose = cartPose(i, time),
           stride = pose.moving ? pose.traveled * 15 : time * 2.4;
@@ -1399,13 +1459,13 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
         p.leftArm.rotation.x=-.65;p.head.rotation.y=idle.look;
       });
       for(const vessel of [...boats,...moored])for(const child of vessel.children){
-        if(child.name.startsWith('boat-detail-'))child.visible=child.name==='boat-detail-'+(plantDetail===0?0:2);
+        if(child.name.startsWith('boat-detail-'))child.visible=child.name==='boat-detail-'+(plantShown===0?0:2);
       }
       boats.forEach((vessel, i) => {
         const pose = boatPose(i, time);
         const rig=vessel.getObjectByName("lowering-sail-rig");
-        if(rig)updateLoweringRig(rig,Math.abs(pose.s-BRIDGE.center.s));
-        vessel.visible = Math.abs(pose.s) < 25 + BOATS[i].length * 0.62 && Math.abs(pose.d) < 23 + BOATS[i].length * 0.62;
+        if(rig){rig.visible=i===0;updateLoweringRig(rig,rigBridgeDistance(i,pose));}
+        vessel.visible = true; // Hulls and crews use the shared fragment-level paper fade.
         vessel.position.copy(scrollPoint(pose.s, pose.d));
         vessel.position.y = pose.y;
         vessel.rotation.set(
@@ -1429,7 +1489,7 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
         const b = MOORED_BOATS[index];
         vessel.updateWorldMatrix(true, false);
         const start = vessel.localToWorld(
-          new THREE.Vector3(b.width * 0.5, 0.3, side * b.length * 0.31),
+          new THREE.Vector3((b.side === "far" ? 1 : -1) * b.width * 0.5, 0.3, side * b.length * 0.31),
         );
         const end = new THREE.Vector3(point.x, GROUND_Y+0.2, point.z),
           positions = rope.geometry.getAttribute("position");
@@ -1441,7 +1501,33 @@ export function createBridgeStudy(seed = Math.floor(Math.random() * 10000)) {
         }
         positions.needsUpdate = true;
       });
-      crossroadsPeople.forEach((p,i)=>{const at=CROSSROADS_PEOPLE[i];animatePerson(p,900+i,time,{...at,y:GROUND_Y,moving:false,stride:0});});
+      crossroadsPeople.forEach((p,i)=>animatePerson(p,900+i,time,loiterPose(i,time,seed)));
+      riderHorses.forEach((horse,i)=>{
+        const main=i<MAIN_STREET_RIDERS,
+          street=main?null:streetRiderPose(i-MAIN_STREET_RIDERS,time,seed),
+          road=main?mainRiderPose(i,time):null,
+          pose=(road??street)!,
+          heading=pose.angle,
+          moving=pose.moving,
+          stride=road?road.traveled*13:street!.stride*.9;
+        // Centre the horse on its footprint.
+        const back=RIDING_HORSE_CENTRE*RIDING_HORSE_SCALE;
+        horse.group.position.copy(scrollPoint(pose.s-Math.cos(heading)*back,pose.d-Math.sin(heading)*back));
+        horse.group.position.y=pose.y;
+        horse.group.rotation.set(0,REFERENCE_AZIMUTH-heading,road?Math.atan(road.slope):0,"YXZ");
+        horse.legs.forEach((leg,j)=>{leg.rotation.z=moving?Math.sin(stride+(j===0||j===3?0:Math.PI))*.26:0;});
+        horse.head.position.y=moving?Math.sin(stride*2)*.015:0;
+        const p=riders[i],idle=idleMotion(i+600,time,seed);
+        // Hips on the saddle, legs astride the barrel, hands forward on the reins.
+        const hip=.265*PERSON_SCALE/RIDING_HORSE_SCALE;
+        p.group.position.set(.6,1.43-hip+(moving?Math.abs(Math.sin(stride))*.02:0)+idle.breath,0);
+        p.group.rotation.set(idle.lean*.5,Math.PI/2+idle.look*.6,0);
+        p.torso.rotation.set(moving?.05:0,0,0);
+        p.left.rotation.set(-.42,0,-.36);p.right.rotation.set(-.42,0,.36);
+        p.leftArm.rotation.set(-.62,0,0);p.rightArm.rotation.set(-.62,0,0);
+        p.leftElbow.rotation.x=-.5;p.rightElbow.rotation.x=-.5;
+        p.head.rotation.set(0,idle.look,0);
+      });
       crowd.update(camera, viewportHeight, preview);
       for (let i = 0; i < RIPPLE_COUNT; i++) {
         const ripple = riverRipple(i, time);

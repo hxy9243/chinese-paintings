@@ -1,5 +1,5 @@
-import { chromium } from "../artworks/qingming/node_modules/playwright/index.mjs";
-import { preview } from "../artworks/qingming/node_modules/vite/dist/node/index.js";
+import { chromium } from "playwright";
+import { preview } from "vite";
 import fs from "node:fs";
 import path from "node:path";
 const out=process.env.REVIEW_DIR??"docs/reviews/2026-10-20-reference-details";

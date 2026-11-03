@@ -47,7 +47,7 @@ Crowds remain instanced and grouped by figure type, articulated part, material, 
 ## Running and reviewing
 
 ```sh
-npm run setup
+npm ci
 npm run dev
 npm test
 npm run test:e2e

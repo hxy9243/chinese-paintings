@@ -75,7 +75,7 @@ export function createInkFinish(renderer: THREE.WebGLRenderer) {
         }
         halo*=.25;
         float outer=(1.-smoothstep(.25,.94,texture2D(source,p).a));
-        color=mix(color,min(background(p),halo),outer*strength*.82);
+        color=mix(color,min(background(p),halo),outer*min(1.,strength*1.4));
 
         // Wet-edge pigment ring (水渍)
         float pooled=smoothstep(.04,.24,edge/8.);

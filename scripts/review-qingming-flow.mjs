@@ -1,4 +1,4 @@
-import { chromium } from "../artworks/qingming/node_modules/playwright/index.mjs";
+import { chromium } from "playwright";
 import fs from "node:fs";
 import crypto from "node:crypto";
 import { execFileSync } from "node:child_process";

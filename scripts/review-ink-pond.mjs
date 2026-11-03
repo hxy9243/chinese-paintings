@@ -5,7 +5,7 @@ import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import path from 'node:path';
 import {spawnSync} from 'node:child_process';
-const require=createRequire(new URL('../artworks/qingming/package.json',import.meta.url));
+const require=createRequire(new URL('../package.json',import.meta.url));
 const {chromium}=require('@playwright/test'),sharp=require('sharp');
 const root=fileURLToPath(new URL('..',import.meta.url)),out=path.join(root,'docs/reviews/ink-pond-interactive');await mkdir(out,{recursive:true});
 const base=process.env.REVIEW_URL??'http://127.0.0.1:5180',sha=b=>createHash('sha256').update(b).digest('hex');

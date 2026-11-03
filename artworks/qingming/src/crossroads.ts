@@ -1,45 +1,73 @@
 import * as THREE from "three";
 import {scrollPoint} from "./scrollLayout";
-import {GROUND_Y} from "./passageLayout";
+import {GROUND_Y,type PassagePoint} from "./passageLayout";
+import {reserve} from "./passageSpace";
+import {wander} from "./peopleMotion";
 import {paintMaterial,createDryInk} from "./paintMaterial";
+import {CROSSROADS_ROUTES} from "./roadSurface";
 
-// Two crossing streets are kept open between the observed roof groups. The
-// eastern arm bends into the existing bank-side lane rather than ending at a wall.
-export const CROSSROADS_ROUTES=[
-  [[-46,2.2],[-35.5,2.2],[-27,2.2],[-24,7.9],[-18,7.9]],
-  [[-35.5,-20],[-35.5,-8],[-35.5,2.2],[-35.5,20]],
-];
-export const CROSSROADS_PEOPLE=[
-  [-43,3.8,.2],[-41.9,3.1,2.9],[-39.5,3.5,.3],[-38.7,4,3.2],[-37.1,3.1,.1],
-  [-33.7,3.8,2.8],[-32.6,3.1,.2],[-31.4,4.1,3],[-29.2,3.6,.2],[-27.7,3.8,2.9],
-  [-35.9,-13,1.5],[-35.1,-11,-1.5],[-35.8,-6.9,1.5],[-35.1,-4.8,-1.5],
-  [-35.9,7.6,1.5],[-35.1,10.1,-1.5],[-35.8,13,1.5],[-35.1,15.4,-1.5],
-  [-31.4,.2,-1.5],[-30.5,.4,1.5],[-40.6,-1.6,-1.5],[-39.7,-1.4,1.5],
-  [-25.8,6.5,.4],[-24.5,7.2,3],[-32.6,4.1,-1.4],[-31.9,4.1,1.4],
-].map(([s,d,angle])=>({s,d,angle}));
+// The routes live with the road surface so the ground shader can feather them.
+export {CROSSROADS_ROUTES};
+// Parked reference ox carts (s, d, heading) and the well. Street walkers and
+// riders treat their complete footprints as obstacles.
+export const CROSSROADS_CARTS=[[-40.3,6.5,.05],[-37.6,12.4,Math.PI/2]] as const;
+export const CROSSROADS_CART_HALF={length:2.1,width:.97} as const;
+export const CROSSROADS_WELL={s:-35.0,d:2.9,radius:.72} as const;
+export const LOITER_SPACE=.6,LOITER_WANDER=.42;
+function routePoint(route:readonly (readonly number[])[], distance:number, lateral:number){
+  for(let i=1;i<route.length;i++){
+    const [a,b]=[route[i-1],route[i]],ds=b[0]-a[0],dd=b[1]-a[1],length=Math.hypot(ds,dd);
+    if(distance<=length)return {s:a[0]+ds*distance/length-dd*lateral/length,d:a[1]+dd*distance/length+ds*lateral/length};
+    distance-=length;
+  }
+  return null;
+}
+// A few neighbours linger at shop fronts on the street shoulders. Each one
+// reserves its whole wandering space, so the moving street crowd and riders
+// pass around them instead of through them.
+export const CROSSROADS_PEOPLE:PassagePoint[]=[];
+for(const [route,start,spacing,shoulder] of [[0,7,3.1,1.75],[1,3,3.4,2.05]] as const)
+  for(let k=0;CROSSROADS_PEOPLE.length<(route?18:9)&&k<40;k++){
+    const p=routePoint(CROSSROADS_ROUTES[route],start+k*spacing,(k%2?1:-1)*shoulder);
+    if(!p)break;
+    if(p.s>-26)continue;
+    if(CROSSROADS_CARTS.some(([s,d,a])=>{
+      const u=(p.s-s)*Math.cos(a)+(p.d-d)*Math.sin(a),v=-(p.s-s)*Math.sin(a)+(p.d-d)*Math.cos(a);
+      return Math.hypot(Math.max(0,Math.abs(u)-CROSSROADS_CART_HALF.length),Math.max(0,Math.abs(v)-CROSSROADS_CART_HALF.width))<LOITER_SPACE+1.3;
+    }))continue;
+    // Keep both streets open: never stand on the other street's carriageway.
+    if(CROSSROADS_ROUTES.some(r=>r.some((a,i)=>{
+      if(!i)return false;
+      const b=r[i-1],ds=a[0]-b[0],dd=a[1]-b[1],t=Math.max(0,Math.min(1,((p.s-b[0])*ds+(p.d-b[1])*dd)/(ds*ds+dd*dd)));
+      return Math.hypot(p.s-b[0]-ds*t,p.d-b[1]-dd*t)<1.6;
+    })))continue;
+    if(Math.hypot(p.s-CROSSROADS_WELL.s,p.d-CROSSROADS_WELL.d)<CROSSROADS_WELL.radius+LOITER_SPACE+.05)continue;
+    if(reserve(p,LOITER_SPACE,"person"))CROSSROADS_PEOPLE.push(p);
+  }
+export function loiterPose(index:number,time:number,seed=0){
+  const home=CROSSROADS_PEOPLE[index],p=wander(index+900,time,LOITER_WANDER,seed);
+  return {...p,s:home.s+p.s,d:home.d+p.d,y:GROUND_Y};
+}
 
 export function createCrossroadsGround(){
   const root=new THREE.Group();root.name="western-crossroads";
-  const earth=paintMaterial(0xb7a477,true),stone=paintMaterial(0xa59b80),wood=paintMaterial(0x8d7651),ink=createDryInk(.23);
-  const positions:number[]=[],marks:number[]=[];
+  // The street itself is a feathered wash in the ground shader (roadSurface);
+  // only sparse, faint wheel marks are drawn on top of it.
+  const stone=paintMaterial(0xa59b80),wood=paintMaterial(0x8d7651),ink=createDryInk(.23),wheelInk=createDryInk(.07);
+  const marks:number[]=[];
   for(const route of CROSSROADS_ROUTES)for(let i=1;i<route.length;i++){
     const [as,ad]=route[i-1],[bs,bd]=route[i],ds=bs-as,dd=bd-ad,len=Math.hypot(ds,dd),nx=-dd/len,nz=ds/len;
-    const p=(s:number,d:number)=>{const v=scrollPoint(s,d);return [v.x,GROUND_Y+.006,v.z];};
-    const w=route===CROSSROADS_ROUTES[0]?1.25:1.05;
-    const A=p(as+nx*w,ad+nz*w),B=p(bs+nx*w,bd+nz*w),C=p(bs-nx*w,bd-nz*w),D=p(as-nx*w,ad-nz*w);
-    positions.push(...A,...B,...C,...A,...C,...D);
     for(let t=.12;t<len;t+=.17){
-      if(Math.sin(t*8+i)<-.2)continue;
+      if(Math.sin(t*8+i)+Math.sin(t*2.3+i*1.7)*.8<.35)continue;
       for(const side of [-1,1])for(const end of [0,.12]){
         const s=as+ds/len*(t+end)+nx*side*.27,d=ad+dd/len*(t+end)+nz*side*.27;
         const v=scrollPoint(s,d);marks.push(v.x,GROUND_Y+.012,v.z);
       }
     }
   }
-  const geo=new THREE.BufferGeometry().setAttribute("position",new THREE.Float32BufferAttribute(positions,3));geo.computeVertexNormals();earth.side=THREE.DoubleSide;
-  root.add(new THREE.Mesh(geo,earth));root.add(new THREE.LineSegments(new THREE.BufferGeometry().setAttribute("position",new THREE.Float32BufferAttribute(marks,3)),ink));
+  root.add(new THREE.LineSegments(new THREE.BufferGeometry().setAttribute("position",new THREE.Float32BufferAttribute(marks,3)),wheelInk));
   // A low well with real masonry courses, winding frame, rope and bucket.
-  const well=new THREE.Group();well.name="crossroads-well";well.position.copy(scrollPoint(-26.8,.7));well.position.y=GROUND_Y;root.add(well);
+  const well=new THREE.Group();well.name="crossroads-well";well.position.copy(scrollPoint(CROSSROADS_WELL.s,CROSSROADS_WELL.d));well.position.y=GROUND_Y;root.add(well);
   for(let row=0;row<3;row++)for(let i=0;i<10;i++){
     const a=(i+row*.5)/10*Math.PI*2;
     const block=new THREE.Mesh(new THREE.BoxGeometry(.22,.11,.12),stone);block.position.set(Math.cos(a)*.31,.055+row*.115,Math.sin(a)*.31);block.rotation.y=-a+Math.PI/2;well.add(block);
@@ -49,7 +77,7 @@ export function createCrossroadsGround(){
   const rope=new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,1.1,0),new THREE.Vector3(0,.16,0)]),ink);well.add(rope);
   const bucket=new THREE.Mesh(new THREE.CylinderGeometry(.095,.07,.17,8,1,true),wood);bucket.position.set(.64,.09,.18);well.add(bucket);
   // Irregular doorstep slabs stop at each frontage; the crossing stays earth.
-  for(const [s,d] of [[-30.8,-.85],[-40.1,-2.45],[-30.8,4.55],[-40.1,4.55]])for(let j=-2;j<=2;j++){
+  for(const [s,d] of [[-42.06,4.10],[-28.23,6.35],[-43.3,8.95],[-30.4,9.45]])for(let j=-2;j<=2;j++){
     const slab=new THREE.Mesh(new THREE.BoxGeometry(.39,.035,.3),stone),p=scrollPoint(s+j*.41,d);
     slab.position.set(p.x,GROUND_Y+.018,p.z);slab.rotation.y=-Math.PI*50/180;root.add(slab);
   }

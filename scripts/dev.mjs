@@ -1,11 +1,9 @@
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
-import {fileURLToPath,pathToFileURL} from 'node:url';
-import {createRequire} from 'node:module';
+import {fileURLToPath} from 'node:url';
+import {createServer} from 'vite';
 const root=fileURLToPath(new URL('../',import.meta.url));
-const require=createRequire(path.join(root,'artworks/qingming/package.json'));
-const {createServer}=await import(pathToFileURL(require.resolve('vite')));
 const types={'.html':'text/html; charset=utf-8','.js':'text/javascript','.css':'text/css','.ts':'text/javascript','.json':'application/json','.webp':'image/webp','.png':'image/png','.jpg':'image/jpeg','.mp4':'video/mp4','.glb':'model/gltf-binary'};
 let vite,pondVite;
 const server=http.createServer((req,res)=>{

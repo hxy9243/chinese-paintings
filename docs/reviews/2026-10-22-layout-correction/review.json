@@ -1,0 +1,2285 @@
+{
+  "errors": [],
+  "measurements": {
+    "boat-close": {
+      "boatCrews": [
+        {
+          "style": "freight",
+          "count": 9,
+          "roof": 3
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "skiff",
+          "count": 2,
+          "roof": 0
+        },
+        {
+          "style": "freight",
+          "count": 9,
+          "roof": 3
+        },
+        {
+          "style": "skiff",
+          "count": 2,
+          "roof": 0
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "canopy",
+          "count": 3,
+          "roof": 0
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        }
+      ],
+      "landmarks": [
+        "two-storey-balcony-house",
+        "open-timber-construction",
+        "western-crossroads",
+        "joined-roof-houses"
+      ],
+      "crowd": {
+        "variants": 16,
+        "levels": [
+          {
+            "level": 0,
+            "actors": 0,
+            "visibleActors": 0,
+            "triangles": 0
+          },
+          {
+            "level": 1,
+            "actors": 590,
+            "visibleActors": 252,
+            "triangles": 603188
+          },
+          {
+            "level": 2,
+            "actors": 0,
+            "visibleActors": 0,
+            "triangles": 0
+          }
+        ]
+      },
+      "seed": 9243,
+      "palette": "silk",
+      "vegetationLevel": 2,
+      "buildings": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "traffic": [
+        "horse-cart",
+        "covered-cart",
+        "pack-horse",
+        "donkey-cart",
+        "ox-cart",
+        "covered-cart",
+        "horse-cart",
+        "handcart"
+      ],
+      "bridgeCounters": [
+        {
+          "x": -7.178252854609436,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -5.198045170579247,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -3.2178374865490573,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -1.2376298025188683,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 0.7425778815113215,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 2.7227855655415105,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 4.702993249571701,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 6.68320093360189,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -7.178252854609436,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -5.198045170579247,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -3.2178374865490573,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -1.2376298025188683,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 0.7425778815113215,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 2.7227855655415105,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 4.702993249571701,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 6.68320093360189,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        }
+      ],
+      "marketTypes": [
+        "tea-and-bowls",
+        "woven-baskets",
+        "food-and-skewers",
+        "cloth-and-scrolls",
+        "grain-and-jars",
+        "fishmonger"
+      ],
+      "referenceTrees": [
+        "near-quay-old-tree",
+        "west-bend-pollard",
+        "bend-roof-pollard",
+        "balcony-rear-pollard",
+        "foreground-pollard",
+        "right-bank-pollard",
+        "far-east-pollard",
+        "crossroads-west-old-tree",
+        "crossroads-north-tree"
+      ],
+      "streetLife": {
+        "walkers": 204,
+        "mainStreetWalkers": 156,
+        "approachPeople": 45,
+        "bridgeWalkingDensity": 3.2204903348285905,
+        "streetWalkingDensity": 4.1461698270623115
+      },
+      "bridgeLife": {
+        "stands": 16,
+        "stationaryPeople": 40,
+        "passingPeople": 52,
+        "roles": {
+          "river-watcher": 10,
+          "vendor": 10,
+          "customer": 10,
+          "conversation": 10
+        }
+      },
+      "triangles": 1459186,
+      "calls": 630
+    },
+    "bridge-topology": {
+      "boatCrews": [
+        {
+          "style": "freight",
+          "count": 9,
+          "roof": 3
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "skiff",
+          "count": 2,
+          "roof": 0
+        },
+        {
+          "style": "freight",
+          "count": 9,
+          "roof": 3
+        },
+        {
+          "style": "skiff",
+          "count": 2,
+          "roof": 0
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "canopy",
+          "count": 3,
+          "roof": 0
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        }
+      ],
+      "landmarks": [
+        "two-storey-balcony-house",
+        "open-timber-construction",
+        "western-crossroads",
+        "joined-roof-houses"
+      ],
+      "crowd": {
+        "variants": 16,
+        "levels": [
+          {
+            "level": 0,
+            "actors": 0,
+            "visibleActors": 0,
+            "triangles": 0
+          },
+          {
+            "level": 1,
+            "actors": 590,
+            "visibleActors": 246,
+            "triangles": 585236
+          },
+          {
+            "level": 2,
+            "actors": 0,
+            "visibleActors": 0,
+            "triangles": 0
+          }
+        ]
+      },
+      "seed": 9243,
+      "palette": "silk",
+      "vegetationLevel": 2,
+      "buildings": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "traffic": [
+        "horse-cart",
+        "covered-cart",
+        "pack-horse",
+        "donkey-cart",
+        "ox-cart",
+        "covered-cart",
+        "horse-cart",
+        "handcart"
+      ],
+      "bridgeCounters": [
+        {
+          "x": -7.178252854609436,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -5.198045170579247,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -3.2178374865490573,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -1.2376298025188683,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 0.7425778815113215,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 2.7227855655415105,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 4.702993249571701,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 6.68320093360189,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -7.178252854609436,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -5.198045170579247,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -3.2178374865490573,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -1.2376298025188683,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 0.7425778815113215,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 2.7227855655415105,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 4.702993249571701,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 6.68320093360189,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        }
+      ],
+      "marketTypes": [
+        "tea-and-bowls",
+        "woven-baskets",
+        "food-and-skewers",
+        "cloth-and-scrolls",
+        "grain-and-jars",
+        "fishmonger"
+      ],
+      "referenceTrees": [
+        "near-quay-old-tree",
+        "west-bend-pollard",
+        "bend-roof-pollard",
+        "balcony-rear-pollard",
+        "foreground-pollard",
+        "right-bank-pollard",
+        "far-east-pollard",
+        "crossroads-west-old-tree",
+        "crossroads-north-tree"
+      ],
+      "streetLife": {
+        "walkers": 204,
+        "mainStreetWalkers": 156,
+        "approachPeople": 45,
+        "bridgeWalkingDensity": 3.2204903348285905,
+        "streetWalkingDensity": 4.1461698270623115
+      },
+      "bridgeLife": {
+        "stands": 16,
+        "stationaryPeople": 40,
+        "passingPeople": 52,
+        "roles": {
+          "river-watcher": 10,
+          "vendor": 10,
+          "customer": 10,
+          "conversation": 10
+        }
+      },
+      "triangles": 1488906,
+      "calls": 651
+    },
+    "scaffold-and-bridge": {
+      "boatCrews": [
+        {
+          "style": "freight",
+          "count": 9,
+          "roof": 3
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "skiff",
+          "count": 2,
+          "roof": 0
+        },
+        {
+          "style": "freight",
+          "count": 9,
+          "roof": 3
+        },
+        {
+          "style": "skiff",
+          "count": 2,
+          "roof": 0
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "canopy",
+          "count": 3,
+          "roof": 0
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        }
+      ],
+      "landmarks": [
+        "two-storey-balcony-house",
+        "open-timber-construction",
+        "western-crossroads",
+        "joined-roof-houses"
+      ],
+      "crowd": {
+        "variants": 16,
+        "levels": [
+          {
+            "level": 0,
+            "actors": 29,
+            "visibleActors": 22,
+            "triangles": 4796
+          },
+          {
+            "level": 1,
+            "actors": 561,
+            "visibleActors": 451,
+            "triangles": 1078400
+          },
+          {
+            "level": 2,
+            "actors": 0,
+            "visibleActors": 0,
+            "triangles": 0
+          }
+        ]
+      },
+      "seed": 9243,
+      "palette": "silk",
+      "vegetationLevel": 2,
+      "buildings": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "traffic": [
+        "horse-cart",
+        "covered-cart",
+        "pack-horse",
+        "donkey-cart",
+        "ox-cart",
+        "covered-cart",
+        "horse-cart",
+        "handcart"
+      ],
+      "bridgeCounters": [
+        {
+          "x": -7.178252854609436,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -5.198045170579247,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -3.2178374865490573,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -1.2376298025188683,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 0.7425778815113215,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 2.7227855655415105,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 4.702993249571701,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 6.68320093360189,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -7.178252854609436,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -5.198045170579247,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -3.2178374865490573,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -1.2376298025188683,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 0.7425778815113215,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 2.7227855655415105,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 4.702993249571701,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 6.68320093360189,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        }
+      ],
+      "marketTypes": [
+        "tea-and-bowls",
+        "woven-baskets",
+        "food-and-skewers",
+        "cloth-and-scrolls",
+        "grain-and-jars",
+        "fishmonger"
+      ],
+      "referenceTrees": [
+        "near-quay-old-tree",
+        "west-bend-pollard",
+        "bend-roof-pollard",
+        "balcony-rear-pollard",
+        "foreground-pollard",
+        "right-bank-pollard",
+        "far-east-pollard",
+        "crossroads-west-old-tree",
+        "crossroads-north-tree"
+      ],
+      "streetLife": {
+        "walkers": 204,
+        "mainStreetWalkers": 156,
+        "approachPeople": 45,
+        "bridgeWalkingDensity": 3.2204903348285905,
+        "streetWalkingDensity": 4.1461698270623115
+      },
+      "bridgeLife": {
+        "stands": 16,
+        "stationaryPeople": 40,
+        "passingPeople": 52,
+        "roles": {
+          "river-watcher": 10,
+          "vendor": 10,
+          "customer": 10,
+          "conversation": 10
+        }
+      },
+      "triangles": 2136298,
+      "calls": 803
+    },
+    "crossroads": {
+      "boatCrews": [
+        {
+          "style": "freight",
+          "count": 9,
+          "roof": 3
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "skiff",
+          "count": 2,
+          "roof": 0
+        },
+        {
+          "style": "freight",
+          "count": 9,
+          "roof": 3
+        },
+        {
+          "style": "skiff",
+          "count": 2,
+          "roof": 0
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "canopy",
+          "count": 3,
+          "roof": 0
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        }
+      ],
+      "landmarks": [
+        "two-storey-balcony-house",
+        "open-timber-construction",
+        "western-crossroads",
+        "joined-roof-houses"
+      ],
+      "crowd": {
+        "variants": 16,
+        "levels": [
+          {
+            "level": 0,
+            "actors": 29,
+            "visibleActors": 2,
+            "triangles": 436
+          },
+          {
+            "level": 1,
+            "actors": 561,
+            "visibleActors": 67,
+            "triangles": 157772
+          },
+          {
+            "level": 2,
+            "actors": 0,
+            "visibleActors": 0,
+            "triangles": 0
+          }
+        ]
+      },
+      "seed": 9243,
+      "palette": "silk",
+      "vegetationLevel": 2,
+      "buildings": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "traffic": [
+        "horse-cart",
+        "covered-cart",
+        "pack-horse",
+        "donkey-cart",
+        "ox-cart",
+        "covered-cart",
+        "horse-cart",
+        "handcart"
+      ],
+      "bridgeCounters": [
+        {
+          "x": -7.178252854609436,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -5.198045170579247,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -3.2178374865490573,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -1.2376298025188683,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 0.7425778815113215,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 2.7227855655415105,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 4.702993249571701,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 6.68320093360189,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -7.178252854609436,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -5.198045170579247,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -3.2178374865490573,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -1.2376298025188683,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 0.7425778815113215,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 2.7227855655415105,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 4.702993249571701,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 6.68320093360189,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        }
+      ],
+      "marketTypes": [
+        "tea-and-bowls",
+        "woven-baskets",
+        "food-and-skewers",
+        "cloth-and-scrolls",
+        "grain-and-jars",
+        "fishmonger"
+      ],
+      "referenceTrees": [
+        "near-quay-old-tree",
+        "west-bend-pollard",
+        "bend-roof-pollard",
+        "balcony-rear-pollard",
+        "foreground-pollard",
+        "right-bank-pollard",
+        "far-east-pollard",
+        "crossroads-west-old-tree",
+        "crossroads-north-tree"
+      ],
+      "streetLife": {
+        "walkers": 204,
+        "mainStreetWalkers": 156,
+        "approachPeople": 45,
+        "bridgeWalkingDensity": 3.2204903348285905,
+        "streetWalkingDensity": 4.1461698270623115
+      },
+      "bridgeLife": {
+        "stands": 16,
+        "stationaryPeople": 40,
+        "passingPeople": 52,
+        "roles": {
+          "river-watcher": 10,
+          "vendor": 10,
+          "customer": 10,
+          "conversation": 10
+        }
+      },
+      "triangles": 1216743,
+      "calls": 565
+    },
+    "joined-roofs": {
+      "boatCrews": [
+        {
+          "style": "freight",
+          "count": 9,
+          "roof": 3
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "skiff",
+          "count": 2,
+          "roof": 0
+        },
+        {
+          "style": "freight",
+          "count": 9,
+          "roof": 3
+        },
+        {
+          "style": "skiff",
+          "count": 2,
+          "roof": 0
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "canopy",
+          "count": 3,
+          "roof": 0
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        }
+      ],
+      "landmarks": [
+        "two-storey-balcony-house",
+        "open-timber-construction",
+        "western-crossroads",
+        "joined-roof-houses"
+      ],
+      "crowd": {
+        "variants": 16,
+        "levels": [
+          {
+            "level": 0,
+            "actors": 0,
+            "visibleActors": 0,
+            "triangles": 0
+          },
+          {
+            "level": 1,
+            "actors": 590,
+            "visibleActors": 52,
+            "triangles": 122920
+          },
+          {
+            "level": 2,
+            "actors": 0,
+            "visibleActors": 0,
+            "triangles": 0
+          }
+        ]
+      },
+      "seed": 9243,
+      "palette": "silk",
+      "vegetationLevel": 2,
+      "buildings": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "traffic": [
+        "horse-cart",
+        "covered-cart",
+        "pack-horse",
+        "donkey-cart",
+        "ox-cart",
+        "covered-cart",
+        "horse-cart",
+        "handcart"
+      ],
+      "bridgeCounters": [
+        {
+          "x": -7.178252854609436,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -5.198045170579247,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -3.2178374865490573,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -1.2376298025188683,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 0.7425778815113215,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 2.7227855655415105,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 4.702993249571701,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 6.68320093360189,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -7.178252854609436,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -5.198045170579247,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -3.2178374865490573,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -1.2376298025188683,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 0.7425778815113215,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 2.7227855655415105,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 4.702993249571701,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 6.68320093360189,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        }
+      ],
+      "marketTypes": [
+        "tea-and-bowls",
+        "woven-baskets",
+        "food-and-skewers",
+        "cloth-and-scrolls",
+        "grain-and-jars",
+        "fishmonger"
+      ],
+      "referenceTrees": [
+        "near-quay-old-tree",
+        "west-bend-pollard",
+        "bend-roof-pollard",
+        "balcony-rear-pollard",
+        "foreground-pollard",
+        "right-bank-pollard",
+        "far-east-pollard",
+        "crossroads-west-old-tree",
+        "crossroads-north-tree"
+      ],
+      "streetLife": {
+        "walkers": 204,
+        "mainStreetWalkers": 156,
+        "approachPeople": 45,
+        "bridgeWalkingDensity": 3.2204903348285905,
+        "streetWalkingDensity": 4.1461698270623115
+      },
+      "bridgeLife": {
+        "stands": 16,
+        "stationaryPeople": 40,
+        "passingPeople": 52,
+        "roles": {
+          "river-watcher": 10,
+          "vendor": 10,
+          "customer": 10,
+          "conversation": 10
+        }
+      },
+      "triangles": 1104971,
+      "calls": 487
+    },
+    "full-layout": {
+      "boatCrews": [
+        {
+          "style": "freight",
+          "count": 9,
+          "roof": 3
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "skiff",
+          "count": 2,
+          "roof": 0
+        },
+        {
+          "style": "freight",
+          "count": 9,
+          "roof": 3
+        },
+        {
+          "style": "skiff",
+          "count": 2,
+          "roof": 0
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "canopy",
+          "count": 3,
+          "roof": 0
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        }
+      ],
+      "landmarks": [
+        "two-storey-balcony-house",
+        "open-timber-construction",
+        "western-crossroads",
+        "joined-roof-houses"
+      ],
+      "crowd": {
+        "variants": 16,
+        "levels": [
+          {
+            "level": 0,
+            "actors": 590,
+            "visibleActors": 590,
+            "triangles": 166866
+          },
+          {
+            "level": 1,
+            "actors": 0,
+            "visibleActors": 0,
+            "triangles": 0
+          },
+          {
+            "level": 2,
+            "actors": 0,
+            "visibleActors": 0,
+            "triangles": 0
+          }
+        ]
+      },
+      "seed": 9243,
+      "palette": "silk",
+      "vegetationLevel": 2,
+      "buildings": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        1,
+        1,
+        2,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        2,
+        2,
+        2,
+        1,
+        2,
+        2,
+        2,
+        1,
+        2,
+        2,
+        1,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "traffic": [
+        "horse-cart",
+        "covered-cart",
+        "pack-horse",
+        "donkey-cart",
+        "ox-cart",
+        "covered-cart",
+        "horse-cart",
+        "handcart"
+      ],
+      "bridgeCounters": [
+        {
+          "x": -7.178252854609436,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -5.198045170579247,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -3.2178374865490573,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -1.2376298025188683,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 0.7425778815113215,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 2.7227855655415105,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 4.702993249571701,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 6.68320093360189,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -7.178252854609436,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -5.198045170579247,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -3.2178374865490573,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -1.2376298025188683,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 0.7425778815113215,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 2.7227855655415105,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 4.702993249571701,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 6.68320093360189,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        }
+      ],
+      "marketTypes": [
+        "tea-and-bowls",
+        "woven-baskets",
+        "food-and-skewers",
+        "cloth-and-scrolls",
+        "grain-and-jars",
+        "fishmonger"
+      ],
+      "referenceTrees": [
+        "near-quay-old-tree",
+        "west-bend-pollard",
+        "bend-roof-pollard",
+        "balcony-rear-pollard",
+        "foreground-pollard",
+        "right-bank-pollard",
+        "far-east-pollard",
+        "crossroads-west-old-tree",
+        "crossroads-north-tree"
+      ],
+      "streetLife": {
+        "walkers": 204,
+        "mainStreetWalkers": 156,
+        "approachPeople": 45,
+        "bridgeWalkingDensity": 3.2204903348285905,
+        "streetWalkingDensity": 4.1461698270623115
+      },
+      "bridgeLife": {
+        "stands": 16,
+        "stationaryPeople": 40,
+        "passingPeople": 52,
+        "roles": {
+          "river-watcher": 10,
+          "vendor": 10,
+          "customer": 10,
+          "conversation": 10
+        }
+      },
+      "triangles": 1707535,
+      "calls": 884
+    },
+    "reference-view": {
+      "boatCrews": [
+        {
+          "style": "freight",
+          "count": 9,
+          "roof": 3
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "skiff",
+          "count": 2,
+          "roof": 0
+        },
+        {
+          "style": "freight",
+          "count": 9,
+          "roof": 3
+        },
+        {
+          "style": "skiff",
+          "count": 2,
+          "roof": 0
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "canopy",
+          "count": 3,
+          "roof": 0
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        }
+      ],
+      "landmarks": [
+        "two-storey-balcony-house",
+        "open-timber-construction",
+        "western-crossroads",
+        "joined-roof-houses"
+      ],
+      "crowd": {
+        "variants": 16,
+        "levels": [
+          {
+            "level": 0,
+            "actors": 590,
+            "visibleActors": 494,
+            "triangles": 138512
+          },
+          {
+            "level": 1,
+            "actors": 0,
+            "visibleActors": 0,
+            "triangles": 0
+          },
+          {
+            "level": 2,
+            "actors": 0,
+            "visibleActors": 0,
+            "triangles": 0
+          }
+        ]
+      },
+      "seed": 9243,
+      "palette": "silk",
+      "vegetationLevel": 2,
+      "buildings": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        1,
+        1,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        1,
+        1,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        1,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "traffic": [
+        "horse-cart",
+        "covered-cart",
+        "pack-horse",
+        "donkey-cart",
+        "ox-cart",
+        "covered-cart",
+        "horse-cart",
+        "handcart"
+      ],
+      "bridgeCounters": [
+        {
+          "x": -7.178252854609436,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -5.198045170579247,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -3.2178374865490573,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -1.2376298025188683,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 0.7425778815113215,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 2.7227855655415105,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 4.702993249571701,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 6.68320093360189,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -7.178252854609436,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -5.198045170579247,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -3.2178374865490573,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -1.2376298025188683,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 0.7425778815113215,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 2.7227855655415105,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 4.702993249571701,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 6.68320093360189,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        }
+      ],
+      "marketTypes": [
+        "tea-and-bowls",
+        "woven-baskets",
+        "food-and-skewers",
+        "cloth-and-scrolls",
+        "grain-and-jars",
+        "fishmonger"
+      ],
+      "referenceTrees": [
+        "near-quay-old-tree",
+        "west-bend-pollard",
+        "bend-roof-pollard",
+        "balcony-rear-pollard",
+        "foreground-pollard",
+        "right-bank-pollard",
+        "far-east-pollard",
+        "crossroads-west-old-tree",
+        "crossroads-north-tree"
+      ],
+      "streetLife": {
+        "walkers": 204,
+        "mainStreetWalkers": 156,
+        "approachPeople": 45,
+        "bridgeWalkingDensity": 3.2204903348285905,
+        "streetWalkingDensity": 4.1461698270623115
+      },
+      "bridgeLife": {
+        "stands": 16,
+        "stationaryPeople": 40,
+        "passingPeople": 52,
+        "roles": {
+          "river-watcher": 10,
+          "vendor": 10,
+          "customer": 10,
+          "conversation": 10
+        }
+      },
+      "triangles": 1613857,
+      "calls": 835
+    },
+    "painting-edge": {
+      "boatCrews": [
+        {
+          "style": "freight",
+          "count": 9,
+          "roof": 3
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "skiff",
+          "count": 2,
+          "roof": 0
+        },
+        {
+          "style": "freight",
+          "count": 9,
+          "roof": 3
+        },
+        {
+          "style": "skiff",
+          "count": 2,
+          "roof": 0
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        },
+        {
+          "style": "canopy",
+          "count": 3,
+          "roof": 0
+        },
+        {
+          "style": "cabin",
+          "count": 6,
+          "roof": 2
+        }
+      ],
+      "landmarks": [
+        "two-storey-balcony-house",
+        "open-timber-construction",
+        "western-crossroads",
+        "joined-roof-houses"
+      ],
+      "crowd": {
+        "variants": 16,
+        "levels": [
+          {
+            "level": 0,
+            "actors": 29,
+            "visibleActors": 2,
+            "triangles": 436
+          },
+          {
+            "level": 1,
+            "actors": 561,
+            "visibleActors": 45,
+            "triangles": 106096
+          },
+          {
+            "level": 2,
+            "actors": 0,
+            "visibleActors": 0,
+            "triangles": 0
+          }
+        ]
+      },
+      "seed": 9243,
+      "palette": "silk",
+      "vegetationLevel": 2,
+      "buildings": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "traffic": [
+        "horse-cart",
+        "covered-cart",
+        "pack-horse",
+        "donkey-cart",
+        "ox-cart",
+        "covered-cart",
+        "horse-cart",
+        "handcart"
+      ],
+      "bridgeCounters": [
+        {
+          "x": -7.178252854609436,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -5.198045170579247,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -3.2178374865490573,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -1.2376298025188683,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 0.7425778815113215,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 2.7227855655415105,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 4.702993249571701,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 6.68320093360189,
+          "lateral": -1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -7.178252854609436,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -5.198045170579247,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -3.2178374865490573,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": -1.2376298025188683,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 0.7425778815113215,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 2.7227855655415105,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 4.702993249571701,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        },
+        {
+          "x": 6.68320093360189,
+          "lateral": 1.74,
+          "width": 0.84,
+          "depth": 0.24
+        }
+      ],
+      "marketTypes": [
+        "tea-and-bowls",
+        "woven-baskets",
+        "food-and-skewers",
+        "cloth-and-scrolls",
+        "grain-and-jars",
+        "fishmonger"
+      ],
+      "referenceTrees": [
+        "near-quay-old-tree",
+        "west-bend-pollard",
+        "bend-roof-pollard",
+        "balcony-rear-pollard",
+        "foreground-pollard",
+        "right-bank-pollard",
+        "far-east-pollard",
+        "crossroads-west-old-tree",
+        "crossroads-north-tree"
+      ],
+      "streetLife": {
+        "walkers": 204,
+        "mainStreetWalkers": 156,
+        "approachPeople": 45,
+        "bridgeWalkingDensity": 3.2204903348285905,
+        "streetWalkingDensity": 4.1461698270623115
+      },
+      "bridgeLife": {
+        "stands": 16,
+        "stationaryPeople": 40,
+        "passingPeople": 52,
+        "roles": {
+          "river-watcher": 10,
+          "vendor": 10,
+          "customer": 10,
+          "conversation": 10
+        }
+      },
+      "triangles": 878070,
+      "calls": 389
+    }
+  }
+}

@@ -169,11 +169,13 @@ The canonical source, artifact hashes, geometry counts and validation summary ar
 
 ## Reproduce
 
+Install from the repository root, which holds the only `package.json`, then run the scripts from this folder:
+
 ```sh
-npm ci
+npm ci                              # at the repository root
 npx playwright install chromium
-npm run start
-# In another terminal, with the preview running:
+npm run thousand-miles:start        # at the repository root
+# In another terminal, from artworks/thousand-miles, with the preview running:
 node scripts/capture.cjs stills
 node scripts/capture.cjs detail
 node scripts/capture.cjs motion
