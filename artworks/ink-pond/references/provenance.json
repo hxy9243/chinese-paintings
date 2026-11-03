@@ -1,0 +1,31 @@
+{
+  "repositoryBase": "279ea03da8c3954e4d37e6401661bc56fc69835e",
+  "sourceCheckout": "/home/kevin/Workspace/chinese_painting",
+  "sourceType": "Previously uncommitted approved study files copied into the new worktree",
+  "copiedSources": {
+    "artworks/ink-shrimp/src/shrimp.js": {
+      "originalSha256": "87eff8cd38391d771ef2d6691e2279398e7b1eb7f895ca2dff856116e58c20e2",
+      "worktreeSha256": "2f9ee2ff0ed1c2a55fc3df350b427e673c1cd7bbe687c1af710f458781d7d99a"
+    },
+    "artworks/ink-fish/src/fish.js": {
+      "originalSha256": "c22bab08eed73db493e7ed7eb416007b6debb494d887db89461640e1aa483b30",
+      "worktreeSha256": "26f3a19636560e3928647124c52c9d3c6d9893be5facb9d5735ec872f2861c44"
+    },
+    "artworks/ink-shrimp/src/wet-renderer.js": {
+      "originalSha256": "3da830951ce222ecd26a0b518d0cf4750e179dc0620db4d7cb54c33e099f397f",
+      "worktreeSha256": "3da830951ce222ecd26a0b518d0cf4750e179dc0620db4d7cb54c33e099f397f"
+    },
+    "artworks/ink-shrimp/src/volume.js": {
+      "originalSha256": "6679f05274bbbb0b2dac342871bce75dd37d541a04fa7bc054c87bd812201917",
+      "worktreeSha256": "6679f05274bbbb0b2dac342871bce75dd37d541a04fa7bc054c87bd812201917"
+    },
+    "artworks/ink-shrimp/references/fish-and-shrimp-painting.png": {
+      "originalSha256": "e071fba454352432bab9a67fabe029f64d56c6d25e0ffc48ab564dafff900fe8",
+      "worktreeSha256": "e071fba454352432bab9a67fabe029f64d56c6d25e0ffc48ab564dafff900fe8"
+    },
+    "artworks/ink-fish/references/source-painting.png": {
+      "originalSha256": "e071fba454352432bab9a67fabe029f64d56c6d25e0ffc48ab564dafff900fe8",
+      "worktreeSha256": "e071fba454352432bab9a67fabe029f64d56c6d25e0ffc48ab564dafff900fe8"
+    }
+  }
+}

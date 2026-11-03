@@ -1,0 +1,335 @@
+{
+  "pass": true,
+  "review": "Self-review of interactive browser controls, fixed-time production stills and overlap ownership. Software-rendered frame rate is an observed sample, not a hardware guarantee.",
+  "angles": [
+    {
+      "camera": {
+        "projection": "orthographic",
+        "position": [
+          900.0000000000002,
+          -899.9999999999994,
+          1272.792206135785
+        ],
+        "up": [
+          0,
+          0,
+          1
+        ],
+        "elevationDegrees": 44.99999999999999,
+        "azimuthDegrees": -44.99999999999997,
+        "zoom": 1,
+        "interactive": true
+      },
+      "occlusion": {
+        "overlapPixels": 97,
+        "wrongOwnerPixels": 0,
+        "frontPaintComparedPixels": 95,
+        "hiddenInkLeakPixels": 0,
+        "pairs": [
+          {
+            "a": 1,
+            "b": 7,
+            "bodyOverlapPixels": 0,
+            "allOverlapPixels": 95,
+            "owners": {},
+            "allOwners": {
+              "1": 95
+            }
+          },
+          {
+            "a": 4,
+            "b": 9,
+            "bodyOverlapPixels": 0,
+            "allOverlapPixels": 2,
+            "owners": {},
+            "allOwners": {
+              "9": 2
+            }
+          }
+        ],
+        "offlineReadbackOnly": true
+      },
+      "image": "view--45-45.png"
+    },
+    {
+      "camera": {
+        "projection": "orthographic",
+        "position": [
+          1464.8358264288725,
+          533.1566389068427,
+          899.9999999999993
+        ],
+        "up": [
+          0,
+          0,
+          1
+        ],
+        "elevationDegrees": 29.999999999999993,
+        "azimuthDegrees": 19.999999999999993,
+        "zoom": 1,
+        "interactive": true
+      },
+      "occlusion": {
+        "overlapPixels": 171,
+        "wrongOwnerPixels": 0,
+        "frontPaintComparedPixels": 59,
+        "hiddenInkLeakPixels": 0,
+        "pairs": [
+          {
+            "a": 1,
+            "b": 7,
+            "bodyOverlapPixels": 0,
+            "allOverlapPixels": 67,
+            "owners": {},
+            "allOwners": {
+              "1": 67
+            }
+          },
+          {
+            "a": 4,
+            "b": 9,
+            "bodyOverlapPixels": 0,
+            "allOverlapPixels": 104,
+            "owners": {},
+            "allOwners": {
+              "9": 104
+            }
+          }
+        ],
+        "offlineReadbackOnly": true
+      },
+      "image": "view-20-30.png"
+    },
+    {
+      "camera": {
+        "projection": "orthographic",
+        "position": [
+          -196.88697890390708,
+          -422.22548881764806,
+          1738.6664873203222
+        ],
+        "up": [
+          0,
+          0,
+          1
+        ],
+        "elevationDegrees": 75,
+        "azimuthDegrees": -115.00000000000003,
+        "zoom": 1,
+        "interactive": true
+      },
+      "occlusion": {
+        "overlapPixels": 92,
+        "wrongOwnerPixels": 0,
+        "frontPaintComparedPixels": 92,
+        "hiddenInkLeakPixels": 0,
+        "pairs": [
+          {
+            "a": 1,
+            "b": 7,
+            "bodyOverlapPixels": 0,
+            "allOverlapPixels": 92,
+            "owners": {},
+            "allOwners": {
+              "1": 92
+            }
+          }
+        ],
+        "offlineReadbackOnly": true
+      },
+      "image": "view--115-75.png"
+    }
+  ],
+  "populations": [
+    {
+      "fish": 0,
+      "shrimp": 0,
+      "drawCalls": 3,
+      "memory": {
+        "geometries": 3,
+        "textures": 2
+      }
+    },
+    {
+      "fish": 8,
+      "shrimp": 12,
+      "drawCalls": 3,
+      "memory": {
+        "geometries": 3,
+        "textures": 2
+      }
+    },
+    {
+      "fish": 1,
+      "shrimp": 0,
+      "drawCalls": 3,
+      "memory": {
+        "geometries": 3,
+        "textures": 2
+      }
+    },
+    {
+      "fish": 0,
+      "shrimp": 1,
+      "drawCalls": 3,
+      "memory": {
+        "geometries": 3,
+        "textures": 2
+      }
+    },
+    {
+      "fish": 5,
+      "shrimp": 5,
+      "drawCalls": 3,
+      "memory": {
+        "geometries": 3,
+        "textures": 2
+      }
+    },
+    {
+      "fish": 8,
+      "shrimp": 12,
+      "drawCalls": 3,
+      "memory": {
+        "geometries": 3,
+        "textures": 2
+      }
+    },
+    {
+      "fish": 5,
+      "shrimp": 5,
+      "drawCalls": 3,
+      "memory": {
+        "geometries": 3,
+        "textures": 2
+      }
+    }
+  ],
+  "performance": {
+    "fps": 25.217391304347828,
+    "frameMsP50": 33.400000000001455,
+    "frameMsP95": 50,
+    "cpuMsP50": 7.899999976158142,
+    "sampleFrames": 58
+  },
+  "responsive": [
+    {
+      "width": 320,
+      "scroll": 320,
+      "canvas": 294
+    },
+    {
+      "width": 375,
+      "scroll": 375,
+      "canvas": 349
+    },
+    {
+      "width": 768,
+      "scroll": 768,
+      "canvas": 670
+    },
+    {
+      "width": 1280,
+      "scroll": 1280,
+      "canvas": 996.171875
+    }
+  ],
+  "touch": {
+    "orbit": true,
+    "pinch": true,
+    "zoom": 2.1428571428571437,
+    "pausedTimeUnchanged": true
+  },
+  "film": {
+    "frames": 48,
+    "fps": 24,
+    "duration": 2,
+    "sha256": "84534bea5d74846e1e5500529b25a892668b035c862b1a881e6110fb30530edf",
+    "review": "Offline camera-and-swimming excerpt; decoded samples inspected separately from live performance."
+  },
+  "images": [
+    {
+      "src": "/qingming/reference/selected-passage.webp",
+      "loaded": true
+    },
+    {
+      "src": "/thousand-miles/renders/composition-study/after-painting.png",
+      "loaded": true
+    },
+    {
+      "src": "/ink-pond-preview.png",
+      "loaded": true
+    }
+  ],
+  "exported": {
+    "width": 1992,
+    "height": 1218
+  },
+  "sources": {
+    "artworks/ink-pond/src/appendage-motion.js": "b2c79324eacec2ade9c9dd7f86fe29d50c7ea4decf9dae6c391cf9e3371a79ef",
+    "artworks/ink-pond/src/gpu-ink.js": "8a53c0b1aa817fcc311332f3e6c405e6976533df674a6c2c4c350d9d8b4369b3",
+    "artworks/ink-pond/src/gpu-ripples.js": "4858c6d09af09876db3ca1de1647178d3fb2ba77000d52607f8b426c07fee5e9",
+    "artworks/ink-pond/src/ink-atlas.js": "bd5fc3bcd949e302ae34a46d0ee838b4499072438f0470a3d9c3834fd4ad9897",
+    "artworks/ink-pond/src/main.js": "4d2efc85c62e365fcea084cabbf5fe7e261442fd0c3ab30e9a8f2264e2f57788",
+    "artworks/ink-pond/src/pond.js": "f50f9d7b22ba30bbd845c8573fa01e2182c6a207fb00a630d3b0231ff5ee9276",
+    "artworks/ink-pond/src/pose-cache.js": "d618090e514ac2f6bcb96ebf771d97ba89524d08bcb1e200eeee26c6d0c8798a",
+    "artworks/ink-pond/src/rain.js": "a0885bb4e6dd2dba3ee57ba34539a7cc7c79f83890a04b3d042575ee3d52c068",
+    "artworks/ink-pond/src/ripples.js": "3d5422a777eb0bdc8f50d9b337dbc517f69b6f32eb3b7b26294b4d51d4bca61a",
+    "artworks/ink-pond/src/shrimp-individuals.js": "3a2f0d06e1663d01543505e95a7bfed5f9896790a9da9881fc4780c965627efd",
+    "artworks/ink-pond/src/style.css": "a313228fd16de95777b504d026008703396da8b461bd5d3fd454a4288c3326dc",
+    "artworks/ink-pond/src/swimming.js": "24567c64048bfc29adbbf09588bfb0878bf97cdab3a06eff29b488c1438ed384",
+    "artworks/ink-pond/src/water-space.js": "65ed35f5042a580866a6304a32ebcf791e21d017927cb3ae44ae124bce43b58e",
+    "artworks/ink-pond/src/models/fish.js": "225cb63743057d2a242c19e1c2419daa6ba5037f5e56c5e303afac028838cc3c",
+    "artworks/ink-pond/src/models/shrimp.js": "53b4a79ca130905507a6c2b4fd55fd522a07b72678aa08b1f64a51b6634290a8",
+    "artworks/ink-pond/src/models/volume.js": "5183a6eaf32415bf50b611c2a823f4c96331130ff099b36a35494e43a3ce97c9",
+    "artworks/ink-pond/index.html": "e55ffad11dad5cce99f1e5e97168708d509fa70533fbb0bb3b45bf4a270a9781",
+    "apps/gallery/index.html": "2159b97de54ac314f901ce6aac6a9e97a2c9cee81b4d794fa849cafbffb5d690",
+    "apps/gallery/gallery.css": "80677e1eb48eed97ac767a42f0bdd2ac67e06abe2a10e992b565150efc330454",
+    "scripts/dev.mjs": "d07cc1fe83e2e22a0c4acc66bf3708b64049f8703465fa39ec59f27afc7ea330",
+    "scripts/build.mjs": "d6158dc28acb3869ab6d197a52cabdfae396c01e6463292f687c2e94823a9b4a"
+  },
+  "errors": [],
+  "productionBuild": {
+    "pass": true,
+    "threeCards": true,
+    "fullInkPreview": true,
+    "populationSliders": true,
+    "viewReset": true,
+    "referenceLoaded": true,
+    "shortViewports": [
+      {
+        "width": 844,
+        "height": 390,
+        "scroll": 844
+      },
+      {
+        "width": 1280,
+        "height": 600,
+        "scroll": 1280
+      }
+    ],
+    "routes": [
+      {
+        "route": "/qingming/",
+        "title": "清明小景 · A little life along the river",
+        "htmlServed": true
+      },
+      {
+        "route": "/thousand-miles/",
+        "title": "Blue & Green Waterways",
+        "htmlServed": true
+      }
+    ],
+    "errors": []
+  },
+  "validationScripts": {
+    "scripts/review-ink-pond.mjs": "00478b9d2109a4f443f331c9768dabd06c6f1e413d1d1b3265279fd600cd339e",
+    "scripts/check-gallery-build.mjs": "1d4be0e27fbaff0ff81d4b65bee89bf160f2793408e6ec778d3c98d7531d0821",
+    "artworks/ink-pond/scripts/check-population.mjs": "68d3bce5f5857a842c6c0f59fe3c98404fc6856feeee734eebe080a61cd63783"
+  },
+  "still": {
+    "file": "interactive-pond-8a7d463a.png",
+    "sha256": "8a7d463af3aba9e2ce10c58574c8eed7739281714bc807addb7eaeea6d670d64",
+    "source": "Production build at 3.5 seconds, default population and camera"
+  }
+}

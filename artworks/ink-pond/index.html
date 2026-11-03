@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#f3eddf" />
+  <link rel="icon" href="data:," />
+  <title>游 · Fish & shrimp in ink</title>
+  <link rel="stylesheet" href="./src/style.css" />
+</head>
+<body>
+  <main>
+    <a class="gallery-link" href="/">← 画中行 · All paintings</a>
+    <header>
+      <div class="title"><span class="chinese" lang="zh">游</span><div><p class="eyebrow">03 · An interactive ink painting</p><h1><span lang="zh">鱼虾清趣</span> · Following the current</h1></div></div>
+      <div class="view-actions"><button id="view-reset" class="quiet">Reset view ⤾</button><button id="reference-open" class="quiet">The reference ↗</button></div>
+    </header>
+    <section aria-label="Fish and shrimp ink painting" class="picture">
+      <div id="painting"></div>
+      <div class="inscription" aria-hidden="true"><span lang="zh">鱼虾清趣</span><span class="seal" lang="zh">游</span></div>
+    </section>
+    <section class="controls" aria-label="Painting controls">
+      <div class="playback"><button id="play">Pause</button><button id="reset" class="quiet">Begin again</button><button id="paths" class="quiet">New paths</button><button id="save" class="quiet">Save picture ↓</button></div>
+      <label class="timeline"><span class="sr-only">Time in the painting</span><input id="time" type="range" min="0" max="120" step="0.05" value="0" /><output id="time-value">0:00</output></label>
+    </section>
+    <section class="parameters" aria-label="Pond settings">
+      <label class="parameter">Fish <input id="fish" type="range" min="0" max="8" step="1" value="5" /><output id="fish-value" for="fish">5</output></label>
+      <label class="parameter">Shrimp <input id="shrimp" type="range" min="0" max="12" step="1" value="5" /><output id="shrimp-value" for="shrimp">5</output></label>
+      <label class="parameter">Speed <input id="speed" type="range" min="0.25" max="2" step="0.05" value="1" /><output id="speed-value" for="speed">1.0×</output></label>
+      <label class="ink-control">Ink <input id="wash" type="range" min="0.1" max="0.85" step="0.01" value="0.42" /></label>
+      <label class="ink-control rain-control">Rain <input id="rain" type="range" min="0" max="1" step="0.02" value="0.68" /><output id="rain-value" for="rain">68%</output></label>
+    </section>
+    <footer><span>Drag to turn · Scroll or pinch to zoom · Click for ripples</span><span id="status" role="status">Preparing the ink…</span></footer>
+  </main>
+  <dialog id="reference-dialog" aria-labelledby="reference-title">
+    <div class="dialog-heading"><h2 id="reference-title">The original reference</h2><button id="reference-close" class="quiet">Close</button></div>
+    <img src="./references/painting-detail.png" alt="User supplied traditional ink painting with fish above clusters of shrimp." />
+    <p>The pale washes, dark brush gestures, and long trailing antennae guide this new composition.</p>
+  </dialog>
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
