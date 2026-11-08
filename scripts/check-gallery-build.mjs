@@ -34,7 +34,7 @@ try{
  for(const route of ['/qingming/','/thousand-miles/']){const response=await fetch(base+route);assert.equal(response.status,200);const html=await response.text();assert.ok(html.includes('<title>'));routes.push({route,title:html.match(/<title>(.*?)<\/title>/s)?.[1],htmlServed:true});}
  assert.deepEqual(errors,[]);
  const sha=b=>createHash('sha256').update(b).digest('hex'),report={};
- report.sources={};for(const name of ['apps/gallery/index.html','apps/gallery/gallery.css','artworks/ink-pond/src/style.css','artworks/ink-pond/src/main.js','artworks/ink-pond/src/pond.js','artworks/ink-pond/src/entries.js','artworks/ink-pond/src/gpu-ink.js','scripts/build.mjs','scripts/dev.mjs'])report.sources[name]=sha(fs.readFileSync(path.join(root,name)));
+ report.sources={};for(const name of ['apps/gallery/index.html','apps/gallery/gallery.css','apps/gallery/ink-pond-preview.png','artworks/ink-pond/src/style.css','artworks/ink-pond/src/main.js','artworks/ink-pond/src/pond.js','artworks/ink-pond/src/entries.js','artworks/ink-pond/src/gpu-ink.js','scripts/build.mjs','scripts/dev.mjs'])report.sources[name]=sha(fs.readFileSync(path.join(root,name)));
  report.validationScripts=Object.fromEntries(['scripts/review-pond-population.mjs','scripts/check-gallery-build.mjs','artworks/ink-pond/scripts/check-population.mjs'].map(name=>[name,sha(fs.readFileSync(path.join(root,name)))]));
  report.still={file:stillName,sha256:stillHash,source:'Production build at 3.5 seconds, default population and camera'};
  report.productionBuild={pass:true,threeCards:true,fullInkPreview:true,populationSliders:true,viewReset:true,referenceLoaded:true,shortViewports,routes,errors};

@@ -1,8 +1,13 @@
 // Smooth seeded variation is sampled by absolute time. No per-frame randomness
 // moves the pigment or changes the result of a backward seek.
-const CLAW_YAW=[.100,.164,.232],LEG_YAW=[.180,.320,.460],CLAW_PITCH=[.040,.070,.100],LEG_PITCH=[.114,.225,.330];
+const CLAW_YAW=[.160,.310,.420],LEG_YAW=[.180,.320,.460],CLAW_PITCH=[.065,.100,.150],LEG_PITCH=[.114,.225,.330];
 function hash(cell,seed){let n=(cell+Math.imul(seed|0,374761393))|0;n=Math.imul(n^(n>>>13),1274126177);return((n^(n>>>16))>>>0)/2147483648-1;}
 function noise(t,seed){const k=Math.floor(t),u=t-k,w=u*u*u*(u*(u*6-15)+10),a=hash(k,seed);return a+(hash(k+1,seed)-a)*w;}
+function smooth(a,b,x){const u=Math.max(0,Math.min(1,(x-a)/(b-a)));return u*u*u*(u*(u*6-15)+10);}
+export function clawGesture(time,key){
+  const period=11+(hash(0,key+401)*.5+.5)*7,u=((time/period+hash(0,key+409)*.5+.5)%1+1)%1;
+  return smooth(.08,.30,u)*(1-smooth(.45,.76,u));
+}
 function rotation(out,at,yaw,pitch){
   const cy=Math.cos(yaw),sy=Math.sin(yaw),cp=Math.cos(pitch),sp=Math.sin(pitch);
   out[at]=cy*cp;out[at+1]=-cy*sp;out[at+2]=sy;out[at+3]=sp;out[at+4]=cp;out[at+5]=0;out[at+6]=-sy*cp;out[at+7]=sy*sp;out[at+8]=cy;
@@ -63,13 +68,18 @@ export function createAppendageMotion(meshes,fallbackSeed=4317){
       for(let j=0;j<count;j++)centerAt(arm,Math.round(j/segments*(rows-1)),base,j*3);
       posed[0]=base[0];posed[1]=base[1];posed[2]=base[2];let yaw=0,pitch=0;
       const activity=.65+.35*(noise(time*.23,key+71)*.5+.5),pace=isClaw?1.05:1.70;
+      const fold=isClaw?clawGesture(time,key):0;
       for(let j=0;j<segments;j++){
         const jointSeed=key+j*31;
         yaw+=(isClaw?CLAW_YAW:LEG_YAW)[j]*activity*(.68*noise(time*.57*pace-j*.13,jointSeed+1)+.32*noise(time*1.43*pace-j*.08,jointSeed+9));
         pitch+=(isClaw?CLAW_PITCH:LEG_PITCH)[j]*activity*(.7*noise(time*.86*pace-j*.11,jointSeed+19)+.3*noise(time*2.1*pace-j*.07,jointSeed+27));
+        // Occasional reach-and-fold gestures keep the shoulder quiet while
+        // the long forearm closes at its elbow and the wrist follows through.
+        // Both sides bend inward in their own time, maintaining rigid lengths.
+        if(isClaw){yaw+=g.side*[-.10,.83,-.32][j]*fold;pitch+=[.025,.07,-.03][j]*fold;}
         if(!isClaw&&j<2)yaw+=(j===0?.14:.08)*Math.sin(time*1.7+key*.13-j*.55);
-        yaw=Math.max(isClaw?-.48:-.75,Math.min(isClaw?.48:.75,yaw));
-        pitch=Math.max(isClaw?-.10:g.pair===0?-.28:-.42,Math.min(isClaw?.17:.42,pitch));
+        yaw=Math.max(isClaw?-.98:-.75,Math.min(isClaw?.98:.75,yaw));
+        pitch=Math.max(isClaw?-.20:g.pair===0?-.28:-.42,Math.min(isClaw?.28:.42,pitch));
         const at=j*9,from=j*3,to=from+3;rotation(matrices,at,yaw,pitch);
         const x=base[to]-base[from],y=base[to+1]-base[from+1],z=base[to+2]-base[from+2];
         posed[to]=posed[from]+matrices[at]*x+matrices[at+1]*y+matrices[at+2]*z;
@@ -81,7 +91,7 @@ export function createAppendageMotion(meshes,fallbackSeed=4317){
         const segment=g.vertexSegments[vertex];
         transformVertex(positions,normals,vertex*3,matrices,segment*9,g.origins[segment],g.targets[segment]);
       }
-      const pinch=Math.max(-.10,Math.min(.30,(isClaw?.18:.21)*noise(time*1.05*pace,key+301)+(isClaw?.085:.09)*noise(time*2.8*pace,key+311)));
+      const pinch=Math.max(-.10,Math.min(.40,(isClaw?.24:.21)*noise(time*1.05*pace,key+301)+(isClaw?.11:.09)*noise(time*2.8*pace,key+311)+fold*.12));
       for(const {mesh,finger} of g.fingers){
         // Both pincer fingers inherit the same articulated wrist, then open
         // independently around its new tip, keeping the attachment exact.

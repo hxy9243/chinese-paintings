@@ -1,13 +1,6 @@
 import p5 from 'p5';
 import * as THREE from 'three';
-
-const hash=n=>{const x=Math.sin(n*127.13+71.7)*43758.5453;return x-Math.floor(x);};
-function noise(x,y,seed){
-  const ix=Math.floor(x),iy=Math.floor(y),fx=x-ix,fy=y-iy,u=fx*fx*(3-2*fx),v=fy*fy*(3-2*fy);
-  const a=hash(ix*17.17+iy*41.63+seed*13.7),b=hash((ix+1)*17.17+iy*41.63+seed*13.7);
-  const c=hash(ix*17.17+(iy+1)*41.63+seed*13.7),d=hash((ix+1)*17.17+(iy+1)*41.63+seed*13.7);
-  return(a*(1-u)+b*u)*(1-v)+(c*(1-u)+d*u)*v;
-}
+import {hash,noise,fishBodyInk,paperFields} from './ink-fields.js';
 
 // A loaded brush is pulled along the carapace through a dilute wash. Work in
 // circular coordinates so its blooms join across the closed shell's UV seam.
@@ -49,7 +42,7 @@ export async function createInkAtlas(){
           const grain=noise(t*95,v*50,seed+19),bloom=noise(t*13,v*8,seed+41);
           let alpha,head;
           if(kind===0)alpha=.026+.30*Math.max(0,dorsal)**3*Math.max(0,(t-.48)/.52);
-          else if(kind===1)alpha=(.49+.40*cloud+.12*dorsal)*(.91+.09*Math.sin(t*11+seed));
+          else if(kind===1)alpha=fishBodyInk(t,angle,seed);
           else if(kind===2)alpha=(.24+.30*cloud)*(.80+.20*Math.sin(t*Math.PI));
           else if(kind===3){
             head=carapaceInk(t,angle,seed);alpha=head.deposit;
@@ -69,9 +62,8 @@ export async function createInkAtlas(){
       atlas.minFilter=THREE.LinearFilter;atlas.magFilter=THREE.LinearFilter;atlas.generateMipmaps=false;
       const paperImage=p.createImage(512,512);paperImage.loadPixels();
       for(let i=0;i<512*512;i++){
-        const fiber=hash(Math.floor(i%512/3)+Math.floor(i/512)*149),grain=hash(i*3.7);
-        const value=Math.round(128+(grain-.5)*92+(fiber-.5)*30);
-        paperImage.pixels.set([value,value,value,255],i*4);
+        const field=paperFields((i%512)/512,Math.floor(i/512)/512);
+        paperImage.pixels.set([field.fibre,field.cloud,field.foxing].map(v=>Math.round(v*255)).concat(255),i*4);
       }
       paperImage.updatePixels();
       const paper=new THREE.CanvasTexture(paperImage.canvas);paper.colorSpace=THREE.NoColorSpace;

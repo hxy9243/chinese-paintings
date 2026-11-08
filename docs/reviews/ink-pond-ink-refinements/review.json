@@ -1,0 +1,81 @@
+{
+  "pass": true,
+  "still": "ink-refinements-8cd53f52.png",
+  "paperStable": true,
+  "freshLoadRepeatable": true,
+  "backwardSeekRepeatable": true,
+  "angles": [
+    {
+      "elevation": 45,
+      "azimuth": -45
+    },
+    {
+      "elevation": 20,
+      "azimuth": -35
+    },
+    {
+      "elevation": 65,
+      "azimuth": 25
+    }
+  ],
+  "renderer": {
+    "renderer": "Batched GPU wet ink on articulated 3D surfaces",
+    "p5PigmentAtlas": true,
+    "readbacksPerFrame": 0,
+    "drawCalls": 3,
+    "triangles": 47410,
+    "vertices": 37748,
+    "renderScale": 1,
+    "gpuMemory": {
+      "geometries": 3,
+      "textures": 2
+    },
+    "cpuDrawMs": 4.600000023841858,
+    "depthOwnership": true,
+    "animalOcclusion": "Persistent disjoint water-depth intervals; true self-occlusion within each swimmer",
+    "translucentDiffusion": true,
+    "diffusion": "p5 wet pigment with feathered coverage",
+    "carapaceInk": "Irregular loaded brush strokes, dilute wash, backruns and surface-seeded wet rim",
+    "individualPigmentTints": true,
+    "waterRipples": {
+      "enabled": true,
+      "activeRings": 2,
+      "sharedPerspective": true,
+      "throughBodies": true,
+      "refractionCssPixels": 0,
+      "method": "gpu-overlay"
+    },
+    "stableDithering": true,
+    "formOnly": false
+  },
+  "film": {
+    "file": "claw-movements.mp4",
+    "duration": 8,
+    "fps": 30,
+    "frames": 240,
+    "sha256": "a5c7359ae53938b9dd34f7985a27d789e0914ab29378b2aee0f014595108c94d",
+    "offlineSample": true
+  },
+  "sources": {
+    "artworks/ink-pond/src/appendage-motion.js": "d86cccd5042604ef61658fc4e1cfc29d2fd6bbb4d9c66370eab17ba0be4e71f5",
+    "artworks/ink-pond/src/entries.js": "22a5b4eb258c6d058a169804ad88bad3b1ab474d2d7f462448f5467ff17f9b0a",
+    "artworks/ink-pond/src/fish-rhythm.js": "8a6d3d8fcaad096213e0bb1869f5beb65a9454be4d7c770669fa1b2d02d2ed8a",
+    "artworks/ink-pond/src/gpu-ink.js": "4ac14943daa583ac77d29f269b80e31d0787d5b87b622c89703611b19e258842",
+    "artworks/ink-pond/src/gpu-ripples.js": "4858c6d09af09876db3ca1de1647178d3fb2ba77000d52607f8b426c07fee5e9",
+    "artworks/ink-pond/src/ink-atlas.js": "8ca42addf273fed2be32f2e460b84ca018ca02a0ae4ce52304353b76648e22d2",
+    "artworks/ink-pond/src/ink-fields.js": "37d5d25d3bce8d745b8b09b48359ed306e38baf52d8d6eb4308fd091c2e4315a",
+    "artworks/ink-pond/src/main.js": "5ba90ca642ee27e72957505bcdf8ead5264dea14743ff218590f6fb25c74d1a9",
+    "artworks/ink-pond/src/pond.js": "277fe07d69c01d56f95afba38bb85cb78d6fce4372bf8224a396754dc31599b7",
+    "artworks/ink-pond/src/pose-cache.js": "048bf8e0e39b5740ee0c8167d7413eaa4266c64e19493f5cfbaf580f8648961f",
+    "artworks/ink-pond/src/rain.js": "a0885bb4e6dd2dba3ee57ba34539a7cc7c79f83890a04b3d042575ee3d52c068",
+    "artworks/ink-pond/src/ripples.js": "3d5422a777eb0bdc8f50d9b337dbc517f69b6f32eb3b7b26294b4d51d4bca61a",
+    "artworks/ink-pond/src/shrimp-individuals.js": "3a2f0d06e1663d01543505e95a7bfed5f9896790a9da9881fc4780c965627efd",
+    "artworks/ink-pond/src/style.css": "a313228fd16de95777b504d026008703396da8b461bd5d3fd454a4288c3326dc",
+    "artworks/ink-pond/src/swimming.js": "2081e32fd28f540b4d7789b2f62d8a4ba3d11eedc352f6068c30dfc6278edbf9",
+    "artworks/ink-pond/src/water-space.js": "65ed35f5042a580866a6304a32ebcf791e21d017927cb3ae44ae124bce43b58e",
+    "artworks/ink-pond/src/models/fish.js": "225cb63743057d2a242c19e1c2419daa6ba5037f5e56c5e303afac028838cc3c",
+    "artworks/ink-pond/src/models/shrimp.js": "53b4a79ca130905507a6c2b4fd55fd522a07b72678aa08b1f64a51b6634290a8",
+    "artworks/ink-pond/src/models/volume.js": "5183a6eaf32415bf50b611c2a823f4c96331130ff099b36a35494e43a3ce97c9"
+  },
+  "errors": []
+}

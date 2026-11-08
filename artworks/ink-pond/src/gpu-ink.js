@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import {createInkAtlas} from './ink-atlas.js';
 import {createGpuRipples} from './gpu-ripples.js';
+import {PAPER_GLSL} from './ink-fields.js';
 
 function kindOf(mesh){
   const f=mesh.userData.inkForm;
@@ -85,6 +86,7 @@ export async function createGpuInk(container,renderer,camera,pond,sharedPaint=nu
   const fragmentShader=`uniform sampler2D pigment;uniform sampler2D paper;uniform vec3 paperTone;uniform float wash;uniform float formOnly;uniform float ownerMode;uniform float hideFine;
     uniform vec2 resolution;uniform vec2 cssResolution;
     varying vec3 inkTone;varying vec2 brushUv;varying vec4 brush;varying vec3 facing;varying float animal;varying float coverage;
+    ${PAPER_GLSL}
     void main(){vec3 n=normalize(facing);bool filament=brush.x>5.5&&brush.x<6.5;
       if(ownerMode>.5){gl_FragColor=vec4((brush.x+1.)/255.,(animal+1.)/255.,0.,1.);return;}
       if(formOnly>.5){float lit=.40+.60*abs(dot(n,normalize(vec3(-.35,.6,1.))));gl_FragColor=vec4(vec3(.46,.51,.47)*lit,1.);return;}
@@ -102,8 +104,8 @@ export async function createGpuInk(container,renderer,camera,pond,sharedPaint=nu
         alpha=clamp(deposit*brush.z*(.85+wash*.95)*(.025+.975*rim)*ends,0.,.94);
       }
       if(filament){alpha*=coverage*(1.-smoothstep(.32,.51,abs(brushUv.y-.5)));if(hideFine>.5)alpha=0.;}
-      vec2 paperUv=vec2(gl_FragCoord.x,resolution.y-gl_FragCoord.y)/resolution*cssResolution/512.;
-      vec3 sheet=paperTone+(texture2D(paper,paperUv).r-.5)*.024;
+      vec2 paperUv=vec2(gl_FragCoord.x,resolution.y-gl_FragCoord.y)/resolution;
+      vec3 sheet=paperColor(paperUv);
       gl_FragColor=vec4(mix(sheet,inkTone,alpha),1.);
     }`;
   const material=new THREE.ShaderMaterial({uniforms,vertexShader,fragmentShader,side:THREE.DoubleSide,depthWrite:true,depthTest:true,blending:THREE.NoBlending,toneMapped:false});
@@ -115,7 +117,8 @@ export async function createGpuInk(container,renderer,camera,pond,sharedPaint=nu
     uniforms:{paper:uniforms.paper,paperTone:uniforms.paperTone,cssResolution:uniforms.cssResolution,ownerMode:uniforms.ownerMode,formOnly:uniforms.formOnly},
     vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,1.,1.);}',
     fragmentShader:`uniform sampler2D paper;uniform vec3 paperTone;uniform vec2 cssResolution;uniform float ownerMode;uniform float formOnly;varying vec2 vUv;
-        void main(){vec3 color=paperTone+(texture2D(paper,vec2(vUv.x,1.-vUv.y)*cssResolution/512.).r-.5)*.024;
+        ${PAPER_GLSL}
+        void main(){vec3 color=paperColor(vec2(vUv.x,1.-vUv.y));
         gl_FragColor=vec4(ownerMode>.5?vec3(0.):color,1.);}`});
   const paperMesh=new THREE.Mesh(new THREE.PlaneGeometry(2,2),paperMaterial);paperMesh.frustumCulled=false;paperMesh.renderOrder=-1;scene.add(paperMesh);
   const canvas=renderer.domElement;canvas.tabIndex=0;

@@ -15,7 +15,7 @@
     "thousand-miles:film": "node artworks/thousand-miles/scripts/capture.cjs motion",
     "thousand-miles:check": "node artworks/thousand-miles/scripts/check.cjs",
     "setup": "npm ci",
-    "test:pond": "node artworks/ink-pond/scripts/check-population.mjs && node artworks/ink-pond/scripts/check-fish-rhythm.mjs",
+    "test:pond": "node artworks/ink-pond/scripts/check-population.mjs && node artworks/ink-pond/scripts/check-fish-rhythm.mjs && node artworks/ink-pond/scripts/check-ink-refinements.mjs",
     "pond:dev": "vite artworks/ink-pond --host 127.0.0.1 --port 5189",
     "pond:build": "vite build artworks/ink-pond"
   },

@@ -13,74 +13,75 @@
         "fish": 6,
         "shrimp": 6
       },
-      "synchronousMs": 32.80000001192093
+      "synchronousMs": 66.80000007152557
     },
     {
       "value": {
         "fish": 5,
         "shrimp": 5
       },
-      "synchronousMs": 15.800000011920929
+      "synchronousMs": 15.100000023841858
     },
     {
       "value": {
         "fish": 7,
         "shrimp": 8
       },
-      "synchronousMs": 54.799999952316284
+      "synchronousMs": 67.09999990463257
     },
     {
       "value": {
         "fish": 8,
         "shrimp": 12
       },
-      "synchronousMs": 33.30000001192093
+      "synchronousMs": 38.89999997615814
     },
     {
       "value": {
         "fish": 0,
         "shrimp": 0
       },
-      "synchronousMs": 8.399999976158142
+      "synchronousMs": 11.100000023841858
     },
     {
       "value": {
         "fish": 1,
         "shrimp": 0
       },
-      "synchronousMs": 10.100000023841858
+      "synchronousMs": 15.900000095367432
     },
     {
       "value": {
         "fish": 0,
         "shrimp": 1
       },
-      "synchronousMs": 7.300000011920929
+      "synchronousMs": 11.199999928474426
     },
     {
       "value": {
         "fish": 5,
         "shrimp": 5
       },
-      "synchronousMs": 28.69999998807907
+      "synchronousMs": 22.700000047683716
     },
     {
       "value": {
         "fish": 6,
         "shrimp": 6
       },
-      "synchronousMs": 17.30000001192093
+      "synchronousMs": 26.200000047683716
     }
   ],
   "film": null,
-  "still": "swim-in-e40ac809.png",
+  "still": "swim-in-a782e928.png",
   "sources": {
-    "artworks/ink-pond/src/appendage-motion.js": "b2c79324eacec2ade9c9dd7f86fe29d50c7ea4decf9dae6c391cf9e3371a79ef",
+    "artworks/ink-pond/src/appendage-motion.js": "d86cccd5042604ef61658fc4e1cfc29d2fd6bbb4d9c66370eab17ba0be4e71f5",
     "artworks/ink-pond/src/entries.js": "22a5b4eb258c6d058a169804ad88bad3b1ab474d2d7f462448f5467ff17f9b0a",
     "artworks/ink-pond/src/fish-rhythm.js": "8a6d3d8fcaad096213e0bb1869f5beb65a9454be4d7c770669fa1b2d02d2ed8a",
-    "artworks/ink-pond/src/gpu-ink.js": "0a156346cc6b97ba1f5fa563d89294ac32df9038dc2d7b16cdf980695f9bf4c1",
+    "artworks/ink-pond/src/gpu-ink.js": "4ac14943daa583ac77d29f269b80e31d0787d5b87b622c89703611b19e258842",
     "artworks/ink-pond/src/gpu-ripples.js": "4858c6d09af09876db3ca1de1647178d3fb2ba77000d52607f8b426c07fee5e9",
-    "artworks/ink-pond/src/ink-atlas.js": "bd5fc3bcd949e302ae34a46d0ee838b4499072438f0470a3d9c3834fd4ad9897",
+    "artworks/ink-pond/src/ink-atlas.js": "8ca42addf273fed2be32f2e460b84ca018ca02a0ae4ce52304353b76648e22d2",
+    "artworks/ink-pond/src/ink-fields.js": "37d5d25d3bce8d745b8b09b48359ed306e38baf52d8d6eb4308fd091c2e4315a",
     "artworks/ink-pond/src/main.js": "5ba90ca642ee27e72957505bcdf8ead5264dea14743ff218590f6fb25c74d1a9",
     "artworks/ink-pond/src/pond.js": "277fe07d69c01d56f95afba38bb85cb78d6fce4372bf8224a396754dc31599b7",
     "artworks/ink-pond/src/pose-cache.js": "048bf8e0e39b5740ee0c8167d7413eaa4266c64e19493f5cfbaf580f8648961f",

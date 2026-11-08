@@ -2,22 +2,23 @@
   "sources": {
     "apps/gallery/index.html": "2159b97de54ac314f901ce6aac6a9e97a2c9cee81b4d794fa849cafbffb5d690",
     "apps/gallery/gallery.css": "80677e1eb48eed97ac767a42f0bdd2ac67e06abe2a10e992b565150efc330454",
+    "apps/gallery/ink-pond-preview.png": "523e29b4f1e10655d348767ab625a08d62ddf4d425a82aa30677284a1d980a3c",
     "artworks/ink-pond/src/style.css": "a313228fd16de95777b504d026008703396da8b461bd5d3fd454a4288c3326dc",
     "artworks/ink-pond/src/main.js": "5ba90ca642ee27e72957505bcdf8ead5264dea14743ff218590f6fb25c74d1a9",
     "artworks/ink-pond/src/pond.js": "277fe07d69c01d56f95afba38bb85cb78d6fce4372bf8224a396754dc31599b7",
     "artworks/ink-pond/src/entries.js": "22a5b4eb258c6d058a169804ad88bad3b1ab474d2d7f462448f5467ff17f9b0a",
-    "artworks/ink-pond/src/gpu-ink.js": "0a156346cc6b97ba1f5fa563d89294ac32df9038dc2d7b16cdf980695f9bf4c1",
+    "artworks/ink-pond/src/gpu-ink.js": "4ac14943daa583ac77d29f269b80e31d0787d5b87b622c89703611b19e258842",
     "scripts/build.mjs": "65eee7a24a16a14f5893732996692bbd490448ebcc658517498b6dbb38c07c9d",
     "scripts/dev.mjs": "315ed0b6297799c5735cd6babfa9ec4a10db5ce2b19a26bdd2e18949790d5ad8"
   },
   "validationScripts": {
     "scripts/review-pond-population.mjs": "771500863996287b3c6892e90672e4c2fad38838757148b92d22dbbc06dc9d6c",
-    "scripts/check-gallery-build.mjs": "ee959a1597e6861bd7f6a0d5047045078e562aa974e910d6e940184a87d59bca",
+    "scripts/check-gallery-build.mjs": "badc1282de03607a04529aa3da38d43a22291bd843dc644eee3c5484dfe1cac5",
     "artworks/ink-pond/scripts/check-population.mjs": "92a6bb5d8533b331e0c0233044d1464e93ff2db15c243123f7442b6fcb6e4518"
   },
   "still": {
-    "file": "interactive-pond-4ae2742b.png",
-    "sha256": "4ae2742b908b1f301efb5ff8b756bcdc0d7a44e5034a171657ba4838b0e10804",
+    "file": "interactive-pond-39ec8cc2.png",
+    "sha256": "39ec8cc2534750d8079be68489e332bf1e2ea3c121e227b03f817b1d8458e2af",
     "source": "Production build at 3.5 seconds, default population and camera"
   },
   "productionBuild": {
