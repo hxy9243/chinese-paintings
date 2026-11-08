@@ -15,7 +15,7 @@ try{
   await page.goto(process.env.REVIEW_URL??'http://127.0.0.1:5180/ink-pond/');
   await page.waitForFunction(()=>window.pondPainting?.ready,{},{timeout:60000});
   await page.evaluate(()=>window.pondPainting.setRenderScale(.8));
-  const canvas=page.locator('canvas'),samples=[];
+  const canvas=page.locator('#painting canvas'),samples=[];
   for(const time of [12,18,22,28]){
     await page.evaluate(t=>window.pondPainting.renderFrame(t),time);
     samples.push(await page.evaluate(()=>({time:window.pondPainting.describe().time,fish:window.pondPainting.describe().animals.filter(a=>a.species==='fish').map(a=>({id:a.id,behavior:a.behavior,effort:a.effort,speed:Math.hypot(...a.velocity)}))})));

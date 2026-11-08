@@ -4,6 +4,7 @@ import {createGpuInk} from './gpu-ink.js';
 import {createInkAtlas} from './ink-atlas.js';
 import {createPond,DURATION,POPULATION_LIMITS} from './pond.js';
 import {createWaterCamera,resizeWaterCamera,describeWaterCamera} from './water-space.js';
+import {createInscription} from './inscription.js';
 
 const $=id=>document.getElementById(id),container=$('painting'),play=$('play');
 const timeline=$('time'),wash=$('wash'),rain=$('rain'),paper=$('paper'),inscription=$('inscription'),status=$('status');
@@ -21,7 +22,7 @@ function controls(){
 }
 function renderFrame(t=time){
   time=Math.max(0,t);const start=performance.now();
-  if(view){view.pond.update(time);view.ink.draw(Number(wash.value));}
+  if(view){view.pond.update(time);view.ink.draw(Number(wash.value));view.writing.render(time);}
   cpuTimes.push(performance.now()-start);if(cpuTimes.length>180)cpuTimes.shift();cameraDirty=false;controls();
 }
 function resize(){
@@ -75,7 +76,7 @@ reducedMotion.addEventListener('change',e=>{if(e.matches)setPlaying(false);});
 window.addEventListener('resize',resize);document.addEventListener('visibilitychange',()=>{last=performance.now();previousFrame=0;});
 
 async function init(){
-  await inscription.decode();
+  const writing=await createInscription(inscription);
   const renderer=new THREE.WebGLRenderer({antialias:false,alpha:false,preserveDrawingBuffer:false,powerPreference:'high-performance'});
   renderer.setPixelRatio(1);renderer.setClearColor(0xf3eddf,0);renderer.outputColorSpace=THREE.LinearSRGBColorSpace;
   const camera=createWaterCamera(18/11),pond=createPond(),paint=await createInkAtlas();
@@ -84,7 +85,7 @@ async function init(){
   orbit.minPolarAngle=THREE.MathUtils.degToRad(10);orbit.maxPolarAngle=THREE.MathUtils.degToRad(70);orbit.minZoom=.6;orbit.maxZoom=2.4;
   orbit.mouseButtons={LEFT:THREE.MOUSE.ROTATE,MIDDLE:THREE.MOUSE.DOLLY,RIGHT:null};orbit.touches={ONE:THREE.TOUCH.ROTATE,TWO:THREE.TOUCH.DOLLY_ROTATE};
   orbit.addEventListener('change',()=>{cameraDirty=true;});
-  view={renderer,camera,pond,ink,orbit,paint};rain.value=String(pond.describe().rain.intensity);resize();
+  view={renderer,camera,pond,ink,orbit,paint,writing};rain.value=String(pond.describe().rain.intensity);resize();
   let drag=null,pointers=new Set();
   ink.canvas.addEventListener('pointerdown',e=>{
     pointers.add(e.pointerId);if(pointers.size>1){if(drag)drag.moved=true;return;}
@@ -113,7 +114,7 @@ async function init(){
     setRain(value){view.pond.setRain(value);rain.value=String(view.pond.describe().rain.intensity);$('rain-value').value=`${Math.round(Number(rain.value)*100)}%`;renderFrame();},
     setRenderScale(value){if(value==null)autoQuality=true;else{autoQuality=false;view.ink.setRenderScale(value);}renderFrame();},
     stir(position){view.pond.stir(position);renderFrame();},diagnoseOcclusion(){return view.ink.diagnoseOcclusion(Number(wash.value));},diagnoseAnimalLayers(){return view.ink.diagnoseAnimalLayers(Number(wash.value));},diagnoseRipples(){return view.ink.diagnoseRipples(Number(wash.value));},
-    describe(){return{...view.pond.describe(),playing,speed,camera:{...describeWaterCamera(camera),zoom:camera.zoom,interactive:true},renderer:view.ink.describe(),performance:performanceStats()};}};
+    describe(){return{...view.pond.describe(),playing,speed,writing:view.writing.describe(),camera:{...describeWaterCamera(camera),zoom:camera.zoom,interactive:true},renderer:view.ink.describe(),performance:performanceStats()};}};
   status.textContent='Drag to explore the pond';
   function loop(now){
     const elapsed=Math.min(.10,(now-last)/1000);last=now;orbit.update();

@@ -7,8 +7,8 @@
     "趣"
   ],
   "style": "shutifang-liugongquan-kai",
-  "renderer": "calligraphy StaticFontScene",
-  "mode": "finished calligraphy still, no writing animation",
+  "renderer": "calligraphy FontLayerScene",
+  "mode": "ordered font-preserving stroke layers and brush progress fields",
   "engineRepository": "https://github.com/hxy9243/calligraphy",
   "engineCommit": "ea6d497bc9534bb7f3e48f067d919c55731edbab",
   "fontName": "ShuTiFang Liu Gongquan Kai",
@@ -26,7 +26,12 @@
       "margin": 8,
       "gap": 0.18
     },
-    "timing": {},
+    "timing": {
+      "stroke_seconds": 0.18,
+      "character_gap": 0.22,
+      "intro": 0.5,
+      "outro": 1
+    },
     "punctuation": "gap",
     "appearance": {
       "paper_color": [
@@ -56,5 +61,14 @@
     1315
   ],
   "sha256": "a3d34cff31d6b54df5ae2a85b3aad601c14aecab7ada4b7571f2b7cd09e6da26",
-  "command": ".venv/bin/python /home/kevin/Workspace/chinese-paintings/scripts/generate-pond-calligraphy.py --calligraphy /home/kevin/Workspace/calligraphy"
+  "command": ".venv/bin/python /home/kevin/Workspace/chinese-paintings/scripts/generate-pond-calligraphy.py --calligraphy /home/kevin/Workspace/calligraphy",
+  "writing": {
+    "strokes": 52,
+    "duration": 10.52,
+    "atlasSize": [
+      1024,
+      539
+    ],
+    "atlasSha256": "bae041a550f979128ac4f63ed402726f9b3fe26cf163580e4ee59a26593b8500"
+  }
 }

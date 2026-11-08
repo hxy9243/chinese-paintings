@@ -14,17 +14,17 @@ export function fishBodyInk(t,angle,seed){
   const wet=noise(t*14+c,s*4,seed+41);
   const pull=t*(7.3+hash(seed+67)*2.1)+.33*noise(t*3,1,seed+69);
   const pressure=.5+.5*Math.cos(pull*Math.PI*2+seed);
-  const ridge=.28*(noise(t*7,1,seed+71)-.5)+.045*Math.sin(t*31+seed);
+  const ridge=.14*(noise(t*4,1,seed+71)-.5)+.020*Math.sin(t*19+seed);
   const distance=Math.atan2(Math.sin(angle-ridge),Math.cos(angle-ridge));
   const fibre=noise(t*4.5,c*11+s*31,seed+83),edge=noise(t*37+c*4,s*17,seed+89);
-  const width=.235+.17*pressure+.075*noise(t*7,2,seed+79);
-  const reach=width*(.82+.32*edge+.18*fibre);
+  const width=.36+.06*pressure+.045*noise(t*5,2,seed+79);
+  const reach=width*(.96+.09*edge+.045*fibre);
   const back=Math.exp(-Math.pow(Math.abs(distance)/reach,3.4));
   // Long, unequal channels left by separate hairs. Dry passages are sparse;
   // most of the ridge still carries wet ink, with softer deposits beside it.
   const split=Math.max(0,(.41-fibre)/.41)*(.35+.65*noise(t*9,3,seed+97));
-  const backrun=Math.max(0,wet-.64)*.34;
-  const load=(.86+.17*cloud-backrun)*(.91+.09*pressure)*(1-.68*split);
+  const backrun=Math.max(0,wet-.64)*.22;
+  const load=(.86+.17*cloud-backrun)*(.96+.04*pressure)*(1-.45*split);
   const fringe=Math.exp(-Math.pow((Math.abs(distance)-reach*1.06)/(.10+.055*wet),2))*(.035+.075*wet);
   const pooled=Math.exp(-Math.pow((Math.abs(distance)-reach*.79)/.075,2))*.065*pressure;
   const wash=.105+.09*cloud+.035*(c*.5+.5);

@@ -3,6 +3,140 @@
   "calligraphy": {
     "text": "魚蝦清趣",
     "style": "shutifang-liugongquan-kai",
+    "position": {
+      "left": 0.03587378070278529,
+      "center": 0.49998799490984175
+    },
+    "writingSamples": [
+      {
+        "time": 0,
+        "sum": 0,
+        "quarters": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "text": "魚蝦清趣",
+        "strokes": 52,
+        "completed": 0,
+        "duration": 10.52,
+        "position": "left, vertically centered",
+        "method": "Ordered font-preserving stroke alpha and progress fields"
+      },
+      {
+        "time": 0.65,
+        "sum": 470087,
+        "quarters": [
+          470087,
+          0,
+          0,
+          0
+        ],
+        "text": "魚蝦清趣",
+        "strokes": 52,
+        "completed": 0,
+        "duration": 10.52,
+        "position": "left, vertically centered",
+        "method": "Ordered font-preserving stroke alpha and progress fields"
+      },
+      {
+        "time": 1.5,
+        "sum": 2403767,
+        "quarters": [
+          2403767,
+          0,
+          0,
+          0
+        ],
+        "text": "魚蝦清趣",
+        "strokes": 52,
+        "completed": 5,
+        "duration": 10.52,
+        "position": "left, vertically centered",
+        "method": "Ordered font-preserving stroke alpha and progress fields"
+      },
+      {
+        "time": 3.25,
+        "sum": 4469637,
+        "quarters": [
+          3607597,
+          862040,
+          0,
+          0
+        ],
+        "text": "魚蝦清趣",
+        "strokes": 52,
+        "completed": 14,
+        "duration": 10.52,
+        "position": "left, vertically centered",
+        "method": "Ordered font-preserving stroke alpha and progress fields"
+      },
+      {
+        "time": 6,
+        "sum": 7729198,
+        "quarters": [
+          3607597,
+          3872368,
+          249233,
+          0
+        ],
+        "text": "魚蝦清趣",
+        "strokes": 52,
+        "completed": 28,
+        "duration": 10.52,
+        "position": "left, vertically centered",
+        "method": "Ordered font-preserving stroke alpha and progress fields"
+      },
+      {
+        "time": 8,
+        "sum": 10420535,
+        "quarters": [
+          3607597,
+          3872368,
+          2582068,
+          358502
+        ],
+        "text": "魚蝦清趣",
+        "strokes": 52,
+        "completed": 38,
+        "duration": 10.52,
+        "position": "left, vertically centered",
+        "method": "Ordered font-preserving stroke alpha and progress fields"
+      },
+      {
+        "time": 10.52,
+        "sum": 14104921,
+        "quarters": [
+          3608463,
+          3873604,
+          2582453,
+          4040401
+        ],
+        "text": "魚蝦清趣",
+        "strokes": 52,
+        "completed": 52,
+        "duration": 10.52,
+        "position": "left, vertically centered",
+        "method": "Ordered font-preserving stroke alpha and progress fields"
+      },
+      {
+        "time": 12,
+        "sum": 14104921,
+        "quarters": [
+          3608463,
+          3873604,
+          2582453,
+          4040401
+        ],
+        "text": "魚蝦清趣",
+        "strokes": 52,
+        "completed": 52,
+        "duration": 10.52,
+        "position": "left, vertically centered",
+        "method": "Ordered font-preserving stroke alpha and progress fields"
+      }
+    ],
     "noStamp": true,
     "onlyPaintingInscription": true,
     "loaded": true
@@ -15,7 +149,7 @@
     ],
     "deviations": {
       "smooth": 0,
-      "heavy": 5.959138487753362
+      "heavy": 6.094869662812558
     },
     "sharedWithBodies": true,
     "stableAcrossTime": true,
@@ -57,7 +191,7 @@
       "geometries": 3,
       "textures": 2
     },
-    "cpuDrawMs": 6.600000023841858,
+    "cpuDrawMs": 6.100000023841858,
     "depthOwnership": true,
     "animalOcclusion": "Persistent disjoint water-depth intervals; true self-occlusion within each swimmer",
     "translucentDiffusion": true,
@@ -83,22 +217,25 @@
     "artworks/ink-pond/src/gpu-ink.js": "30d86d5e1f0dc18529854259eeed5f8d14d0555da84363d655b4ce4b291875c5",
     "artworks/ink-pond/src/gpu-ripples.js": "4858c6d09af09876db3ca1de1647178d3fb2ba77000d52607f8b426c07fee5e9",
     "artworks/ink-pond/src/ink-atlas.js": "506b16a995f91980327d3e00ac12c3ed1933f3ebe0ab4ae5995b093b89fa1088",
-    "artworks/ink-pond/src/ink-fields.js": "85a29ec07c025e41692c10dece596bf3cf3254fbca31113df7fb615de657212e",
-    "artworks/ink-pond/src/main.js": "aa292a59240e4336cb9455c7655a78ff1abfe36497b55a9a65c7d5fbe0286d1a",
+    "artworks/ink-pond/src/ink-fields.js": "9b4f268054054e82d41dbe8b575e13605372b27484d4e97ba97d1f00f3694f64",
+    "artworks/ink-pond/src/inscription.js": "17b1a529c3217d6163da83a27ea5998083502e609f0e08bb79ebf2c8bc2272c7",
+    "artworks/ink-pond/src/main.js": "7b5bd16b38221aa9511e9b00a673419655fd0cf3536c5423e51d40dcfd0ec42f",
     "artworks/ink-pond/src/pond.js": "bd3906bdc322a59f50f48b978a287f854324dbac4e43a45b724dd87e54a95bf2",
     "artworks/ink-pond/src/pose-cache.js": "048bf8e0e39b5740ee0c8167d7413eaa4266c64e19493f5cfbaf580f8648961f",
     "artworks/ink-pond/src/rain.js": "a0885bb4e6dd2dba3ee57ba34539a7cc7c79f83890a04b3d042575ee3d52c068",
     "artworks/ink-pond/src/ripples.js": "3d5422a777eb0bdc8f50d9b337dbc517f69b6f32eb3b7b26294b4d51d4bca61a",
     "artworks/ink-pond/src/shrimp-individuals.js": "3a2f0d06e1663d01543505e95a7bfed5f9896790a9da9881fc4780c965627efd",
-    "artworks/ink-pond/src/style.css": "dc58e65e4896028b2e65cbd108b6afdefac985d12bad01f466fb560f2fa72925",
+    "artworks/ink-pond/src/style.css": "2880725a18528f5f43cbd89cfb9e0303c9a5e04e6dc216bdaf77242a9969aa94",
     "artworks/ink-pond/src/swimming.js": "2081e32fd28f540b4d7789b2f62d8a4ba3d11eedc352f6068c30dfc6278edbf9",
     "artworks/ink-pond/src/water-space.js": "65ed35f5042a580866a6304a32ebcf791e21d017927cb3ae44ae124bce43b58e",
     "artworks/ink-pond/src/models/fish.js": "225cb63743057d2a242c19e1c2419daa6ba5037f5e56c5e303afac028838cc3c",
     "artworks/ink-pond/src/models/shrimp.js": "53b4a79ca130905507a6c2b4fd55fd522a07b72678aa08b1f64a51b6634290a8",
     "artworks/ink-pond/src/models/volume.js": "5183a6eaf32415bf50b611c2a823f4c96331130ff099b36a35494e43a3ce97c9",
-    "artworks/ink-pond/src/assets/yu-xia-qing-qu-liu.json": "088f6a59cd3b6316867045d731aa5228fb2012a7ce1f7edec30eb208fd1e738b",
+    "artworks/ink-pond/src/assets/yu-xia-qing-qu-liu-strokes.json": "876a0538dd24e1851e719ef224159449e273ab1332967c6e65cc9d068135f73f",
+    "artworks/ink-pond/src/assets/yu-xia-qing-qu-liu-strokes.png": "bae041a550f979128ac4f63ed402726f9b3fe26cf163580e4ee59a26593b8500",
+    "artworks/ink-pond/src/assets/yu-xia-qing-qu-liu.json": "9cbe50d7a006886ed0ca2904aea4710b5acc1fb20f201d3bb836d33b736f2866",
     "artworks/ink-pond/src/assets/yu-xia-qing-qu-liu.png": "a3d34cff31d6b54df5ae2a85b3aad601c14aecab7ada4b7571f2b7cd09e6da26",
-    "artworks/ink-pond/index.html": "ca4d24710a167ee3e5151987f86487a4acd35ab1ff5bbd91884bb699bad73b1c"
+    "artworks/ink-pond/index.html": "1e62267d6613d3bda96b865a943736014451184360b059d3fc44ddd3d500d9d4"
   },
   "errors": []
 }

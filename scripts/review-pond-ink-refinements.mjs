@@ -22,7 +22,7 @@ try{
   const page=await browser.newPage({viewport:{width:1280,height:940},reducedMotion:'reduce'}),errors=[];
   page.on('pageerror',e=>errors.push(String(e)));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
   const load=async()=>{await page.goto(`http://127.0.0.1:${server.address().port}/ink-pond/`);await page.waitForFunction(()=>window.pondPainting?.ready,{},{timeout:60000});await page.evaluate(t=>{window.pondPainting.setRenderScale(1);window.pondPainting.renderFrame(t);},stillTime);};
-  await load();const canvas=page.locator('canvas'),opening=await canvas.screenshot();
+  await load();const canvas=page.locator('#painting canvas'),opening=await canvas.screenshot();
   const context=await page.screenshot({fullPage:true}),still=`${brushReview?'brush':densityReview?'density':'ink-refinements'}-${sha(context).slice(0,8)}.png`;fs.writeFileSync(path.join(out,still),context);
   if(brushReview)await page.screenshot({path:path.join(out,'fish-detail.png'),clip:{x:0,y:140,width:1280,height:650}});
   await page.evaluate(()=>window.pondPainting.setView({elevationDegrees:20,azimuthDegrees:-35,zoom:1}));await page.screenshot({path:path.join(out,'low-angle.png'),fullPage:true});

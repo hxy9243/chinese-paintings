@@ -12,7 +12,7 @@ try{
  const page=await browser.newPage({viewport:{width:1192,height:900},reducedMotion:'reduce'}),errors=[];page.on('pageerror',e=>errors.push(String(e)));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
  await page.goto(process.env.REVIEW_URL??'http://127.0.0.1:5180/ink-pond/');await page.waitForFunction(()=>window.pondPainting?.ready,{},{timeout:60000});
  await page.evaluate(()=>{window.pondPainting.setRenderScale(.8);window.pondPainting.renderFrame(90);window.pondPainting.setRain(.8);window.pondPainting.setCurrent(12);window.pondPainting.stir([20,40,0]);});
- const state=()=>page.evaluate(()=>window.pondPainting.describe()),canvas=page.locator('canvas'),before=await state(),beforeImage=await canvas.screenshot();
+ const state=()=>page.evaluate(()=>window.pondPainting.describe()),canvas=page.locator('#painting canvas'),before=await state(),beforeImage=await canvas.screenshot();
  const mutations=[];
  const change=async value=>{const ms=await page.evaluate(value=>{const start=performance.now();window.pondPainting.setPopulation(value);return performance.now()-start;},value);assert.ok(ms<150,`Population edit blocked the page for ${ms}ms`);mutations.push({value,synchronousMs:ms});return state();};
  const added=await change({fish:6,shrimp:6});assert.equal(added.time,before.time);assert.equal(added.current,before.current);for(const key of ['azimuthDegrees','elevationDegrees','zoom'])assert.ok(Math.abs(added.camera[key]-before.camera[key])<1e-7);assert.deepEqual(added.rain,before.rain);assert.deepEqual(added.ripples,before.ripples);assert.equal(added.simulation.generatedSteps,before.simulation.generatedSteps);

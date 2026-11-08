@@ -60,7 +60,7 @@ try{
  // Real touch input through Chromium, including two-finger pinch.
  const mobile=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true,reducedMotion:'reduce'});
  mobile.on('pageerror',e=>errors.push(String(e)));await mobile.goto(base+'/ink-pond/');await mobile.waitForFunction(()=>window.pondPainting?.ready);
- const mobileState=()=>mobile.evaluate(()=>window.pondPainting.describe()),touchInitial=await mobileState(),bounds=await mobile.locator('canvas').boundingBox();
+ const mobileState=()=>mobile.evaluate(()=>window.pondPainting.describe()),touchInitial=await mobileState(),bounds=await mobile.locator('#painting canvas').boundingBox();
  const cdp=await mobile.context().newCDPSession(mobile),cx=bounds.x+bounds.width*.5,cy=bounds.y+bounds.height*.5;
  await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:cx-50,y:cy,id:1}]});
  for(let i=1;i<=8;i++)await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:cx-50+i*12,y:cy+i*2,id:1}]});
