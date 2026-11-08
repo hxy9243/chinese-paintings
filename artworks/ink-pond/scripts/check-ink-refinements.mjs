@@ -2,13 +2,15 @@ import assert from 'node:assert/strict';
 import {fishBodyInk,paperFields} from '../src/ink-fields.js';
 import {createPond} from '../src/pond.js';
 
-let back=0,belly=0,n=0;
+let back=0,belly=0,side=0,shoulder=0,n=0,loaded=0,totalAngles=0;
 for(let seed=0;seed<4;seed++)for(let i=0;i<=100;i++){
   const t=i/100,s=20+seed*31;
-  back+=fishBodyInk(t,0,s);belly+=fishBodyInk(t,Math.PI,s);n++;
+  back+=fishBodyInk(t,0,s);belly+=fishBodyInk(t,Math.PI,s);side+=fishBodyInk(t,Math.PI/2,s);shoulder+=fishBodyInk(t,Math.PI/4,s);n++;
+  for(let angle=0;angle<72;angle++){if(fishBodyInk(t,angle/72*Math.PI*2,s)>.55)loaded++;totalAngles++;}
   assert.ok(Math.abs(fishBodyInk(t,0,s)-fishBodyInk(t,2*Math.PI,s))<1e-10,'Paint must close around the 3D UV seam');
 }
-assert.ok(back/n>.75&&belly/n<.015,'The back must carry ink and the belly reserve paper');
+assert.ok(back/n>.75&&belly/n>.10&&belly/n<.23,'A dark spine must sit above a visible dilute belly wash');
+assert.ok(side/n<.26&&shoulder/n<.30&&loaded/totalAngles<.16,'The loaded back must remain a narrow strip');
 const clouds=[],spots=[];
 for(let y=0;y<=100;y++)for(let x=0;x<=100;x++){const p=paperFields(x/100,y/100);clouds.push(p.cloud);spots.push(p.foxing);assert.deepEqual(p,paperFields(x/100,y/100));}
 assert.ok(Math.max(...clouds)-Math.min(...clouds)>.35,'Paper needs broad visible variation');
@@ -20,6 +22,9 @@ function center(mesh,fraction){
 }
 const sub=(a,b)=>a.map((v,i)=>v-b[i]),length=v=>Math.hypot(...v);
 const pond=createPond({fish:0,shrimp:1}),shrimp=pond.animals.find(a=>a.definition.id==='shrimp-1'),claws=[],fingers=[];
+const shrimpModels=pond.animals.filter(a=>a.definition.species==='shrimp'),density=shrimpModels.map(a=>a.definition.ink);
+assert.ok(Math.max(...density)/Math.min(...density)>4.5,'Shrimp washes should range from very pale to loaded ink');
+for(const animal of shrimpModels)animal.model.root.traverse(mesh=>{if(mesh.userData.inkGlyph)assert.ok(mesh.userData.paintOpacity>=.9,'Pale shrimp must retain dark eye marks');});
 shrimp.model.root.traverse(mesh=>{const tag=mesh.userData.waterAppendage;if(tag?.kind==='claw')claws.push(mesh);if(tag?.kind==='finger'&&tag.limb.kind==='claw')fingers.push(mesh);});
 const samples=claws.map(()=>({tips:[],angles:[],lengths:[[],[],[]]}));let maxFingerGap=0;
 for(let frame=0;frame<=288;frame++){
@@ -36,4 +41,4 @@ pond.dispose();
 assert.ok(motion.every(m=>m.tipTravel>70&&m.elbowRangeDegrees>25),'Both claws need visible sweeps and substantial bends');
 assert.ok(motion.every(m=>m.lengthVariation.every(v=>v<.035)),'Large bends must preserve rigid limb lengths');
 assert.ok(maxFingerGap<.01,'Pincers must remain attached to the wrist');
-console.log(JSON.stringify({pass:true,backDeposit:back/n,bellyDeposit:belly/n,paperCloudRange:[Math.min(...clouds),Math.max(...clouds)],foxingFraction:spots.filter(v=>v>.2).length/spots.length,motion,maxFingerGap},null,2));
+console.log(JSON.stringify({pass:true,backDeposit:back/n,bellyDeposit:belly/n,sideDeposit:side/n,darkStripFraction:loaded/totalAngles,shrimpDensities:density,paperCloudRange:[Math.min(...clouds),Math.max(...clouds)],foxingFraction:spots.filter(v=>v>.2).length/spots.length,motion,maxFingerGap},null,2));

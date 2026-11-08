@@ -17,11 +17,11 @@ export const ANIMALS=[
   {id:'fish-3',species:'fish',size:1.00*FISH_SCALE,ink:.79,pigment:[.15,.21,.17],color:'sage-grey',phase:4.1,start:[490,90,-15],velocity:[-47,-7,.6]},
   {id:'fish-4',species:'fish',size:1.12*FISH_SCALE,ink:1,pigment:[.20,.16,.19],color:'plum-grey',phase:4.8,start:[800,-230,14],velocity:[-46,3,-.4]},
   {id:'fish-5',species:'fish',size:1.06*FISH_SCALE,ink:.85,pigment:[.12,.20,.20],color:'teal-grey',phase:6.3,start:[-130,-350,0],velocity:[43,-13,.3]},
-  {id:'shrimp-1',species:'shrimp',individual:0,size:.71,ink:.92,phase:0,start:[-510,-145,12],velocity:[25,4,.3]},
-  {id:'shrimp-2',species:'shrimp',individual:1,size:.66,ink:.73,phase:2.4,start:[-240,-35,-8],velocity:[23,8,-.3]},
-  {id:'shrimp-3',species:'shrimp',individual:2,size:.69,ink:.80,phase:5.2,start:[130,350,-5],velocity:[-24,-4,.4]},
-  {id:'shrimp-4',species:'shrimp',individual:3,size:.72,ink:.67,phase:3.2,start:[550,330,-12],velocity:[-28,-5,-.4]},
-  {id:'shrimp-5',species:'shrimp',individual:4,size:.67,ink:.77,phase:7.2,start:[220,-410,8],velocity:[-25,6,.3]},
+  {id:'shrimp-1',species:'shrimp',individual:0,size:.71,ink:1.22,phase:0,start:[-510,-145,12],velocity:[25,4,.3]},
+  {id:'shrimp-2',species:'shrimp',individual:1,size:.66,ink:.24,phase:2.4,start:[-240,-35,-8],velocity:[23,8,-.3]},
+  {id:'shrimp-3',species:'shrimp',individual:2,size:.69,ink:.72,phase:5.2,start:[130,350,-5],velocity:[-24,-4,.4]},
+  {id:'shrimp-4',species:'shrimp',individual:3,size:.72,ink:.42,phase:3.2,start:[550,330,-12],velocity:[-28,-5,-.4]},
+  {id:'shrimp-5',species:'shrimp',individual:4,size:.67,ink:1.05,phase:7.2,start:[220,-410,8],velocity:[-25,6,.3]},
 ];
 
 export const POPULATION_LIMITS=Object.freeze({fish:8,shrimp:12});
@@ -51,7 +51,17 @@ export function createPond({fish=5,shrimp=5,seed:initialSeed=4317,rain:rainInten
     model.root.children[0].rotation.x=Math.PI/2;model.root.userData.anatomicalTop=[0,1,0];
     placement.add(model.root);root.add(placement);placement.scale.setScalar(definition.size);
     const waterDepthLayer=depthOrder.indexOf(index);
-    model.root.traverse(mesh=>{mesh.userData.paintOpacity=definition.ink;mesh.userData.paintColor=definition.pigment;mesh.userData.paintSeedOffset=(index+1)*1009;mesh.userData.animalIndex=index;mesh.userData.waterDepthLayer=waterDepthLayer;});
+    model.root.traverse(mesh=>{
+      let opacity=definition.ink;
+      if(definition.species==='shrimp'){
+        // Pale washes still have crisp eye marks and readable fine limbs.
+        // Let the shell carry the widest range, with a stronger loaded head.
+        if(mesh.userData.inkGlyph)opacity=.92;
+        else if(mesh.userData.inkStroke)opacity=.42+.58*opacity;
+        else if(mesh.userData.inkForm?.head)opacity=.10+.90*Math.sqrt(opacity);
+      }
+      mesh.userData.paintOpacity=opacity;mesh.userData.paintColor=definition.pigment;mesh.userData.paintSeedOffset=(index+1)*1009;mesh.userData.animalIndex=index;mesh.userData.waterDepthLayer=waterDepthLayer;
+    });
     const individual=definition.species==='shrimp'?createShrimpIndividual(model,SHRIMP_INDIVIDUALS[definition.individual]):null;
     animals.push({definition,model,placement,waterDepthLayer,individual,state:null,active:false,lives:[]});
   }
