@@ -63,7 +63,7 @@ export async function createInkAtlas(){
       const paperImage=p.createImage(512,512);paperImage.loadPixels();
       for(let i=0;i<512*512;i++){
         const field=paperFields((i%512)/512,Math.floor(i/512)/512);
-        paperImage.pixels.set([field.fibre,field.cloud,field.foxing].map(v=>Math.round(v*255)).concat(255),i*4);
+        paperImage.pixels.set([field.fibre,field.cloud,field.foxing,field.threads].map(v=>Math.round(v*255)),i*4);
       }
       paperImage.updatePixels();
       const paper=new THREE.CanvasTexture(paperImage.canvas);paper.colorSpace=THREE.NoColorSpace;

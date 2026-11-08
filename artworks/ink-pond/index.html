@@ -12,12 +12,12 @@
   <main>
     <a class="gallery-link" href="/">← 画中行 · All paintings</a>
     <header>
-      <div class="title"><span class="chinese" lang="zh">游</span><div><p class="eyebrow">03 · An interactive ink painting</p><h1><span lang="zh">鱼虾清趣</span> · Following the current</h1></div></div>
+      <div class="title"><span class="chinese" lang="zh">游</span><div><p class="eyebrow">03 · An interactive ink painting</p><h1><span lang="zh-Hant">魚蝦清趣</span> · Following the current</h1></div></div>
       <div class="view-actions"><button id="view-reset" class="quiet">Reset view ⤾</button><button id="reference-open" class="quiet">The reference ↗</button></div>
     </header>
     <section aria-label="Fish and shrimp ink painting" class="picture">
       <div id="painting"></div>
-      <div class="inscription" aria-hidden="true"><span lang="zh">鱼虾清趣</span><span class="seal" lang="zh">游</span></div>
+      <img id="inscription" class="inscription" src="./src/assets/yu-xia-qing-qu-liu.png" alt="魚蝦清趣" lang="zh-Hant" draggable="false" />
     </section>
     <section class="controls" aria-label="Painting controls">
       <div class="playback"><button id="play">Pause</button><button id="reset" class="quiet">Begin again</button><button id="paths" class="quiet">New paths</button><button id="save" class="quiet">Save picture ↓</button></div>
@@ -29,6 +29,7 @@
       <label class="parameter">Speed <input id="speed" type="range" min="0.25" max="2" step="0.05" value="1" /><output id="speed-value" for="speed">1.0×</output></label>
       <label class="ink-control">Ink <input id="wash" type="range" min="0.1" max="0.85" step="0.01" value="0.42" /></label>
       <label class="ink-control rain-control">Rain <input id="rain" type="range" min="0" max="1" step="0.02" value="0.68" /><output id="rain-value" for="rain">68%</output></label>
+      <label class="parameter">Paper <input id="paper" type="range" min="0" max="1" step="0.01" value="0.72" /><output id="paper-value" for="paper">72%</output></label>
     </section>
     <footer><span>Drag to turn · Scroll or pinch to zoom · Click for ripples</span><span id="status" role="status">Preparing the ink…</span></footer>
   </main>

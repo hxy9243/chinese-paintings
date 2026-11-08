@@ -1,0 +1,60 @@
+{
+  "text": "魚蝦清趣",
+  "characters": [
+    "魚",
+    "蝦",
+    "清",
+    "趣"
+  ],
+  "style": "shutifang-liugongquan-kai",
+  "renderer": "calligraphy StaticFontScene",
+  "mode": "finished calligraphy still, no writing animation",
+  "engineRepository": "https://github.com/hxy9243/calligraphy",
+  "engineCommit": "ea6d497bc9534bb7f3e48f067d919c55731edbab",
+  "fontName": "ShuTiFang Liu Gongquan Kai",
+  "fontSha256": "9419626abeb1ff547ea24b6a094d9a14400ccf2ee3472ce6a3ef701b7785e893",
+  "fontMetadata": "Retained source font metadata\nFont: ShuTiFang Liu Gongquan Kai\nCatalog license designation (not a grant): 商用须授权 / Commercial License Required (Founder Type)\nSource: https://www.fontowns.com/font/1226352/\n\nCopyright(c) Beijing Founder Electronics Co.,Ltd. ±±æ©±±¥Û∑Ω’˝µÁ◊””–œﬁπ´Àæ\n\n±±æ©±±¥Û∑Ω’˝µÁ◊””–œﬁπ´Àæ\n\nFor further details please go to: http://www.foundertype.com/index.php/About/bookAuth/key/my_grfs.htm\n\nCopyright(c) Beijing Founder Electronics Co.,Ltd. 北京北大方正电子有限公司\n\n北京北大方正电子有限公司\n",
+  "scene": {
+    "schemaVersion": 1,
+    "text": "魚蝦清趣",
+    "style": "shutifang-liugongquan-kai",
+    "layout": {
+      "width": 320,
+      "height": 1480,
+      "direction": "vertical-rl",
+      "characters_per_line": 4,
+      "margin": 8,
+      "gap": 0.18
+    },
+    "timing": {},
+    "punctuation": "gap",
+    "appearance": {
+      "paper_color": [
+        255,
+        255,
+        255
+      ],
+      "ink_color": [
+        0,
+        0,
+        0
+      ],
+      "paper_style": "plain",
+      "stamp_enabled": false
+    },
+    "transforms": {
+      "scale": 1.0,
+      "stretch": 1.0,
+      "rotation": 0.0
+    },
+    "inscription": null
+  },
+  "transparent": true,
+  "stamp": false,
+  "size": [
+    260,
+    1315
+  ],
+  "sha256": "a3d34cff31d6b54df5ae2a85b3aad601c14aecab7ada4b7571f2b7cd09e6da26",
+  "command": ".venv/bin/python /home/kevin/Workspace/chinese-paintings/scripts/generate-pond-calligraphy.py --calligraphy /home/kevin/Workspace/calligraphy"
+}

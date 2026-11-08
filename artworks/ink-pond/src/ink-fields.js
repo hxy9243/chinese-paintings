@@ -46,6 +46,21 @@ const FOX_SPOTS=Array.from({length:42},(_,i)=>{
   const seed=307+i*17.3,r=.0025+.0045*hash(seed+3);
   return{x:hash(seed),y:hash(seed+1),rx:r,ry:r*(.65+.8*hash(seed+5)),strength:.18+.32*hash(seed+7)};
 });
+// Scattered short fibres have independent directions and lengths. Baking them
+// into the paper's spare channel avoids a regular weave or moving frame noise.
+const PAPER_THREADS=new Float32Array(512*512).fill(.5);
+for(let i=0;i<1800;i++){
+  const seed=941+i*7.13,cx=hash(seed)*512,cy=hash(seed+1)*512,angle=hash(seed+2)*Math.PI*2;
+  const ux=Math.cos(angle),uy=Math.sin(angle),half=2+hash(seed+3)*9,radius=.25+.4*hash(seed+4),strength=(hash(seed+5)-.48)*.75;
+  const x0=Math.floor(cx-Math.abs(ux)*half-2),x1=Math.ceil(cx+Math.abs(ux)*half+2);
+  const y0=Math.floor(cy-Math.abs(uy)*half-2),y1=Math.ceil(cy+Math.abs(uy)*half+2);
+  for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){
+    const dx=x-cx,dy=y-cy,along=dx*ux+dy*uy;
+    if(Math.abs(along)>half)continue;
+    const across=dx*uy-dy*ux,deposit=Math.exp(-across*across/(radius*radius))*Math.sqrt(1-along*along/(half*half));
+    PAPER_THREADS[((y+512)%512)*512+(x+512)%512]+=strength*deposit;
+  }
+}
 // Separate fine fibres, broad age clouds, and sparse warm foxing. Macro fields
 // cover the entire sheet once; only the microscopic fibre channel is tiled.
 export function paperFields(u,v){
@@ -57,15 +72,17 @@ export function paperFields(u,v){
     const dx=(u-spot.x)/spot.rx,dy=(v-spot.y)/spot.ry;
     if(Math.abs(dx)<2&&Math.abs(dy)<2)foxing+=spot.strength*Math.exp(-(dx*dx+dy*dy)*2);
   }
-  return{fibre:(128+(grain-.5)*92+(fibre-.5)*30)/255,cloud,foxing};
+  const threads=Math.max(0,Math.min(1,PAPER_THREADS[(Math.floor(y)%512)*512+Math.floor(x)%512]));
+  return{fibre:(128+(grain-.5)*92+(fibre-.5)*30)/255,cloud,foxing,threads};
 }
 
 // Share the exact paper colour beneath bare paper and translucent animals.
 // This keeps the dilute body washes continuous with the surrounding sheet.
 export const PAPER_GLSL=`
   vec3 paperColor(vec2 pageUv){
-    float fibre=texture2D(paper,pageUv*cssResolution/512.).r-.5;
+    vec4 fibres=texture2D(paper,pageUv*cssResolution/512.);
     vec3 age=texture2D(paper,pageUv*.88+vec2(.06)).rgb;
-    return paperTone+fibre*.024+(age.g-.5)*vec3(.105,.130,.170)-age.b*vec3(.030,.050,.085);
+    float tooth=(fibres.r-.5)*.135+(fibres.a-.5)*.17;
+    return paperTone+paperStrength*(tooth+(age.g-.5)*vec3(.165,.195,.240)-age.b*vec3(.060,.095,.145));
   }
 `;

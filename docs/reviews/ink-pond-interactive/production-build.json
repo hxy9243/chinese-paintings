@@ -2,12 +2,12 @@
   "sources": {
     "apps/gallery/index.html": "2159b97de54ac314f901ce6aac6a9e97a2c9cee81b4d794fa849cafbffb5d690",
     "apps/gallery/gallery.css": "80677e1eb48eed97ac767a42f0bdd2ac67e06abe2a10e992b565150efc330454",
-    "apps/gallery/ink-pond-preview.png": "a06ae2c974ef23643c1eb62c729216ac355858f90892c8df5c61187b3705631a",
-    "artworks/ink-pond/src/style.css": "a313228fd16de95777b504d026008703396da8b461bd5d3fd454a4288c3326dc",
-    "artworks/ink-pond/src/main.js": "5ba90ca642ee27e72957505bcdf8ead5264dea14743ff218590f6fb25c74d1a9",
+    "apps/gallery/ink-pond-preview.png": "65ade795f4a12f84df8344b17b69cb34740a818cb8263c58ad50847534d4e649",
+    "artworks/ink-pond/src/style.css": "dc58e65e4896028b2e65cbd108b6afdefac985d12bad01f466fb560f2fa72925",
+    "artworks/ink-pond/src/main.js": "aa292a59240e4336cb9455c7655a78ff1abfe36497b55a9a65c7d5fbe0286d1a",
     "artworks/ink-pond/src/pond.js": "bd3906bdc322a59f50f48b978a287f854324dbac4e43a45b724dd87e54a95bf2",
     "artworks/ink-pond/src/entries.js": "22a5b4eb258c6d058a169804ad88bad3b1ab474d2d7f462448f5467ff17f9b0a",
-    "artworks/ink-pond/src/gpu-ink.js": "4ac14943daa583ac77d29f269b80e31d0787d5b87b622c89703611b19e258842",
+    "artworks/ink-pond/src/gpu-ink.js": "30d86d5e1f0dc18529854259eeed5f8d14d0555da84363d655b4ce4b291875c5",
     "scripts/build.mjs": "65eee7a24a16a14f5893732996692bbd490448ebcc658517498b6dbb38c07c9d",
     "scripts/dev.mjs": "315ed0b6297799c5735cd6babfa9ec4a10db5ce2b19a26bdd2e18949790d5ad8"
   },
@@ -17,8 +17,8 @@
     "artworks/ink-pond/scripts/check-population.mjs": "92a6bb5d8533b331e0c0233044d1464e93ff2db15c243123f7442b6fcb6e4518"
   },
   "still": {
-    "file": "interactive-pond-6e777f4c.png",
-    "sha256": "6e777f4ce12281ccca794d816ecf2d312d6760a7cf0f0cc0f512ae84c5e060e3",
+    "file": "interactive-pond-aa8b7839.png",
+    "sha256": "aa8b7839397001f9cf800efdb757669538d46872ded92aef94c5266519a71d6b",
     "source": "Production build at 3.5 seconds, default population and camera"
   },
   "productionBuild": {

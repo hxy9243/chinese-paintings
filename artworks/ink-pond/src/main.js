@@ -6,7 +6,7 @@ import {createPond,DURATION,POPULATION_LIMITS} from './pond.js';
 import {createWaterCamera,resizeWaterCamera,describeWaterCamera} from './water-space.js';
 
 const $=id=>document.getElementById(id),container=$('painting'),play=$('play');
-const timeline=$('time'),wash=$('wash'),rain=$('rain'),status=$('status');
+const timeline=$('time'),wash=$('wash'),rain=$('rain'),paper=$('paper'),inscription=$('inscription'),status=$('status');
 const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
 let playing=!reducedMotion.matches,time=0,current=0,last=performance.now(),view=null,speed=1;
 let autoQuality=true,lastQualityChange=0,lastStatus=0,previousFrame=0,cameraDirty=false,populationTimer;
@@ -31,6 +31,7 @@ function resize(){
 function setPlaying(value){playing=Boolean(value);last=performance.now();previousFrame=0;controls();status.textContent=playing?'Following the current':'Paused · drag to explore';}
 function setCurrent(value){current=THREE.MathUtils.clamp(value,-45,45);view.pond.setCurrent(current);renderFrame();}
 function setSpeed(value){speed=THREE.MathUtils.clamp(Number(value)||1,.25,2);$('speed').value=String(speed);$('speed-value').value=`${speed.toFixed(2).replace(/0$/,'')}×`;}
+function setPaperStrength(value){view.ink.setPaperStrength(value);paper.value=String(view.ink.describe().paperStrength);$('paper-value').value=`${Math.round(Number(paper.value)*100)}%`;renderFrame();}
 function setView({azimuthDegrees=-45,elevationDegrees=45,zoom=1}={}){
   const {camera,orbit}=view,az=THREE.MathUtils.degToRad(azimuthDegrees),el=THREE.MathUtils.degToRad(THREE.MathUtils.clamp(elevationDegrees,20,80));
   const damping=orbit.enableDamping;orbit.enableDamping=false;orbit.update();orbit.reset();orbit.target.set(0,0,0);camera.position.set(1800*Math.cos(el)*Math.cos(az),1800*Math.cos(el)*Math.sin(az),1800*Math.sin(el));
@@ -49,6 +50,7 @@ timeline.addEventListener('input',()=>{setPlaying(false);renderFrame(Number(time
 wash.addEventListener('input',()=>renderFrame());$('reset').addEventListener('click',reset);
 rain.addEventListener('input',()=>{view.pond.setRain(Number(rain.value));$('rain-value').value=`${Math.round(Number(rain.value)*100)}%`;renderFrame();});
 $('speed').addEventListener('input',()=>setSpeed($('speed').value));
+paper.addEventListener('input',()=>setPaperStrength(paper.value));
 for(const species of ['fish','shrimp']){
   $(species).max=String(POPULATION_LIMITS[species]);
   $(species).addEventListener('input',()=>{$(species+'-value').value=$(species).value;clearTimeout(populationTimer);populationTimer=setTimeout(()=>setPopulation(),150);});
@@ -60,10 +62,10 @@ $('save').addEventListener('click',()=>{
   const previousScale=view.ink.describe().renderScale;view.ink.setRenderScale(2);renderFrame();
   const exportCanvas=document.createElement('canvas'),canvas=view.ink.canvas;
   exportCanvas.width=canvas.width;exportCanvas.height=canvas.height;
-  const ctx=exportCanvas.getContext('2d');ctx.drawImage(canvas,0,0);const s=canvas.width/1800;
-  ctx.save();ctx.translate(canvas.width*.958,canvas.height*.063);ctx.fillStyle='#5b5b4d';
-  ctx.font=`${25*s}px "Noto Serif CJK SC",serif`;ctx.textAlign='center';[...'鱼虾清趣'].forEach((c,i)=>ctx.fillText(c,0,i*35*s));
-  ctx.strokeStyle='#a64532';ctx.fillStyle='#a64532';ctx.strokeRect(-12*s,150*s,24*s,29*s);ctx.font=`${19*s}px serif`;ctx.fillText('游',0,172*s);ctx.restore();
+  const ctx=exportCanvas.getContext('2d');ctx.drawImage(canvas,0,0);
+  const bounds=container.getBoundingClientRect(),writing=inscription.getBoundingClientRect(),sx=canvas.width/bounds.width,sy=canvas.height/bounds.height;
+  ctx.save();ctx.globalAlpha=Number(getComputedStyle(inscription).opacity);
+  ctx.drawImage(inscription,(writing.left-bounds.left)*sx,(writing.top-bounds.top)*sy,writing.width*sx,writing.height*sy);ctx.restore();
   view.ink.setRenderScale(previousScale);renderFrame();last=performance.now();
   exportCanvas.toBlob(blob=>{if(!blob)return;const a=document.createElement('a'),url=URL.createObjectURL(blob);a.href=url;a.download='fish-and-shrimp-in-ink.png';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
 });
@@ -73,6 +75,7 @@ reducedMotion.addEventListener('change',e=>{if(e.matches)setPlaying(false);});
 window.addEventListener('resize',resize);document.addEventListener('visibilitychange',()=>{last=performance.now();previousFrame=0;});
 
 async function init(){
+  await inscription.decode();
   const renderer=new THREE.WebGLRenderer({antialias:false,alpha:false,preserveDrawingBuffer:false,powerPreference:'high-performance'});
   renderer.setPixelRatio(1);renderer.setClearColor(0xf3eddf,0);renderer.outputColorSpace=THREE.LinearSRGBColorSpace;
   const camera=createWaterCamera(18/11),pond=createPond(),paint=await createInkAtlas();
@@ -105,7 +108,7 @@ async function init(){
       zoom:camera.zoom*(e.key==='+'||e.key==='='?1.12:e.key==='-'?1/1.12:1)});
   });
   window.pondPainting={ready:true,renderFrame(t){setPlaying(false);renderFrame(t);},setPlaying,setCurrent,setView,setPopulation,setSpeed,
-    setWashStrength(value){wash.value=String(value);renderFrame();},setPaperTone(value){view.ink.setPaperTone(value??[243,237,223]);renderFrame();},
+    setWashStrength(value){wash.value=String(value);renderFrame();},setPaperStrength,setPaperTone(value){view.ink.setPaperTone(value??[243,237,223]);renderFrame();},
     setFormOnly(value){view.ink.setFormOnly(value);renderFrame();},setRipples(value){view.ink.setRipples(value);renderFrame();},
     setRain(value){view.pond.setRain(value);rain.value=String(view.pond.describe().rain.intensity);$('rain-value').value=`${Math.round(Number(rain.value)*100)}%`;renderFrame();},
     setRenderScale(value){if(value==null)autoQuality=true;else{autoQuality=false;view.ink.setRenderScale(value);}renderFrame();},

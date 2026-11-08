@@ -57,7 +57,7 @@ export async function createGpuInk(container,renderer,camera,pond,sharedPaint=nu
   geometry.setAttribute('waterLayer',new THREE.BufferAttribute(depthLayers,1));
   geometry.setAttribute('paintTone',new THREE.BufferAttribute(tones,3));
   const uniforms={animalActive:{value:pond.animals.map(a=>a.active?1:0)},pigment:{value:paint.atlas},paper:{value:paint.paper},paperTone:{value:new THREE.Vector3(243/255,237/255,223/255)},
-    waterLayerCount:{value:Math.max(1,pond.animals.length)},wash:{value:.42},formOnly:{value:0},ownerMode:{value:0},hideFine:{value:0},resolution:{value:new THREE.Vector2(1,1)},cssResolution:{value:new THREE.Vector2(1,1)}};
+    waterLayerCount:{value:Math.max(1,pond.animals.length)},wash:{value:.42},paperStrength:{value:.72},formOnly:{value:0},ownerMode:{value:0},hideFine:{value:0},resolution:{value:new THREE.Vector2(1,1)},cssResolution:{value:new THREE.Vector2(1,1)}};
   const water=createGpuRipples(uniforms);
   const vertexShader=`attribute vec4 paintMeta;attribute float animalId;attribute float waterLayer;attribute vec3 paintTone;varying vec3 inkTone;varying vec2 brushUv;varying vec4 brush;varying vec3 facing;varying float animal;varying float coverage;
     uniform vec2 resolution;uniform vec2 cssResolution;uniform float formOnly;uniform float waterLayerCount;uniform float animalActive[${Math.max(1,pond.animals.length)}];
@@ -84,7 +84,7 @@ export async function createGpuInk(container,renderer,camera,pond,sharedPaint=nu
       gl_Position=clip;
     }`;
   const fragmentShader=`uniform sampler2D pigment;uniform sampler2D paper;uniform vec3 paperTone;uniform float wash;uniform float formOnly;uniform float ownerMode;uniform float hideFine;
-    uniform vec2 resolution;uniform vec2 cssResolution;
+    uniform vec2 resolution;uniform vec2 cssResolution;uniform float paperStrength;
     varying vec3 inkTone;varying vec2 brushUv;varying vec4 brush;varying vec3 facing;varying float animal;varying float coverage;
     ${PAPER_GLSL}
     void main(){vec3 n=normalize(facing);bool filament=brush.x>5.5&&brush.x<6.5;
@@ -114,9 +114,9 @@ export async function createGpuInk(container,renderer,camera,pond,sharedPaint=nu
   // Paper, ink and a faint water overlay. No refraction target is needed.
   // There is no full-screen blur chain or GPU readback during playback.
   const paperMaterial=new THREE.ShaderMaterial({depthTest:false,depthWrite:false,toneMapped:false,
-    uniforms:{paper:uniforms.paper,paperTone:uniforms.paperTone,cssResolution:uniforms.cssResolution,ownerMode:uniforms.ownerMode,formOnly:uniforms.formOnly},
+    uniforms:{paper:uniforms.paper,paperTone:uniforms.paperTone,paperStrength:uniforms.paperStrength,cssResolution:uniforms.cssResolution,ownerMode:uniforms.ownerMode,formOnly:uniforms.formOnly},
     vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,1.,1.);}',
-    fragmentShader:`uniform sampler2D paper;uniform vec3 paperTone;uniform vec2 cssResolution;uniform float ownerMode;uniform float formOnly;varying vec2 vUv;
+    fragmentShader:`uniform sampler2D paper;uniform vec3 paperTone;uniform vec2 cssResolution;uniform float paperStrength;uniform float ownerMode;uniform float formOnly;varying vec2 vUv;
         ${PAPER_GLSL}
         void main(){vec3 color=paperColor(vec2(vUv.x,1.-vUv.y));
         gl_FragColor=vec4(ownerMode>.5?vec3(0.):color,1.);}`});
@@ -227,6 +227,6 @@ export async function createGpuInk(container,renderer,camera,pond,sharedPaint=nu
     }
     return{overlapPixels,wrongOwnerPixels,frontPaintComparedPixels,hiddenInkLeakPixels,pairs,offlineReadbackOnly:true};
   }
-  return{canvas,resize,draw,describe:()=>stats,diagnoseOcclusion,diagnoseAnimalLayers,diagnoseRipples,setRipples(value){uniforms.rippleEnabled.value=value?1:0;},setPaperTone(rgb){uniforms.paperTone.value.set(...rgb.map(x=>x/255));},setFormOnly(value){formOnly=Boolean(value);},setRenderScale(value){resize(width,height,value);},
+  return{canvas,resize,draw,describe:()=>({...stats,paperStrength:uniforms.paperStrength.value}),diagnoseOcclusion,diagnoseAnimalLayers,diagnoseRipples,setRipples(value){uniforms.rippleEnabled.value=value?1:0;},setPaperStrength(value){uniforms.paperStrength.value=THREE.MathUtils.clamp(Number(value)||0,0,1);},setPaperTone(rgb){uniforms.paperTone.value.set(...rgb.map(x=>x/255));},setFormOnly(value){formOnly=Boolean(value);},setRenderScale(value){resize(width,height,value);},
     dispose(){geometry.dispose();material.dispose();paperMesh.geometry.dispose();paperMaterial.dispose();water.dispose();if(!sharedPaint)paint.dispose();}};
 }
