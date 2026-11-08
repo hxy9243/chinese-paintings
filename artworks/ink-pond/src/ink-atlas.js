@@ -1,6 +1,6 @@
 import p5 from 'p5';
 import * as THREE from 'three';
-import {hash,noise,fishBodyInk,paperFields} from './ink-fields.js';
+import {hash,noise,fishBodyInk,fishFinInk,paperFields} from './ink-fields.js';
 
 // A loaded brush is pulled along the carapace through a dilute wash. Work in
 // circular coordinates so its blooms join across the closed shell's UV seam.
@@ -43,7 +43,7 @@ export async function createInkAtlas(){
           let alpha,head;
           if(kind===0)alpha=.026+.30*Math.max(0,dorsal)**3*Math.max(0,(t-.48)/.52);
           else if(kind===1)alpha=fishBodyInk(t,angle,seed);
-          else if(kind===2)alpha=(.24+.30*cloud)*(.80+.20*Math.sin(t*Math.PI));
+          else if(kind===2)alpha=fishFinInk(t,angle,seed);
           else if(kind===3){
             head=carapaceInk(t,angle,seed);alpha=head.deposit;
           }else if(kind===4)alpha=.27+.34*cloud+.065*dorsal;

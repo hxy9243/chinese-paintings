@@ -2,7 +2,7 @@
   "sources": {
     "apps/gallery/index.html": "2159b97de54ac314f901ce6aac6a9e97a2c9cee81b4d794fa849cafbffb5d690",
     "apps/gallery/gallery.css": "80677e1eb48eed97ac767a42f0bdd2ac67e06abe2a10e992b565150efc330454",
-    "apps/gallery/ink-pond-preview.png": "f934d2aa9448c9b492cce96f42569dbffe28d7bb26cab608623d80d9ba6b33a6",
+    "apps/gallery/ink-pond-preview.png": "a06ae2c974ef23643c1eb62c729216ac355858f90892c8df5c61187b3705631a",
     "artworks/ink-pond/src/style.css": "a313228fd16de95777b504d026008703396da8b461bd5d3fd454a4288c3326dc",
     "artworks/ink-pond/src/main.js": "5ba90ca642ee27e72957505bcdf8ead5264dea14743ff218590f6fb25c74d1a9",
     "artworks/ink-pond/src/pond.js": "bd3906bdc322a59f50f48b978a287f854324dbac4e43a45b724dd87e54a95bf2",
@@ -17,8 +17,8 @@
     "artworks/ink-pond/scripts/check-population.mjs": "92a6bb5d8533b331e0c0233044d1464e93ff2db15c243123f7442b6fcb6e4518"
   },
   "still": {
-    "file": "interactive-pond-ba6eb5d0.png",
-    "sha256": "ba6eb5d09d08e4c79b73e39e205b4d3a2760d13045cf91fea3bae3077212da8a",
+    "file": "interactive-pond-6e777f4c.png",
+    "sha256": "6e777f4ce12281ccca794d816ecf2d312d6760a7cf0f0cc0f512ae84c5e060e3",
     "source": "Production build at 3.5 seconds, default population and camera"
   },
   "productionBuild": {
