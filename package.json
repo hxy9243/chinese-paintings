@@ -17,7 +17,11 @@
     "setup": "npm ci",
     "test:pond": "node artworks/ink-pond/scripts/check-population.mjs && node artworks/ink-pond/scripts/check-fish-rhythm.mjs && node artworks/ink-pond/scripts/check-ink-refinements.mjs",
     "pond:dev": "vite artworks/ink-pond --host 127.0.0.1 --port 5189",
-    "pond:build": "vite build artworks/ink-pond"
+    "pond:build": "vite build artworks/ink-pond",
+    "chicks:dev": "vite artworks/ink-chicks --host 127.0.0.1 --port 5191 --strictPort",
+    "chicks:build": "vite build artworks/ink-chicks",
+    "test:chicks": "node --test artworks/ink-chicks/scripts/physics.test.mjs",
+    "test:chicks:browser": "node artworks/ink-chicks/scripts/check-gallery.mjs"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",

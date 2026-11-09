@@ -1,0 +1,63 @@
+{
+  "pass": true,
+  "productionBuild": true,
+  "fourGalleryCards": true,
+  "mouseOrbit": {
+    "turn": 30.085714285714293,
+    "tilt": 35.24887320398731,
+    "zoom": 1
+  },
+  "mouseZoom": true,
+  "keyboardView": true,
+  "repeatableSeek": true,
+  "parameters": [
+    "speed",
+    "ink",
+    "paper",
+    "turn",
+    "tilt",
+    "zoom"
+  ],
+  "reducedMotion": true,
+  "pauseAndSeek": true,
+  "savePNG": true,
+  "referenceImages": true,
+  "standaloneHenStudy": true,
+  "mobileOverflow": false,
+  "shortViewportOverflow": false,
+  "errors": [],
+  "requests": [],
+  "sources": {
+    "apps/gallery/index.html": "6dfacb0d7ce36c232697c50bc5d10d3fc0ce7002277c079c8587a400dcc0889f",
+    "apps/gallery/gallery.css": "2d72a54a7cdc857590f6e21e9980b344ddbcd33c97435206cd968e3c20a9a02f",
+    "apps/gallery/ink-chicks-preview.png": "9f668dcc0fead94847daa239affb7505f096367e645ef5fa414bf36f571a1e7e",
+    "scripts/dev.mjs": "74b314a014b4c63f340e2845ab754406d1676fb98c819a12488f7795818c111a",
+    "scripts/build.mjs": "57627d9aec7e9d826db1d199c95d87a64f35b4a7d40158f71a516619d1f32d0e",
+    "artworks/ink-chicks/index.html": "7355371689946f5cf17ddf81a71b2ede337f667a6e36a86033f7d0c0e144b34d",
+    "artworks/ink-chicks/src/style.css": "fa95002fbb79e0e7e7c998b5a259f9127028907b7b36eebbd99e898bdbdd4491",
+    "artworks/ink-chicks/vite.config.js": "7ece54f7e27181ec2862d7dd64591e1a0740821ddb80a1934360ac057500adc9",
+    "artworks/ink-chicks/scripts/check-gallery.mjs": "308489be6ead28073928a7f740e671aee0998160815162b391d068a37cc25574",
+    "artworks/ink-chicks/scripts/physics.test.mjs": "4fee6cd53d795e2a01adc6360c8575bac0ea05b197fa1793857f7c6744ffe11b",
+    "artworks/ink-chicks/src/flock.js": "975f48ebecdc3fc432238c7032c0b8cdba51b0db9be2a479fae7d61ce214f44c",
+    "artworks/ink-chicks/hen-study/src/model.js": "9d4e8ea68f5656539dc56910e1404dbbbea6719875a6a3330b5d73ee8309ea97",
+    "artworks/ink-chicks/hen-study/src/motion.js": "783699888b1e6b94accffdf4d7db2282ec019afeb19c1f087f778d5feb75dcc1",
+    "artworks/ink-chicks/src/main.js": "68aeb08e784fddf380e955fb89fa9977576f0a1d205244d461167d785eec828f",
+    "artworks/ink-chicks/src/scene.js": "864628a7c1b2804c00124d7fe53d31a6440518bcd72aaaf61475f0c0ec695c3d",
+    "artworks/ink-chicks/src/paper.js": "b1ab073535fc5ea343c27a319e99d5b7b9b88dfc2f1ef2316e1200ec8eb4af7e",
+    "artworks/ink-chicks/src/poses.js": "dd8df8037e2c6982c26895bd60db1ed9a8cb343fc361f41ac1f46bba48f5dae3"
+  },
+  "postValidationFormatting": [
+    {
+      "file": "artworks/ink-chicks/hen-study/src/model.js",
+      "change": "Trailing whitespace only",
+      "before": "9d4e8ea68f5656539dc56910e1404dbbbea6719875a6a3330b5d73ee8309ea97",
+      "after": "eee0aad55cdde36102550d8c54d218199b7eef6e041a15e48b70272148f71e54"
+    },
+    {
+      "file": "artworks/ink-chicks/hen-study/src/previous-model.js",
+      "change": "Trailing whitespace only",
+      "before": "c7f7b092f45fdb6fe1a23698e248065cbab99fcd7fb62ebe775fca53ad22d341",
+      "after": "a44d8c73423df47a5d2a34f96b2bc042d50c42ccfd96630be7153e32cd629017"
+    }
+  ]
+}

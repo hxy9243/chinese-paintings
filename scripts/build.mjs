@@ -5,10 +5,12 @@ import {execFileSync} from 'node:child_process';
 const root=fileURLToPath(new URL('../',import.meta.url)),out=path.join(root,'dist');
 execFileSync('npm',['run','qingming:build'],{cwd:root,env:{...process.env,PAINTING_BASE:'/qingming/'},stdio:'inherit'});
 execFileSync('npm',['run','pond:build'],{cwd:root,env:{...process.env,PAINTING_BASE:'/ink-pond/'},stdio:'inherit'});
+execFileSync('npm',['run','chicks:build'],{cwd:root,env:{...process.env,PAINTING_BASE:'/ink-chicks/'},stdio:'inherit'});
 fs.rmSync(out,{recursive:true,force:true});fs.mkdirSync(out);
 fs.cpSync(path.join(root,'apps/gallery'),out,{recursive:true});
 fs.cpSync(path.join(root,'artworks/qingming/dist'),path.join(out,'qingming'),{recursive:true});
 fs.cpSync(path.join(root,'artworks/ink-pond/dist'),path.join(out,'ink-pond'),{recursive:true});
+fs.cpSync(path.join(root,'artworks/ink-chicks/dist'),path.join(out,'ink-chicks'),{recursive:true});
 const source=path.join(root,'artworks/thousand-miles'),dest=path.join(out,'thousand-miles');fs.mkdirSync(dest);
 for(const entry of fs.readdirSync(source)){
  if(!['src','vendor','reference','renders','models','qa'].includes(entry)&&!entry.endsWith('.html')&&!entry.endsWith('-manifest.json'))continue;

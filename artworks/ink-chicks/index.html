@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>群雏 · A Mother and Eight Chicks</title><link rel="icon" href="data:,"><link rel="stylesheet" href="./src/style.css"></head>
+<body><main>
+<header><div><a class="gallery-link" id="gallery-link" href="/">画中行 · ALL PAINTINGS</a><div class="title"><span lang="zh-Hans">群雏</span><div><p class="eyebrow">04 · INK ON PAPER</p><h1>A mother and eight chicks</h1></div></div></div><nav><button id="view-reset">Reset view</button><button id="reference-open">The paintings ↗</button><a href="./hen-study/">Study the hen ↗</a></nav></header>
+<section class="painting-frame" aria-label="Interactive painting"><div id="painting"></div><span class="view-hint" aria-hidden="true">Drag to turn · Scroll to look closer</span><span id="loading">Unfolding the paper…</span></section>
+<section class="controls" aria-label="Painting controls">
+<div class="playback"><div class="buttons"><button id="play" disabled>Pause</button><button id="reset" disabled>Begin again</button><button id="save" disabled>Save picture</button></div><label class="timeline"><span class="sr-only">Time in the painting</span><input id="timeline" type="range" min="0" max="90" step=".01" value="0" disabled><output id="time-label">0.0 s</output></label></div>
+<div class="parameters">
+<label for="speed"><span>Movement <output id="speed-label">1×</output></span><input id="speed" type="range" min=".25" max="2" step=".05" value="1" disabled></label>
+<label for="ink"><span>Ink <output id="ink-label">100%</output></span><input id="ink" type="range" min=".65" max="1.4" step=".05" value="1" disabled></label>
+<label for="paper"><span>Paper <output id="paper-label">85%</output></span><input id="paper" type="range" min="0" max="1.5" step=".05" value=".85" disabled></label>
+<label for="turn"><span>Turn <output id="turn-label">0°</output></span><input id="turn" type="range" min="-75" max="75" step="1" value="0" disabled></label>
+<label for="tilt"><span>Tilt <output id="tilt-label">25°</output></span><input id="tilt" type="range" min="20" max="70" step="1" value="25" disabled></label>
+<label for="zoom"><span>Zoom <output id="zoom-label">1×</output></span><input id="zoom" type="range" min=".7" max="2" step=".05" value="1" disabled></label>
+</div></section>
+<footer><span>Drag or use arrow keys to turn · Scroll or pinch to zoom</span><span id="status" role="status">Preparing the flock…</span></footer>
+<details class="layers"><summary>Meet the flock</summary><div id="layer-controls"></div><p>Six dark chicks, two golden chicks, and their mother. Each follows its own rhythm: walking, foraging, stretching, and wandering beyond the paper.</p></details>
+<dialog id="reference-dialog"><div class="dialog-heading"><h2>Two paintings, one flock</h2><button id="reference-close" aria-label="Close references">Close ×</button></div><div class="references"><figure><img id="reference-image" alt="Original ink painting of eight chicks"><figcaption>The eight chicks and open paper.</figcaption></figure><figure><img id="hen-reference-image" alt="Reference ink painting of a mother hen with chicks"><figcaption>The mother hen and layered feather brushwork.</figcaption></figure></div></dialog>
+</main><script type="module" src="./src/main.js"></script></body></html>

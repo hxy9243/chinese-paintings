@@ -6,7 +6,8 @@ import {fileURLToPath} from 'node:url';
 import {createRequire} from 'node:module';
 import {createHash} from 'node:crypto';
 const require=createRequire(new URL('../package.json',import.meta.url)),{chromium}=require('@playwright/test');
-const root=fileURLToPath(new URL('..',import.meta.url)),dist=path.join(root,'dist'),out=path.join(root,'docs/reviews/ink-pond-interactive');
+const root=fileURLToPath(new URL('..',import.meta.url)),dist=path.join(root,'dist'),out=process.env.REVIEW_DIR??path.join(root,'docs/reviews/ink-pond-interactive');
+fs.mkdirSync(out,{recursive:true});
 const types={'.html':'text/html','.js':'text/javascript','.css':'text/css','.json':'application/json','.png':'image/png','.webp':'image/webp','.jpg':'image/jpeg','.glb':'model/gltf-binary'};
 const server=http.createServer((req,res)=>{
  const url=new URL(req.url,'http://localhost'),file=path.resolve(dist,'.'+decodeURIComponent(url.pathname)+(url.pathname.endsWith('/')?'index.html':''));
@@ -17,9 +18,10 @@ await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));const base=`htt
 const browser=await chromium.launch({headless:true,args:['--no-sandbox','--enable-unsafe-swiftshader']});
 try{
  const page=await browser.newPage({viewport:{width:1280,height:940},reducedMotion:'reduce'}),errors=[];page.on('pageerror',e=>errors.push(String(e)));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
- await page.goto(base+'/');assert.equal(await page.locator('.works article').count(),3);
+ await page.goto(base+'/');assert.equal(await page.locator('.works article').count(),4);
+ await page.locator('.works article').last().scrollIntoViewIfNeeded();await page.waitForFunction(()=>[...document.querySelectorAll('.works img')].every(i=>i.complete&&i.naturalWidth>0));await page.evaluate(()=>scrollTo(0,0));
  const sizes=await page.locator('.works img').evaluateAll(images=>images.map(image=>({ready:image.complete&&image.naturalWidth>0,aspect:image.clientWidth/image.clientHeight})));assert.ok(sizes.every(s=>s.ready));assert.ok(Math.abs(sizes[2].aspect-18/11)<.01,'The ink inscription and full composition must fit the third preview');
- await page.screenshot({path:path.join(out,'three-paintings.png'),fullPage:true});
+ await page.screenshot({path:path.join(out,'four-paintings.png'),fullPage:true});
  await page.locator('.works article').nth(2).locator('.picture').click();await page.waitForFunction(()=>window.pondPainting?.ready);
  await page.locator('#fish').focus();await page.keyboard.press('End');await page.waitForFunction(()=>window.pondPainting.describe().fish===8);
  await page.locator('#shrimp').focus();await page.keyboard.press('Home');await page.waitForFunction(()=>window.pondPainting.describe().shrimp===0);
@@ -37,6 +39,6 @@ try{
  report.sources={};for(const name of ['apps/gallery/index.html','apps/gallery/gallery.css','apps/gallery/ink-pond-preview.png','artworks/ink-pond/src/style.css','artworks/ink-pond/src/main.js','artworks/ink-pond/src/pond.js','artworks/ink-pond/src/entries.js','artworks/ink-pond/src/gpu-ink.js','scripts/build.mjs','scripts/dev.mjs'])report.sources[name]=sha(fs.readFileSync(path.join(root,name)));
  report.validationScripts=Object.fromEntries(['scripts/review-pond-population.mjs','scripts/check-gallery-build.mjs','artworks/ink-pond/scripts/check-population.mjs'].map(name=>[name,sha(fs.readFileSync(path.join(root,name)))]));
  report.still={file:stillName,sha256:stillHash,source:'Production build at 3.5 seconds, default population and camera'};
- report.productionBuild={pass:true,threeCards:true,fullInkPreview:true,populationSliders:true,viewReset:true,referenceLoaded:true,shortViewports,routes,errors};
+ report.productionBuild={pass:true,fourCards:true,fullInkPreview:true,populationSliders:true,viewReset:true,referenceLoaded:true,shortViewports,routes,errors};
  fs.writeFileSync(path.join(out,'production-build.json'),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report.productionBuild,null,2));
 }finally{await browser.close();await new Promise(resolve=>server.close(resolve));}
